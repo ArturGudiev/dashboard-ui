@@ -1,0 +1,40 @@
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {TaskC} from '../../../models/taskClass';
+
+@Component({
+  selector: 'app-new-task-dialog',
+  templateUrl: './new-task-dialog.component.html',
+  styleUrls: ['./new-task-dialog.component.sass']
+})
+export class NewTaskDialogComponent implements OnInit {
+  myForm = new FormGroup({
+    description: new FormControl('', [
+      Validators.required
+    ]),
+
+
+  });
+
+
+  constructor(public dialogRef: MatDialogRef<NewTaskDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: {parentTask: TaskC}
+              ) { }
+
+  ngOnInit(): void {
+    // console.log('VVVV', this.data.parentTask);
+  }
+
+  closeDialog() {
+    this.dialogRef.close('Pizza!');
+  }
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+
+  onSubmit() {
+    console.log('AAAAAA');
+    this.dialogRef.close(this.myForm.value);
+  }
+}

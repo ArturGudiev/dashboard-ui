@@ -1,0 +1,19 @@
+<mat-toolbar color="primary">
+
+  <button mat-button class="sidenav-toggle" (click)="toggleSidenav.emit()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <div style="display: flex; align-items: baseline;">
+    <span>Dashboard</span>
+    <button id="task-button" mat-stroked-button (click)="onNavToTaskClick()" >Task</button>
+    <button id="task-button2" mat-flat-button color="primary" (click)="onNavToTaskClick()">Task</button>
+  </div>
+  <span class="example-spacer"></span>
+
+  <button mat-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+  </mat-menu>
+</mat-toolbar>

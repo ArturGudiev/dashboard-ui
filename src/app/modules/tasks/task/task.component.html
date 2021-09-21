@@ -1,0 +1,91 @@
+<div style="display: flex; flex-flow: row nowrap; margin-top: 1rem">
+
+  <div style="margin-right: 7rem">
+    <!--<div>{{parentsPath | json}}</div>-->
+    <h1 style="margin-bottom: 0 !important;"
+        id="full-description-title">{{task?.getFullDescription()}}</h1>
+    <br>
+
+    <div id="subtasks-actions">
+      <h2 style="padding-right: 1rem">Tasks</h2>
+      <button mat-mini-fab color="primary" style="margin-right: 1rem" aria-label="Example icon button with a menu icon"
+              (click)="onAddTaskClick()">
+        <mat-icon class="tasks-icon">add</mat-icon>
+      </button>
+
+      <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()"
+              aria-label="Example icon button with a menu icon"
+              (click)="onFinishTaskClick()">
+        <mat-icon class="tasks-icon">done</mat-icon>
+      </button>
+
+    </div>
+
+
+    <table id="subtasks-table" *ngIf="subtasks && subtasks.length > 0" mat-table [dataSource]="subtasks"
+           class="mat-elevation-z8">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [aria-label]="checkboxLabel()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)"
+                        [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef> No.</th>
+        <td mat-cell class="row-link" (click)="onSubtaskClick(subtask)" *matCellDef="let subtask; let i = index">
+          <span>{{i + 1}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description</th>
+        <td mat-cell *matCellDef="let subtask;">
+          <span class="row-link" (click)="onSubtaskClick(subtask)">{{subtask.description}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions</th>
+        <td mat-cell *matCellDef="let subtask;">
+          <!--      <span class="row-link" (click)="onSubtaskClick(subtask)">{{subtask.description}}</span>-->
+          <button mat-icon-button (click)="onSubtaskDoneClick(subtask)"
+                  aria-label="Example icon button with a vertical three dot icon">
+            <mat-icon>done</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+
+  </div>
+  <div id="parents-path-container">
+    <div class="parent-node" *ngFor="let node of parentsPath?.slice(0, -1)"
+         [ngStyle]="{'padding-left': (parentsPath.indexOf(node)) + 'rem'}">
+      <!--    <a [routerLink]="['task', '1']">{{node}} {{parentsPath.indexOf(node)}}</a>-->
+      <h4 style="padding: 0; margin: 0;"><span style="cursor: pointer"
+                                               (click)="onParentClick(node)">{{node}} {{parentsPath.indexOf(node)}}</span>
+      </h4>
+    </div>
+  </div>
+</div>
