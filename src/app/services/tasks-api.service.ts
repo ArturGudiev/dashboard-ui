@@ -43,6 +43,13 @@ export class TasksApiService {
   }
 
   _finishTasks(tasks: TaskC[]) {
-    return this.http.put(`${this.baseUrl}:3000/finish-tasks/`, tasks);
+    return this.http.put(`${this.baseUrl}:3000/finish-tasks/`, tasks).pipe(
+
+    );
+  }
+
+  _getDoneTasksNumber() {
+    // return this.http.get(`${this.baseUrl}:3000/done-tasks-number/`);
+    return this.http.get(`${this.baseUrl}:3000/done-tasks/`);
   }
 }

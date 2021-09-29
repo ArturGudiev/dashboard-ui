@@ -4,6 +4,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {NewTaskDialogComponent} from "../../modules/tasks/new-task-dialog/new-task-dialog.component";
 import {NavToTaskDialogComponent} from "../../modules/dialogs/nav-to-task-dialog/nav-to-task-dialog.component";
+import {Subscription} from "rxjs";
+import {DashboardService, DashboardStateInterface} from "../../services/dashboard.service";
 
 @Component({
   selector: 'app-toolbar',
@@ -15,12 +17,18 @@ export class ToolbarComponent implements OnInit {
   @Output() toggleSidenav = new EventEmitter<void>();
   // @Output() toggleTheme = new EventEmitter<void>();
   // @Output() toggleDir = new EventEmitter<void>();
+  dashboardSubscription: Subscription;
+  doneTasks: number;
 
   constructor(private dialog: MatDialog,
               private _snackBar: MatSnackBar,
+              private dashboardService: DashboardService,
               private router: Router) { }
 
   ngOnInit(): void {
+    this.dashboardService.getDataStateChange().subscribe((state: DashboardStateInterface) => {
+      this.doneTasks = state.doneTasks;
+    });
   }
 
   @HostListener('window:keyup', ['$event'])

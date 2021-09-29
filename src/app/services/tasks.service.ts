@@ -2,13 +2,16 @@ import { Injectable } from '@angular/core';
 import {TaskC} from '../models/taskClass';
 import {TasksApiService} from './tasks-api.service';
 import {Observable} from 'rxjs';
+import {tap} from "rxjs/operators";
+import {DashboardService} from "./dashboard.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TasksService {
 
-  constructor(private tasksApiService: TasksApiService) { }
+  constructor(private tasksApiService: TasksApiService,
+              private dashboardService: DashboardService) { }
 
   getTask(id: number): Observable<TaskC> {
     return this.tasksApiService._getTask(id);
@@ -27,10 +30,18 @@ export class TasksService {
   }
 
   finishTask(task: TaskC): Observable<TaskC> {
-    return this.tasksApiService._finishTask(task);
+    return this.tasksApiService._finishTask(task).pipe(
+
+      tap({
+      complete: () => this.dashboardService.updateDoneTasksNumber()
+      })
+    );
   }
 
   finishTasks(tasks: TaskC[]): Observable<any> {
-    return this.tasksApiService._finishTasks(tasks);
+    return this.tasksApiService._finishTasks(tasks).pipe(
+      tap({
+        complete: () => this.dashboardService.updateDoneTasksNumber()
+      }));
   }
 }
