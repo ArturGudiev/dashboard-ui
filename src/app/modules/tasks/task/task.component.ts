@@ -6,7 +6,6 @@ import {TasksApiService} from '../../../services/tasks-api.service';
 import {isTaskDescription} from '../../../shared/libs/dashboard.lib';
 import {MatDialog} from '@angular/material/dialog';
 import {NewTaskDialogComponent} from '../new-task-dialog/new-task-dialog.component';
-import {SelectionModel} from '@angular/cdk/collections';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
@@ -19,9 +18,8 @@ export class TaskComponent implements OnInit {
   task: TaskC;
   subtasks: TaskC[];
   parentsPath: string[];
-  displayedColumns: string[] = ['select', 'position', 'description', 'actions'];
+
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
-  selection = new SelectionModel<TaskC>(true, []);
 
   constructor(private route: ActivatedRoute,
               private taskApiService: TasksApiService,
@@ -75,9 +73,6 @@ export class TaskComponent implements OnInit {
     // }
   }
 
-  onSubtaskClick(task: TaskC) {
-    this.router.navigate(['task', task._id]);
-  }
 
   onParentClick(description: string) {
     if (isTaskDescription(description)) {
@@ -110,44 +105,8 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  onAddTaskClick() {
+  addSubtask() {
     this.openDialog();
-  }
-
-  masterToggle() {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
-
-    this.selection.select(...this.subtasks);
-  }
-
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.subtasks.length;
-    return numSelected === numRows;
-  }
-
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: TaskC): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.subtasks.indexOf(row) + 1}`;
-  }
-
-  onFinishTasksClick() {
-    this.tasksService.finishTasks(this.selection.selected).subscribe(
-      {
-        next: () => {
-          this.selection.clear();
-          this.tasksService.getTasks(this.task.getFullDescription()).subscribe(res => {
-            this.subtasks = res;
-          });
-        }
-      }
-    );
   }
 
   onSubtaskDoneClick(subtask: TaskC) {
@@ -171,7 +130,7 @@ export class TaskComponent implements OnInit {
     console.log('onDoneAllClick');
 
     this.tasksService.finishTask(this.task).subscribe();
-    if (this.parentsPath.length > 1) {
+    if (this.parentsPath && this.parentsPath.length > 1) {
       const description = this.parentsPath.slice(-2, -1)[0];
       this.onParentClick(description);
     }
@@ -189,14 +148,10 @@ export class TaskComponent implements OnInit {
     } catch(err) { }
   }
 
-  onFinishAllTasksClick() {
-    this.selection.clear();
-    const subtasks = this.subtasks;
-    this.subtasks = [];
-    this.tasksService.finishTasks(subtasks).subscribe( () => {
-      this.tasksService.getTasks(this.task.getFullDescription()).subscribe(newSubtasks => {
-        this.subtasks = newSubtasks;
-      });
-    })
+  refreshSubtasks() {
+    this.tasksService.getTasks(this.task.getFullDescription()).subscribe(newSubtasks => {
+      this.subtasks = newSubtasks;
+    });
+
   }
 }

@@ -8,71 +8,12 @@
       </button>
     </div>
     <br>
-    <div id="subtasks-actions">
-      <h2 id="subtasks-title">Tasks</h2>
-      <button mat-mini-fab color="primary" id="add-task-button" (click)="onAddTaskClick()">
-        <mat-icon class="tasks-icon">add</mat-icon>
-      </button>
-
-      <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()" (click)="onFinishTasksClick()">
-        <mat-icon class="tasks-icon">done</mat-icon>
-      </button>
-
-      <button mat-mini-fab color="primary" [disabled]="this.subtasks.length === 0"
-              id="done-all-tasks-button" (click)="onFinishAllTasksClick()">
-        <mat-icon class="tasks-icon">done_outline</mat-icon>
-      </button>
-    </div>
 
 
-    <table id="subtasks-table" *ngIf="subtasks && subtasks.length > 0" mat-table [dataSource]="subtasks"
-           class="mat-elevation-z8">
-
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()"
-                        [aria-label]="checkboxLabel()">
-          </mat-checkbox>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)">
-          </mat-checkbox>
-        </td>
-      </ng-container>
-
-      <!-- Position Column -->
-      <ng-container matColumnDef="position">
-        <th mat-header-cell *matHeaderCellDef> No.</th>
-        <td mat-cell class="row-link" (click)="onSubtaskClick(subtask)" *matCellDef="let subtask; let i = index">
-          <span>{{i + 1}}</span>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef> Description</th>
-        <td mat-cell *matCellDef="let subtask;" (click)="onSubtaskClick(subtask)">
-          <span class="row-link" (click)="onSubtaskClick(subtask)">{{subtask.description}}</span>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Actions</th>
-        <td mat-cell *matCellDef="let subtask; let i=index" id="row-{{i}}">
-          <button mat-icon-button (click)="onSubtaskDoneClick(subtask)"
-                  aria-label="Example icon button with a vertical three dot icon">
-            <mat-icon>done</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+    <app-subtasks (refreshSubtasks)="refreshSubtasks()"
+                  (addSubtask)="addSubtask()"
+                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+                  [subtasks]="subtasks"></app-subtasks>
 
   </div>
   <div id="parents-path-container">

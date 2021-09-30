@@ -6,6 +6,7 @@ import { TasksListComponent } from './tasks-list/tasks-list.component';
 import {MaterialModule} from '../../shared/material/material.module';
 import { NewTaskDialogComponent } from './new-task-dialog/new-task-dialog.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {SharedModule} from "../../shared/shared.module";
 
 
 const routes: Routes = [
@@ -27,6 +28,7 @@ const routes: Routes = [
     MaterialModule,
     CommonModule,
     ReactiveFormsModule,
+    SharedModule,
     RouterModule.forChild(routes),
   ]
 })
