@@ -17,7 +17,7 @@ export class TasksService {
     return this.tasksApiService._getTask(id);
   }
 
-  getParentsPath(task: TaskC) {
+  getParentsPath(task: TaskC): Observable<string[]> {
     return this.tasksApiService._getParentsPath(task);
   }
 

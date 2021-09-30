@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../services/tasks.service';
 import {TaskC} from '../../../models/taskClass';
@@ -18,9 +18,9 @@ export class TaskComponent implements OnInit {
 
   task: TaskC;
   subtasks: TaskC[];
-  parentsPath: any;
+  parentsPath: string[];
   displayedColumns: string[] = ['select', 'position', 'description', 'actions'];
-
+  @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   selection = new SelectionModel<TaskC>(true, []);
 
   constructor(private route: ActivatedRoute,
@@ -37,7 +37,7 @@ export class TaskComponent implements OnInit {
       this.tasksService.getTask(id).subscribe(task => {
         this.task = task;
         if (this.task !== null) {
-          this.tasksService.getParentsPath(this.task).subscribe(res => {
+          this.tasksService.getParentsPath(this.task).subscribe((res: string[]) => {
             this.parentsPath = res;
           });
           this.tasksService.getTasks(this.task.getFullDescription()).subscribe(res => {
@@ -91,18 +91,17 @@ export class TaskComponent implements OnInit {
   openDialog() {
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
       {
-        data: { parentTask: this.task },
+        data: {parentTask: this.task},
         height: '300px',
         width: '300px',
       });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(`in PARENT COMPONENT Dialog result: ${JSON.stringify(result)}`);
         const description = result.description;
         const obj = {description: description, tags: [this.task.getFullDescription()]}
         console.log(obj);
-        this.tasksService.createNewTask(obj).subscribe(res => {
+        this.tasksService.createNewTask(obj).subscribe(() => {
           this.tasksService.getTasks(this.task.getFullDescription()).subscribe(res => {
             this.subtasks = res;
           });
@@ -138,14 +137,22 @@ export class TaskComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.subtasks.indexOf(row) + 1}`;
   }
 
-  onFinishTaskClick() {
-    console.log(this.selection.selected);
-    this.tasksService.finishTasks(this.selection.selected);
+  onFinishTasksClick() {
+    this.tasksService.finishTasks(this.selection.selected).subscribe(
+      {
+        next: () => {
+          this.selection.clear();
+          this.tasksService.getTasks(this.task.getFullDescription()).subscribe(res => {
+            this.subtasks = res;
+          });
+        }
+      }
+    );
   }
 
   onSubtaskDoneClick(subtask: TaskC) {
     this.tasksService.finishTask(subtask).subscribe(
-      res => {
+      () => {
         this.tasksService.getTasks(this.task.getFullDescription()).subscribe(res => {
           this.subtasks = res;
         });
@@ -160,4 +167,36 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  onDoneAllClick() {
+    console.log('onDoneAllClick');
+
+    this.tasksService.finishTask(this.task).subscribe();
+    if (this.parentsPath.length > 1) {
+      const description = this.parentsPath.slice(-2, -1)[0];
+      this.onParentClick(description);
+    }
+  }
+
+  onDownClick() {
+    // this.scrollToBottom();
+    document.getElementById(`row-${this.subtasks.length - 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // window.scrollTo(0,document.body.scrollHeight);
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch(err) { }
+  }
+
+  onFinishAllTasksClick() {
+    this.selection.clear();
+    const subtasks = this.subtasks;
+    this.subtasks = [];
+    this.tasksService.finishTasks(subtasks).subscribe( () => {
+      this.tasksService.getTasks(this.task.getFullDescription()).subscribe(newSubtasks => {
+        this.subtasks = newSubtasks;
+      });
+    })
+  }
 }

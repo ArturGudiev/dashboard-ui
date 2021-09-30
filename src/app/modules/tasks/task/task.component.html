@@ -1,31 +1,33 @@
-<div style="display: flex; flex-flow: row nowrap; margin-top: 1rem">
-
-  <div style="margin-right: 7rem">
-    <!--<div>{{parentsPath | json}}</div>-->
-    <h1 style="margin-bottom: 0 !important;"
-        id="full-description-title">{{task?.getFullDescription()}}</h1>
+<div id="content-wrapper">
+  <div id="task-content">
+    <div id="description-line">
+      <h1 id="full-description-title">{{task?.getFullDescription()}}</h1>
+      <button id="done-all-button" *ngIf="task?.getFullDescription()"
+              mat-mini-fab color="accent" (click)="onDoneAllClick()">
+        <mat-icon>done_all</mat-icon>
+      </button>
+    </div>
     <br>
-
     <div id="subtasks-actions">
-      <h2 style="padding-right: 1rem">Tasks</h2>
-      <button mat-mini-fab color="primary" style="margin-right: 1rem" aria-label="Example icon button with a menu icon"
-              (click)="onAddTaskClick()">
+      <h2 id="subtasks-title">Tasks</h2>
+      <button mat-mini-fab color="primary" id="add-task-button" (click)="onAddTaskClick()">
         <mat-icon class="tasks-icon">add</mat-icon>
       </button>
 
-      <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()"
-              aria-label="Example icon button with a menu icon"
-              (click)="onFinishTaskClick()">
+      <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()" (click)="onFinishTasksClick()">
         <mat-icon class="tasks-icon">done</mat-icon>
       </button>
 
+      <button mat-mini-fab color="primary" [disabled]="this.subtasks.length === 0"
+              id="done-all-tasks-button" (click)="onFinishAllTasksClick()">
+        <mat-icon class="tasks-icon">done_outline</mat-icon>
+      </button>
     </div>
 
 
     <table id="subtasks-table" *ngIf="subtasks && subtasks.length > 0" mat-table [dataSource]="subtasks"
            class="mat-elevation-z8">
 
-      <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef>
           <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -43,9 +45,6 @@
         </td>
       </ng-container>
 
-      <!--- Note that these columns can be defined in any order.
-            The actual rendered columns are set as a property on the row definition" -->
-
       <!-- Position Column -->
       <ng-container matColumnDef="position">
         <th mat-header-cell *matHeaderCellDef> No.</th>
@@ -56,15 +55,14 @@
 
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef> Description</th>
-        <td mat-cell *matCellDef="let subtask;">
+        <td mat-cell *matCellDef="let subtask;" (click)="onSubtaskClick(subtask)">
           <span class="row-link" (click)="onSubtaskClick(subtask)">{{subtask.description}}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions</th>
-        <td mat-cell *matCellDef="let subtask;">
-          <!--      <span class="row-link" (click)="onSubtaskClick(subtask)">{{subtask.description}}</span>-->
+        <td mat-cell *matCellDef="let subtask; let i=index" id="row-{{i}}">
           <button mat-icon-button (click)="onSubtaskDoneClick(subtask)"
                   aria-label="Example icon button with a vertical three dot icon">
             <mat-icon>done</mat-icon>
@@ -72,20 +70,22 @@
         </td>
       </ng-container>
 
-
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-
   </div>
   <div id="parents-path-container">
     <div class="parent-node" *ngFor="let node of parentsPath?.slice(0, -1)"
-         [ngStyle]="{'padding-left': (parentsPath.indexOf(node)) + 'rem'}">
-      <!--    <a [routerLink]="['task', '1']">{{node}} {{parentsPath.indexOf(node)}}</a>-->
-      <h4 style="padding: 0; margin: 0;"><span style="cursor: pointer"
+         [ngStyle]="{'padding-left': (parentsPath.indexOf(node)) * .5 + 'rem'}">
+      <h4 class="parent-title"><span style="cursor: pointer"
                                                (click)="onParentClick(node)">{{node}} {{parentsPath.indexOf(node)}}</span>
       </h4>
     </div>
   </div>
 </div>
+
+
+<button mat-mini-fab color="primary" (click)="onDownClick()" id="bottom-button">
+  <mat-icon class="tasks-icon">south</mat-icon>
+</button>

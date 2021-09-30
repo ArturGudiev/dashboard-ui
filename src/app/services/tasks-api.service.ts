@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
 import {TaskC} from '../models/taskClass';
-import {getJSONFileContent} from '../shared/libs/utils.lib';
-import {tasksFile} from '../shared/constants';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -22,8 +20,8 @@ export class TasksApiService {
     );
   }
 
-  _getParentsPath(task: TaskC) {
-    return this.http.post(`${this.baseUrl}:3000/task/parents-path/`, task);
+  _getParentsPath(task: TaskC): Observable<string[]> {
+    return this.http.post<string[]>(`${this.baseUrl}:3000/task/parents-path/`, task);
   }
 
   _getTasks(tag: string): Observable<TaskC[]> {
