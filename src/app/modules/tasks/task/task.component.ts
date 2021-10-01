@@ -2,8 +2,8 @@ import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/c
 import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../services/tasks.service';
 import {TaskC} from '../../../models/taskClass';
-import {TasksApiService} from '../../../services/tasks-api.service';
-import {isTaskDescription} from '../../../shared/libs/dashboard.lib';
+import {ApiService} from '../../../services/api.service';
+import {getUrlByDescription, isTaskDescription} from '../../../shared/libs/dashboard.lib';
 import {MatDialog} from '@angular/material/dialog';
 import {NewTaskDialogComponent} from '../new-task-dialog/new-task-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -22,7 +22,7 @@ export class TaskComponent implements OnInit {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
 
   constructor(private route: ActivatedRoute,
-              private taskApiService: TasksApiService,
+              private taskApiService: ApiService,
               private router: Router,
               public dialog: MatDialog,
               private _snackBar: MatSnackBar,
@@ -60,7 +60,7 @@ export class TaskComponent implements OnInit {
   keyEvent(event: KeyboardEvent) {
 
     if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
-      this.openDialog();
+      this.openAddTaskDialog();
     }
 
     // if (event.key === 'u' && this.parentsPath.length > 1) {
@@ -75,15 +75,13 @@ export class TaskComponent implements OnInit {
 
 
   onParentClick(description: string) {
-    if (isTaskDescription(description)) {
-      const arr = TaskC.DESCRIPTION_REGEX.exec(description)
-      if (arr && arr.length > 1) {
-        this.router.navigate(['task', +arr[1]]);
-      }
+    const urls = getUrlByDescription(description);
+    if (urls) {
+      this.router.navigate(urls);
     }
   }
 
-  openDialog() {
+  openAddTaskDialog() {
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
       {
         data: {parentTask: this.task},
@@ -106,17 +104,11 @@ export class TaskComponent implements OnInit {
   }
 
   addSubtask() {
-    this.openDialog();
+    this.openAddTaskDialog();
   }
 
   onSubtaskDoneClick(subtask: TaskC) {
-    this.tasksService.finishTask(subtask).subscribe(
-      () => {
-        this.tasksService.getTasks(this.task.getFullDescription()).subscribe(res => {
-          this.subtasks = res;
-        });
-      }
-    );
+    this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
   openSnackBar() {
@@ -152,6 +144,5 @@ export class TaskComponent implements OnInit {
     this.tasksService.getTasks(this.task.getFullDescription()).subscribe(newSubtasks => {
       this.subtasks = newSubtasks;
     });
-
   }
 }

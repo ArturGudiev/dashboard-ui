@@ -5,18 +5,18 @@ import {TaskC} from "../../../models/taskClass";
 
 @Component({
   selector: 'app-nav-to-task-dialog',
-  templateUrl: './nav-to-task-dialog.component.html',
+  templateUrl: './nav-to-dialog.component.html',
   styleUrls: ['./nav-to-task-dialog.component.sass']
 })
-export class NavToTaskDialogComponent implements OnInit {
+export class NavToDialogComponent implements OnInit {
   myForm = new FormGroup({
-    taskId: new FormControl(null, [
+    navItem: new FormControl(null, [
       Validators.required
     ]),
   });
 
 
-  constructor(public dialogRef: MatDialogRef<NavToTaskDialogComponent>,
+  constructor(public dialogRef: MatDialogRef<NavToDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: {parentTask: TaskC}
   ) { }
 

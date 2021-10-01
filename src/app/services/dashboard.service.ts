@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
-import {TasksApiService} from "./tasks-api.service";
+import {ApiService} from "./api.service";
 
 export interface DashboardStateInterface {
   doneTasks: number;
@@ -14,7 +14,7 @@ export class DashboardService {
     doneTasks: 0
   }
   private data = new BehaviorSubject(this.initialState);
-  constructor(private tasksApiService: TasksApiService) { }
+  constructor(private tasksApiService: ApiService) { }
 
   getDataCurrentState(): DashboardStateInterface {
     return this.data.getValue();

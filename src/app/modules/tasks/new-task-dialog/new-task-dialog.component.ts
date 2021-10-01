@@ -23,7 +23,6 @@ export class NewTaskDialogComponent implements OnInit {
               ) { }
 
   ngOnInit(): void {
-    // console.log('VVVV', this.data.parentTask);
   }
 
   closeDialog() {
@@ -34,7 +33,6 @@ export class NewTaskDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('AAAAAA');
     this.dialogRef.close(this.myForm.value);
   }
 }

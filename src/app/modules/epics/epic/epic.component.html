@@ -1,0 +1,23 @@
+<div id="content-wrapper">
+  <div id="epic-content">
+    <div id="description-line">
+      <h1 id="full-description-title">{{epic?.getFullDescription()}}</h1>
+    </div>
+    <br>
+
+
+    <app-subtasks (refreshSubtasks)="refreshSubtasks()"
+                  (addSubtask)="addSubtask()"
+                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+                  [subtasks]="subtasks"></app-subtasks>
+
+  </div>
+  <div id="parents-path-container">
+    <div class="parent-node" *ngFor="let node of parentsPath?.slice(0, -1)"
+         [ngStyle]="{'padding-left': (parentsPath.indexOf(node)) * .5 + 'rem'}">
+      <h4 class="parent-title"><span style="cursor: pointer"
+                                     (click)="onParentClick(node)">{{node}} {{parentsPath.indexOf(node)}}</span>
+      </h4>
+    </div>
+  </div>
+</div>
