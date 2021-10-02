@@ -1,6 +1,3 @@
-import {Problem} from '../models/problem';
-import {Question} from '../models/question';
-
 export interface TaskContainer {
   // tags: string[];
   //
@@ -12,7 +9,7 @@ export interface TaskContainer {
   //
   // getAllTasks(): Task[];
   //
-  // getFullDescription(): string;
-  //
+  getFullDescription(): string;
+
   // interactive(): Promise<void>;
 }

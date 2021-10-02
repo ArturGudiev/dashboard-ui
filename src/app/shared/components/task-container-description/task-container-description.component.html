@@ -1,0 +1,7 @@
+<div id="description-line">
+  <h1 id="full-description-title">{{taskContainer?.getFullDescription()}}</h1>
+  <button id="done-all-button" *ngIf="taskContainer?.getFullDescription()"
+          mat-mini-fab color="accent" (click)="onDoneAllClick.emit()">
+    <mat-icon>done_all</mat-icon>
+  </button>
+</div>

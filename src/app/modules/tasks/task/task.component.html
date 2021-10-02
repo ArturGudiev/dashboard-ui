@@ -1,15 +1,9 @@
 <div id="content-wrapper">
   <div id="task-content">
-    <div id="description-line">
-      <h1 id="full-description-title">{{task?.getFullDescription()}}</h1>
-      <button id="done-all-button" *ngIf="task?.getFullDescription()"
-              mat-mini-fab color="accent" (click)="onDoneAllClick()">
-        <mat-icon>done_all</mat-icon>
-      </button>
-    </div>
+    <app-task-container-description (onDoneAllClick)="onDoneAllClick()"
+    [taskContainer]="task">
+    </app-task-container-description>
     <br>
-
-
     <app-subtasks (refreshSubtasks)="refreshSubtasks()"
                   (addSubtask)="addSubtask()"
                   (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
