@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
 import {TaskC} from "../../../models/taskClass";
@@ -43,6 +43,16 @@ export class EpicComponent implements OnInit {
       })
     });
   }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+
+    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
+      this.openAddTaskDialog();
+    }
+
+  }
+
 
   refreshSubtasks() {
     this.tasksService.getTasks(this.epic.getFullDescription()).subscribe(newSubtasks => {

@@ -1,12 +1,10 @@
-import {Component, OnInit, EventEmitter, Output, HostListener} from '@angular/core';
+import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {NewTaskDialogComponent} from "../../modules/tasks/new-task-dialog/new-task-dialog.component";
 import {NavToDialogComponent} from "../../modules/dialogs/nav-to-task-dialog/nav-to-dialog.component";
 import {Subscription} from "rxjs";
 import {DashboardService, DashboardStateInterface} from "../../services/dashboard.service";
-import {predefinedRoutes} from "../../shared/constants/predefined-routes";
 import {getPredefinedRouteValue, isPredefinedRoute} from "../../shared/libs/dashboard.lib";
 import {Hotkeys} from "../../classes/hotkeys";
 
@@ -63,7 +61,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   @HostListener('keydown.shift', ['$event'])
-  onKeyDown(e: KeyboardEvent) {
+  onKeyDown() {
     // optionally use preventDefault() if your combination
     // triggers other events (moving focus in case of Shift+Tab)
     // e.preventDefault();
@@ -75,7 +73,7 @@ export class ToolbarComponent implements OnInit {
     const dialogRef = this.dialog.open(NavToDialogComponent,
       {
         height: '300px',
-        width: '300px',
+        width: '500px',
       });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -86,12 +84,10 @@ export class ToolbarComponent implements OnInit {
           this.router.navigate(getPredefinedRouteValue(navItem)).then();
         }
         if (Number.isInteger(+navItem)) {
-          this.router.navigate(['task', navItem.taskId]);
+          this.router.navigate(['task', navItem]).then();
         }
         const arr = navItem.split(' ');
-        console.log('HERE2', arr[0], arr[1], ['e', 'epic'].includes(arr[0]), ['e', 'epic'].includes(arr[0]) && Number.isInteger(arr[1]))
         if (['e', 'epic'].includes(arr[0]) && Number.isInteger(+arr[1])) {
-          console.log('HERE3');
           this.router.navigate(['epic', arr[1]]).then();
         }
         if (['t', 'task'].includes(arr[0]) && Number.isInteger(+arr[1])) {

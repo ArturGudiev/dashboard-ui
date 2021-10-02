@@ -1,4 +1,5 @@
 export const predefinedRoutes = [
+  {routes: ['s', 'stack'], value: ['epic', 1]},
   {routes: ['mem', 'memg', 'memory guard'], value: ['epic', 34]},
   {routes: ['itp', 'it projects'], value: ['epic', 31]},
   {routes: ['sizer'], value: ['epic', 6]},
