@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Epic} from "../models/epic";
 import {TaskContainer} from "../interfaces/task-container";
+import {Story} from "../models/story";
 
 @Injectable({
   providedIn: 'root'
@@ -62,5 +63,11 @@ export class ApiService {
       );
   }
 
-
+//------------------------------------stories-------------------------------------------------
+  _getStory(id: number) {
+    return this.http.get<Story>(`${this.baseUrl}/story/${id}`)
+      .pipe(
+        map((obj) => new Story(obj._id, obj.description, obj.tags, obj.active, obj.closed))
+      );
+  }
 }

@@ -25,7 +25,6 @@ export class NavToDialogComponent implements OnInit {
   }
 
   closeDialog() {
-    this.dialogRef.close('Pizza!');
   }
   onNoClick(): void {
     this.dialogRef.close(null);

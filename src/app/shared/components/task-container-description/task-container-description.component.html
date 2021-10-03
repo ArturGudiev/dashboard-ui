@@ -1,7 +1,9 @@
-<div id="description-line">
+<div id="description-line" *ngIf="taskContainer?.getFullDescription()">
+  <button id="go-to-parent-button" mat-mini-fab color="accent" (click)="goToParent.emit()">
+    <mat-icon>north</mat-icon>
+  </button>
   <h1 id="full-description-title">{{taskContainer?.getFullDescription()}}</h1>
-  <button id="done-all-button" *ngIf="taskContainer?.getFullDescription()"
-          mat-mini-fab color="accent" (click)="onDoneAllClick.emit()">
+  <button *ngIf="showDoneAll" id="done-all-button" mat-mini-fab color="accent" (click)="onDoneAllClick.emit()">
     <mat-icon>done_all</mat-icon>
   </button>
 </div>

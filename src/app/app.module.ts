@@ -12,6 +12,7 @@ import {DialogsModule} from "./modules/dialogs/dialogs.module";
 
 const routes: Routes = [
   {path: 'epic', loadChildren: () => import('./modules/epics/epics.module').then(m => m.EpicsModule)},
+  {path: 'story', loadChildren: () => import('./modules/stories/stories.module').then(m => m.StoriesModule)},
   {path: 'task', loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule)},
   {path: 'tasks', redirectTo: 'task'},
 ];

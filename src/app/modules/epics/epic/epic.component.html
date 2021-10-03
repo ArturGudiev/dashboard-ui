@@ -1,8 +1,9 @@
 <div id="content-wrapper">
   <div id="epic-content">
-    <div id="description-line">
-      <h1 id="full-description-title">{{epic?.getFullDescription()}}</h1>
-    </div>
+    <app-task-container-description
+      (goToParent)="onGoToNearseParent()" [showDoneAll]="false"
+      [taskContainer]="epic">
+    </app-task-container-description>
     <br>
 
 

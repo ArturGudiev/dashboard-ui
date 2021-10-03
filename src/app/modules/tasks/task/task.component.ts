@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../services/tasks.service';
 import {TaskC} from '../../../models/taskClass';
 import {ApiService} from '../../../services/api.service';
-import {getUrlByDescription, isTaskDescription} from '../../../shared/libs/dashboard.lib';
+import {getUrlByDescription} from '../../../shared/libs/dashboard.lib';
 import {MatDialog} from '@angular/material/dialog';
 import {NewTaskDialogComponent} from '../new-task-dialog/new-task-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -73,14 +73,6 @@ export class TaskComponent implements OnInit {
     // }
   }
 
-
-  onParentClick(description: string) {
-    const urls = getUrlByDescription(description);
-    if (urls) {
-      this.router.navigate(urls);
-    }
-  }
-
   openAddTaskDialog() {
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
       {
@@ -93,12 +85,7 @@ export class TaskComponent implements OnInit {
       if (result) {
         const description = result.description;
         const obj = {description: description, tags: [this.task.getFullDescription()]}
-        console.log(obj);
-        this.tasksService.createNewTask(obj).subscribe(() => {
-          this.tasksService.getTasks(this.task.getFullDescription()).subscribe(res => {
-            this.subtasks = res;
-          });
-        });
+        this.tasksService.createNewTask(obj).subscribe(() => this.refreshSubtasks());
       }
     });
   }
@@ -119,12 +106,10 @@ export class TaskComponent implements OnInit {
   }
 
   onDoneAllClick() {
-    console.log('onDoneAllClick');
-
     this.tasksService.finishTask(this.task).subscribe();
     if (this.parentsPath && this.parentsPath.length > 1) {
       const description = this.parentsPath.slice(-2, -1)[0];
-      this.onParentClick(description);
+      this.goToParentHandler(description);
     }
   }
 
@@ -144,5 +129,20 @@ export class TaskComponent implements OnInit {
     this.tasksService.getTasks(this.task.getFullDescription()).subscribe(newSubtasks => {
       this.subtasks = newSubtasks;
     });
+  }
+
+  goToParentHandler(description: string) {
+    const urls = getUrlByDescription(description);
+    if (urls) {
+      this.router.navigate(urls);
+    }
+  }
+
+
+  onGoToNearseParent() {
+    if (this.parentsPath && this.parentsPath.length <= 1) {
+      return;
+    }
+    this.goToParentHandler(this.parentsPath.slice(-2, -1)[0]);
   }
 }

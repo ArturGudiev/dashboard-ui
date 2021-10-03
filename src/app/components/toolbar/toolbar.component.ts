@@ -93,6 +93,9 @@ export class ToolbarComponent implements OnInit {
         if (['t', 'task'].includes(arr[0]) && Number.isInteger(+arr[1])) {
           this.router.navigate(['epic', arr[1]]).then();
         }
+        if (['s', 'story'].includes(arr[0]) && Number.isInteger(+arr[1])) {
+          this.router.navigate(['story', arr[1]]).then();
+        }
       }
     });
   }

@@ -8,7 +8,9 @@ import {TaskContainer} from "../../../interfaces/task-container";
 })
 export class TaskContainerDescriptionComponent implements OnInit {
   @Input() taskContainer: TaskContainer;
+  @Input() showDoneAll = true;
   @Output() onDoneAllClick = new EventEmitter();
+  @Output() goToParent = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
