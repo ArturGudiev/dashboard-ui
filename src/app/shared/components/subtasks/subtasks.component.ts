@@ -39,14 +39,6 @@ export class SubtasksComponent implements OnInit, OnChanges {
     this.selection.select(...this.subtasks);
   }
 
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: TaskC): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${this.subtasks.indexOf(row) + 1}`;
-  }
-
   onFinishTasksClick() {
     this.tasksService.finishTasks(this.selection.selected).subscribe(
       {
