@@ -1,0 +1,65 @@
+<ng-container *ngIf="stories">
+
+  <div id="substories-actions">
+    <h2 id="substories-title">Stories</h2>
+    <button mat-mini-fab color="primary" id="add-story-button" (click)="addSubstory.emit()">
+      <mat-icon class="stories-icon">add</mat-icon>
+    </button>
+
+<!--    [disabled]="!this.selection.hasValue()"-->
+    <button mat-mini-fab color="primary" [disabled]="true"
+            (click)="onFinishStoriesClick()" >
+      <mat-icon class="stories-icon">done</mat-icon>
+    </button>
+  </div>
+
+  <table id="substories-table" *ngIf="stories && stories.length > 0" mat-table [dataSource]="stories"
+         class="mat-elevation-z8">
+
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? storiesSelectAllToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                      >
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No.</th>
+      <td mat-cell class="row-link" (click)="onSubstoryClick(story)" *matCellDef="let story; let i = index">
+        <span>{{i + 1}}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description</th>
+      <td mat-cell *matCellDef="let story;" (click)="onSubstoryClick(story)">
+        <span class="row-link" (click)="onSubstoryClick(story)">{{story.description}}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions</th>
+      <td mat-cell *matCellDef="let story; let i=index" id="row-{{i}}">
+        <button mat-icon-button [disabled]="true"
+                aria-label="Example icon button with a vertical three dot icon">
+          <mat-icon>done</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+</ng-container>
+

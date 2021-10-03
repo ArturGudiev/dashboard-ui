@@ -70,4 +70,16 @@ export class ApiService {
         map((obj) => new Story(obj._id, obj.description, obj.tags, obj.active, obj.closed))
       );
   }
+
+  _getStories(tag: string): Observable<Story[]> {
+    return this.http.get(`${this.baseUrl}/get-stories/`, {
+      params: {tag}
+    }).pipe(
+      map((stories: any) => stories.map(
+        (s: Story) => new Story(s._id, s.description, s.tags, s.active, s.closed, s.deferred))
+      ));
+
+  }
+  //------------------------------------stories-------------------------------------------------
+
 }

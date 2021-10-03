@@ -7,6 +7,8 @@ import {EpicsService} from "../../../services/epics.service";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
+import {Story} from "../../../models/story";
+import {StoriesService} from "../../../services/stories.service";
 
 @Component({
   selector: 'app-epic',
@@ -16,12 +18,14 @@ import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 export class EpicComponent implements OnInit {
   epic: Epic;
   subtasks: TaskC[];
+  stories: Story[];
   parentsPath: string[];
 
   constructor(private route: ActivatedRoute,
               private epicsService: EpicsService,
               private tasksService: TasksService,
               private router: Router,
+              private storiesService: StoriesService,
               public dialog: MatDialog
   ) {
   }
@@ -35,9 +39,8 @@ export class EpicComponent implements OnInit {
           this.tasksService.getParentsPath(this.epic).subscribe((res: string[]) => {
             this.parentsPath = res;
           });
-          this.tasksService.getTasks(this.epic.getFullDescription()).subscribe(res => {
-            this.subtasks = res;
-          });
+          this.refreshSubtasks();
+          this.refreshSubstories();
         }
       })
     });
@@ -109,5 +112,19 @@ export class EpicComponent implements OnInit {
     if (urls) {
       this.router.navigate(urls).then();
     }
+  }
+
+  navigateToStory(story: Story) {
+    this.router.navigate(['story', story._id]).then();
+  }
+
+  addSubstory() {
+
+  }
+
+  private refreshSubstories() {
+    this.storiesService.getStories(this.epic.getFullDescription()).subscribe(stories => {
+      this.stories = stories;
+    });
   }
 }

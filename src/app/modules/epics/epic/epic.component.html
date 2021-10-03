@@ -7,13 +7,20 @@
     <br>
 
 
+    <app-substories [stories]="stories" (onStoryClick)="navigateToStory($event)"
+                    (addSubstory)="addSubstory()">
+
+    </app-substories>
+
+
     <app-subtasks (refreshSubtasks)="refreshSubtasks()"
                   (addSubtask)="addSubtask()"
                   (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
-                  [subtasks]="subtasks"></app-subtasks>
+                  [subtasks]="subtasks">
+    </app-subtasks>
 
   </div>
   <app-parents-path [parentsPath]="parentsPath"
-                    (onParentClick)="onParentClick($event)"
-  ></app-parents-path>
+                    (onParentClick)="onParentClick($event)">
+  </app-parents-path>
 </div>
