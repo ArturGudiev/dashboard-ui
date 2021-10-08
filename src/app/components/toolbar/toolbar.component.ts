@@ -3,10 +3,11 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {NavToDialogComponent} from "../../modules/dialogs/nav-to-task-dialog/nav-to-dialog.component";
-import {Subscription} from "rxjs";
 import {DashboardService, DashboardStateInterface} from "../../services/dashboard.service";
 import {getPredefinedRouteValue, isPredefinedRoute} from "../../shared/libs/dashboard.lib";
 import {Hotkeys} from "../../classes/hotkeys";
+import {CommandDialogComponent} from "../../modules/dialogs/command-dialog/command-dialog.component";
+import {CommandsService} from "../../services/commands.service";
 
 @Component({
   selector: 'app-toolbar',
@@ -16,15 +17,12 @@ import {Hotkeys} from "../../classes/hotkeys";
 export class ToolbarComponent implements OnInit {
 
   @Output() toggleSidenav = new EventEmitter<void>();
-  // @Output() toggleTheme = new EventEmitter<void>();
-  // @Output() toggleDir = new EventEmitter<void>();
-  dashboardSubscription: Subscription;
   doneTasks: number;
-
   constructor(private dialog: MatDialog,
               private _snackBar: MatSnackBar,
               private dashboardService: DashboardService,
               private hotkeys: Hotkeys,
+              private commandService: CommandsService,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -37,6 +35,16 @@ export class ToolbarComponent implements OnInit {
       this.onNavToClick()
     );
 
+    this.hotkeys.addShortcut({keys: 'meta.b'}).subscribe(() => this.commandService.setCommand('back'));
+    this.hotkeys.addShortcut({keys: 'alt.b'}).subscribe(() => this.commandService.setCommand('back'));
+
+    this.hotkeys.addShortcut({keys: '§'}).subscribe(() => this.commandService.setCommand('command'));
+    this.hotkeys.addShortcut({keys: '`'}).subscribe(() => this.commandService.setCommand('command'));
+    this.hotkeys.addShortcut({keys: 'meta.c'}).subscribe(() => this.openCommandDialog());
+    this.hotkeys.addShortcut({keys: 'alt.c'}).subscribe(() => this.openCommandDialog());
+
+    // this.hotkeys.addShortcut({keys: 'meta.c'}).subscribe(() => this.openCommandDialog());
+
     // Unsubscribe if you need to
     this.hotkeys.addShortcut({ keys: 'meta.j' }).subscribe();
   }
@@ -44,12 +52,9 @@ export class ToolbarComponent implements OnInit {
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     console.log('CCC', event, event.key);
-
-
     if (event.key === '_') {
       this.onNavToClick();
     }
-
     // if (event.key === 'u' && this.parentsPath.length > 1) {
     //   console.log('AAAA', this.parentsPath.slice(-2));
     //   // this.onParentClick(this.parentsPath.slice(-2)[0]); // todo refactor
@@ -77,6 +82,9 @@ export class ToolbarComponent implements OnInit {
       });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
       const navItem = result.navItem;
 
       if (navItem) {
@@ -96,7 +104,31 @@ export class ToolbarComponent implements OnInit {
         if (['s', 'story'].includes(arr[0]) && Number.isInteger(+arr[1])) {
           this.router.navigate(['story', arr[1]]).then();
         }
+
       }
+    });
+  }
+
+  private openCommandDialog() {
+    const dialogRef = this.dialog.open(CommandDialogComponent,
+      {
+        height: '300px',
+        width: '500px',
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+      this.commandService.setCommand(result.command);
+    });
+
+    }
+
+  openSnackBar(message = 'Cannonball!!') {
+    this._snackBar.open(message, 'Splash', {
+      horizontalPosition: 'center', //start, end, left, right
+      verticalPosition: 'bottom',  // top, bottom
     });
   }
 }

@@ -1,9 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Observable, of} from 'rxjs';
 import {Direction} from '@angular/cdk/bidi';
 import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
 import {Router} from '@angular/router';
 import {MatSidenav} from '@angular/material/sidenav';
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {CommandsService} from "../../services/commands.service";
+
 const SMALL_WIDTH_BREAKPOINT = 720;
 
 @Component({
@@ -16,12 +18,21 @@ export class SidenavComponent implements OnInit {
   // users: Observable<User[]> = of([]);
   isDarkTheme: boolean = false;
   dir = 'ltr' as Direction;
+  showCard = false;
 
   constructor(private breakpointObserver: BreakpointObserver,
-              private router: Router
+              private router: Router,
+              private commandService: CommandsService
               ) { }
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
+  myForm = new FormGroup({
+    command: new FormControl(null, [
+      Validators.required
+    ]),
+  });
+
+
 
   ngOnInit(): void {
     this.breakpointObserver
@@ -32,6 +43,12 @@ export class SidenavComponent implements OnInit {
       })
     // this.users = this.userService.users;
     // this.userService.loadAll();
+
+    this.commandService.getDataStateChange().subscribe(state => {
+      if (state.command === 'command'){
+        this.showCard = !this.showCard;
+      }
+    })
 
     this.router.events.subscribe(() => {
       if (this.isScreenSmall) {
@@ -48,4 +65,11 @@ export class SidenavComponent implements OnInit {
     this.dir = this.dir == 'ltr' ? 'rtl' : 'ltr';
   }
 
+  onSubmit() {
+    this.commandService.setCommand(this.myForm.value.command);
+  }
+
+  onNoClick() {
+
+  }
 }

@@ -1,12 +1,13 @@
 import {TaskC} from '../../models/taskClass';
 import {Epic} from "../../models/epic";
 import {predefinedRoutes} from "../constants/predefined-routes";
+import {Story} from "../../models/story";
 
 export const isTaskDescription = (description: string): boolean => TaskC.DESCRIPTION_REGEX.test(description);
 export const isEpicDescription = (description: string): boolean => Epic.DESCRIPTION_REGEX.test(description);
 // export const isProblemDescription = (description: string): boolean => Problem.DESCRIPTION_REGEX.test(description);
 // export const isQuestionDescription = (description: string): boolean => Question.DESCRIPTION_REGEX.test(description);
-// export const isStoryDescription = (description: string): boolean => Story.DESCRIPTION_REGEX.test(description);
+export const isStoryDescription = (description: string): boolean => Story.DESCRIPTION_REGEX.test(description);
 
 export function getUrlByDescription(description: string): string[] {
   if (isTaskDescription(description)) {
@@ -21,9 +22,17 @@ export function getUrlByDescription(description: string): string[] {
       return ['epic', arr[1]];
     }
   }
+  if (isStoryDescription(description)) {
+    const arr = Story.DESCRIPTION_REGEX.exec(description);
+    if (arr && arr.length > 1) {
+      return ['story', arr[1]];
+    }
+  }
   return null;
 }
 
-export const isPredefinedRoute = (val: string) => predefinedRoutes.some(obj => obj.routes.includes(val));
-export const getPredefinedRouteValue = (val: string) => predefinedRoutes.find(obj => obj.routes.includes(val)).value;
+export const isPredefinedRoute = (val: string) => predefinedRoutes.some(obj => obj.routes.includes(val.trim()));
+export const getPredefinedRouteValue = (val: string) => {
+  return predefinedRoutes.find(obj => obj.routes.includes(val.trim())).value;
+};
 

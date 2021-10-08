@@ -8,6 +8,8 @@ import {SidenavComponent} from './components/sidenav/sidenav.component';
 import {ToolbarComponent} from './components/toolbar/toolbar.component';
 import {HttpClientModule} from '@angular/common/http';
 import {DialogsModule} from "./modules/dialogs/dialogs.module";
+import {ReactiveFormsModule} from "@angular/forms";
+import { CommandCardComponent } from './components/command-card/command-card.component';
 
 
 const routes: Routes = [
@@ -22,16 +24,18 @@ const routes: Routes = [
     AppComponent,
     SidenavComponent,
     ToolbarComponent,
+    CommandCardComponent,
   ],
-  imports: [
-    HttpClientModule,
-    DialogsModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    RouterModule,
-    MaterialModule,
-    RouterModule.forRoot(routes)
-  ],
+    imports: [
+        HttpClientModule,
+        DialogsModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        RouterModule,
+        MaterialModule,
+        RouterModule.forRoot(routes),
+        ReactiveFormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

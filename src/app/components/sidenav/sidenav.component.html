@@ -34,6 +34,24 @@
     ></app-toolbar>
     <div class="wrapper">
       <router-outlet></router-outlet>
+
+      <app-command-card *ngIf="showCard" (closeCard)="showCard = false"
+
+      ></app-command-card>
+<!--        <mat-card *ngIf="showCard"  style="width: 20rem" id="command-card">-->
+<!--          <form autocomplete="on"-->
+<!--                [formGroup]="myForm" (ngSubmit)="onSubmit()" >-->
+<!--            <mat-form-field id="nav-input-field">-->
+<!--              <mat-label>Command</mat-label>-->
+<!--              <input id="description-input"  matInput formControlName="command">-->
+<!--            </mat-form-field>-->
+<!--            <mat-card-actions>-->
+<!--              <button mat-button [disabled]="!myForm.valid" type="submit">OK</button>-->
+<!--              <button mat-button (click)="onNoClick()">CANCEL</button>-->
+<!--            </mat-card-actions>-->
+<!--          </form>-->
+<!--        </mat-card>-->
+      <br>
     </div>
   </div>
 </mat-sidenav-container>

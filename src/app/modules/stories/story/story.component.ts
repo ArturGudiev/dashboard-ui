@@ -17,6 +17,8 @@ export class StoryComponent implements OnInit {
   story: Story;
   subtasks: TaskC[];
   parentsPath: string[];
+  stories: Story[];
+
   constructor(
     private route: ActivatedRoute,
     private storiesService: StoriesService,
@@ -36,9 +38,16 @@ export class StoryComponent implements OnInit {
             this.parentsPath = res;
           });
           this.refreshSubtasks();
+          this.refreshSubstories();
         }
       })
     })
+  }
+
+  private refreshSubstories() {
+    this.storiesService.getStories(this.story.getFullDescription()).subscribe(stories => {
+      this.stories = stories;
+    });
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -50,6 +59,9 @@ export class StoryComponent implements OnInit {
 
   }
 
+  navigateToStory(story: Story) {
+    this.router.navigate(['story', story._id]).then();
+  }
 
   refreshSubtasks() {
     this.tasksService.getTasks(this.story.getFullDescription()).subscribe(newSubtasks => {
@@ -110,5 +122,9 @@ export class StoryComponent implements OnInit {
     if (urls) {
       this.router.navigate(urls).then();
     }
+  }
+
+  addSubstory() {
+
   }
 }

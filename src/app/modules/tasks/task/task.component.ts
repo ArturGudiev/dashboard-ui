@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../services/tasks.service';
@@ -7,6 +8,7 @@ import {getUrlByDescription} from '../../../shared/libs/dashboard.lib';
 import {MatDialog} from '@angular/material/dialog';
 import {NewTaskDialogComponent} from '../new-task-dialog/new-task-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {CommandsService} from "../../../services/commands.service";
 
 @Component({
   selector: 'app-task',
@@ -26,6 +28,7 @@ export class TaskComponent implements OnInit {
               private router: Router,
               public dialog: MatDialog,
               private _snackBar: MatSnackBar,
+              private commandsService: CommandsService,
               private tasksService: TasksService) {
   }
 
@@ -46,6 +49,72 @@ export class TaskComponent implements OnInit {
       })
       // console.log('AAAA', this.task);
     });
+    this.commandsService.getDataStateChange().subscribe( state => {
+      this.handleTaskCommand(state.command);
+    })
+  }
+
+  private handleTaskCommand(command: string) {
+    const arr = command.split(' ');
+    const args = arr.slice(1);
+    if (arr[0] === 'back') {
+      this.onGoToNearseParent();
+      return;
+    }
+    // if (arr.length === 1 && arr[0].startsWith('f')) {
+    //   const newCommand = command.slice(1);
+    //   const newArgs = newCommand.split(' ');
+    //   this.finishTaskHandler(newArgs);
+    //   return;
+    // }
+    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
+      this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
+      return;
+    }
+    if (['f', 'ft', 'finish-task'].includes(arr[0])) {
+      this.finishTaskHandler(args);
+      return;
+    }
+    if (['fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
+      this.finishAllTasks();
+      return;
+    }
+    if (['res', 'resolve'].includes(arr[0])) {
+      this.onDoneAllClick();
+      return;
+    }
+  }
+
+  finishAllTasks() {
+    const subtasks = this.subtasks;
+    this.subtasks = [];
+    this.tasksService.finishTasks(subtasks).subscribe(() => this.refreshSubtasks());
+  }
+
+
+
+  private finishTaskHandler(args: string[]) {
+    if (!args || args.length === 0) {
+      return;
+    }
+    if (args.length > 0 && args[0] && /^\d+-\d+$/.test(args[0])) {
+      const numbers = args[0].split('-');
+      const num1 = +numbers[0] - 1;
+      const num2 = +numbers[1] - 1;
+      const rangeNumbers = _.range(num1, num2 + 1);
+      const tasksToFinish = rangeNumbers.map((number: number) => this.subtasks[number]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
+    }
+    else if (args.length > 0 && args[0] && args[0].includes(',')) {
+      const numbers = args[0].split(',').map(str => +str);
+      const tasksToFinish = numbers.map((number: number) => this.subtasks[number - 1]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
+    } else {
+      const index = +args[0];
+      if (Number.isInteger(index) && index >= 1 && index <= this.subtasks.length) {
+        this.tasksService.finishTask(this.subtasks[index - 1]).subscribe(() => this.refreshSubtasks());
+      }
+    }
   }
 
   // @HostListener('keydown.alt.u', ['$event'])
