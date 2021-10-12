@@ -45,9 +45,12 @@ export class ApiService {
   }
 
   _finishTasks(tasks: TaskC[]) {
-    return this.http.put(`${this.baseUrl}/finish-tasks/`, tasks).pipe(
+    return this.http.put(`${this.baseUrl}/finish-tasks/`, tasks).pipe();
+  }
 
-    );
+  _addAnonymousTask(): Observable<any> {
+    return this.http.put(`${this.baseUrl}/add-anonymous-task/`, {});
+
   }
 
   _getDoneTasksNumber() {

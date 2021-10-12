@@ -11,27 +11,27 @@ import {TaskContainer} from "../interfaces/task-container";
 })
 export class TasksService {
 
-  constructor(private tasksApiService: ApiService,
+  constructor(private apiService: ApiService,
               private dashboardService: DashboardService) { }
 
   getTask(id: number): Observable<TaskC> {
-    return this.tasksApiService._getTask(id);
+    return this.apiService._getTask(id);
   }
 
   getParentsPath(task: TaskContainer): Observable<string[]> {
-    return this.tasksApiService._getParentsPath(task);
+    return this.apiService._getParentsPath(task);
   }
 
   getTasks(tag: string): Observable<TaskC[]> {
-    return this.tasksApiService._getTasks(tag);
+    return this.apiService._getTasks(tag);
   }
 
   createNewTask(obj: { description: any; tags: string[] }): Observable<TaskC> {
-    return this.tasksApiService._createNewTask(obj);
+    return this.apiService._createNewTask(obj);
   }
 
   finishTask(task: TaskC): Observable<TaskC> {
-    return this.tasksApiService._finishTask(task).pipe(
+    return this.apiService._finishTask(task).pipe(
 
       tap({
       complete: () => this.dashboardService.updateDoneTasksNumber()
@@ -40,9 +40,18 @@ export class TasksService {
   }
 
   finishTasks(tasks: TaskC[]): Observable<any> {
-    return this.tasksApiService._finishTasks(tasks).pipe(
+    return this.apiService._finishTasks(tasks).pipe(
       tap({
         complete: () => this.dashboardService.updateDoneTasksNumber()
       }));
   }
+
+  addAnonymousTask() {
+    return this.apiService._addAnonymousTask().pipe(
+      tap({
+        complete: () => this.dashboardService.updateDoneTasksNumber()
+      })
+    );
+  }
+
 }

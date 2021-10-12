@@ -52,8 +52,11 @@ export class ToolbarComponent implements OnInit {
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     console.log('CCC', event, event.key);
-    if (event.key === '_') {
-      this.onNavToClick();
+    // if (event.key === '_') {
+    //   this.onNavToClick();
+    // }
+    if (event.key === '\\') {
+      this.commandService.setCommand('anonymous');
     }
     // if (event.key === 'u' && this.parentsPath.length > 1) {
     //   console.log('AAAA', this.parentsPath.slice(-2));

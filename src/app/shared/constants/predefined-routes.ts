@@ -1,4 +1,7 @@
 export const predefinedRoutes = [
+  {routes: ['youtube', 'tube'], value: ['epic', 44]},
+  {routes: ['social', 'soc'], value: ['epic', 12]},
+  {routes: ['memory', 'mem'], value: ['epic', 34]},
   {routes: ['home'], value: ['epic', 14]},
   {routes: ['s', 'stack'], value: ['epic', 1]},
   {routes: ['mem', 'memg', 'memory guard'], value: ['epic', 34]},

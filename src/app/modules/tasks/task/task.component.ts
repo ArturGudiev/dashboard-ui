@@ -57,8 +57,12 @@ export class TaskComponent implements OnInit {
   private handleTaskCommand(command: string) {
     const arr = command.split(' ');
     const args = arr.slice(1);
-    if (arr[0] === 'back') {
+    if (['back', 'b'].includes(arr[0])) {
       this.onGoToNearseParent();
+      return;
+    }
+    if (['anonymous'].includes(arr[0])) {
+      this.addAnonymousTaskHandler();
       return;
     }
     // if (arr.length === 1 && arr[0].startsWith('f')) {
@@ -75,14 +79,18 @@ export class TaskComponent implements OnInit {
       this.finishTaskHandler(args);
       return;
     }
-    if (['fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
+    if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
       this.finishAllTasks();
       return;
     }
-    if (['res', 'resolve'].includes(arr[0])) {
+    if (['r', 'res', 'resolve'].includes(arr[0])) {
       this.onDoneAllClick();
       return;
     }
+  }
+
+  private addAnonymousTaskHandler() {
+    this.tasksService.addAnonymousTask().subscribe();
   }
 
   finishAllTasks() {
