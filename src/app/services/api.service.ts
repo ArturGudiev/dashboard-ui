@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
-import {TaskC} from '../models/taskClass';
+import {TaskC} from '../models/task-class';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Epic} from "../models/epic";
 import {TaskContainer} from "../interfaces/task-container";
 import {Story} from "../models/story";
+import {Problem} from "../models/problem";
 
 @Injectable({
   providedIn: 'root'
@@ -84,5 +85,24 @@ export class ApiService {
 
   }
   //------------------------------------stories-------------------------------------------------
+  //------------------------------------problems-------------------------------------------------
+
+  _getProblems(tag: string): Observable<Problem[]> {
+    return this.http.get(`${this.baseUrl}/get-problems/`, {
+      params: {tag}
+    }).pipe(
+      map((problems: any) => problems.map(
+        (p: Problem) => new Problem(p._id, p.description, p.tags, p.solution)
+      )));
+  }
+
+  _getProblem(id: any) {
+    console.log('ApiService._getProblem');
+    return this.http.get<Problem>(`${this.baseUrl}/problem/${id}`)
+      .pipe(
+        map((obj) => new Problem(obj._id, obj.description, obj.tags, obj.solution))
+      );
+  }
+  //------------------------------------problems-------------------------------------------------
 
 }

@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {TaskC} from '../../../models/taskClass';
+import {TaskC} from '../../../models/task-class';
 
 @Component({
   selector: 'app-new-task-dialog',

@@ -1,4 +1,4 @@
-import {TaskC} from '../../models/taskClass';
+import {TaskC} from '../../models/task-class';
 import {Epic} from "../../models/epic";
 import {predefinedRoutes} from "../constants/predefined-routes";
 import {Story} from "../../models/story";

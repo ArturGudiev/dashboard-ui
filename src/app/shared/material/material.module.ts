@@ -34,6 +34,7 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDividerModule} from '@angular/material/divider';
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 
 @NgModule({
@@ -76,8 +77,8 @@ import {MatDividerModule} from '@angular/material/divider';
     MatTooltipModule,
     MatPaginatorModule,
     MatSortModule,
-    MatTableModule
-
+    MatTableModule,
+    DragDropModule,
   ]
 })
 export class MaterialModule { }

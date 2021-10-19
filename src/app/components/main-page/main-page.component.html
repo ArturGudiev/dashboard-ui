@@ -1,0 +1,81 @@
+<!--<div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)" #aaa-->
+<!--     (cdkDropListExited)="drop2($event)"-->
+
+<!--&gt;-->
+<!--  <div class="example-box" *ngFor="let movie of movies" cdkDrag>{{movie}}</div>-->
+<!--</div>-->
+
+
+<!--<div>-->
+<!--  <h3  style="text-align: center">Task List</h3>-->
+<!--  <div> <sw-item-list  *ngFor="let item of list"-->
+<!--                       [inside]="item"-->
+<!--                       [item-class]="'list-custom'"-->
+<!--                       [editTemplate]="editTemplate"-->
+<!--                       [trashTemplate]="trashTemplate"-->
+<!--                       (callback)="action($event)">-->
+<!--  </sw-item-list>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<ng-template  #editTemplate>-->
+<!--  <i  class="fas fa-edit"></i>-->
+<!--</ng-template>-->
+
+<!--<ng-template  #trashTemplate>-->
+<!--  <i  class="fas fa-trash"></i>-->
+<!--</ng-template>-->
+
+
+<div>
+
+  <h3  style="text-align: center">TASK LIST</h3>
+
+  <div>
+
+    <sw-item-list
+      *ngFor="let item of list"
+      [inside]="item"
+      [item-class]="'list-custom'"
+      [show-mark]="false"
+      [disable-mark]="item?.disable"
+      (swClick)="click(item)"
+      [editTemplate]="editTemplate"
+      [trashTemplate]="trashTemplate"
+      [markTemplate]="defaultMark"
+      [customTemplate]="customTemplateSrc"
+      [notMarkTemplate]="defaultNotMark"
+      (callback)="action($event)">
+    </sw-item-list>
+  </div>
+</div>
+
+<ng-template  #editTemplate>z
+  <i  class="fas fa-edit"></i>
+</ng-template>
+
+<ng-template  #trashTemplate>
+  <i  class="fas fa-trash"></i>
+</ng-template>
+
+<ng-template  #defaultMark>
+  <i  class="far fa-check-circle"></i>
+</ng-template>
+
+<ng-template  #defaultNotMark>
+  <i  class="far fa-circle"></i>
+</ng-template>
+
+<ng-template  #customTemplateSrc  let-item='item'  let-id='id'>
+
+  <div  style="display: flex;">
+    <div  style="padding-right: 10px;">
+      <img  style="width:60px;height:60px;border-radius:60px;"
+            [src]="'https://api.adorable.io/avatars/400/'+id+'.png'"  alt="">
+    </div>
+    <div>
+      <h3  style="margin-top: 0;margin-bottom: 0;">Lorem, ipsum dolor.</h3>
+      <small  style="color:gray;font-weight:500;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, optio.</small>
+    </div>
+  </div>
+</ng-template>

@@ -30,7 +30,6 @@ export class ToolbarComponent implements OnInit {
       this.doneTasks = state.doneTasks;
     });
 
-    this.hotkeys.addShortcut({ keys: 'shift.z' }).subscribe(() => console.log('SSS'));
     this.hotkeys.addShortcut({ keys: 'meta.g' }).subscribe(() =>
       this.onNavToClick()
     );

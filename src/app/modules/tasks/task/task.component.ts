@@ -2,13 +2,16 @@ import * as _ from 'lodash';
 import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../services/tasks.service';
-import {TaskC} from '../../../models/taskClass';
+import {TaskC} from '../../../models/task-class';
 import {ApiService} from '../../../services/api.service';
 import {getUrlByDescription} from '../../../shared/libs/dashboard.lib';
 import {MatDialog} from '@angular/material/dialog';
 import {NewTaskDialogComponent} from '../new-task-dialog/new-task-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CommandsService} from "../../../services/commands.service";
+import {Title} from "@angular/platform-browser";
+import { Problem } from 'src/app/models/problem';
+import {ProblemsService} from "../../../services/problems.service";
 
 @Component({
   selector: 'app-task',
@@ -19,6 +22,7 @@ export class TaskComponent implements OnInit {
 
   task: TaskC;
   subtasks: TaskC[];
+  problems: Problem[];
   parentsPath: string[];
 
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
@@ -28,7 +32,9 @@ export class TaskComponent implements OnInit {
               private router: Router,
               public dialog: MatDialog,
               private _snackBar: MatSnackBar,
+              private titleService: Title,
               private commandsService: CommandsService,
+              private problemsService: ProblemsService,
               private tasksService: TasksService) {
   }
 
@@ -37,13 +43,13 @@ export class TaskComponent implements OnInit {
       let id = params['id'];
       this.tasksService.getTask(id).subscribe(task => {
         this.task = task;
+        this.titleService.setTitle(this.task.getFullDescription());
         if (this.task !== null) {
           this.tasksService.getParentsPath(this.task).subscribe((res: string[]) => {
             this.parentsPath = res;
           });
-          this.tasksService.getTasks(this.task.getFullDescription()).subscribe(res => {
-            this.subtasks = res;
-          });
+          this.refreshSubtasks();
+          this.refreshProblems();
         }
 
       })
@@ -208,6 +214,11 @@ export class TaskComponent implements OnInit {
     });
   }
 
+  refreshProblems() {
+    this.problemsService.getProblems(this.task.getFullDescription())
+      .subscribe(problems => this.problems = problems);
+  }
+
   goToParentHandler(description: string) {
     const urls = getUrlByDescription(description);
     if (urls) {
@@ -221,5 +232,13 @@ export class TaskComponent implements OnInit {
       return;
     }
     this.goToParentHandler(this.parentsPath.slice(-2, -1)[0]);
+  }
+
+  addProblem() {
+    // todo here
+  }
+
+  onProblemSolvedClick($event: any) {
+    // todo here
   }
 }

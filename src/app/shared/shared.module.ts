@@ -5,6 +5,7 @@ import {MaterialModule} from "./material/material.module";
 import { ParentsPathComponent } from './components/parents-path/parents-path.component';
 import { TaskContainerDescriptionComponent } from './components/task-container-description/task-container-description.component';
 import { SubStoriesComponent } from './components/substories/sub-stories.component';
+import { SubproblemsComponent } from './components/subproblems/subproblems.component';
 
 
 
@@ -13,13 +14,15 @@ import { SubStoriesComponent } from './components/substories/sub-stories.compone
     SubtasksComponent,
     ParentsPathComponent,
     TaskContainerDescriptionComponent,
-    SubStoriesComponent
+    SubStoriesComponent,
+    SubproblemsComponent
   ],
   exports: [
     SubtasksComponent,
     ParentsPathComponent,
     TaskContainerDescriptionComponent,
-    SubStoriesComponent
+    SubStoriesComponent,
+    SubproblemsComponent
   ],
   imports: [
     CommonModule,

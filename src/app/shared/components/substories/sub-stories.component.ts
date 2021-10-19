@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Story} from "../../../models/story";
 import {SelectionModel} from "@angular/cdk/collections";
-import {TaskC} from "../../../models/taskClass";
+import {TaskC} from "../../../models/task-class";
 import {Router} from "@angular/router";
 
 @Component({

@@ -1,0 +1,17 @@
+<div id="content-wrapper">
+  <div id="problem-content">
+    <app-task-container-description (goToParent)="onGoToNearestParent()"
+                                    [showDoneAll]="false"
+                                    [taskContainer]="problem">
+    </app-task-container-description>
+    <br>
+    <app-subtasks (refreshSubtasks)="refreshSubtasks()"
+                  (addSubtask)="addSubtask()"
+                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+                  [subtasks]="subtasks"></app-subtasks>
+
+  </div>
+  <app-parents-path [parentsPath]="parentsPath"
+                    (onParentClick)="goToParentHandler($event)"
+  ></app-parents-path>
+</div>

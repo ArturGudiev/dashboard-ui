@@ -1,5 +1,5 @@
 import {Component, HostListener, OnInit} from '@angular/core';
-import {TaskC} from "../../../models/taskClass";
+import {TaskC} from "../../../models/task-class";
 import {Story} from "../../../models/story";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
@@ -7,6 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {StoriesService} from "../../../services/stories.service";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-story',
@@ -24,15 +25,19 @@ export class StoryComponent implements OnInit {
     private storiesService: StoriesService,
     private tasksService: TasksService,
     private router: Router,
+    private titleService: Title,
     public dialog: MatDialog
 
   ) { }
 
   ngOnInit(): void {
+    console.log('StoryComponent.ngOnInit');
+
     this.route.params.subscribe(params => {
       let id = params['id'];
       this.storiesService.getStory(id).subscribe((story: Story) => {
         this.story = story;
+        this.titleService.setTitle(this.story.getFullDescription());
         if (this.story !== null) {
           this.tasksService.getParentsPath(this.story).subscribe((res: string[]) => {
             this.parentsPath = res;

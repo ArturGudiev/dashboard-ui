@@ -1,7 +1,7 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
-import {TaskC} from "../../../models/taskClass";
+import {TaskC} from "../../../models/task-class";
 import {Epic} from "../../../models/epic";
 import {EpicsService} from "../../../services/epics.service";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
@@ -9,6 +9,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {Story} from "../../../models/story";
 import {StoriesService} from "../../../services/stories.service";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-epic',
@@ -26,7 +27,8 @@ export class EpicComponent implements OnInit {
               private tasksService: TasksService,
               private router: Router,
               private storiesService: StoriesService,
-              public dialog: MatDialog
+              private titleService: Title,
+  public dialog: MatDialog
   ) {
   }
 
@@ -35,6 +37,7 @@ export class EpicComponent implements OnInit {
       let id = params['id'];
       this.epicsService.getEpic(id).subscribe((epic: Epic) => {
         this.epic = epic;
+        this.titleService.setTitle(this.epic.getFullDescription());
         if (this.epic !== null) {
           this.tasksService.getParentsPath(this.epic).subscribe((res: string[]) => {
             this.parentsPath = res;

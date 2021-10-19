@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {TaskC} from "../../../models/taskClass";
+import {TaskC} from "../../../models/task-class";
 import {SelectionModel} from "@angular/cdk/collections";
 import {TasksService} from "../../../services/tasks.service";
 import {Router} from "@angular/router";
@@ -59,7 +59,7 @@ export class SubtasksComponent implements OnInit, OnChanges {
   }
 
   onSubtaskClick(task: TaskC) {
-    this.router.navigate(['task', task._id]);
+    this.router.navigate(['task', task._id]).then();
   }
 
 
