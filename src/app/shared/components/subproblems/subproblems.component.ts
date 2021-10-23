@@ -10,7 +10,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./subproblems.component.sass']
 })
 export class SubproblemsComponent implements OnInit {
-  @Input() problems: Problem[];
+  @Input() problems: Problem[] = [];
   @Output() addProblem = new EventEmitter();
   @Output() refreshProblems = new EventEmitter();
   @Output() onProblemSolvedClick = new EventEmitter();

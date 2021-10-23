@@ -12,6 +12,7 @@ import {CommandsService} from "../../../services/commands.service";
 import {Title} from "@angular/platform-browser";
 import { Problem } from 'src/app/models/problem';
 import {ProblemsService} from "../../../services/problems.service";
+import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 
 @Component({
   selector: 'app-task',
@@ -216,7 +217,7 @@ export class TaskComponent implements OnInit {
 
   refreshProblems() {
     this.problemsService.getProblems(this.task.getFullDescription())
-      .subscribe(problems => this.problems = problems);
+      .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
   }
 
   goToParentHandler(description: string) {
@@ -238,7 +239,12 @@ export class TaskComponent implements OnInit {
     // todo here
   }
 
-  onProblemSolvedClick($event: any) {
-    // todo here
+  onProblemSolvedClick(problem: Problem) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
+      }
+    });
   }
 }

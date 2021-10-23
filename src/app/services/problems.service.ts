@@ -16,10 +16,13 @@ export class ProblemsService {
 
   finishProblem(problem: Problem): Observable<any> {
     throw Error('not implemented finish problem' );
-      return null;
   }
 
   getProblem(id: any): Observable<Problem> {
     return this.apiService._getProblem(id);
+  }
+
+  solveTheProblem(problem: Problem, solution: string): Observable<any> {
+    return this.apiService._solveTheProblem(problem._id, solution)
   }
 }

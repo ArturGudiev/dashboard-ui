@@ -97,11 +97,14 @@ export class ApiService {
   }
 
   _getProblem(id: any) {
-    console.log('ApiService._getProblem');
     return this.http.get<Problem>(`${this.baseUrl}/problem/${id}`)
       .pipe(
         map((obj) => new Problem(obj._id, obj.description, obj.tags, obj.solution))
       );
+  }
+
+  _solveTheProblem(_id: number, solution: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/solve-problem/${_id}`, {solution});
   }
   //------------------------------------problems-------------------------------------------------
 
