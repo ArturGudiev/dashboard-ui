@@ -13,6 +13,7 @@ import {Title} from "@angular/platform-browser";
 import { Problem } from 'src/app/models/problem';
 import {ProblemsService} from "../../../services/problems.service";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
+import {AlertService} from "../../../services/alert.service";
 
 @Component({
   selector: 'app-task',
@@ -36,6 +37,7 @@ export class TaskComponent implements OnInit {
               private titleService: Title,
               private commandsService: CommandsService,
               private problemsService: ProblemsService,
+              private alertService: AlertService,
               private tasksService: TasksService) {
   }
 
