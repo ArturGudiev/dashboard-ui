@@ -8,6 +8,9 @@ import {StoriesService} from "../../../services/stories.service";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {Title} from "@angular/platform-browser";
+import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
+import {ProblemsService} from "../../../services/problems.service";
+import {Problem} from "../../../models/problem";
 
 @Component({
   selector: 'app-story',
@@ -17,8 +20,9 @@ import {Title} from "@angular/platform-browser";
 export class StoryComponent implements OnInit {
   story: Story;
   subtasks: TaskC[];
+  problems: Problem[];
   parentsPath: string[];
-  stories: Story[];
+  substories: Story[];
 
   constructor(
     private route: ActivatedRoute,
@@ -26,13 +30,11 @@ export class StoryComponent implements OnInit {
     private tasksService: TasksService,
     private router: Router,
     private titleService: Title,
-    public dialog: MatDialog
-
+    public dialog: MatDialog,
+    public problemsService: ProblemsService
   ) { }
 
   ngOnInit(): void {
-    console.log('StoryComponent.ngOnInit');
-
     this.route.params.subscribe(params => {
       let id = params['id'];
       this.storiesService.getStory(id).subscribe((story: Story) => {
@@ -43,6 +45,7 @@ export class StoryComponent implements OnInit {
             this.parentsPath = res;
           });
           this.refreshSubtasks();
+          this.refreshProblems();
           this.refreshSubstories();
         }
       })
@@ -51,7 +54,7 @@ export class StoryComponent implements OnInit {
 
   private refreshSubstories() {
     this.storiesService.getStories(this.story.getFullDescription()).subscribe(stories => {
-      this.stories = stories;
+      this.substories = stories;
     });
   }
 
@@ -97,19 +100,6 @@ export class StoryComponent implements OnInit {
     });
   }
 
-  onDownClick() {
-    // this.scrollToBottom();
-    document.getElementById(`row-${this.subtasks.length - 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-    // window.scrollTo(0,document.body.scrollHeight);
-  }
-
-  onParentClick(description: string) {
-    const urls = getUrlByDescription(description);
-    if (urls) {
-      this.router.navigate(urls);
-    }
-  }
-
   onSubtaskDoneClick(subtask: TaskC) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
@@ -129,7 +119,27 @@ export class StoryComponent implements OnInit {
     }
   }
 
-  addSubstory() {
+  refreshProblems(): void {
+    this.problemsService.getProblems(this.story.getFullDescription())
+      .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
+  }
 
+  addProblem() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Description' }});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [this.story.getFullDescription()]}
+        this.problemsService.createNewProblem(obj).subscribe(() => this.refreshProblems());
+      }
+    });
+  }
+
+  onProblemSolvedClick(problem: Problem) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
+      }
+    });
   }
 }

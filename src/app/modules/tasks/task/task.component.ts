@@ -65,7 +65,7 @@ export class TaskComponent implements OnInit {
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['back', 'b'].includes(arr[0])) {
-      this.onGoToNearseParent();
+      this.onGoToNearestParent();
       return;
     }
     if (['anonymous'].includes(arr[0])) {
@@ -228,7 +228,7 @@ export class TaskComponent implements OnInit {
   }
 
 
-  onGoToNearseParent() {
+  onGoToNearestParent() {
     if (this.parentsPath && this.parentsPath.length <= 1) {
       return;
     }
@@ -236,7 +236,14 @@ export class TaskComponent implements OnInit {
   }
 
   addProblem() {
-    // todo here
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Description' }});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        // this.tasksService.createNewTask(obj).subscribe(() => this.refreshSubtasks());
+        const obj = {description: description, tags: [this.task.getFullDescription()]}
+        this.problemsService.createNewProblem(obj).subscribe(() => this.refreshProblems());
+      }
+    });
   }
 
   onProblemSolvedClick(problem: Problem) {

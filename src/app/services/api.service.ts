@@ -106,6 +106,10 @@ export class ApiService {
   _solveTheProblem(_id: number, solution: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/solve-problem/${_id}`, {solution});
   }
+
+  _createNewProblem(obj: { description: string; tags: string[] }) {
+    return this.http.post<Problem>(`${this.baseUrl}/new-problem/`, obj);
+  }
   //------------------------------------problems-------------------------------------------------
 
 }

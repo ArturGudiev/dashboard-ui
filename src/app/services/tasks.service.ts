@@ -18,8 +18,8 @@ export class TasksService {
     return this.apiService._getTask(id);
   }
 
-  getParentsPath(task: TaskContainer): Observable<string[]> {
-    return this.apiService._getParentsPath(task);
+  getParentsPath(taskContainer: TaskContainer): Observable<string[]> {
+    return this.apiService._getParentsPath(taskContainer);
   }
 
   getTasks(tag: string): Observable<TaskC[]> {
@@ -32,7 +32,6 @@ export class TasksService {
 
   finishTask(task: TaskC): Observable<TaskC> {
     return this.apiService._finishTask(task).pipe(
-
       tap({
       complete: () => this.dashboardService.updateDoneTasksNumber()
       })

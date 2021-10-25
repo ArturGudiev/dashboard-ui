@@ -91,12 +91,6 @@ export class EpicComponent implements OnInit {
     });
   }
 
-  onParentClick(description: string) {
-    const urls = getUrlByDescription(description);
-    if (urls) {
-      this.router.navigate(urls);
-    }
-  }
 
   onSubtaskDoneClick(subtask: TaskC) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());

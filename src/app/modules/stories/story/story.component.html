@@ -1,14 +1,31 @@
 <div id="content-wrapper">
   <div id="story-content">
-    <app-task-container-description (goToParent)="onGoToNearestParent()"
-                                    [showDoneAll]="false"
-                                    [taskContainer]="story">
-    </app-task-container-description>
+    <div class="flex-container">
+      <app-task-container-description (goToParent)="onGoToNearestParent()"
+                                      [showDoneAll]="false"
+                                      [taskContainer]="story">
+      </app-task-container-description>
+      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent" *ngIf="story?.getFullDescription()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="addProblem()">Add a new problem</button>
+      </mat-menu>
+
+    </div>
+
+
     <br>
     <app-subtasks (refreshSubtasks)="refreshSubtasks()"
                   (addSubtask)="addSubtask()"
                   (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
                   [subtasks]="subtasks"></app-subtasks>
+
+    <app-subproblems (refreshProblems)="refreshProblems()"
+                     (addProblem)="addProblem()"
+                     (onProblemSolvedClick)="onProblemSolvedClick($event)"
+                     [problems]="problems"></app-subproblems>
+
 
   </div>
   <app-parents-path [parentsPath]="parentsPath"

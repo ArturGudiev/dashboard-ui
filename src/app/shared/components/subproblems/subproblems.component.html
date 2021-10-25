@@ -6,7 +6,8 @@
       <mat-icon class="problems-icon">add</mat-icon>
     </button>
 
-    <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()" (click)="onFinishProblemClick()">
+    <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()"
+            (click)="onFinishProblemClick()">
       <mat-icon class="problems-icon">done</mat-icon>
     </button>
 
@@ -18,7 +19,7 @@
 
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? masterToggle() : null"
+        <mat-checkbox [disabled]="true" (change)="$event ? masterToggle() : null"
                       [checked]="selection.hasValue() && isAllSelected()"
                       [indeterminate]="selection.hasValue() && !isAllSelected()">
         </mat-checkbox>

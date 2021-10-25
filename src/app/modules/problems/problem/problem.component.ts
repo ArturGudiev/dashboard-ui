@@ -11,6 +11,7 @@ import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
 import {CommandsService} from "../../../services/commands.service";
 import * as _ from "lodash";
+import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 
 @Component({
   selector: 'app-problem',
@@ -21,6 +22,7 @@ export class ProblemComponent implements OnInit {
   problem: Problem;
   subtasks: TaskC[];
   parentsPath: string[];
+  problems: Problem[];
 
   constructor(
     private route: ActivatedRoute,
@@ -45,16 +47,51 @@ export class ProblemComponent implements OnInit {
           this.tasksService.getParentsPath(this.problem)
             .subscribe((res: string[]) => this.parentsPath = res);
           this.refreshSubtasks();
+          this.refreshProblems();
         }
-      })
+      });
     })
 
 
     this.commandsService.getDataStateChange().subscribe( state => {
       this.handleTaskCommand(state.command);
     })
-
   }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
+      this.openAddTaskDialog();
+    }
+  }
+
+
+
+  refreshProblems(): void {
+    this.problemsService.getProblems(this.problem.getFullDescription())
+      .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
+  }
+
+
+  addProblem() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Description' }});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [this.problem.getFullDescription()]}
+        this.problemsService.createNewProblem(obj).subscribe(() => this.refreshProblems());
+      }
+    });
+  }
+
+  onProblemSolvedClick(problem: Problem) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
+      }
+    });
+  }
+
 
   private handleTaskCommand(command: string) {
     const arr = command.split(' ');
@@ -116,13 +153,6 @@ export class ProblemComponent implements OnInit {
     }
   }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
-      this.openAddTaskDialog();
-    }
-  }
-
 
   refreshSubtasks(): void {
     this.tasksService.getTasks(this.problem.getFullDescription())
@@ -168,6 +198,19 @@ export class ProblemComponent implements OnInit {
 
   onSubtaskDoneClick(subtask: TaskC) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
+  }
+
+  onDoneAllClick() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.problemsService.solveTheProblem(this.problem, solution).subscribe();
+      }
+      if (this.parentsPath && this.parentsPath.length > 1) {
+        const description = this.parentsPath.slice(-2, -1)[0];
+        this.goToParentHandler(description);
+      }
+    });
   }
 
 }
