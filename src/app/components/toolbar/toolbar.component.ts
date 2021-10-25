@@ -2,12 +2,14 @@ import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/co
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {NavToDialogComponent} from "../../modules/dialogs/nav-to-task-dialog/nav-to-dialog.component";
+import {NavToDialogComponent} from "../../modules/dialogs/nav-task-dialog/nav-to-dialog.component";
 import {DashboardService, DashboardStateInterface} from "../../services/dashboard.service";
 import {getPredefinedRouteValue, isPredefinedRoute} from "../../shared/libs/dashboard.lib";
 import {Hotkeys} from "../../classes/hotkeys";
 import {CommandDialogComponent} from "../../modules/dialogs/command-dialog/command-dialog.component";
 import {CommandsService} from "../../services/commands.service";
+import {AlertService} from "../../services/alert.service";
+import {GetValueDialogComponent} from "../../modules/dialogs/get-value/get-value-dialog.component";
 
 @Component({
   selector: 'app-toolbar',
@@ -23,6 +25,7 @@ export class ToolbarComponent implements OnInit {
               private dashboardService: DashboardService,
               private hotkeys: Hotkeys,
               private commandService: CommandsService,
+              private alertService: AlertService,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -32,6 +35,15 @@ export class ToolbarComponent implements OnInit {
 
     this.hotkeys.addShortcut({ keys: 'meta.g' }).subscribe(() =>
       this.onNavToClick()
+    );
+    this.hotkeys.addShortcut({ keys: 'Control.f' }).subscribe(() => {
+        const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Finish' }});
+        dialogRef.afterClosed().subscribe((finishCommand: string) => {
+          if (finishCommand) {
+            this.commandService.setCommand(`f ${finishCommand}`);
+          }
+        });
+      }
     );
 
     this.hotkeys.addShortcut({keys: 'meta.b'}).subscribe(() => this.commandService.setCommand('back'));
@@ -51,6 +63,7 @@ export class ToolbarComponent implements OnInit {
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     console.log('CCC', event, event.key);
+    // this.alertService.showAlert(`'CCC', ${event.key}`);
     // if (event.key === '_') {
     //   this.onNavToClick();
     // }

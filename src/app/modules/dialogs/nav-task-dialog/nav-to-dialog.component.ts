@@ -6,7 +6,7 @@ import {TaskC} from "../../../models/task-class";
 @Component({
   selector: 'app-nav-to-task-dialog',
   templateUrl: './nav-to-dialog.component.html',
-  styleUrls: ['./nav-to-task-dialog.component.sass']
+  styleUrls: ['./nav-to-dialog.component.sass']
 })
 export class NavToDialogComponent implements OnInit {
   myForm = new FormGroup({

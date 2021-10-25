@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {StoriesService} from "../../../services/stories.service";
 import {TasksService} from "../../../services/tasks.service";
@@ -12,17 +12,20 @@ import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialo
 import {CommandsService} from "../../../services/commands.service";
 import * as _ from "lodash";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-problem',
   templateUrl: './problem.component.html',
   styleUrls: ['./problem.component.sass']
 })
-export class ProblemComponent implements OnInit {
+export class ProblemComponent implements OnInit, OnDestroy {
   problem: Problem;
   subtasks: TaskC[];
   parentsPath: string[];
   problems: Problem[];
+
+  commandSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,8 +39,6 @@ export class ProblemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('ProblemComponent.ngOnInit');
-
     this.route.params.subscribe(params => {
       let id = params['id'];
       this.problemsService.getProblem(id).subscribe((problem: Problem) => {
@@ -52,8 +53,7 @@ export class ProblemComponent implements OnInit {
       });
     })
 
-
-    this.commandsService.getDataStateChange().subscribe( state => {
+    this.commandSubscription = this.commandsService.getDataStateChange().subscribe( state => {
       this.handleTaskCommand(state.command);
     })
   }
@@ -83,7 +83,7 @@ export class ProblemComponent implements OnInit {
     });
   }
 
-  onProblemSolvedClick(problem: Problem) {
+  solveTheProblem(problem: Problem) {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
@@ -118,6 +118,10 @@ export class ProblemComponent implements OnInit {
       this.finishTaskHandler(args);
       return;
     }
+    if (['fp', 'finish-problem'].includes(arr[0])) {
+      this.finishProblemHandler(args);
+      return;
+    }
     // if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
     //   this.finishAllTasks();
     //   return;
@@ -128,6 +132,16 @@ export class ProblemComponent implements OnInit {
     // }
   }
 
+  private finishProblemHandler(args: string[]) {
+    if (!args || args.length === 0) {
+      return;
+    }
+    const index = +args[0];
+    if (Number.isInteger(index) && index >= 1 && index <= this.problems.length) {
+      const problem = this.problems[index - 1];
+      this.solveTheProblem(problem);
+    }
+  }
 
   private finishTaskHandler(args: string[]) {
     if (!args || args.length === 0) {
@@ -211,6 +225,10 @@ export class ProblemComponent implements OnInit {
         this.goToParentHandler(description);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.commandSubscription.unsubscribe();
   }
 
 }

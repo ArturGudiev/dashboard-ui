@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../services/tasks.service';
 import {TaskC} from '../../../models/task-class';
@@ -14,18 +14,21 @@ import { Problem } from 'src/app/models/problem';
 import {ProblemsService} from "../../../services/problems.service";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 import {AlertService} from "../../../services/alert.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.sass']
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, OnDestroy {
 
   task: TaskC;
   subtasks: TaskC[];
   problems: Problem[];
   parentsPath: string[];
+
+  commandsSubscription: Subscription;
 
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
 
@@ -58,7 +61,7 @@ export class TaskComponent implements OnInit {
       })
       // console.log('AAAA', this.task);
     });
-    this.commandsService.getDataStateChange().subscribe( state => {
+    this.commandsSubscription = this.commandsService.getDataStateChange().subscribe( state => {
       this.handleTaskCommand(state.command);
     })
   }
@@ -88,6 +91,10 @@ export class TaskComponent implements OnInit {
       this.finishTaskHandler(args);
       return;
     }
+    if (['fp', 'finish-problem'].includes(arr[0])) {
+      this.finishProblemHandler(args);
+      return;
+    }
     if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
       this.finishAllTasks();
       return;
@@ -108,7 +115,16 @@ export class TaskComponent implements OnInit {
     this.tasksService.finishTasks(subtasks).subscribe(() => this.refreshSubtasks());
   }
 
-
+  private finishProblemHandler(args: string[]) {
+    if (!args || args.length === 0) {
+      return;
+    }
+    const index = +args[0];
+    if (Number.isInteger(index) && index >= 1 && index <= this.problems.length) {
+      const problem = this.problems[index - 1];
+      this.solveTheProblem(problem);
+    }
+  }
 
   private finishTaskHandler(args: string[]) {
     if (!args || args.length === 0) {
@@ -248,7 +264,7 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  onProblemSolvedClick(problem: Problem) {
+  solveTheProblem(problem: Problem) {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
@@ -256,4 +272,9 @@ export class TaskComponent implements OnInit {
       }
     });
   }
+
+  ngOnDestroy(): void {
+    this.commandsSubscription.unsubscribe();
+  }
+
 }
