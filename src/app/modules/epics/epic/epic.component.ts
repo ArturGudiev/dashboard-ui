@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
 import {TaskC} from "../../../models/task-class";
@@ -10,18 +10,19 @@ import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {Story} from "../../../models/story";
 import {StoriesService} from "../../../services/stories.service";
 import {Title} from "@angular/platform-browser";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-epic',
   templateUrl: './epic.component.html',
   styleUrls: ['./epic.component.sass']
 })
-export class EpicComponent implements OnInit {
+export class EpicComponent implements OnInit, OnDestroy {
   epic: Epic;
   subtasks: TaskC[];
   stories: Story[];
   parentsPath: string[];
-
+  routeSubscription: Subscription;
   constructor(private route: ActivatedRoute,
               private epicsService: EpicsService,
               private tasksService: TasksService,
@@ -33,7 +34,7 @@ export class EpicComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.routeSubscription = this.route.params.subscribe(params => {
       let id = params['id'];
       this.epicsService.getEpic(id).subscribe((epic: Epic) => {
         this.epic = epic;
@@ -123,5 +124,9 @@ export class EpicComponent implements OnInit {
     this.storiesService.getStories(this.epic.getFullDescription()).subscribe(stories => {
       this.stories = stories;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
   }
 }

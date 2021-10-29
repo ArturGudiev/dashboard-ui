@@ -1,16 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DashboardService} from "./services/dashboard.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AlertService, IAlertsDataState} from "./services/alert.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'dashboard-ui';
   alertState: IAlertsDataState;
+  alertSubscription: Subscription;
 
   constructor(private dashboardService: DashboardService,
               private alertService: AlertService,
@@ -19,7 +21,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.dashboardService.updateDoneTasksNumber();
-    this.alertService.getDataStateChange()
+    this.alertSubscription = this.alertService.getDataStateChange()
       .subscribe((alertState: IAlertsDataState) => {
         this.alertState = alertState;
         if (!alertState.closed) {
@@ -29,5 +31,9 @@ export class AppComponent implements OnInit {
           this.alertService.setAlertClosed();
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.alertSubscription.unsubscribe();
   }
 }

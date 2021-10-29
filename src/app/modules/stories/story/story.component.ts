@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {TaskC} from "../../../models/task-class";
 import {Story} from "../../../models/story";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -11,18 +11,23 @@ import {Title} from "@angular/platform-browser";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 import {ProblemsService} from "../../../services/problems.service";
 import {Problem} from "../../../models/problem";
+import {Subscription} from "rxjs";
+import {CommandsService} from "../../../services/commands.service";
 
 @Component({
   selector: 'app-story',
   templateUrl: './story.component.html',
   styleUrls: ['./story.component.sass']
 })
-export class StoryComponent implements OnInit {
+export class StoryComponent implements OnInit, OnDestroy {
   story: Story;
   subtasks: TaskC[];
   problems: Problem[];
   parentsPath: string[];
   substories: Story[];
+
+  commandSubscription: Subscription;
+  routerSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,11 +36,13 @@ export class StoryComponent implements OnInit {
     private router: Router,
     private titleService: Title,
     public dialog: MatDialog,
+    private commandService: CommandsService,
     public problemsService: ProblemsService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.routerSubscription = this.route.params.subscribe(params => {
       let id = params['id'];
       this.storiesService.getStory(id).subscribe((story: Story) => {
         this.story = story;
@@ -48,8 +55,32 @@ export class StoryComponent implements OnInit {
           this.refreshProblems();
           this.refreshSubstories();
         }
-      })
+      });
+    });
+    this.commandSubscription = this.commandService.getDataStateChange().subscribe(state => {
+      this.handleTaskCommand(state.command);
     })
+  }
+
+  private handleTaskCommand(command: string) {
+    const arr = command.split(' ');
+    const args = arr.slice(1);
+    if (['back', 'b'].includes(arr[0])) {
+      this.onGoToNearestParent();
+      return;
+    }
+    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
+      this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
+      return;
+    }
+    if (['f', 'ft', 'finish-task'].includes(arr[0])) {
+      // this.finishTaskHandler(args);
+      return;
+    }
+    if (['fp', 'finish-problem'].includes(arr[0])) {
+      // this.finishProblemHandler(args);
+      return;
+    }
   }
 
   private refreshSubstories() {
@@ -125,7 +156,7 @@ export class StoryComponent implements OnInit {
   }
 
   addProblem() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Description' }});
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
         const obj = {description: description, tags: [this.story.getFullDescription()]}
@@ -135,11 +166,16 @@ export class StoryComponent implements OnInit {
   }
 
   onProblemSolvedClick(problem: Problem) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.routerSubscription.unsubscribe();
+    this.commandSubscription.unsubscribe();
   }
 }

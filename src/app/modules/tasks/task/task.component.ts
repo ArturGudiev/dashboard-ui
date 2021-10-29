@@ -31,6 +31,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   commandsSubscription: Subscription;
 
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
+  private routerSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private taskApiService: ApiService,
@@ -45,7 +46,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.routerSubscription = this.route.params.subscribe(params => {
       let id = params['id'];
       this.tasksService.getTask(id).subscribe(task => {
         this.task = task;
@@ -93,6 +94,14 @@ export class TaskComponent implements OnInit, OnDestroy {
     }
     if (['fp', 'finish-problem'].includes(arr[0])) {
       this.finishProblemHandler(args);
+      return;
+    }
+    if (['problem'].includes(arr[0])) {
+      this.addProblem();
+      return;
+    }
+    if (['back', 'b'].includes(arr[0])) {
+      this.onGoToNearestParent();
       return;
     }
     if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
@@ -275,6 +284,7 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.commandsSubscription.unsubscribe();
+    this.routerSubscription.unsubscribe();
   }
 
 }

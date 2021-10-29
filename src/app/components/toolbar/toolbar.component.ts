@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, OnDestroy, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
@@ -10,16 +10,18 @@ import {CommandDialogComponent} from "../../modules/dialogs/command-dialog/comma
 import {CommandsService} from "../../services/commands.service";
 import {AlertService} from "../../services/alert.service";
 import {GetValueDialogComponent} from "../../modules/dialogs/get-value/get-value-dialog.component";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.sass']
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnDestroy {
 
   @Output() toggleSidenav = new EventEmitter<void>();
   doneTasks: number;
+  private commandSubscription: Subscription;
   constructor(private dialog: MatDialog,
               private _snackBar: MatSnackBar,
               private dashboardService: DashboardService,
@@ -29,13 +31,15 @@ export class ToolbarComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
-    this.dashboardService.getDataStateChange().subscribe((state: DashboardStateInterface) => {
+    this.commandSubscription = this.dashboardService.getDataStateChange().subscribe((state: DashboardStateInterface) => {
       this.doneTasks = state.doneTasks;
     });
 
-    this.hotkeys.addShortcut({ keys: 'meta.g' }).subscribe(() =>
-      this.onNavToClick()
-    );
+    this.hotkeys.addShortcut({ keys: 'meta.g' }).subscribe(() => this.onNavToClick());
+    this.hotkeys.addShortcut({keys: 'Control.r'}).subscribe(() => this.commandService.setCommand('resolve'));
+    this.hotkeys.addShortcut({keys: 'Control.p'}).subscribe(() => this.commandService.setCommand('problem'));
+    this.hotkeys.addShortcut({keys: 'Control.a'}).subscribe(() => this.commandService.setCommand('fta'));
+
     this.hotkeys.addShortcut({ keys: 'Control.f' }).subscribe(() => {
         const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Finish' }});
         dialogRef.afterClosed().subscribe((finishCommand: string) => {
@@ -53,8 +57,6 @@ export class ToolbarComponent implements OnInit {
     this.hotkeys.addShortcut({keys: '`'}).subscribe(() => this.commandService.setCommand('command'));
     this.hotkeys.addShortcut({keys: 'meta.c'}).subscribe(() => this.openCommandDialog());
     this.hotkeys.addShortcut({keys: 'alt.c'}).subscribe(() => this.openCommandDialog());
-
-    // this.hotkeys.addShortcut({keys: 'meta.c'}).subscribe(() => this.openCommandDialog());
 
     // Unsubscribe if you need to
     this.hotkeys.addShortcut({ keys: 'meta.j' }).subscribe();
@@ -145,5 +147,9 @@ export class ToolbarComponent implements OnInit {
       horizontalPosition: 'center', //start, end, left, right
       verticalPosition: 'bottom',  // top, bottom
     });
+  }
+
+  ngOnDestroy(): void {
+    this.commandSubscription.unsubscribe();
   }
 }

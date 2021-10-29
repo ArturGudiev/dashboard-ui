@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 
 export interface CommandsStateInterface {
   command: string;
@@ -10,25 +10,15 @@ export interface CommandsStateInterface {
 })
 export class CommandsService {
 
-  private initialState: CommandsStateInterface = {
-    command: ''
-  }
-  private data = new BehaviorSubject(this.initialState);
-
+  private data = new Subject<CommandsStateInterface>();
   constructor() { }
-
-
-  getDataCurrentState(): CommandsStateInterface {
-    return this.data.getValue();
-  }
 
   setDataState(state: CommandsStateInterface): void {
     this.data.next(state);
   }
 
   setCommand(command: string): void {
-    const state = this.getDataCurrentState();
-    this.setDataState({...state, command});
+    this.setDataState({command});
   }
 
   getDataStateChange(): Observable<CommandsStateInterface> {

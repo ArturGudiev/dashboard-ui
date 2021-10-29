@@ -26,6 +26,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
   problems: Problem[];
 
   commandSubscription: Subscription;
+  routerSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,10 +37,11 @@ export class ProblemComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private problemsService: ProblemsService,
     private commandsService: CommandsService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.routerSubscription = this.route.params.subscribe(params => {
       let id = params['id'];
       this.problemsService.getProblem(id).subscribe((problem: Problem) => {
         this.problem = problem;
@@ -53,7 +55,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
       });
     })
 
-    this.commandSubscription = this.commandsService.getDataStateChange().subscribe( state => {
+    this.commandSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
     })
   }
@@ -66,7 +68,6 @@ export class ProblemComponent implements OnInit, OnDestroy {
   }
 
 
-
   refreshProblems(): void {
     this.problemsService.getProblems(this.problem.getFullDescription())
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
@@ -74,7 +75,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
 
 
   addProblem() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Description' }});
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
         const obj = {description: description, tags: [this.problem.getFullDescription()]}
@@ -83,11 +84,14 @@ export class ProblemComponent implements OnInit, OnDestroy {
     });
   }
 
-  solveTheProblem(problem: Problem) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
+  solveTheProblem(problem = this.problem) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
+        if (problem === this.problem) {
+          this.onGoToNearestParent();
+        }
       }
     });
   }
@@ -122,6 +126,10 @@ export class ProblemComponent implements OnInit, OnDestroy {
       this.finishProblemHandler(args);
       return;
     }
+    if (['r', 'resolve'].includes(arr[0])) {
+      this.solveTheProblem();
+      return;
+    }
     // if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
     //   this.finishAllTasks();
     //   return;
@@ -154,8 +162,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
       const rangeNumbers = _.range(num1, num2 + 1);
       const tasksToFinish = rangeNumbers.map((number: number) => this.subtasks[number]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
-    }
-    else if (args.length > 0 && args[0] && args[0].includes(',')) {
+    } else if (args.length > 0 && args[0] && args[0].includes(',')) {
       const numbers = args[0].split(',').map(str => +str);
       const tasksToFinish = numbers.map((number: number) => this.subtasks[number - 1]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
@@ -215,7 +222,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
   }
 
   onDoneAllClick() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.problemsService.solveTheProblem(this.problem, solution).subscribe();
@@ -229,6 +236,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.commandSubscription.unsubscribe();
+    this.routerSubscription.unsubscribe();
   }
 
 }

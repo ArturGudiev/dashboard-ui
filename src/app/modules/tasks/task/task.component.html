@@ -1,11 +1,11 @@
 <div id="content-wrapper">
   <div id="task-content">
-    <div class="flex-container">
+    <div class="flex-center-container">
       <app-task-container-description (onDoneAllClick)="onDoneAllClick()"
                                       (goToParent)="onGoToNearestParent()"
                                       [taskContainer]="task">
       </app-task-container-description>
-      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent" *ngIf="task.getFullDescription()">
+      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent" *ngIf="task?.getFullDescription()">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
