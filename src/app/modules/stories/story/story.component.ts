@@ -81,6 +81,10 @@ export class StoryComponent implements OnInit, OnDestroy {
       // this.finishProblemHandler(args);
       return;
     }
+    if (['problem'].includes(arr[0])) {
+      this.addProblem();
+      return;
+    }
   }
 
   private refreshSubstories() {

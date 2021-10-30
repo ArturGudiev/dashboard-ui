@@ -18,6 +18,11 @@
                   (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
                   [subtasks]="subtasks">
     </app-subtasks>
+    <app-subproblems (refreshProblems)="refreshProblems()"
+                     (addProblem)="addProblem()"
+                     (onProblemSolvedClick)="solveTheProblem($event)"
+                     [problems]="problems">
+    </app-subproblems>
 
   </div>
   <app-parents-path [parentsPath]="parentsPath"

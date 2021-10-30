@@ -130,6 +130,10 @@ export class ProblemComponent implements OnInit, OnDestroy {
       this.solveTheProblem();
       return;
     }
+    if (['problem'].includes(arr[0])) {
+      this.addProblem();
+      return;
+    }
     // if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
     //   this.finishAllTasks();
     //   return;

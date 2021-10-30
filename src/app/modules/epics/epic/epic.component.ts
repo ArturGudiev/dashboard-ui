@@ -11,6 +11,11 @@ import {Story} from "../../../models/story";
 import {StoriesService} from "../../../services/stories.service";
 import {Title} from "@angular/platform-browser";
 import {Subscription} from "rxjs";
+import {CommandsService} from "../../../services/commands.service";
+import {Problem} from "../../../models/problem";
+import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
+import {ProblemsService} from "../../../services/problems.service";
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-epic',
@@ -21,15 +26,20 @@ export class EpicComponent implements OnInit, OnDestroy {
   epic: Epic;
   subtasks: TaskC[];
   stories: Story[];
+  problems: Problem[];
   parentsPath: string[];
   routeSubscription: Subscription;
+  commandsSubscription: Subscription;
+
   constructor(private route: ActivatedRoute,
               private epicsService: EpicsService,
               private tasksService: TasksService,
               private router: Router,
               private storiesService: StoriesService,
+              private commandsService: CommandsService,
               private titleService: Title,
-  public dialog: MatDialog
+              public dialog: MatDialog,
+              private problemsService: ProblemsService
   ) {
   }
 
@@ -45,9 +55,14 @@ export class EpicComponent implements OnInit, OnDestroy {
           });
           this.refreshSubtasks();
           this.refreshSubstories();
+          this.refreshProblems();
         }
       })
     });
+    this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
+      this.handleCommand(state.command);
+    })
+
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -57,6 +72,94 @@ export class EpicComponent implements OnInit, OnDestroy {
       this.openAddTaskDialog();
     }
 
+  }
+
+  private handleCommand(command: string) {
+    const arr = command.split(' ');
+    const args = arr.slice(1);
+    if (['back', 'b'].includes(arr[0])) {
+      this.onGoToNearseParent();
+      return;
+    }
+    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
+      this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
+      return;
+    }
+    if (['f', 'ft', 'finish-task'].includes(arr[0])) {
+      this.finishTaskHandler(args);
+      return;
+    }
+    if (['fp', 'finish-problem'].includes(arr[0])) {
+      this.finishProblemHandler(args);
+      return;
+    }
+    if (['problem'].includes(arr[0])) {
+      this.addProblem();
+      return;
+    }
+    if (['back', 'b'].includes(arr[0])) {
+      this.onGoToNearseParent();
+      return;
+    }
+  }
+
+  private finishProblemHandler(args: string[]) {
+    if (!args || args.length === 0) {
+      return;
+    }
+    const index = +args[0];
+    if (Number.isInteger(index) && index >= 1 && index <= this.problems.length) {
+      const problem = this.problems[index - 1];
+      this.solveTheProblem(problem);
+    }
+  }
+
+  refreshProblems() {
+    this.problemsService.getProblems(this.epic.getFullDescription())
+      .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
+  }
+
+  addProblem() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Description' }});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        // this.tasksService.createNewTask(obj).subscribe(() => this.refreshSubtasks());
+        const obj = {description: description, tags: [this.epic.getFullDescription()]}
+        this.problemsService.createNewProblem(obj).subscribe(() => this.refreshProblems());
+      }
+    });
+  }
+
+  solveTheProblem(problem: Problem) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
+      }
+    });
+  }
+
+  private finishTaskHandler(args: string[]) {
+    if (!args || args.length === 0) {
+      return;
+    }
+    if (args.length > 0 && args[0] && /^\d+-\d+$/.test(args[0])) {
+      const numbers = args[0].split('-');
+      const num1 = +numbers[0] - 1;
+      const num2 = +numbers[1] - 1;
+      const rangeNumbers = _.range(num1, num2 + 1);
+      const tasksToFinish = rangeNumbers.map((number: number) => this.subtasks[number]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
+    } else if (args.length > 0 && args[0] && args[0].includes(',')) {
+      const numbers = args[0].split(',').map(str => +str);
+      const tasksToFinish = numbers.map((number: number) => this.subtasks[number - 1]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
+    } else {
+      const index = +args[0];
+      if (Number.isInteger(index) && index >= 1 && index <= this.subtasks.length) {
+        this.tasksService.finishTask(this.subtasks[index - 1]).subscribe(() => this.refreshSubtasks());
+      }
+    }
   }
 
 
