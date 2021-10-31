@@ -10,11 +10,11 @@ import {NewTaskDialogComponent} from '../new-task-dialog/new-task-dialog.compone
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CommandsService} from "../../../services/commands.service";
 import {Title} from "@angular/platform-browser";
-import { Problem } from 'src/app/models/problem';
+import {Problem} from 'src/app/models/problem';
 import {ProblemsService} from "../../../services/problems.service";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 import {AlertService} from "../../../services/alert.service";
-import {Subscription} from "rxjs";
+import {forkJoin, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-task',
@@ -27,7 +27,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   subtasks: TaskC[];
   problems: Problem[];
   parentsPath: string[];
-
+  isLoading = true;
   commandsSubscription: Subscription;
 
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
@@ -52,17 +52,18 @@ export class TaskComponent implements OnInit, OnDestroy {
         this.task = task;
         this.titleService.setTitle(this.task.getFullDescription());
         if (this.task !== null) {
-          this.tasksService.getParentsPath(this.task).subscribe((res: string[]) => {
+          const parentsPath$ = this.tasksService.getParentsPath(this.task);
+          parentsPath$.subscribe((res: string[]) => {
             this.parentsPath = res;
           });
-          this.refreshSubtasks();
-          this.refreshProblems();
-        }
+          forkJoin([this.refreshSubtasks(), this.refreshProblems()]).subscribe(
+            () => this.isLoading = false
+          )}
 
       })
       // console.log('AAAA', this.task);
     });
-    this.commandsSubscription = this.commandsService.getDataStateChange().subscribe( state => {
+    this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
     })
   }
@@ -146,8 +147,7 @@ export class TaskComponent implements OnInit, OnDestroy {
       const rangeNumbers = _.range(num1, num2 + 1);
       const tasksToFinish = rangeNumbers.map((number: number) => this.subtasks[number]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
-    }
-    else if (args.length > 0 && args[0] && args[0].includes(',')) {
+    } else if (args.length > 0 && args[0] && args[0].includes(',')) {
       const numbers = args[0].split(',').map(str => +str);
       const tasksToFinish = numbers.map((number: number) => this.subtasks[number - 1]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
@@ -226,25 +226,30 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   onDownClick() {
     // this.scrollToBottom();
-    document.getElementById(`row-${this.subtasks.length - 1}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById(`row-${this.subtasks.length - 1}`).scrollIntoView({behavior: 'smooth', block: 'center'});
     // window.scrollTo(0,document.body.scrollHeight);
   }
 
   scrollToBottom(): void {
     try {
       this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-    } catch(err) { }
+    } catch (err) {
+    }
   }
 
   refreshSubtasks() {
-    this.tasksService.getTasks(this.task.getFullDescription()).subscribe(newSubtasks => {
+    const tasksObservable = this.tasksService.getTasks(this.task.getFullDescription());
+    tasksObservable.subscribe(newSubtasks => {
       this.subtasks = newSubtasks;
     });
+    return tasksObservable;
   }
 
   refreshProblems() {
-    this.problemsService.getProblems(this.task.getFullDescription())
+    const problemsObservable = this.problemsService.getProblems(this.task.getFullDescription());
+    problemsObservable
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
+    return problemsObservable;
   }
 
   goToParentHandler(description: string) {
@@ -263,7 +268,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   addProblem() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Description' }});
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
         // this.tasksService.createNewTask(obj).subscribe(() => this.refreshSubtasks());
@@ -274,7 +279,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   solveTheProblem(problem: Problem) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Solution' }});
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());

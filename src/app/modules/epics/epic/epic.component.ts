@@ -231,5 +231,6 @@ export class EpicComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routeSubscription.unsubscribe();
+    this.commandsSubscription.unsubscribe();
   }
 }

@@ -58,11 +58,11 @@ export class StoryComponent implements OnInit, OnDestroy {
       });
     });
     this.commandSubscription = this.commandService.getDataStateChange().subscribe(state => {
-      this.handleTaskCommand(state.command);
+      this.handleCommand(state.command);
     })
   }
 
-  private handleTaskCommand(command: string) {
+  private handleCommand(command: string) {
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['back', 'b'].includes(arr[0])) {
@@ -77,15 +77,27 @@ export class StoryComponent implements OnInit, OnDestroy {
       // this.finishTaskHandler(args);
       return;
     }
-    if (['fp', 'finish-problem'].includes(arr[0])) {
-      // this.finishProblemHandler(args);
-      return;
-    }
     if (['problem'].includes(arr[0])) {
       this.addProblem();
       return;
     }
+    if (['fp', 'finish-problem'].includes(arr[0])) {
+      this.finishProblemHandler(args);
+      return;
+    }
   }
+
+  private finishProblemHandler(args: string[]) {
+    if (!args || args.length === 0) {
+      return;
+    }
+    const index = +args[0];
+    if (Number.isInteger(index) && index >= 1 && index <= this.problems.length) {
+      const problem = this.problems[index - 1];
+      this.solveTheProblem(problem);
+    }
+  }
+
 
   private refreshSubstories() {
     this.storiesService.getStories(this.story.getFullDescription()).subscribe(stories => {
@@ -169,7 +181,7 @@ export class StoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  onProblemSolvedClick(problem: Problem) {
+  solveTheProblem(problem: Problem) {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
