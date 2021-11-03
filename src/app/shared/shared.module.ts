@@ -6,6 +6,7 @@ import { ParentsPathComponent } from './components/parents-path/parents-path.com
 import { TaskContainerDescriptionComponent } from './components/task-container-description/task-container-description.component';
 import { SubStoriesComponent } from './components/substories/sub-stories.component';
 import { SubproblemsComponent } from './components/subproblems/subproblems.component';
+import { SubquestionsComponent } from './components/subquestions/subquestions.component';
 
 
 
@@ -15,15 +16,17 @@ import { SubproblemsComponent } from './components/subproblems/subproblems.compo
     ParentsPathComponent,
     TaskContainerDescriptionComponent,
     SubStoriesComponent,
-    SubproblemsComponent
+    SubproblemsComponent,
+    SubquestionsComponent
   ],
-  exports: [
-    SubtasksComponent,
-    ParentsPathComponent,
-    TaskContainerDescriptionComponent,
-    SubStoriesComponent,
-    SubproblemsComponent
-  ],
+    exports: [
+        SubtasksComponent,
+        ParentsPathComponent,
+        TaskContainerDescriptionComponent,
+        SubStoriesComponent,
+        SubproblemsComponent,
+        SubquestionsComponent
+    ],
   imports: [
     CommonModule,
     MaterialModule

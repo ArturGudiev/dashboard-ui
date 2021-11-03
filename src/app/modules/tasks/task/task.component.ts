@@ -14,7 +14,9 @@ import {Problem} from 'src/app/models/problem';
 import {ProblemsService} from "../../../services/problems.service";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 import {AlertService} from "../../../services/alert.service";
-import {forkJoin, Subscription} from "rxjs";
+import {forkJoin, Observable, Subscription} from "rxjs";
+import {Question} from "../../../models/question";
+import {QuestionsService} from "../../../services/questions.service";
 
 @Component({
   selector: 'app-task',
@@ -26,6 +28,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   task: TaskC;
   subtasks: TaskC[];
   problems: Problem[];
+  questions: Question[];
   parentsPath: string[];
   isLoading = true;
   commandsSubscription: Subscription;
@@ -42,6 +45,7 @@ export class TaskComponent implements OnInit, OnDestroy {
               private commandsService: CommandsService,
               private problemsService: ProblemsService,
               private alertService: AlertService,
+              private questionsService: QuestionsService,
               private tasksService: TasksService) {
   }
 
@@ -56,12 +60,10 @@ export class TaskComponent implements OnInit, OnDestroy {
           parentsPath$.subscribe((res: string[]) => {
             this.parentsPath = res;
           });
-          forkJoin([this.refreshSubtasks(), this.refreshProblems()]).subscribe(
+          forkJoin([this.refreshSubtasks(), this.refreshProblems(), this.refreshQuestions()]).subscribe(
             () => this.isLoading = false
           )}
-
       })
-      // console.log('AAAA', this.task);
     });
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
@@ -99,6 +101,10 @@ export class TaskComponent implements OnInit, OnDestroy {
     }
     if (['problem'].includes(arr[0])) {
       this.addProblem();
+      return;
+    }
+    if (['question'].includes(arr[0])) {
+      this.addQuestion();
       return;
     }
     if (['back', 'b'].includes(arr[0])) {
@@ -245,17 +251,17 @@ export class TaskComponent implements OnInit, OnDestroy {
     return tasksObservable;
   }
 
-  refreshProblems() {
-    const problemsObservable = this.problemsService.getProblems(this.task.getFullDescription());
-    problemsObservable
+  refreshProblems(): Observable<Problem[]> {
+    const problems$ = this.problemsService.getProblems(this.task.getFullDescription());
+    problems$
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
-    return problemsObservable;
+    return problems$;
   }
 
   goToParentHandler(description: string) {
     const urls = getUrlByDescription(description);
     if (urls) {
-      this.router.navigate(urls);
+      this.router.navigate(urls).then();
     }
   }
 
@@ -290,6 +296,34 @@ export class TaskComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.commandsSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
+    this.isLoading = true;
   }
 
+  refreshQuestions(): Observable<Question[]> {
+    const questions$ = this.questionsService.getQuestions(this.task.getFullDescription());
+    questions$
+      .subscribe(questions => this.questions = questions.filter((p: Question) => !p.answer));
+    return questions$;
+  }
+
+  addQuestion() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [this.task.getFullDescription()]}
+        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+
+  answerTheQuestion(question: Question) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {data: {title: 'Answer'}});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.questionsService.answerTheQuestion(question, solution)
+          .subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
 }

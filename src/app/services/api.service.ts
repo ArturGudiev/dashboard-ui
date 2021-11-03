@@ -7,6 +7,7 @@ import {Epic} from "../models/epic";
 import {TaskContainer} from "../interfaces/task-container";
 import {Story} from "../models/story";
 import {Problem} from "../models/problem";
+import {Question} from "../models/question";
 
 @Injectable({
   providedIn: 'root'
@@ -107,9 +108,28 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/solve-problem/${_id}`, {solution});
   }
 
-  _createNewProblem(obj: { description: string; tags: string[] }) {
+  _createNewProblem(obj: { description: string; tags: string[] }): Observable<Problem> {
     return this.http.post<Problem>(`${this.baseUrl}/new-problem/`, obj);
   }
   //------------------------------------problems-------------------------------------------------
+  //------------------------------------questions----------------------------------------
+  _getQuestions(tag: string): Observable<Question[]> {
+    return this.http.get(`${this.baseUrl}/get-questions/`, {
+      params: {tag}
+    }).pipe(
+      map((questions: any) => questions.map(
+        (p: Question) => new Question(p._id, p.description, p.tags, p.answer)
+      )));
+  }
+
+  _createNewQuestion(obj: {description: string; tags: string[]}): Observable<Question> {
+    return this.http.post<Question>(`${this.baseUrl}/new-question/`, obj);
+  }
+
+  _answerTheQuestion(_id: number, answer: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/answer-question/${_id}`, {answer});
+  }
+  //------------------------------------questions----------------------------------------
+
 
 }

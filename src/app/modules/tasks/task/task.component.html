@@ -11,6 +11,7 @@
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="addProblem()">Add a new problem</button>
+        <button mat-menu-item (click)="addQuestion()">Add a new question</button>
       </mat-menu>
     </div>
     <br>
@@ -20,10 +21,19 @@
                     (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
                     [subtasks]="subtasks"></app-subtasks>
 
+      <app-subquestions (refreshQuestions)="refreshQuestions()"
+                        (addQuestion)="addQuestion()"
+                        (answerTheQuestion)="answerTheQuestion($event)"
+                        [questions]="questions">
+      </app-subquestions>
+
+
       <app-subproblems (refreshProblems)="refreshProblems()"
                        (addProblem)="addProblem()"
                        (onProblemSolvedClick)="solveTheProblem($event)"
-                       [problems]="problems"></app-subproblems>
+                       [problems]="problems">
+      </app-subproblems>
+
     </div>
 
   </div>
