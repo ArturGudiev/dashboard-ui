@@ -17,6 +17,8 @@ import {AlertService} from "../../../services/alert.service";
 import {forkJoin, Observable, Subscription} from "rxjs";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
+import {KnowledgeService} from "../../../services/knowledge.service";
+import {Definition} from "../../../models/definition";
 
 @Component({
   selector: 'app-task',
@@ -29,6 +31,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   subtasks: TaskC[];
   problems: Problem[];
   questions: Question[];
+  definitions: Definition[];
   parentsPath: string[];
   isLoading = true;
   commandsSubscription: Subscription;
@@ -44,6 +47,7 @@ export class TaskComponent implements OnInit, OnDestroy {
               private titleService: Title,
               private commandsService: CommandsService,
               private problemsService: ProblemsService,
+              private knowledgeService: KnowledgeService,
               private alertService: AlertService,
               private questionsService: QuestionsService,
               private tasksService: TasksService) {
@@ -60,6 +64,7 @@ export class TaskComponent implements OnInit, OnDestroy {
           parentsPath$.subscribe((res: string[]) => {
             this.parentsPath = res;
           });
+          this.refreshDefinitions();
           forkJoin([this.refreshSubtasks(), this.refreshProblems(), this.refreshQuestions()]).subscribe(
             () => this.isLoading = false
           )}
@@ -256,6 +261,14 @@ export class TaskComponent implements OnInit, OnDestroy {
     problems$
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
     return problems$;
+  }
+
+  refreshDefinitions(): Observable<Definition[]> {
+    const definitions$ = this.knowledgeService.getDefinitions(this.task.getFullDescription());
+    definitions$.subscribe(definitions => {
+      return this.definitions = definitions;
+    });
+    return definitions$;
   }
 
   goToParentHandler(description: string) {

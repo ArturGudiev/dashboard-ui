@@ -34,12 +34,20 @@
                        [problems]="problems">
       </app-subproblems>
 
-    </div>
 
+
+    </div>
   </div>
-  <app-parents-path [parentsPath]="parentsPath"
-                    (onParentClick)="goToParentHandler($event)"
-  ></app-parents-path>
+
+  <div id="right-column">
+    <app-parents-path [parentsPath]="parentsPath"
+                      (onParentClick)="goToParentHandler($event)">
+
+    </app-parents-path>
+    <app-subdefinitions [definitions]="definitions"
+                        (refreshDefinitions)="refreshDefinitions()">
+    </app-subdefinitions>
+  </div>
 </div>
 
 

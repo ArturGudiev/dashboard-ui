@@ -7,6 +7,7 @@ import { TaskContainerDescriptionComponent } from './components/task-container-d
 import { SubStoriesComponent } from './components/substories/sub-stories.component';
 import { SubproblemsComponent } from './components/subproblems/subproblems.component';
 import { SubquestionsComponent } from './components/subquestions/subquestions.component';
+import { SubdefinitionsComponent } from './components/subdefinitions/subdefinitions.component';
 
 
 
@@ -17,7 +18,8 @@ import { SubquestionsComponent } from './components/subquestions/subquestions.co
     TaskContainerDescriptionComponent,
     SubStoriesComponent,
     SubproblemsComponent,
-    SubquestionsComponent
+    SubquestionsComponent,
+    SubdefinitionsComponent
   ],
     exports: [
         SubtasksComponent,
@@ -25,7 +27,8 @@ import { SubquestionsComponent } from './components/subquestions/subquestions.co
         TaskContainerDescriptionComponent,
         SubStoriesComponent,
         SubproblemsComponent,
-        SubquestionsComponent
+        SubquestionsComponent,
+        SubdefinitionsComponent
     ],
   imports: [
     CommonModule,

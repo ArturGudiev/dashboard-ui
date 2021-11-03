@@ -8,6 +8,7 @@ import {TaskContainer} from "../interfaces/task-container";
 import {Story} from "../models/story";
 import {Problem} from "../models/problem";
 import {Question} from "../models/question";
+import {Definition} from "../models/definition";
 
 @Injectable({
   providedIn: 'root'
@@ -131,5 +132,12 @@ export class ApiService {
   }
   //------------------------------------questions----------------------------------------
 
-
+  _getDefinitions(tag: string): Observable<Definition[]> {
+    return this.http.get(`${this.baseUrl}/get-definitions/`, {
+      params: {tag}
+    }).pipe(
+      map((definitions: any) => definitions.map(
+        (p: Definition) => new Definition(p._id, p.name, p.value, p.tags)
+      )));
+  }
 }
