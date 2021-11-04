@@ -82,4 +82,4 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     MatMenuModule
   ]
 })
-export class MaterialModule { }
+export class DashboardMaterialModule { }

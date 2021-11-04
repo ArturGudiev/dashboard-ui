@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule, HammerModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MaterialModule} from './shared/material/material.module';
+import {DashboardMaterialModule} from './shared/material/dashboard-material.module';
 import {RouterModule, Routes} from '@angular/router';
 import {SidenavComponent} from './components/sidenav/sidenav.component';
 import {ToolbarComponent} from './components/toolbar/toolbar.component';
@@ -11,7 +11,7 @@ import {DialogsModule} from "./modules/dialogs/dialogs.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import { CommandCardComponent } from './components/command-card/command-card.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
-import {SwipeAngularListModule} from "swipe-angular-list";
+import {MatIconModule} from "@angular/material/icon";
 
 
 const routes: Routes = [
@@ -32,14 +32,14 @@ const routes: Routes = [
     MainPageComponent,
   ],
     imports: [
-        HammerModule,  // < ----- ******************************** IMPORTANT ******************
-        SwipeAngularListModule, // < ----- ********************,
+        HammerModule,
+      MatIconModule,
         HttpClientModule,
         DialogsModule,
         BrowserModule,
         BrowserAnimationsModule,
         RouterModule,
-        MaterialModule,
+        DashboardMaterialModule,
         RouterModule.forRoot(routes),
         ReactiveFormsModule
     ],

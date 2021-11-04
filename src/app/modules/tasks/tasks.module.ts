@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import { TaskComponent } from './task/task.component';
 import { TasksListComponent } from './tasks-list/tasks-list.component';
-import {MaterialModule} from '../../shared/material/material.module';
+import {DashboardMaterialModule} from '../../shared/material/dashboard-material.module';
 import { NewTaskDialogComponent } from './new-task-dialog/new-task-dialog.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from "../../shared/shared.module";
@@ -25,7 +25,7 @@ const routes: Routes = [
     NewTaskDialogComponent
   ],
   imports: [
-    MaterialModule,
+    DashboardMaterialModule,
     CommonModule,
     ReactiveFormsModule,
     SharedModule,
