@@ -1,0 +1,13 @@
+<div id="content-wrapper">
+  <div id="action-content">
+    <div class="flex-container">
+      <div id="description-line" *ngIf="action?.getFullDescription()">
+<!--        <button id="go-to-parent-button" mat-mini-fab color="accent" (click)="goToParent.emit()">-->
+<!--          <mat-icon>north</mat-icon>-->
+<!--        </button>-->
+        <h1 id="full-description-title">{{action?.getFullDescription()}}</h1>
+        {{action.value}}
+      </div>
+    </div>
+  </div>
+</div>

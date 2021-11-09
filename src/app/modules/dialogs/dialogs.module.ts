@@ -5,6 +5,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DashboardMaterialModule} from "../../shared/material/dashboard-material.module";
 import { CommandDialogComponent } from './command-dialog/command-dialog.component';
 import { GetValueDialogComponent } from './get-value/get-value-dialog.component';
+import { DefinitionDialogComponent } from './definition/definition-dialog.component';
+import { ActionDialogComponent } from './action-dialog/action-dialog.component';
 
 
 
@@ -12,7 +14,9 @@ import { GetValueDialogComponent } from './get-value/get-value-dialog.component'
   declarations: [
     NavToDialogComponent,
     CommandDialogComponent,
-    GetValueDialogComponent
+    GetValueDialogComponent,
+    DefinitionDialogComponent,
+    ActionDialogComponent
   ],
   imports: [
     CommonModule,

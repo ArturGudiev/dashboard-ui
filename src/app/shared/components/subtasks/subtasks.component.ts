@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {TaskC} from "../../../models/task-class";
+import {Task} from "../../../models/task-class";
 import {SelectionModel} from "@angular/cdk/collections";
 import {TasksService} from "../../../services/tasks.service";
 import {Router} from "@angular/router";
@@ -10,11 +10,11 @@ import {Router} from "@angular/router";
   styleUrls: ['./subtasks.component.sass']
 })
 export class SubtasksComponent implements OnInit, OnChanges {
-  @Input() subtasks: TaskC[];
+  @Input() subtasks: Task[];
   @Output() refreshSubtasks = new EventEmitter();
   @Output() addSubtask = new EventEmitter();
   @Output() onSubtaskDoneClick = new EventEmitter();
-  selection = new SelectionModel<TaskC>(true, []);
+  selection = new SelectionModel<Task>(true, []);
   displayedColumns: string[] = ['select', 'position', 'description', 'actions'];
   constructor(private tasksService: TasksService,
               private router: Router) { }
@@ -58,7 +58,7 @@ export class SubtasksComponent implements OnInit, OnChanges {
       () => this.refreshSubtasks.emit());
   }
 
-  onSubtaskClick(task: TaskC) {
+  onSubtaskClick(task: Task) {
     this.router.navigate(['task', task._id]).then();
   }
 

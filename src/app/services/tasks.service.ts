@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {TaskC} from '../models/task-class';
+import {Task} from '../models/task-class';
 import {ApiService} from './api.service';
 import {Observable} from 'rxjs';
 import {tap} from "rxjs/operators";
@@ -14,7 +14,7 @@ export class TasksService {
   constructor(private apiService: ApiService,
               private dashboardService: DashboardService) { }
 
-  getTask(id: number): Observable<TaskC> {
+  getTask(id: number): Observable<Task> {
     return this.apiService._getTask(id);
   }
 
@@ -22,15 +22,15 @@ export class TasksService {
     return this.apiService._getParentsPath(taskContainer);
   }
 
-  getTasks(tag: string): Observable<TaskC[]> {
+  getTasks(tag: string): Observable<Task[]> {
     return this.apiService._getTasks(tag);
   }
 
-  createNewTask(obj: { description: any; tags: string[] }): Observable<TaskC> {
+  createNewTask(obj: { description: any; tags: string[] }): Observable<Task> {
     return this.apiService._createNewTask(obj);
   }
 
-  finishTask(task: TaskC): Observable<TaskC> {
+  finishTask(task: Task): Observable<Task> {
     return this.apiService._finishTask(task).pipe(
       tap({
       complete: () => this.dashboardService.updateDoneTasksNumber()
@@ -38,7 +38,7 @@ export class TasksService {
     );
   }
 
-  finishTasks(tasks: TaskC[]): Observable<any> {
+  finishTasks(tasks: Task[]): Observable<any> {
     return this.apiService._finishTasks(tasks).pipe(
       tap({
         complete: () => this.dashboardService.updateDoneTasksNumber()

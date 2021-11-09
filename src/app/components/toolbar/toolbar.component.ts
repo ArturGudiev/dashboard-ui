@@ -43,6 +43,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.hotkeys.addShortcut({keys: 'Control.p'}).subscribe(() => this.commandService.setCommand('problem'));
     this.hotkeys.addShortcut({keys: 'Control.q'}).subscribe(() => this.commandService.setCommand('question'));
     this.hotkeys.addShortcut({keys: 'Control.a'}).subscribe(() => this.commandService.setCommand('fta'));
+    this.hotkeys.addShortcut({keys: 'Control.d'}).subscribe(() => this.commandService.setCommand('definition'));
 
     this.hotkeys.addShortcut({ keys: 'Control.f' }).subscribe(() => {
         const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Finish' }});

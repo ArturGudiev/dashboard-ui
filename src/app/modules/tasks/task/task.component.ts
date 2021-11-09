@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../services/tasks.service';
-import {TaskC} from '../../../models/task-class';
+import {Task} from '../../../models/task-class';
 import {ApiService} from '../../../services/api.service';
 import {getUrlByDescription} from '../../../shared/libs/dashboard.lib';
 import {MatDialog} from '@angular/material/dialog';
@@ -19,6 +19,9 @@ import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
 import {KnowledgeService} from "../../../services/knowledge.service";
 import {Definition} from "../../../models/definition";
+import {DefinitionDialogComponent} from "../../dialogs/definition/definition-dialog.component";
+import {Action} from "../../../models/action";
+import {ActionDialogComponent} from "../../dialogs/action-dialog/action-dialog.component";
 
 @Component({
   selector: 'app-task',
@@ -27,9 +30,10 @@ import {Definition} from "../../../models/definition";
 })
 export class TaskComponent implements OnInit, OnDestroy {
 
-  task: TaskC;
-  subtasks: TaskC[];
+  task: Task;
+  subtasks: Task[];
   problems: Problem[];
+  actions: Action[];
   questions: Question[];
   definitions: Definition[];
   parentsPath: string[];
@@ -65,6 +69,7 @@ export class TaskComponent implements OnInit, OnDestroy {
             this.parentsPath = res;
           });
           this.refreshDefinitions();
+          this.refreshActions();
           forkJoin([this.refreshSubtasks(), this.refreshProblems(), this.refreshQuestions()]).subscribe(
             () => this.isLoading = false
           )}
@@ -80,49 +85,36 @@ export class TaskComponent implements OnInit, OnDestroy {
     const args = arr.slice(1);
     if (['back', 'b'].includes(arr[0])) {
       this.onGoToNearestParent();
-      return;
     }
     if (['anonymous'].includes(arr[0])) {
       this.addAnonymousTaskHandler();
-      return;
     }
-    // if (arr.length === 1 && arr[0].startsWith('f')) {
-    //   const newCommand = command.slice(1);
-    //   const newArgs = newCommand.split(' ');
-    //   this.finishTaskHandler(newArgs);
-    //   return;
-    // }
     if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
       this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
-      return;
     }
     if (['f', 'ft', 'finish-task'].includes(arr[0])) {
       this.finishTaskHandler(args);
-      return;
     }
     if (['fp', 'finish-problem'].includes(arr[0])) {
       this.finishProblemHandler(args);
-      return;
     }
     if (['problem'].includes(arr[0])) {
       this.addProblem();
-      return;
+    }
+    if (['definition'].includes(arr[0])) {
+      this.addDefinition();
     }
     if (['question'].includes(arr[0])) {
       this.addQuestion();
-      return;
     }
     if (['back', 'b'].includes(arr[0])) {
       this.onGoToNearestParent();
-      return;
     }
     if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
       this.finishAllTasks();
-      return;
     }
     if (['r', 'res', 'resolve'].includes(arr[0])) {
       this.onDoneAllClick();
-      return;
     }
   }
 
@@ -216,7 +208,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.openAddTaskDialog();
   }
 
-  onSubtaskDoneClick(subtask: TaskC) {
+  onSubtaskDoneClick(subtask: Task) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
@@ -338,5 +330,41 @@ export class TaskComponent implements OnInit, OnDestroy {
           .subscribe(() => this.refreshQuestions());
       }
     });
+  }
+
+  addDefinition() {
+    // this.knowledgeService.addDefinition();
+    const dialogRef = this.dialog.open(DefinitionDialogComponent, {
+      height: '400px',
+      width: '800px',
+    });
+    dialogRef.afterClosed().subscribe((obj: any) => {
+      if (obj) {
+        const definitionObject = {name: obj.name, value: obj.value, tags: [this.task.getFullDescription()]}
+        this.knowledgeService.createNewDefinition(definitionObject).subscribe(() => this.refreshDefinitions());
+      }
+    });
+  }
+
+  addAction() {
+    const dialogRef = this.dialog.open(ActionDialogComponent, {
+      height: '400px',
+      width: '800px',
+    });
+    dialogRef.afterClosed().subscribe((obj: any) => {
+      if (obj) {
+        const action = {name: obj.name, value: obj.value, tags: [this.task.getFullDescription()]}
+        this.knowledgeService.createNewAction(action).subscribe(() => this.refreshActions());
+      }
+    });
+  }
+
+  refreshActions() {
+    const actionsSubscription$ = this.knowledgeService.getActions(this.task.getFullDescription());
+    actionsSubscription$.subscribe(actions => {
+      console.log(actions);
+      this.actions = actions;
+    });
+    return actionsSubscription$;
   }
 }

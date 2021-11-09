@@ -6,7 +6,7 @@ import {Title} from "@angular/platform-browser";
 import {MatDialog} from "@angular/material/dialog";
 import {ProblemsService} from "../../../services/problems.service";
 import {Problem} from "../../../models/problem";
-import {TaskC} from "../../../models/task-class";
+import {Task} from "../../../models/task-class";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
 import {CommandsService} from "../../../services/commands.service";
@@ -21,7 +21,7 @@ import {Subscription} from "rxjs";
 })
 export class ProblemComponent implements OnInit, OnDestroy {
   problem: Problem;
-  subtasks: TaskC[];
+  subtasks: Task[];
   parentsPath: string[];
   problems: Problem[];
 
@@ -221,7 +221,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubtaskDoneClick(subtask: TaskC) {
+  onSubtaskDoneClick(subtask: Task) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 

@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {TaskC} from "../../../models/task-class";
+import {Task} from "../../../models/task-class";
 
 @Component({
   selector: 'app-command-dialog',
@@ -17,7 +17,7 @@ export class CommandDialogComponent implements OnInit {
 
 
   constructor(public dialogRef: MatDialogRef<CommandDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {parentTask: TaskC}
+              @Inject(MAT_DIALOG_DATA) public data: {parentTask: Task}
   ) { }
 
   ngOnInit(): void {

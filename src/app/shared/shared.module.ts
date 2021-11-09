@@ -8,6 +8,7 @@ import { SubStoriesComponent } from './components/substories/sub-stories.compone
 import { SubproblemsComponent } from './components/subproblems/subproblems.component';
 import { SubquestionsComponent } from './components/subquestions/subquestions.component';
 import { SubdefinitionsComponent } from './components/subdefinitions/subdefinitions.component';
+import { SubactionsComponent } from './components/subactions/subactions.component';
 
 
 
@@ -19,7 +20,8 @@ import { SubdefinitionsComponent } from './components/subdefinitions/subdefiniti
     SubStoriesComponent,
     SubproblemsComponent,
     SubquestionsComponent,
-    SubdefinitionsComponent
+    SubdefinitionsComponent,
+    SubactionsComponent
   ],
     exports: [
         SubtasksComponent,
@@ -28,7 +30,8 @@ import { SubdefinitionsComponent } from './components/subdefinitions/subdefiniti
         SubStoriesComponent,
         SubproblemsComponent,
         SubquestionsComponent,
-        SubdefinitionsComponent
+        SubdefinitionsComponent,
+        SubactionsComponent
     ],
   imports: [
     CommonModule,

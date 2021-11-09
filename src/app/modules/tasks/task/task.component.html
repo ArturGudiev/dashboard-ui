@@ -12,6 +12,7 @@
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="addProblem()">Add a new problem</button>
         <button mat-menu-item (click)="addQuestion()">Add a new question</button>
+        <button mat-menu-item (click)="addDefinition()">Add a new definition</button>
       </mat-menu>
     </div>
     <br>
@@ -45,8 +46,14 @@
 
     </app-parents-path>
     <app-subdefinitions [definitions]="definitions"
+                        (addDefinition)="addDefinition()"
                         (refreshDefinitions)="refreshDefinitions()">
     </app-subdefinitions>
+
+    <app-subactions [actions]="actions"
+                        (addAction)="addAction()"
+                        (refreshActions)="refreshActions()">
+    </app-subactions>
   </div>
 </div>
 

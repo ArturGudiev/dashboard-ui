@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
-import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
+import {BreakpointObserver} from '@angular/cdk/layout';
 import {Router} from '@angular/router';
 import {MatSidenav} from '@angular/material/sidenav';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -37,12 +37,12 @@ export class SidenavComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.breakpointObserver
-      // .observe( [Breakpoints.XSmall  ])
-      .observe([`(max-width: ${SMALL_WIDTH_BREAKPOINT}px`])
-      .subscribe((state: BreakpointState) => {
-        this.isScreenSmall = state.matches;
-      })
+    // this.breakpointObserver
+    //   // .observe( [Breakpoints.XSmall  ])
+    //   .observe([`(max-width: ${SMALL_WIDTH_BREAKPOINT}px`])
+    //   .subscribe((state: BreakpointState) => {
+    //     this.isScreenSmall = state.matches;
+    //   })
     // this.users = this.userService.users;
     // this.userService.loadAll();
 

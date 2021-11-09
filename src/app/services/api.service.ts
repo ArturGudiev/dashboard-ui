@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {TaskC} from '../models/task-class';
+import {Task} from '../models/task-class';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -9,6 +9,7 @@ import {Story} from "../models/story";
 import {Problem} from "../models/problem";
 import {Question} from "../models/question";
 import {Definition} from "../models/definition";
+import {Action} from "../models/action";
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +21,10 @@ export class ApiService {
   }
 
 
-  _getTask(id: number): Observable<TaskC> {
-    return this.http.get<TaskC>(`${this.baseUrl}/task/${id}`)
+  _getTask(id: number): Observable<Task> {
+    return this.http.get<Task>(`${this.baseUrl}/task/${id}`)
       .pipe(
-        map((obj) => new TaskC(obj._id, obj.description, obj.done, obj.tags))
+        map((obj) => new Task(obj._id, obj.description, obj.done, obj.tags))
       );
   }
 
@@ -31,23 +32,23 @@ export class ApiService {
     return this.http.post<string[]>(`${this.baseUrl}/task/parents-path/`, obj);
   }
 
-  _getTasks(tag: string): Observable<TaskC[]> {
+  _getTasks(tag: string): Observable<Task[]> {
     return this.http.get(`${this.baseUrl}/get-tasks/`, {
       params: {tag}
     }).pipe(
-      map((tasks: any) => tasks.map((t: TaskC) => new TaskC(t._id, t.description, t.done, t.tags))
+      map((tasks: any) => tasks.map((t: Task) => new Task(t._id, t.description, t.done, t.tags))
       ));
   }
 
-  _createNewTask(obj: { description: any; tags: string[] }): Observable<TaskC> {
-    return this.http.post<TaskC>(`${this.baseUrl}/new-task/`, obj);
+  _createNewTask(obj: { description: any; tags: string[] }): Observable<Task> {
+    return this.http.post<Task>(`${this.baseUrl}/new-task/`, obj);
   }
 
-  _finishTask(task: TaskC): Observable<any> {
+  _finishTask(task: Task): Observable<any> {
     return this.http.put(`${this.baseUrl}/finish-task/${task._id}`, {});
   }
 
-  _finishTasks(tasks: TaskC[]) {
+  _finishTasks(tasks: Task[]) {
     return this.http.put(`${this.baseUrl}/finish-tasks/`, tasks).pipe();
   }
 
@@ -132,6 +133,7 @@ export class ApiService {
   }
   //------------------------------------questions----------------------------------------
 
+  //------------------------------------definitions----------------------------------------
   _getDefinitions(tag: string): Observable<Definition[]> {
     return this.http.get(`${this.baseUrl}/get-definitions/`, {
       params: {tag}
@@ -140,4 +142,33 @@ export class ApiService {
         (p: Definition) => new Definition(p._id, p.name, p.value, p.tags)
       )));
   }
+
+  _createNewDefinition(definitionObject: {name: any; value: any; tags: string[]}): Observable<Definition> {
+    return this.http.post<Definition>(`${this.baseUrl}/new-definition/`, definitionObject);
+  }
+  //------------------------------------definitions----------------------------------------
+  //------------------------------------actions----------------------------------------
+
+  _getActions(tag: string) {
+    return this.http.get(`${this.baseUrl}/get-actions/`, {
+      params: {tag}
+    }).pipe(
+      map((actions: any) => actions.map(
+        (a: Action) => new Action(a._id, a.name, a.value, a.tags)
+      )));
+  }
+
+  _createNewAction(actionObject: {name: any; value: any; tags: string[]}): Observable<Action> {
+    return this.http.post<Action>(`${this.baseUrl}/new-action/`, actionObject);
+  }
+
+  _getAction(id: number) {
+    return this.http.get<Action>(`${this.baseUrl}/action/${id}`)
+      .pipe(
+        map((obj: Action) => new Action(obj._id, obj.name, obj.value, obj.tags))
+      );
+  }
+  //------------------------------------actions----------------------------------------
+
+
 }

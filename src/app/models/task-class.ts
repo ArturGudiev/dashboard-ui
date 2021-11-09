@@ -1,8 +1,8 @@
 import {TaskContainer} from '../interfaces/task-container';
 
-export class TaskC implements TaskContainer {
+export class Task implements TaskContainer {
   static readonly PREFIX = 'Task-';
-  static readonly DESCRIPTION_REGEX = new RegExp('^' + TaskC.PREFIX + '(\\d+)\\s');
+  static readonly DESCRIPTION_REGEX = new RegExp('^' + Task.PREFIX + '(\\d+)\\s');
 
 
   _id: number;
@@ -22,7 +22,7 @@ export class TaskC implements TaskContainer {
   }
 
   getFullDescription(): string {
-    return `${(TaskC.PREFIX)}${this._id} ${this.description}`
+    return `${(Task.PREFIX)}${this._id} ${this.description}`
   }
 
 }

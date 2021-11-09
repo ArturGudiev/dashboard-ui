@@ -1,5 +1,5 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
-import {TaskC} from "../../../models/task-class";
+import {Task} from "../../../models/task-class";
 import {Story} from "../../../models/story";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
@@ -21,7 +21,7 @@ import {CommandsService} from "../../../services/commands.service";
 })
 export class StoryComponent implements OnInit, OnDestroy {
   story: Story;
-  subtasks: TaskC[];
+  subtasks: Task[];
   problems: Problem[];
   parentsPath: string[];
   substories: Story[];
@@ -147,7 +147,7 @@ export class StoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubtaskDoneClick(subtask: TaskC) {
+  onSubtaskDoneClick(subtask: Task) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 

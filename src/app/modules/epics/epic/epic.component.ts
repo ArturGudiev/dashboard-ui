@@ -1,7 +1,7 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
-import {TaskC} from "../../../models/task-class";
+import {Task} from "../../../models/task-class";
 import {Epic} from "../../../models/epic";
 import {EpicsService} from "../../../services/epics.service";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
@@ -24,7 +24,7 @@ import * as _ from "lodash";
 })
 export class EpicComponent implements OnInit, OnDestroy {
   epic: Epic;
-  subtasks: TaskC[];
+  subtasks: Task[];
   stories: Story[];
   problems: Problem[];
   parentsPath: string[];
@@ -196,7 +196,7 @@ export class EpicComponent implements OnInit, OnDestroy {
   }
 
 
-  onSubtaskDoneClick(subtask: TaskC) {
+  onSubtaskDoneClick(subtask: Task) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
