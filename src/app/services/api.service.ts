@@ -154,7 +154,7 @@ export class ApiService {
       params: {tag}
     }).pipe(
       map((actions: any) => actions.map(
-        (a: Action) => new Action(a._id, a.name, a.value, a.tags)
+        (a: Action) => new Action(a._id, a.name, a.value, a.tags, a.extension)
       )));
   }
 
@@ -165,8 +165,19 @@ export class ApiService {
   _getAction(id: number) {
     return this.http.get<Action>(`${this.baseUrl}/action/${id}`)
       .pipe(
-        map((obj: Action) => new Action(obj._id, obj.name, obj.value, obj.tags))
+        map((obj: Action) => new Action(obj._id, obj.name, obj.value, obj.tags, obj.extension))
       );
+  }
+
+  _updateAction(action: Action): Observable<Action> {
+    return this.http.post<Action>(`${this.baseUrl}/update-action/`, action)
+      .pipe(
+        map((obj: Action) => new Action(obj._id, obj.name, obj.value, obj.tags, obj.extension))
+      );
+  }
+
+  _getActionParentsPath(action: Action): Observable<string[]> {
+    return this.http.post<string[]>(`${this.baseUrl}/action/parents-path/`, action);
   }
   //------------------------------------actions----------------------------------------
 

@@ -104,6 +104,9 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (['definition'].includes(arr[0])) {
       this.addDefinition();
     }
+    if (['action'].includes(arr[0])) {
+      this.addAction();
+    }
     if (['question'].includes(arr[0])) {
       this.addQuestion();
     }

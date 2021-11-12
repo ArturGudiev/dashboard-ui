@@ -12,6 +12,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import { CommandCardComponent } from './components/command-card/command-card.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import {MatIconModule} from "@angular/material/icon";
+import {HIGHLIGHT_OPTIONS, HighlightModule} from "ngx-highlightjs";
 
 
 const routes: Routes = [
@@ -42,9 +43,17 @@ const routes: Routes = [
         RouterModule,
         DashboardMaterialModule,
         RouterModule.forRoot(routes),
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HighlightModule
     ],
-  providers: [],
+  providers: [
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        fullLibraryLoader: () => import('highlight.js'),
+      }
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

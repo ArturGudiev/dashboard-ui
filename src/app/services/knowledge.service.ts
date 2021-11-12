@@ -30,4 +30,12 @@ export class KnowledgeService {
   getAction(id: number) {
     return this.apiService._getAction(id);
   }
+
+  updateAction(action: Action) {
+    return this.apiService._updateAction(action);
+  }
+
+  getParentsPath(action: Action) {
+    return this.apiService._getActionParentsPath(action);
+  }
 }

@@ -42,9 +42,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.hotkeys.addShortcut({keys: 'Control.r'}).subscribe(() => this.commandService.setCommand('resolve'));
     this.hotkeys.addShortcut({keys: 'Control.p'}).subscribe(() => this.commandService.setCommand('problem'));
     this.hotkeys.addShortcut({keys: 'Control.q'}).subscribe(() => this.commandService.setCommand('question'));
-    this.hotkeys.addShortcut({keys: 'Control.a'}).subscribe(() => this.commandService.setCommand('fta'));
+    this.hotkeys.addShortcut({keys: 'Control.t'}).subscribe(() => this.commandService.setCommand('fta'));
     this.hotkeys.addShortcut({keys: 'Control.d'}).subscribe(() => this.commandService.setCommand('definition'));
-
+    // this.hotkeys.addShortcut({keys: 'Control.a'}).subscribe(() => this.commandService.setCommand('action'));
     this.hotkeys.addShortcut({ keys: 'Control.f' }).subscribe(() => {
         const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Finish' }});
         dialogRef.afterClosed().subscribe((finishCommand: string) => {
@@ -60,44 +60,27 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         });
       }
     );
-
     this.hotkeys.addShortcut({keys: 'meta.b'}).subscribe(() => this.commandService.setCommand('back'));
     this.hotkeys.addShortcut({keys: 'alt.b'}).subscribe(() => this.commandService.setCommand('back'));
-
     this.hotkeys.addShortcut({keys: '§'}).subscribe(() => this.commandService.setCommand('command'));
     this.hotkeys.addShortcut({keys: '`'}).subscribe(() => this.commandService.setCommand('command'));
     this.hotkeys.addShortcut({keys: 'meta.c'}).subscribe(() => this.openCommandDialog());
     this.hotkeys.addShortcut({keys: 'alt.c'}).subscribe(() => this.openCommandDialog());
 
     // Unsubscribe if you need to
-    this.hotkeys.addShortcut({ keys: 'meta.j' }).subscribe();
   }
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     console.log('CCC', event, event.key);
-    // this.alertService.showAlert(`'CCC', ${event.key}`);
-    // if (event.key === '_') {
-    //   this.onNavToClick();
-    // }
+    // this.alertService.showAlert(`'CCC', ${event}, ${event.key}`)
     if (event.key === '\\') {
       this.commandService.setCommand('anonymous');
     }
-    // if (event.key === 'u' && this.parentsPath.length > 1) {
-    //   console.log('AAAA', this.parentsPath.slice(-2));
-    //   // this.onParentClick(this.parentsPath.slice(-2)[0]); // todo refactor
-    // }
-    //
-    // if (event.keyCode === KEY_CODE.LEFT_ARROW) {
-    //   this.decrement();
-    // }
   }
 
   @HostListener('keydown.shift', ['$event'])
   onKeyDown() {
-    // optionally use preventDefault() if your combination
-    // triggers other events (moving focus in case of Shift+Tab)
-    // e.preventDefault();
     console.log('shift and tab');
   }
 
