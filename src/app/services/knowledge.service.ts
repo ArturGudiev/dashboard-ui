@@ -3,6 +3,7 @@ import {Observable} from "rxjs";
 import {ApiService} from "./api.service";
 import {Definition} from "../models/definition";
 import {Action} from "../models/action";
+import {Knowledge} from "../models/knowledge";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class KnowledgeService {
     return this.apiService._getActions(tag);
   }
 
-  createNewAction(actionObject: {name: any; value: any; tags: string[]}) {
+  createNewAction(actionObject: {name: any; value: any; tags: string[], extension: string}) {
     return this.apiService._createNewAction(actionObject);
   }
 
@@ -35,7 +36,30 @@ export class KnowledgeService {
     return this.apiService._updateAction(action);
   }
 
-  getParentsPath(action: Action) {
+  getActionParentsPath(action: Action) {
     return this.apiService._getActionParentsPath(action);
   }
+
+  //----------knowledge bits start -----------------
+
+  getKnowledgeBits(tag: string): Observable<Knowledge[]> {
+    return this.apiService._getKnowledgeBits(tag);
+  }
+
+  createNewKnowledge(knowledgeObject: {name: any; value: any; tags: string[], extension: string}) {
+    return this.apiService._createNewKnowledge(knowledgeObject);
+  }
+
+  getKnowledge(id: number) {
+    return this.apiService._getKnowledge(id);
+  }
+
+  updateKnowledge(knowledge: Knowledge) {
+    return this.apiService._updateKnowledge(knowledge);
+  }
+
+  getKnowledgeParentsPath(knowledge: Knowledge) {
+    return this.apiService._getKnowledgeParentsPath(knowledge);
+  }
+  //----------knowledge bits stop -----------------
 }

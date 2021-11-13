@@ -1,22 +1,11 @@
 <h1>New Task</h1>
 
 <form autocomplete="on" [formGroup]="myForm" (ngSubmit)="onSubmit()" >
-  <mat-form-field appearance="fill" >
+  <mat-form-field appearance="fill" id="description-input">
     <mat-label>Description</mat-label>
-    <input id="description-input"  matInput formControlName="description" autofocus>
+    <input  matInput formControlName="description" autofocus>
   </mat-form-field>
-<!--  <mat-form-field appearance="fill">-->
-<!--    <mat-label>Select</mat-label>-->
-<!--    <mat-select>-->
-<!--      <mat-option value="one">First option</mat-option>-->
-<!--      <mat-option value="two">Second option</mat-option>-->
-<!--    </mat-select>-->
-<!--  </mat-form-field>-->
-<!--  <mat-form-field appearance="fill">-->
-<!--    <mat-label>Textarea</mat-label>-->
-<!--    <textarea matInput></textarea>-->
-<!--  </mat-form-field>-->
-<!--  <button mat-stroked-button  >Submit</button>-->
+
   <div mat-dialog-actions>
     <button mat-button type="button" (click)="onNoClick()">No Thanks</button>
     <button mat-button type="submit" [disabled]="!myForm.valid">Ok</button>

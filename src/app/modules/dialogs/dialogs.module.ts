@@ -7,6 +7,7 @@ import { CommandDialogComponent } from './command-dialog/command-dialog.componen
 import { GetValueDialogComponent } from './get-value/get-value-dialog.component';
 import { DefinitionDialogComponent } from './definition/definition-dialog.component';
 import { ActionDialogComponent } from './action-dialog/action-dialog.component';
+import { KnowledgeDialogComponent } from './knowledge-dialog/knowledge-dialog.component';
 
 
 
@@ -16,7 +17,8 @@ import { ActionDialogComponent } from './action-dialog/action-dialog.component';
     CommandDialogComponent,
     GetValueDialogComponent,
     DefinitionDialogComponent,
-    ActionDialogComponent
+    ActionDialogComponent,
+    KnowledgeDialogComponent
   ],
   imports: [
     CommonModule,

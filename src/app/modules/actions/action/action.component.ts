@@ -44,7 +44,7 @@ export class ActionComponent implements OnInit, OnDestroy {
         this.action = action;
         this.titleService.setTitle(this.action.getFullDescription());
 
-        const parentsPath$ = this.knowledgeService.getParentsPath(this.action);
+        const parentsPath$ = this.knowledgeService.getActionParentsPath(this.action);
         parentsPath$.subscribe((res: string[]) => {
           this.parentsPath = res;
           console.log('SSSS', res);

@@ -22,6 +22,8 @@ import {Definition} from "../../../models/definition";
 import {DefinitionDialogComponent} from "../../dialogs/definition/definition-dialog.component";
 import {Action} from "../../../models/action";
 import {ActionDialogComponent} from "../../dialogs/action-dialog/action-dialog.component";
+import {Knowledge} from "../../../models/knowledge";
+import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
 
 @Component({
   selector: 'app-task',
@@ -42,6 +44,7 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   private routerSubscription: Subscription;
+  knowledgeBits: Knowledge[];
 
   constructor(private route: ActivatedRoute,
               private taskApiService: ApiService,
@@ -70,6 +73,7 @@ export class TaskComponent implements OnInit, OnDestroy {
           });
           this.refreshDefinitions();
           this.refreshActions();
+          this.refreshKnowledgeBits();
           forkJoin([this.refreshSubtasks(), this.refreshProblems(), this.refreshQuestions()]).subscribe(
             () => this.isLoading = false
           )}
@@ -104,7 +108,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (['definition'].includes(arr[0])) {
       this.addDefinition();
     }
-    if (['action'].includes(arr[0])) {
+    if (['action', 'act'].includes(arr[0])) {
       this.addAction();
     }
     if (['question'].includes(arr[0])) {
@@ -195,7 +199,7 @@ export class TaskComponent implements OnInit, OnDestroy {
       {
         data: {parentTask: this.task},
         height: '300px',
-        width: '300px',
+        width: '700px',
       });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -351,12 +355,12 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   addAction() {
     const dialogRef = this.dialog.open(ActionDialogComponent, {
-      height: '400px',
+      height: '600px',
       width: '800px',
     });
     dialogRef.afterClosed().subscribe((obj: any) => {
       if (obj) {
-        const action = {name: obj.name, value: obj.value, tags: [this.task.getFullDescription()]}
+        const action = {name: obj.name, value: obj.value, tags: [this.task.getFullDescription()], extension: obj.extension};
         this.knowledgeService.createNewAction(action).subscribe(() => this.refreshActions());
       }
     });
@@ -365,9 +369,27 @@ export class TaskComponent implements OnInit, OnDestroy {
   refreshActions() {
     const actionsSubscription$ = this.knowledgeService.getActions(this.task.getFullDescription());
     actionsSubscription$.subscribe(actions => {
-      console.log(actions);
       this.actions = actions;
     });
     return actionsSubscription$;
+  }
+
+  refreshKnowledgeBits() {
+    const knowledgeBitsSubscription$ = this.knowledgeService.getKnowledgeBits(this.task.getFullDescription());
+    knowledgeBitsSubscription$.subscribe(knowledgeBits => this.knowledgeBits = knowledgeBits);
+    return knowledgeBitsSubscription$;
+  }
+
+  addKnowledge() {
+    const dialogRef = this.dialog.open(KnowledgeDialogComponent, {
+      height: '600px',
+      width: '800px',
+    });
+    dialogRef.afterClosed().subscribe((obj: any) => {
+      if (obj) {
+        const knowledge = {name: obj.name, value: obj.value, tags: [this.task.getFullDescription()], extension: obj.extension};
+        this.knowledgeService.createNewKnowledge(knowledge).subscribe(() => this.refreshKnowledgeBits());
+      }
+    });
   }
 }

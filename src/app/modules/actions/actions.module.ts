@@ -9,11 +9,13 @@ import {QuillModule} from 'ngx-quill'
 import {HttpClientModule} from "@angular/common/http";
 import {DashboardMaterialModule} from "../../shared/material/dashboard-material.module";
 import {HighlightModule} from "ngx-highlightjs";
+import { NewActionComponent } from './new-action/new-action.component';
 
 
 @NgModule({
   declarations: [
-    ActionComponent
+    ActionComponent,
+    NewActionComponent
   ],
     imports: [
         CommonModule,

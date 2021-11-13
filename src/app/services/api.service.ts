@@ -10,6 +10,7 @@ import {Problem} from "../models/problem";
 import {Question} from "../models/question";
 import {Definition} from "../models/definition";
 import {Action} from "../models/action";
+import {Knowledge} from "../models/knowledge";
 
 @Injectable({
   providedIn: 'root'
@@ -158,7 +159,7 @@ export class ApiService {
       )));
   }
 
-  _createNewAction(actionObject: {name: any; value: any; tags: string[]}): Observable<Action> {
+  _createNewAction(actionObject: {name: any; value: any; tags: string[], extension: string}): Observable<Action> {
     return this.http.post<Action>(`${this.baseUrl}/new-action/`, actionObject);
   }
 
@@ -180,6 +181,38 @@ export class ApiService {
     return this.http.post<string[]>(`${this.baseUrl}/action/parents-path/`, action);
   }
   //------------------------------------actions----------------------------------------
+  //------------------------------------knowledge bits start----------------------------------------
+  _getKnowledgeBits(tag: string) {
+    return this.http.get(`${this.baseUrl}/get-knowledge-bits/`, {
+      params: {tag}
+    }).pipe(
+      map((knowledgeBits: any) => knowledgeBits.map(
+        (a: Knowledge) => new Knowledge(a._id, a.name, a.value, a.tags, a.extension)
+      )));
+  }
+
+  _createNewKnowledge(knowledgeObject: {name: any; value: any; tags: string[], extension: string}): Observable<Knowledge> {
+    return this.http.post<Knowledge>(`${this.baseUrl}/new-knowledge/`, knowledgeObject);
+  }
+
+  _getKnowledge(id: number) {
+    return this.http.get<Knowledge>(`${this.baseUrl}/knowledge/${id}`)
+      .pipe(
+        map((obj: Knowledge) => new Knowledge(obj._id, obj.name, obj.value, obj.tags, obj.extension))
+      );
+  }
+
+  _updateKnowledge(knowledge: Knowledge): Observable<Knowledge> {
+    return this.http.post<Knowledge>(`${this.baseUrl}/update-knowledge/`, knowledge)
+      .pipe(
+        map((obj: Knowledge) => new Knowledge(obj._id, obj.name, obj.value, obj.tags, obj.extension))
+      );
+  }
+
+  _getKnowledgeParentsPath(knowledge: Knowledge): Observable<string[]> {
+    return this.http.post<string[]>(`${this.baseUrl}/knowledge/parents-path/`, knowledge);
+  }
+  //------------------------------------knowledge bits end----------------------------------------
 
 
 }

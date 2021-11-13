@@ -9,6 +9,7 @@ import { SubproblemsComponent } from './components/subproblems/subproblems.compo
 import { SubquestionsComponent } from './components/subquestions/subquestions.component';
 import { SubdefinitionsComponent } from './components/subdefinitions/subdefinitions.component';
 import { SubactionsComponent } from './components/subactions/subactions.component';
+import { SubknowledgeComponent } from './components/subknowledge/subknowledge.component';
 
 
 
@@ -21,7 +22,8 @@ import { SubactionsComponent } from './components/subactions/subactions.componen
     SubproblemsComponent,
     SubquestionsComponent,
     SubdefinitionsComponent,
-    SubactionsComponent
+    SubactionsComponent,
+    SubknowledgeComponent
   ],
     exports: [
         SubtasksComponent,
@@ -31,7 +33,8 @@ import { SubactionsComponent } from './components/subactions/subactions.componen
         SubproblemsComponent,
         SubquestionsComponent,
         SubdefinitionsComponent,
-        SubactionsComponent
+        SubactionsComponent,
+        SubknowledgeComponent
     ],
   imports: [
     CommonModule,

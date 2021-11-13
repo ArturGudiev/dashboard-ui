@@ -1,8 +1,7 @@
 <div id="content-wrapper" *ngIf="action">
   <div id="action-content">
     <div class="flex-container" id="description-line">
-      <app-task-container-description
-                                      (goToParent)="onGoToNearestParent()"
+      <app-task-container-description (goToParent)="onGoToNearestParent()"
                                       [showDoneAll]="false"
                                       [taskContainer]="action">
       </app-task-container-description>
@@ -34,9 +33,6 @@
           {{action.value}}
         </div>
       </ng-container>
-
-<!--      <h5>Default</h5>-->
-<!--      <quill-editor [ngModel]="text1" (ngModelChange)="f($event)"></quill-editor>-->
     </div>
   </div>
   <div id="right-column">
