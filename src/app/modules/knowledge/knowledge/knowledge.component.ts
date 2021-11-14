@@ -1,21 +1,21 @@
-import {ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Title} from "@angular/platform-browser";
-import {Action} from "../../../models/action";
 import {KnowledgeService} from "../../../services/knowledge.service";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {take} from "rxjs/operators";
 import {TasksService} from "../../../services/tasks.service";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
+import {take} from "rxjs/operators";
+import {Knowledge} from "../../../models/knowledge";
 
 @Component({
-  selector: 'app-action',
-  templateUrl: './action.component.html',
-  styleUrls: ['./action.component.sass']
+  selector: 'app-knowledge',
+  templateUrl: './knowledge.component.html',
+  styleUrls: ['./knowledge.component.sass']
 })
-export class ActionComponent implements OnInit, OnDestroy {
-  action: Action;
+export class KnowledgeComponent implements OnInit {
+  knowledge: Knowledge;
   parentsPath: string[];
   showTextArea = true;
   routerSubscription: Subscription;
@@ -39,11 +39,11 @@ export class ActionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
       let id = params['id'];
-      this.knowledgeService.getAction(id).subscribe((action: Action) => {
-        this.action = action;
-        this.titleService.setTitle(this.action.getFullDescription());
+      this.knowledgeService.getKnowledge(id).subscribe((knowledge: Knowledge) => {
+        this.knowledge = knowledge;
+        this.titleService.setTitle(this.knowledge.getFullDescription());
 
-        const parentsPath$ = this.knowledgeService.getActionParentsPath(this.action);
+        const parentsPath$ = this.knowledgeService.getKnowledgeParentsPath(this.knowledge);
         parentsPath$.subscribe((res: string[]) => {
           this.parentsPath = res;
         });
@@ -65,16 +65,16 @@ export class ActionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.updateActionValue();
+    this.updateKnowledgeValue();
     this.routerSubscription.unsubscribe();
   }
 
 
-  updateActionValue() {
-    if (this.valueText && this.valueText.nativeElement.value !== this.action.value) {
-      this.action.value = this.valueText.nativeElement.value;
-      this.knowledgeService.updateAction(this.action).subscribe(action => {
-        this.action = action;
+  updateKnowledgeValue() {
+    if (this.valueText && this.valueText.nativeElement.value !== this.knowledge.value) {
+      this.knowledge.value = this.valueText.nativeElement.value;
+      this.knowledgeService.updateKnowledge(this.knowledge).subscribe(knowledge => {
+        this.knowledge = knowledge;
       });
     }
     this.editValue = false;
@@ -96,14 +96,14 @@ export class ActionComponent implements OnInit, OnDestroy {
   }
 
   isSaveIconDisabled() {
-    return !this.editValue || (this.valueText && this.valueText.nativeElement.value === this.action.value);
+    return !this.editValue || (this.valueText && this.valueText.nativeElement.value === this.knowledge.value);
   }
 
-  updateActionExtension($event: FocusEvent) {
-    if (this.extension.nativeElement.value !== this.action.extension) {
-      this.action.extension = this.extension.nativeElement.value;
-      this.knowledgeService.updateAction(this.action).subscribe(action => {
-        this.action = action;
+  updateKnowledgeExtension($event: FocusEvent) {
+    if (this.extension.nativeElement.value !== this.knowledge.extension) {
+      this.knowledge.extension = this.extension.nativeElement.value;
+      this.knowledgeService.updateKnowledge(this.knowledge).subscribe(knowledge => {
+        this.knowledge = knowledge;
         this.cdr.detectChanges();
         this.showTextArea = false;
         setTimeout(() => this.showTextArea = true, 0);

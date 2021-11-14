@@ -147,9 +147,27 @@ export class ApiService {
   _createNewDefinition(definitionObject: {name: any; value: any; tags: string[]}): Observable<Definition> {
     return this.http.post<Definition>(`${this.baseUrl}/new-definition/`, definitionObject);
   }
+
+  _getDefinition(id: number) {
+    return this.http.get<Definition>(`${this.baseUrl}/definition/${id}`)
+      .pipe(
+        map((obj: Definition) => new Definition(obj._id, obj.name, obj.value, obj.tags))
+      );
+  }
+
+  _updateDefinition(definition: Definition): Observable<Definition> {
+    return this.http.post<Definition>(`${this.baseUrl}/update-definition/`, definition)
+      .pipe(
+        map((obj: Definition) => new Definition(obj._id, obj.name, obj.value, obj.tags))
+      );
+  }
+
+  _getDefinitionParentsPath(definition: Definition): Observable<string[]> {
+    return this.http.post<string[]>(`${this.baseUrl}/definition/parents-path/`, definition);
+  }
+
   //------------------------------------definitions----------------------------------------
   //------------------------------------actions----------------------------------------
-
   _getActions(tag: string) {
     return this.http.get(`${this.baseUrl}/get-actions/`, {
       params: {tag}

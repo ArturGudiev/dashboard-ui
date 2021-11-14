@@ -1,0 +1,31 @@
+<div id="content-wrapper" *ngIf="definition">
+  <div id="definition-content">
+    <div class="flex-container" id="description-line">
+      <app-task-container-description (goToParent)="onGoToNearestParent()"
+                                      [showDoneAll]="false"
+                                      [taskContainer]="definition">
+      </app-task-container-description>
+      <button id="save-icon"  mat-mini-fab color="primary" [disabled]="isSaveIconDisabled()"
+              (click)="updateDefinitionValue()">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+    <div id="definition-value">
+<!--        <h5 *ngIf="!editValue" style="margin-bottom: 0">Value</h5>-->
+        <div *ngIf="!editValue" class="textarea-value" id="value-wrapper" (click)="toggleEditValue()">
+          {{definition.value}}
+        </div>
+      <mat-form-field *ngIf="editValue" appearance="fill" id="definition-value-input">
+        <mat-label>Value</mat-label>
+        <input id="description-input"  matInput [ngModel]="definition.value" #definitionValueInput
+               (focusout)="updateDefinitionValue()">
+      </mat-form-field>
+    </div>
+  </div>
+  <div id="right-column">
+    <app-parents-path [parentsPath]="parentsPath"
+                      (onParentClick)="goToParentHandler($event)">
+
+    </app-parents-path>
+  </div>
+</div>

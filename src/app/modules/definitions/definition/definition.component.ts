@@ -1,27 +1,25 @@
-import {ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
+import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Title} from "@angular/platform-browser";
-import {Action} from "../../../models/action";
 import {KnowledgeService} from "../../../services/knowledge.service";
-import {CdkTextareaAutosize} from "@angular/cdk/text-field";
-import {take} from "rxjs/operators";
 import {TasksService} from "../../../services/tasks.service";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
+import {take} from "rxjs/operators";
+import {Definition} from "../../../models/definition";
 
 @Component({
-  selector: 'app-action',
-  templateUrl: './action.component.html',
-  styleUrls: ['./action.component.sass']
+  selector: 'app-definition',
+  templateUrl: './definition.component.html',
+  styleUrls: ['./definition.component.sass']
 })
-export class ActionComponent implements OnInit, OnDestroy {
-  action: Action;
+export class DefinitionComponent implements OnInit {
+  definition: Definition;
   parentsPath: string[];
-  showTextArea = true;
   routerSubscription: Subscription;
   editValue = false;
-  @ViewChild('valueText') valueText: ElementRef;
-  @ViewChild('extensionInput') extension: ElementRef;
+  @ViewChild('definitionValueInput') definitionValueInput: ElementRef;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
 
@@ -39,11 +37,11 @@ export class ActionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
       let id = params['id'];
-      this.knowledgeService.getAction(id).subscribe((action: Action) => {
-        this.action = action;
-        this.titleService.setTitle(this.action.getFullDescription());
+      this.knowledgeService.getDefinition(id).subscribe((definition: Definition) => {
+        this.definition = definition;
+        this.titleService.setTitle(this.definition.getFullDescription());
 
-        const parentsPath$ = this.knowledgeService.getActionParentsPath(this.action);
+        const parentsPath$ = this.knowledgeService.getDefinitionParentsPath(this.definition);
         parentsPath$.subscribe((res: string[]) => {
           this.parentsPath = res;
         });
@@ -65,16 +63,16 @@ export class ActionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.updateActionValue();
+    this.updateDefinitionValue();
     this.routerSubscription.unsubscribe();
   }
 
 
-  updateActionValue() {
-    if (this.valueText && this.valueText.nativeElement.value !== this.action.value) {
-      this.action.value = this.valueText.nativeElement.value;
-      this.knowledgeService.updateAction(this.action).subscribe(action => {
-        this.action = action;
+  updateDefinitionValue() {
+    if (this.definitionValueInput && this.definitionValueInput.nativeElement.value !== this.definition.value) {
+      this.definition.value = this.definitionValueInput.nativeElement.value;
+      this.knowledgeService.updateDefinition(this.definition).subscribe(definition => {
+        this.definition = definition;
       });
     }
     this.editValue = false;
@@ -91,24 +89,17 @@ export class ActionComponent implements OnInit, OnDestroy {
     this.editValue = !this.editValue;
     this.cdr.detectChanges();
     if (this.editValue) {
-      this.valueText.nativeElement.focus();
+      this.definitionValueInput.nativeElement.focus();
     }
   }
 
   isSaveIconDisabled() {
-    return !this.editValue || (this.valueText && this.valueText.nativeElement.value === this.action.value);
+    return !this.editValue || (this.definitionValueInput && this.definitionValueInput.nativeElement.value === this.definition.value);
   }
 
-  updateActionExtension($event: FocusEvent) {
-    if (this.extension.nativeElement.value !== this.action.extension) {
-      this.action.extension = this.extension.nativeElement.value;
-      this.knowledgeService.updateAction(this.action).subscribe(action => {
-        this.action = action;
-        this.cdr.detectChanges();
-        this.showTextArea = false;
-        setTimeout(() => this.showTextArea = true, 0);
-      });
-      this.cdr.detectChanges();
+  changeDefinitionValue(val: any) {
+    if (this.definition) {
+      this.definition.value = val;
     }
   }
 }

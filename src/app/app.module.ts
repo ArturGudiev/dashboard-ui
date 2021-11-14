@@ -9,8 +9,8 @@ import {ToolbarComponent} from './components/toolbar/toolbar.component';
 import {HttpClientModule} from '@angular/common/http';
 import {DialogsModule} from "./modules/dialogs/dialogs.module";
 import {ReactiveFormsModule} from "@angular/forms";
-import { CommandCardComponent } from './components/command-card/command-card.component';
-import { MainPageComponent } from './components/main-page/main-page.component';
+import {CommandCardComponent} from './components/command-card/command-card.component';
+import {MainPageComponent} from './components/main-page/main-page.component';
 import {MatIconModule} from "@angular/material/icon";
 import {HIGHLIGHT_OPTIONS, HighlightModule} from "ngx-highlightjs";
 
@@ -20,6 +20,7 @@ const routes: Routes = [
   {path: 'epic', loadChildren: () => import('./modules/epics/epics.module').then(m => m.EpicsModule)},
   {path: 'action', loadChildren: () => import('./modules/actions/actions.module').then(m => m.ActionsModule)},
   {path: 'problem', loadChildren: () => import('./modules/problems/problems.module').then(m => m.ProblemsModule)},
+  {path: 'definition', loadChildren: () => import('./modules/definitions/definitions.module').then(m => m.DefinitionsModule)},
   {path: 'story', loadChildren: () => import('./modules/stories/stories.module').then(m => m.StoriesModule)},
   {path: 'task', loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule)},
   {path: 'tasks', redirectTo: 'task'},
@@ -40,9 +41,9 @@ const routes: Routes = [
         DialogsModule,
         BrowserModule,
         BrowserAnimationsModule,
-        RouterModule,
         DashboardMaterialModule,
         RouterModule.forRoot(routes),
+      // AppRoutingModule,
         ReactiveFormsModule,
         HighlightModule
     ],

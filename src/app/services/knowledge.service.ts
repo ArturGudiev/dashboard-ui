@@ -12,6 +12,7 @@ export class KnowledgeService {
 
   constructor(private apiService: ApiService) { }
 
+  //----------Definitions start -----------------
   getDefinitions(tag: string): Observable<Definition[]> {
     return this.apiService._getDefinitions(tag);
   }
@@ -20,6 +21,19 @@ export class KnowledgeService {
     return this.apiService._createNewDefinition(definitionObject);
   }
 
+  getDefinition(id: number) {
+    return this.apiService._getDefinition(id);
+  }
+
+  updateDefinition(definition: Definition) {
+    return this.apiService._updateDefinition(definition);
+  }
+
+  getDefinitionParentsPath(definition: Definition) {
+    return this.apiService._getDefinitionParentsPath(definition);
+  }
+  //----------Definitions end -----------------
+  //----------Actions start -----------------
   getActions(tag: string): Observable<Action[]> {
     return this.apiService._getActions(tag);
   }
@@ -39,7 +53,7 @@ export class KnowledgeService {
   getActionParentsPath(action: Action) {
     return this.apiService._getActionParentsPath(action);
   }
-
+  //----------Actions end -----------------
   //----------knowledge bits start -----------------
 
   getKnowledgeBits(tag: string): Observable<Knowledge[]> {
