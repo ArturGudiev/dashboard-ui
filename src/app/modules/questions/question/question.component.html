@@ -1,0 +1,39 @@
+<div id="content-wrapper">
+  <div id="question-content">
+    <div class="flex-container">
+      <app-task-container-description (goToParent)="onGoToNearestParent()"
+                                      [showDoneAll]="true"
+                                      (onDoneAllClick)="onDoneAllClick()"
+                                      [taskContainer]="question">
+      </app-task-container-description>
+      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent"
+              *ngIf="question?.getFullDescription()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="addQuestion()">Add a new question</button>
+      </mat-menu>
+
+    </div>
+    <br>
+    <app-subtasks (refreshSubtasks)="refreshSubtasks()"
+                  (addSubtask)="addSubtask()"
+                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+                  [subtasks]="subtasks">
+    </app-subtasks>
+    <app-subquestions (refreshQuestions)="refreshQuestions()"
+                      (addQuestion)="addQuestion()"
+                      (answerTheQuestion)="answerTheQuestion($event)"
+                      [questions]="questions">
+    </app-subquestions>
+    <app-subproblems (refreshProblems)="refreshProblems()"
+                     (addProblem)="addProblem()"
+                     (onProblemSolvedClick)="solveTheProblem($event)"
+                     [problems]="problems">
+    </app-subproblems>
+
+  </div>
+  <app-parents-path [parentsPath]="parentsPath"
+                    (onParentClick)="goToParentHandler($event)"
+  ></app-parents-path>
+</div>

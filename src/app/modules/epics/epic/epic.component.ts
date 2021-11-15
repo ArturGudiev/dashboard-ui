@@ -177,8 +177,7 @@ export class EpicComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
       {
         data: {parentTask: this.epic},
-        height: '300px',
-        width: '300px',
+        ...NewTaskDialogComponent.DIALOG_OPTIONS
       });
 
     dialogRef.afterClosed().subscribe(result => {

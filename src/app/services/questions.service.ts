@@ -33,4 +33,12 @@ export class QuestionsService {
         complete: () => this.dashboardService.updateDoneTasksNumber()
       }));
   }
+
+  getQuestion(id: number): Observable<Question> {
+    return this.apiService._getQuestion(id);
+  }
+
+  getQuestionParentsPath(question: Question): Observable<string[]> {
+    return this.apiService._getQuestionParentsPath(question);
+  }
 }

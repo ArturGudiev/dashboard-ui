@@ -1,29 +1,32 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
+import {Problem} from "../../../models/problem";
+import {Task} from "../../../models/task-class";
+import {Observable, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StoriesService} from "../../../services/stories.service";
 import {TasksService} from "../../../services/tasks.service";
 import {Title} from "@angular/platform-browser";
 import {MatDialog} from "@angular/material/dialog";
 import {ProblemsService} from "../../../services/problems.service";
-import {Problem} from "../../../models/problem";
-import {Task} from "../../../models/task-class";
+import {CommandsService} from "../../../services/commands.service";
+import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
+import * as _ from "lodash";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
-import {CommandsService} from "../../../services/commands.service";
-import * as _ from "lodash";
-import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
-import {Subscription} from "rxjs";
+import {Question} from "../../../models/question";
+import {QuestionsService} from "../../../services/questions.service";
 
 @Component({
-  selector: 'app-problem',
-  templateUrl: './problem.component.html',
-  styleUrls: ['./problem.component.sass']
+  selector: 'app-question',
+  templateUrl: './question.component.html',
+  styleUrls: ['./question.component.sass']
 })
-export class ProblemComponent implements OnInit, OnDestroy {
-  problem: Problem;
+export class QuestionComponent implements OnInit {
+  question: Question;
   subtasks: Task[];
   parentsPath: string[];
   problems: Problem[];
+  questions: Question[];
 
   commandSubscription: Subscription;
   routerSubscription: Subscription;
@@ -36,6 +39,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
     private titleService: Title,
     public dialog: MatDialog,
     private problemsService: ProblemsService,
+    private questionsService: QuestionsService,
     private commandsService: CommandsService
   ) {
   }
@@ -43,14 +47,15 @@ export class ProblemComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
       let id = params['id'];
-      this.problemsService.getProblem(id).subscribe((problem: Problem) => {
-        this.problem = problem;
-        this.titleService.setTitle(this.problem.getFullDescription());
-        if (this.problem !== null) {
-          this.tasksService.getParentsPath(this.problem)
+      this.questionsService.getQuestion(id).subscribe((question: Question) => {
+        this.question = question;
+        this.titleService.setTitle(this.question.getFullDescription());
+        if (this.question !== null) {
+          this.questionsService.getQuestionParentsPath(this.question)
             .subscribe((res: string[]) => this.parentsPath = res);
           this.refreshSubtasks();
           this.refreshProblems();
+          this.refreshQuestions();
         }
       });
     })
@@ -69,7 +74,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
 
 
   refreshProblems(): void {
-    this.problemsService.getProblems(this.problem.getFullDescription())
+    this.problemsService.getProblems(this.question.getFullDescription())
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
   }
 
@@ -78,24 +83,43 @@ export class ProblemComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
-        const obj = {description: description, tags: [this.problem.getFullDescription()]}
+        const obj = {description: description, tags: [this.question.getFullDescription()]}
         this.problemsService.createNewProblem(obj).subscribe(() => this.refreshProblems());
       }
     });
   }
 
-  solveTheProblem(problem = this.problem) {
+  addQuestion() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [this.question.getFullDescription()]}
+        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+
+  solveTheProblem(problem: Problem) {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
-        if (problem === this.problem) {
+      }
+    });
+  }
+
+  answerTheQuestion(question: Question = this.question) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {data: {title: 'Answer'}});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.questionsService.answerTheQuestion(question, solution).subscribe(() => this.refreshQuestions());
+        if (question === this.question) {
           this.onGoToNearestParent();
         }
       }
     });
   }
-
 
   private handleTaskCommand(command: string) {
     const arr = command.split(' ');
@@ -127,7 +151,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
       return;
     }
     if (['r', 'resolve'].includes(arr[0])) {
-      this.solveTheProblem();
+      this.answerTheQuestion();
       return;
     }
     if (['problem'].includes(arr[0])) {
@@ -180,8 +204,15 @@ export class ProblemComponent implements OnInit, OnDestroy {
 
 
   refreshSubtasks(): void {
-    this.tasksService.getTasks(this.problem.getFullDescription())
+    this.tasksService.getTasks(this.question.getFullDescription())
       .subscribe(newSubtasks => this.subtasks = newSubtasks);
+  }
+
+  refreshQuestions(): Observable<Question[]> {
+    const questions$ = this.questionsService.getQuestions(this.question.getFullDescription());
+    questions$
+      .subscribe(questions => this.questions = questions.filter((q: Question) => !q.answer));
+    return questions$;
   }
 
   onGoToNearestParent() {
@@ -205,14 +236,14 @@ export class ProblemComponent implements OnInit, OnDestroy {
   openAddTaskDialog() {
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
       {
-        data: {parentTask: this.problem},
+        data: {parentTask: this.question},
         ...NewTaskDialogComponent.DIALOG_OPTIONS
       });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         const description = result.description;
-        const obj = {description: description, tags: [this.problem.getFullDescription()]}
+        const obj = {description: description, tags: [this.question.getFullDescription()]}
         this.tasksService.createNewTask(obj).subscribe(() => {
           this.refreshSubtasks();
         });
@@ -228,7 +259,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
-        this.problemsService.solveTheProblem(this.problem, solution).subscribe();
+        this.questionsService.answerTheQuestion(this.question, solution).subscribe();
       }
       if (this.parentsPath && this.parentsPath.length > 1) {
         const description = this.parentsPath.slice(-2, -1)[0];

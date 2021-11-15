@@ -115,8 +115,8 @@ export class ApiService {
   _createNewProblem(obj: { description: string; tags: string[] }): Observable<Problem> {
     return this.http.post<Problem>(`${this.baseUrl}/new-problem/`, obj);
   }
-  //------------------------------------problems-------------------------------------------------
-  //------------------------------------questions----------------------------------------
+  //----------------------------------------problems-----------------------------------------
+  //----------------------------------------questions----------------------------------------
   _getQuestions(tag: string): Observable<Question[]> {
     return this.http.get(`${this.baseUrl}/get-questions/`, {
       params: {tag}
@@ -133,9 +133,19 @@ export class ApiService {
   _answerTheQuestion(_id: number, answer: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/answer-question/${_id}`, {answer});
   }
-  //------------------------------------questions----------------------------------------
 
-  //------------------------------------definitions----------------------------------------
+  _getQuestion(id: number): Observable<Question> {
+    return this.http.get<Question>(`${this.baseUrl}/question/${id}`)
+      .pipe(
+        map((obj) => new Question(obj._id, obj.description, obj.tags, obj.answer))
+      );
+  }
+
+  _getQuestionParentsPath(question: Question): Observable<string[]> {
+    return this.http.post<string[]>(`${this.baseUrl}/question/parents-path/`, question);
+  }
+  //----------------------------------------questions------------------------------------------
+  //----------------------------------------definitions----------------------------------------
   _getDefinitions(tag: string): Observable<Definition[]> {
     return this.http.get(`${this.baseUrl}/get-definitions/`, {
       params: {tag}

@@ -132,8 +132,7 @@ export class StoryComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
       {
         data: {parentTask: this.story},
-        height: '300px',
-        width: '700px',
+        ...NewTaskDialogComponent.DIALOG_OPTIONS
       });
 
     dialogRef.afterClosed().subscribe(result => {

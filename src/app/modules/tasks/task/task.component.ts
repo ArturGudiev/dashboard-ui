@@ -198,8 +198,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
       {
         data: {parentTask: this.task},
-        height: '300px',
-        width: '700px',
+        ...NewTaskDialogComponent.DIALOG_OPTIONS
       });
 
     dialogRef.afterClosed().subscribe(result => {

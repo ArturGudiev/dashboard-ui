@@ -9,6 +9,11 @@ import {Task} from '../../../models/task-class';
   styleUrls: ['./new-task-dialog.component.sass']
 })
 export class NewTaskDialogComponent implements OnInit {
+  static DIALOG_OPTIONS = {
+    height: '300px',
+    width: '700px',
+  }
+
   myForm = new FormGroup({
     description: new FormControl('', [
       Validators.required
