@@ -133,7 +133,7 @@ export class StoryComponent implements OnInit, OnDestroy {
       {
         data: {parentTask: this.story},
         height: '300px',
-        width: '300px',
+        width: '700px',
       });
 
     dialogRef.afterClosed().subscribe(result => {

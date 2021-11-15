@@ -4,6 +4,7 @@ import {ApiService} from "./api.service";
 import {Definition} from "../models/definition";
 import {Action} from "../models/action";
 import {Knowledge} from "../models/knowledge";
+import {KnowledgeNode} from "../models/knowledge-node";
 
 @Injectable({
   providedIn: 'root'
@@ -75,5 +76,22 @@ export class KnowledgeService {
   getKnowledgeParentsPath(knowledge: Knowledge) {
     return this.apiService._getKnowledgeParentsPath(knowledge);
   }
+
   //----------knowledge bits stop -----------------
+  //----------knowledge tree start -----------------
+  getKnowledgeNode(id: number): Observable<KnowledgeNode> {
+    return this.apiService._getKnowledgeNode(id);
+  }
+  getKnowledgeNodeParentsPath(node: KnowledgeNode) {
+    return this.apiService._getKnowledgeNodeParentsPath(node);
+  }
+
+  getKnowledgeNodeChildren(id: any) {
+    return this.apiService._getKnowledgeNodeChildren(id);
+  }
+
+  createNewChildKnowledgeNode(obj: { name: string; id: number }): Observable<any> {
+    return this.apiService._createNewKnowledgeNode(obj);
+  }
+  //----------knowledge tree start -----------------
 }

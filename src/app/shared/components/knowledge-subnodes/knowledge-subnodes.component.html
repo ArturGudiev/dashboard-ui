@@ -1,15 +1,14 @@
-<ng-container *ngIf="knowledgeBits?.length > 0">
+<ng-container *ngIf="knowledgeNodes?.length > 0">
 
-  <div id="knowledge-bits-root">
-    <h2 id="knowledge-bits-title">Knowledge</h2>
-    <button mat-mini-fab color="primary" id="add-knowledge-button" (click)="addKnowledge.emit()">
-      <mat-icon class="knowledge-add-icon">add</mat-icon>
+  <div id="knowledge-nodes-actions">
+    <h2 id="knowledge-nodes-title">Knowledge nodes</h2>
+    <button mat-mini-fab color="primary" id="add-knowledge-node-button" (click)="addKnowledgeNode.emit()">
+      <mat-icon class="knowledge-nodes-icon">add</mat-icon>
     </button>
-
   </div>
-
-  <table id="knowledge-bits-table" *ngIf="knowledgeBits && knowledgeBits.length > 0" mat-table
-         [dataSource]="knowledgeBits"
+  <table id="knowledge-nodes-table" *ngIf="knowledgeNodes && knowledgeNodes.length > 0"
+         mat-table
+         [dataSource]="knowledgeNodes"
          class="mat-elevation-z8">
 
     <ng-container matColumnDef="select">
@@ -30,27 +29,18 @@
     <!-- Position Column -->
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef> No.</th>
-      <td mat-cell class="row-link" (click)="onKnowledgeClick(knowledge)" *matCellDef="let knowledge; let i = index">
+      <td mat-cell class="row-link" (click)="onKnowledgeNodeClick(knowledgeNode)" *matCellDef="let knowledgeNode; let i = index">
         <span>{{i + 1}}</span>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Name</th>
-      <td mat-cell *matCellDef="let knowledge;" (click)="onKnowledgeClick(knowledge)">
-        <span class="row-link"  (click)="onKnowledgeClick(knowledge)">{{knowledge.name}}</span>
+      <td mat-cell *matCellDef="let knowledgeNode;" (click)="onKnowledgeNodeClick(knowledgeNode)">
+        <span class="row-link"  (click)="onKnowledgeNodeClick(knowledgeNode)">{{knowledgeNode.name}}</span>
       </td>
     </ng-container>
 
-    <!-- Values Column -->
-    <ng-container matColumnDef="value">
-      <th mat-header-cell *matHeaderCellDef> Values</th>
-      <td mat-cell *matCellDef="let knowledge;" (click)="onKnowledgeClick(knowledge)">
-        <span class="row-link"  (click)="onKnowledgeClick(knowledge)">
-          {{knowledge.value.split('\n')[0].slice(0, 60)}}{{knowledge.value.split('\n').length > 1 ? '...' : ''}}
-        </span>
-      </td>
-    </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

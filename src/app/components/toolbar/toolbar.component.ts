@@ -146,4 +146,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.commandSubscription.unsubscribe();
   }
+
+  onKnowledgeClick() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Knowledge query'}});
+    dialogRef.afterClosed().subscribe((knowledgeQuery: string) => {
+      if (knowledgeQuery) {
+        this.router.navigate(['knowledge-tree', 'node', knowledgeQuery]).then();
+      }
+    });
+  }
 }

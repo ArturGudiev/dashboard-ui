@@ -11,6 +11,7 @@ import {Question} from "../models/question";
 import {Definition} from "../models/definition";
 import {Action} from "../models/action";
 import {Knowledge} from "../models/knowledge";
+import {KnowledgeNode} from "../models/knowledge-node";
 
 @Injectable({
   providedIn: 'root'
@@ -231,6 +232,30 @@ export class ApiService {
     return this.http.post<string[]>(`${this.baseUrl}/knowledge/parents-path/`, knowledge);
   }
   //------------------------------------knowledge bits end----------------------------------------
+  //------------------------------------knowledge bits start----------------------------------------
 
 
+  _getKnowledgeNode(id: number): Observable<KnowledgeNode> {
+    return this.http.get(`${this.baseUrl}/get-knowledge-node/${id}`).pipe(
+      map((obj: any) => KnowledgeNode.constructKnowledgeNode(obj))
+    );
+  }
+
+  _getKnowledgeNodeParentsPath(node: KnowledgeNode): Observable<string[]> {
+    return this.http.post<string[]>(`${this.baseUrl}/knowledge-node/parents-path/`, node);
+  }
+
+  _getKnowledgeNodeChildren(id: any): Observable<KnowledgeNode[]> {
+    return this.http.get(`${this.baseUrl}/get-knowledge-node-children/${id}`)
+      .pipe(
+        map((nodes: any) => nodes.map(
+          (a: any) => new KnowledgeNode(a._id, a.name, a.children)
+        ))
+      );
+  }
+  //------------------------------------knowledge bits end----------------------------------------
+
+  _createNewKnowledgeNode(obj: { name: string; id: number }) {
+    return this.http.post<string[]>(`${this.baseUrl}/new-knowledge-node/`, obj);
+  }
 }

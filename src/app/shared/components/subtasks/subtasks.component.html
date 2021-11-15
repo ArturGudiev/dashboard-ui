@@ -52,10 +52,11 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions</th>
       <td mat-cell *matCellDef="let subtask; let i=index" id="row-{{i}}">
-        <button mat-icon-button (click)="onSubtaskDoneClick.emit(subtask)"
-                aria-label="Example icon button with a vertical three dot icon">
-          <mat-icon>done</mat-icon>
-        </button>
+<!--        <button mat-icon-button (click)="onSubtaskDoneClick.emit(subtask)"-->
+<!--                aria-label="Example icon button with a vertical three dot icon">-->
+<!--          <mat-icon>done</mat-icon>-->
+<!--        </button>-->
+        <mat-icon (click)="onSubtaskDoneClick.emit(subtask)">done</mat-icon>
       </td>
     </ng-container>
 

@@ -10,6 +10,7 @@ import { SubquestionsComponent } from './components/subquestions/subquestions.co
 import { SubdefinitionsComponent } from './components/subdefinitions/subdefinitions.component';
 import { SubactionsComponent } from './components/subactions/subactions.component';
 import { SubknowledgeComponent } from './components/subknowledge/subknowledge.component';
+import { KnowledgeSubnodesComponent } from './components/knowledge-subnodes/knowledge-subnodes.component';
 
 
 
@@ -23,19 +24,21 @@ import { SubknowledgeComponent } from './components/subknowledge/subknowledge.co
     SubquestionsComponent,
     SubdefinitionsComponent,
     SubactionsComponent,
-    SubknowledgeComponent
+    SubknowledgeComponent,
+    KnowledgeSubnodesComponent,
   ],
-    exports: [
-        SubtasksComponent,
-        ParentsPathComponent,
-        TaskContainerDescriptionComponent,
-        SubStoriesComponent,
-        SubproblemsComponent,
-        SubquestionsComponent,
-        SubdefinitionsComponent,
-        SubactionsComponent,
-        SubknowledgeComponent
-    ],
+  exports: [
+    SubtasksComponent,
+    ParentsPathComponent,
+    TaskContainerDescriptionComponent,
+    SubStoriesComponent,
+    SubproblemsComponent,
+    SubquestionsComponent,
+    SubdefinitionsComponent,
+    SubactionsComponent,
+    SubknowledgeComponent,
+    KnowledgeSubnodesComponent
+  ],
   imports: [
     CommonModule,
     DashboardMaterialModule

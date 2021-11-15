@@ -17,6 +17,7 @@ import {HIGHLIGHT_OPTIONS, HighlightModule} from "ngx-highlightjs";
 
 const routes: Routes = [
   {path: '',  component: MainPageComponent},
+  {path: 'knowledge-tree', loadChildren: () => import('./modules/knowledge-tree/knowledge-tree.module').then(m => m.KnowledgeTreeModule)},
   {path: 'epic', loadChildren: () => import('./modules/epics/epics.module').then(m => m.EpicsModule)},
   {path: 'action', loadChildren: () => import('./modules/actions/actions.module').then(m => m.ActionsModule)},
   {path: 'problem', loadChildren: () => import('./modules/problems/problems.module').then(m => m.ProblemsModule)},

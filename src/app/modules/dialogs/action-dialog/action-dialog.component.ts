@@ -11,7 +11,7 @@ export class ActionDialogComponent implements OnInit {
   myForm = new FormGroup({
     name: new FormControl(null, [Validators.required]),
     value: new FormControl(null, [Validators.required]),
-    extension: new FormControl(null, [Validators.required]),
+    extension: new FormControl(null, ),
   });
 
 
