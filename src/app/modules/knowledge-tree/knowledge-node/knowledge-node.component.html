@@ -12,6 +12,12 @@
             (refreshKnowledgeNodes)="refreshKnowledgeNodes()"
             (addKnowledgeNode)="addKnowledgeNode()">
       </app-knowledge-subnodes>
+      <app-subquestions
+                        (refreshQuestions)="refreshQuestions()"
+                        (addQuestion)="addQuestion()"
+                        (answerTheQuestion)="answerTheQuestion($event)"
+                        [questions]="questions">
+      </app-subquestions>
     </div>
   </div>
   <div id="right-column">

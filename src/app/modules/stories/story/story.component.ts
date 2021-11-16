@@ -11,8 +11,10 @@ import {Title} from "@angular/platform-browser";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 import {ProblemsService} from "../../../services/problems.service";
 import {Problem} from "../../../models/problem";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {CommandsService} from "../../../services/commands.service";
+import {Question} from "../../../models/question";
+import {QuestionsService} from "../../../services/questions.service";
 
 @Component({
   selector: 'app-story',
@@ -23,6 +25,7 @@ export class StoryComponent implements OnInit, OnDestroy {
   story: Story;
   subtasks: Task[];
   problems: Problem[];
+  questions: Question[];
   parentsPath: string[];
   substories: Story[];
 
@@ -37,7 +40,8 @@ export class StoryComponent implements OnInit, OnDestroy {
     private titleService: Title,
     public dialog: MatDialog,
     private commandService: CommandsService,
-    public problemsService: ProblemsService
+    public problemsService: ProblemsService,
+    private questionsService: QuestionsService
   ) {
   }
 
@@ -53,6 +57,7 @@ export class StoryComponent implements OnInit, OnDestroy {
           });
           this.refreshSubtasks();
           this.refreshProblems();
+          this.refreshQuestions();
           this.refreshSubstories();
         }
       });
@@ -61,6 +66,34 @@ export class StoryComponent implements OnInit, OnDestroy {
       this.handleCommand(state.command);
     })
   }
+
+  //--------------------------------qeustions start---------------------------------------------------------
+  refreshQuestions(): Observable<Question[]> {
+    const questions$ = this.questionsService.getQuestions(this.story.getFullDescription());
+    questions$
+      .subscribe((questions: Question[]) => this.questions = questions.filter((q: Question) => !q.answer));
+    return questions$;
+  }
+
+  addQuestion() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [this.story.getFullDescription()]}
+        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+
+  answerTheQuestion(question: Question) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Answer'}});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.questionsService.answerTheQuestion(question, solution).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+  //---------------------------------qeustions end----------------------------------------------------------
 
   private handleCommand(command: string) {
     const arr = command.split(' ');

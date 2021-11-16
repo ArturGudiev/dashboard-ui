@@ -19,11 +19,18 @@
     <app-subtasks (refreshSubtasks)="refreshSubtasks()"
                   (addSubtask)="addSubtask()"
                   (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
-                  [subtasks]="subtasks"></app-subtasks>
+                  [subtasks]="subtasks">
+    </app-subtasks>
+    <app-subquestions (refreshQuestions)="refreshQuestions()"
+                      (addQuestion)="addQuestion()"
+                      (answerTheQuestion)="answerTheQuestion($event)"
+                      [questions]="questions">
+    </app-subquestions>
     <app-subproblems (refreshProblems)="refreshProblems()"
                      (addProblem)="addProblem()"
                      (onProblemSolvedClick)="solveTheProblem($event)"
-                     [problems]="problems"></app-subproblems>
+                     [problems]="problems">
+    </app-subproblems>
 
   </div>
   <app-parents-path [parentsPath]="parentsPath"

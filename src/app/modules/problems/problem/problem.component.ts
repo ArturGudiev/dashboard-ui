@@ -12,7 +12,9 @@ import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialo
 import {CommandsService} from "../../../services/commands.service";
 import * as _ from "lodash";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
+import {Question} from "../../../models/question";
+import {QuestionsService} from "../../../services/questions.service";
 
 @Component({
   selector: 'app-problem',
@@ -24,7 +26,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
   subtasks: Task[];
   parentsPath: string[];
   problems: Problem[];
-
+  questions: Question[];
   commandSubscription: Subscription;
   routerSubscription: Subscription;
 
@@ -36,7 +38,9 @@ export class ProblemComponent implements OnInit, OnDestroy {
     private titleService: Title,
     public dialog: MatDialog,
     private problemsService: ProblemsService,
-    private commandsService: CommandsService
+    private commandsService: CommandsService,
+    private questionsService: QuestionsService,
+
   ) {
   }
 
@@ -51,6 +55,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
             .subscribe((res: string[]) => this.parentsPath = res);
           this.refreshSubtasks();
           this.refreshProblems();
+          this.refreshQuestions();
         }
       });
     })
@@ -67,6 +72,33 @@ export class ProblemComponent implements OnInit, OnDestroy {
     }
   }
 
+//--------------------------------qeustions start---------------------------------------------------------
+  refreshQuestions(): Observable<Question[]> {
+    const questions$ = this.questionsService.getQuestions(this.problem.getFullDescription());
+    questions$
+      .subscribe((questions: Question[]) => this.questions = questions.filter((q: Question) => !q.answer));
+    return questions$;
+  }
+
+  addQuestion() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [this.problem.getFullDescription()]}
+        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+
+  answerTheQuestion(question: Question) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Answer'}});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.questionsService.answerTheQuestion(question, solution).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+  //---------------------------------qeustions end----------------------------------------------------------
 
   refreshProblems(): void {
     this.problemsService.getProblems(this.problem.getFullDescription())

@@ -10,12 +10,14 @@ import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {Story} from "../../../models/story";
 import {StoriesService} from "../../../services/stories.service";
 import {Title} from "@angular/platform-browser";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {CommandsService} from "../../../services/commands.service";
 import {Problem} from "../../../models/problem";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 import {ProblemsService} from "../../../services/problems.service";
 import * as _ from "lodash";
+import {Question} from "../../../models/question";
+import {QuestionsService} from "../../../services/questions.service";
 
 @Component({
   selector: 'app-epic',
@@ -27,6 +29,7 @@ export class EpicComponent implements OnInit, OnDestroy {
   subtasks: Task[];
   stories: Story[];
   problems: Problem[];
+  questions: Question[];
   parentsPath: string[];
   routeSubscription: Subscription;
   commandsSubscription: Subscription;
@@ -39,7 +42,8 @@ export class EpicComponent implements OnInit, OnDestroy {
               private commandsService: CommandsService,
               private titleService: Title,
               public dialog: MatDialog,
-              private problemsService: ProblemsService
+              private problemsService: ProblemsService,
+              private questionsService: QuestionsService
   ) {
   }
 
@@ -56,6 +60,7 @@ export class EpicComponent implements OnInit, OnDestroy {
           this.refreshSubtasks();
           this.refreshSubstories();
           this.refreshProblems();
+          this.refreshQuestions();
         }
       })
     });
@@ -162,6 +167,34 @@ export class EpicComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  //--------------------------------qeustions start---------------------------------------------------------
+  refreshQuestions(): Observable<Question[]> {
+    const questions$ = this.questionsService.getQuestions(this.epic.getFullDescription());
+    questions$
+      .subscribe((questions: Question[]) => this.questions = questions.filter((q: Question) => !q.answer));
+    return questions$;
+  }
+
+  addQuestion() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [this.epic.getFullDescription()]}
+        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+
+  answerTheQuestion(question: Question) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Answer'}});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.questionsService.answerTheQuestion(question, solution).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+  //---------------------------------qeustions end----------------------------------------------------------
 
   refreshSubtasks() {
     this.tasksService.getTasks(this.epic.getFullDescription()).subscribe(newSubtasks => {

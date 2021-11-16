@@ -13,6 +13,8 @@ import {Action} from "../../../models/action";
 import {DefinitionDialogComponent} from "../../dialogs/definition/definition-dialog.component";
 import {ActionDialogComponent} from "../../dialogs/action-dialog/action-dialog.component";
 import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
+import {Question} from "../../../models/question";
+import {QuestionsService} from "../../../services/questions.service";
 
 @Component({
   selector: 'app-knowledge-node',
@@ -26,12 +28,14 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   parentsPath: string[];
   definitions: Definition[];
   actions: Action[];
+  questions: Question[];
   knowledgeBits: Knowledge[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private titleService: Title,
               private dialog: MatDialog,
+              private questionsService: QuestionsService,
               private knowledgeService: KnowledgeService) { }
 
   ngOnInit(): void {
@@ -43,6 +47,7 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
         this.refreshKnowledgeNodes();
         this.refreshDefinitions();
         this.refreshActions();
+        this.refreshQuestions();
         this.refreshKnowledgeBits();
         const parentsPath$ = this.knowledgeService.getKnowledgeNodeParentsPath(this.knowledgeNode);
         parentsPath$.subscribe((res: string[]) => {
@@ -55,6 +60,34 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
   }
+
+  //--------------------------------qeustions start---------------------------------------------------------
+  refreshQuestions(): Observable<Question[]> {
+    const questions$ = this.questionsService.getQuestions(this.knowledgeNode.getFullDescription());
+    questions$
+      .subscribe((questions: Question[]) => this.questions = questions.filter((q: Question) => !q.answer));
+    return questions$;
+  }
+
+  addQuestion() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [this.knowledgeNode.getFullDescription()]}
+        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+
+  answerTheQuestion(question: Question) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Answer'}});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.questionsService.answerTheQuestion(question, solution).subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+  //---------------------------------qeustions end----------------------------------------------------------
 
   goToParentHandler(description: string) {
     const urls = getUrlByDescription(description);
@@ -82,7 +115,6 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
         // this.tasksService.createNewTask(obj).subscribe(() => this.refreshSubtasks());
-        const obj = {description: description, tags: [this.knowledgeNode.getFullDescription()]}
         this.knowledgeService.createNewChildKnowledgeNode({id: this.knowledgeNode._id, name: description})
           .subscribe(() => this.refreshKnowledgeNodes());
       }
