@@ -15,6 +15,7 @@ import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.
 import {Observable, Subscription} from "rxjs";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
+import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-problem',
@@ -40,7 +41,6 @@ export class ProblemComponent implements OnInit, OnDestroy {
     private problemsService: ProblemsService,
     private commandsService: CommandsService,
     private questionsService: QuestionsService,
-
   ) {
   }
 
@@ -81,7 +81,11 @@ export class ProblemComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {
+        data: {title: 'Description'},
+        ...NEW_QUESTION_DIALOG_OPTIONS
+      });
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
         const obj = {description: description, tags: [this.problem.getFullDescription()]}

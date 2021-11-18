@@ -15,6 +15,7 @@ import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
+import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-question',
@@ -90,7 +91,10 @@ export class QuestionComponent implements OnInit {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {
+      data: {title: 'Description'},
+      ...NEW_QUESTION_DIALOG_OPTIONS
+    });
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
         const obj = {description: description, tags: [this.question.getFullDescription()]}

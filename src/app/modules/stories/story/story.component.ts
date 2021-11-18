@@ -15,6 +15,7 @@ import {Observable, Subscription} from "rxjs";
 import {CommandsService} from "../../../services/commands.service";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
+import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-story',
@@ -76,7 +77,10 @@ export class StoryComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {
+      data: {title: 'Description'},
+      ...NEW_QUESTION_DIALOG_OPTIONS
+    });
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
         const obj = {description: description, tags: [this.story.getFullDescription()]}
@@ -93,6 +97,7 @@ export class StoryComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   //---------------------------------qeustions end----------------------------------------------------------
 
   private handleCommand(command: string) {

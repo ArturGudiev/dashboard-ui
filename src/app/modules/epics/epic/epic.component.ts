@@ -18,6 +18,7 @@ import {ProblemsService} from "../../../services/problems.service";
 import * as _ from "lodash";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
+import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-epic',
@@ -177,7 +178,10 @@ export class EpicComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {data: {title: 'Description', inputWidth: '40rem'},
+          ...NEW_QUESTION_DIALOG_OPTIONS
+      });
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
         const obj = {description: description, tags: [this.epic.getFullDescription()]}

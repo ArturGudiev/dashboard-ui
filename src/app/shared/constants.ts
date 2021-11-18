@@ -27,3 +27,5 @@ export const colorLightBrown = '#FFC080'
 export const colorLightPink = '#8080C0'
 
 export const COLORS = [colorBlue, colorPink, colorYellow, colorLightBrown, colorLightPink];
+
+export const  NEW_QUESTION_DIALOG_OPTIONS = { height: '300px', width: '700px'};

@@ -308,6 +308,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.commandsSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
     this.isLoading = true;
+    this.task = null;
   }
 
   refreshQuestions(): Observable<Question[]> {
@@ -318,13 +319,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        const obj = {description: description, tags: [this.task.getFullDescription()]}
-        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
-      }
-    });
+    this.questionsService.openAddQuestionDialog(this.task).then(() => this.refreshQuestions());
   }
 
   answerTheQuestion(question: Question) {
@@ -359,7 +354,12 @@ export class TaskComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((obj: any) => {
       if (obj) {
-        const action = {name: obj.name, value: obj.value, tags: [this.task.getFullDescription()], extension: obj.extension};
+        const action = {
+          name: obj.name,
+          value: obj.value,
+          tags: [this.task.getFullDescription()],
+          extension: obj.extension
+        };
         this.knowledgeService.createNewAction(action).subscribe(() => this.refreshActions());
       }
     });
@@ -386,7 +386,12 @@ export class TaskComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((obj: any) => {
       if (obj) {
-        const knowledge = {name: obj.name, value: obj.value, tags: [this.task.getFullDescription()], extension: obj.extension};
+        const knowledge = {
+          name: obj.name,
+          value: obj.value,
+          tags: [this.task.getFullDescription()],
+          extension: obj.extension
+        };
         this.knowledgeService.createNewKnowledge(knowledge).subscribe(() => this.refreshKnowledgeBits());
       }
     });

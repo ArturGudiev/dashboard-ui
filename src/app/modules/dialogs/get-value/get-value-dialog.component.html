@@ -1,8 +1,9 @@
 <form autocomplete="on"
       [formGroup]="myForm" (ngSubmit)="onSubmit()" >
-  <mat-form-field appearance="fill" id="value-field">
+  <mat-form-field appearance="fill" id="value-field"
+                  [ngStyle]="data.inputWidth && {'width': data.inputWidth}">
     <mat-label>{{data.title}}</mat-label>
-    <input id="description-input"  matInput formControlName="valueField">
+    <input id="value-input"   matInput formControlName="valueField">
   </mat-form-field>
 
   <div mat-dialog-actions>
