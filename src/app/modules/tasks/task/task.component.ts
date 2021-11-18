@@ -24,6 +24,7 @@ import {Action} from "../../../models/action";
 import {ActionDialogComponent} from "../../dialogs/action-dialog/action-dialog.component";
 import {Knowledge} from "../../../models/knowledge";
 import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
+import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-task',
@@ -319,8 +320,18 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    this.questionsService.openAddQuestionDialog(this.task).then(() => this.refreshQuestions());
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {data: {title: 'Description', inputWidth: '40rem'},
+        ...NEW_QUESTION_DIALOG_OPTIONS
+      });
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [this.task.getFullDescription()]}
+        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
+      }
+    });
   }
+
 
   answerTheQuestion(question: Question) {
     const dialogRef = this.dialog.open(GetValueDialogComponent,
