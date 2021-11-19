@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {Question} from "../models/question";
 import {ApiService} from "./api.service";
 import {tap} from "rxjs/operators";
@@ -9,6 +9,10 @@ import {NEW_QUESTION_DIALOG_OPTIONS} from "../shared/constants";
 import {MatDialog} from "@angular/material/dialog";
 import {TaskContainer} from "../interfaces/task-container";
 
+export interface RefreshQuestionsState {
+  taskContainer: TaskContainer;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,6 +21,23 @@ export class QuestionsService {
   constructor(private apiService: ApiService,
               private dialog: MatDialog,
               private dashboardService: DashboardService) {
+  }
+
+  private initialRefreshQuestionsState: RefreshQuestionsState = {
+    taskContainer: null
+  }
+  private refreshQuestionsState = new BehaviorSubject<RefreshQuestionsState>(this.initialRefreshQuestionsState);
+
+  getRefreshQuestionsDataCurrentState(): RefreshQuestionsState {
+    return this.refreshQuestionsState.getValue();
+  }
+
+  getRefreshQuestionsDataStateChange(): Observable<RefreshQuestionsState> {
+    return this.refreshQuestionsState.asObservable();
+  }
+
+  setRefreshQuestionsDataState(state: RefreshQuestionsState): void {
+    this.refreshQuestionsState.next(state);
   }
 
   getQuestions(tag: string): Observable<Question[]> {
@@ -48,16 +69,18 @@ export class QuestionsService {
     return this.apiService._getQuestionParentsPath(question);
   }
 
-  async openAddQuestionDialog(taskContainer: TaskContainer): Promise<any> {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {
-      data: {title: 'Description', inputWidth: '40rem'},
-      ...NEW_QUESTION_DIALOG_OPTIONS
+  openAddQuestionDialog(taskContainer: TaskContainer): void {
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {data: {title: 'Description', inputWidth: '40rem'},
+        ...NEW_QUESTION_DIALOG_OPTIONS
+      });
+    dialogRef.afterClosed().subscribe((description: string) => {
+      if (description) {
+        const obj = {description: description, tags: [taskContainer.getFullDescription()]}
+        const state = this.getRefreshQuestionsDataCurrentState();
+        this.createNewQuestion(obj).subscribe(() =>
+          this.setRefreshQuestionsDataState({...state, taskContainer: taskContainer}));
+      }
     });
-    const description: string = await dialogRef.afterClosed().toPromise();
-    if (description) {
-      const obj = {description: description, tags: [taskContainer.getFullDescription()]}
-      return this.createNewQuestion(obj);
-    }
-    return of(null);
   }
 }

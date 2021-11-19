@@ -1,9 +1,20 @@
 <div id="content-wrapper">
   <div id="epic-content">
-    <app-task-container-description
-      (goToParent)="onGoToNearseParent()" [showDoneAll]="false"
-      [taskContainer]="epic">
-    </app-task-container-description>
+
+    <div class="flex-container">
+      <app-task-container-description
+        (goToParent)="onGoToNearseParent()" [showDoneAll]="false"
+        [taskContainer]="epic">
+      </app-task-container-description>
+      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent"
+              *ngIf="epic?.getFullDescription()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="addQuestion()">Add a new question</button>
+        <button mat-menu-item (click)="addProblem()">Add a new problem</button>
+      </mat-menu>
+    </div>
     <br>
 
 

@@ -5,6 +5,13 @@
                                       [showDoneAll]="false"
                                       [taskContainer]="knowledgeNode">
       </app-task-container-description>
+      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent"
+              *ngIf="knowledgeNode?.getFullDescription()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="addQuestion()">Add a new question</button>
+      </mat-menu>
     </div>
     <div>
       <app-knowledge-subnodes

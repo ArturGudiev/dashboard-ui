@@ -15,7 +15,6 @@ import {ActionDialogComponent} from "../../dialogs/action-dialog/action-dialog.c
 import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
-import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-knowledge-node',
@@ -31,6 +30,8 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   actions: Action[];
   questions: Question[];
   knowledgeBits: Knowledge[];
+
+  refreshQuestionsSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -56,10 +57,16 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
         });
       });
     });
+    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
+      if (this.knowledgeNode === state.taskContainer) {
+        this.refreshQuestions();
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
+    this.refreshQuestionsSubscription.unsubscribe();
   }
 
   //--------------------------------qeustions start---------------------------------------------------------
@@ -71,16 +78,7 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent,
-      {data: {title: 'Description'},
-          ...NEW_QUESTION_DIALOG_OPTIONS
-      });
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        const obj = {description: description, tags: [this.knowledgeNode.getFullDescription()]}
-        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
-      }
-    });
+    this.questionsService.openAddQuestionDialog(this.knowledgeNode);
   }
 
   answerTheQuestion(question: Question) {

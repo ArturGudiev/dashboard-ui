@@ -15,7 +15,6 @@ import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
-import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-question',
@@ -31,6 +30,7 @@ export class QuestionComponent implements OnInit {
 
   commandSubscription: Subscription;
   routerSubscription: Subscription;
+  refreshQuestionsSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -63,7 +63,13 @@ export class QuestionComponent implements OnInit {
 
     this.commandSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
-    })
+    });
+    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
+      if (this.question === state.taskContainer) {
+        this.refreshQuestions();
+      }
+    });
+
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -91,16 +97,7 @@ export class QuestionComponent implements OnInit {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {
-      data: {title: 'Description'},
-      ...NEW_QUESTION_DIALOG_OPTIONS
-    });
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        const obj = {description: description, tags: [this.question.getFullDescription()]}
-        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
-      }
-    });
+    this.questionsService.openAddQuestionDialog(this.question);
   }
 
   solveTheProblem(problem: Problem) {
@@ -275,6 +272,7 @@ export class QuestionComponent implements OnInit {
   ngOnDestroy(): void {
     this.commandSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
+    this.refreshQuestionsSubscription.unsubscribe();
   }
 
 }

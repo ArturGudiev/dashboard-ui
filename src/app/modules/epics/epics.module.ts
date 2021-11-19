@@ -5,6 +5,7 @@ import { EpicsListComponent } from './epics-list/epics-list.component';
 import {EpicsRoutingModule} from "./epics-routing.module";
 import {SharedModule} from "../../shared/shared.module";
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import {DashboardMaterialModule} from "../../shared/material/dashboard-material.module";
 
 
 
@@ -17,7 +18,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
         CommonModule,
         EpicsRoutingModule,
         SharedModule,
-        DragDropModule
+        DragDropModule,
+        DashboardMaterialModule
     ]
 })
 export class EpicsModule { }

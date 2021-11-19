@@ -15,7 +15,6 @@ import {Observable, Subscription} from "rxjs";
 import {CommandsService} from "../../../services/commands.service";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
-import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-story',
@@ -32,6 +31,7 @@ export class StoryComponent implements OnInit, OnDestroy {
 
   commandSubscription: Subscription;
   routerSubscription: Subscription;
+  refreshQuestionsSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -65,7 +65,13 @@ export class StoryComponent implements OnInit, OnDestroy {
     });
     this.commandSubscription = this.commandService.getDataStateChange().subscribe(state => {
       this.handleCommand(state.command);
-    })
+    });
+
+    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
+      if (this.story === state.taskContainer) {
+        this.refreshQuestions();
+      }
+    });
   }
 
   //--------------------------------qeustions start---------------------------------------------------------
@@ -77,16 +83,7 @@ export class StoryComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {
-      data: {title: 'Description'},
-      ...NEW_QUESTION_DIALOG_OPTIONS
-    });
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        const obj = {description: description, tags: [this.story.getFullDescription()]}
-        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
-      }
-    });
+    this.questionsService.openAddQuestionDialog(this.story);
   }
 
   answerTheQuestion(question: Question) {
@@ -230,5 +227,6 @@ export class StoryComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
     this.commandSubscription.unsubscribe();
+    this.refreshQuestionsSubscription.unsubscribe();
   }
 }

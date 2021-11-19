@@ -24,7 +24,6 @@ import {Action} from "../../../models/action";
 import {ActionDialogComponent} from "../../dialogs/action-dialog/action-dialog.component";
 import {Knowledge} from "../../../models/knowledge";
 import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
-import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-task',
@@ -46,6 +45,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   private routerSubscription: Subscription;
   knowledgeBits: Knowledge[];
+  refreshQuestionsSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private taskApiService: ApiService,
@@ -79,6 +79,11 @@ export class TaskComponent implements OnInit, OnDestroy {
             () => this.isLoading = false
           )}
       })
+    });
+    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
+      if (this.task === state.taskContainer) {
+        this.refreshQuestions();
+      }
     });
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
@@ -308,6 +313,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.commandsSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
+    this.refreshQuestionsSubscription.unsubscribe();
     this.isLoading = true;
     this.task = null;
   }
@@ -320,16 +326,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent,
-      {data: {title: 'Description', inputWidth: '40rem'},
-        ...NEW_QUESTION_DIALOG_OPTIONS
-      });
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        const obj = {description: description, tags: [this.task.getFullDescription()]}
-        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
-      }
-    });
+    this.questionsService.openAddQuestionDialog(this.task);
   }
 
 

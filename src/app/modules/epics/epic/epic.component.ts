@@ -18,7 +18,6 @@ import {ProblemsService} from "../../../services/problems.service";
 import * as _ from "lodash";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
-import {NEW_QUESTION_DIALOG_OPTIONS} from "../../../shared/constants";
 
 @Component({
   selector: 'app-epic',
@@ -34,6 +33,7 @@ export class EpicComponent implements OnInit, OnDestroy {
   parentsPath: string[];
   routeSubscription: Subscription;
   commandsSubscription: Subscription;
+  refreshQuestionsSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private epicsService: EpicsService,
@@ -67,8 +67,12 @@ export class EpicComponent implements OnInit, OnDestroy {
     });
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleCommand(state.command);
-    })
-
+    });
+    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
+      if (this.epic === state.taskContainer) {
+        this.refreshQuestions();
+      }
+    });
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -178,16 +182,7 @@ export class EpicComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent,
-      {data: {title: 'Description', inputWidth: '40rem'},
-          ...NEW_QUESTION_DIALOG_OPTIONS
-      });
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        const obj = {description: description, tags: [this.epic.getFullDescription()]}
-        this.questionsService.createNewQuestion(obj).subscribe(() => this.refreshQuestions());
-      }
-    });
+    this.questionsService.openAddQuestionDialog(this.epic);
   }
 
   answerTheQuestion(question: Question) {
@@ -268,5 +263,6 @@ export class EpicComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.routeSubscription.unsubscribe();
     this.commandsSubscription.unsubscribe();
+    this.refreshQuestionsSubscription.unsubscribe();
   }
 }
