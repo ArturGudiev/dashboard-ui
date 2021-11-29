@@ -9,5 +9,6 @@ export const predefinedRoutes = [
   {routes: ['sizer'], value: ['epic', 6]},
   {routes: ['sched', 'scheduler'], value: ['epic', 10]},
   {routes: ['dash', 'dashboard'], value: ['epic', 4]},
-  {routes: ['dash-ui', 'dashui', 'dash ui', 'dash ui', 'dashboardui'], value: ['epic', 38]}
+  {routes: ['dash-ui', 'dashui', 'dash ui', 'dash ui', 'dashboardui'], value: ['epic', 38]},
+  {routes: ['memui', 'mem-ui'], value: ['story', 108]}
 ]

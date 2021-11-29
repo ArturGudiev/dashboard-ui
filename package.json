@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start2": "ng serve -o --host 0.0.0.0",
-    "start22": "ng serve -o --host 0.0.0.0  --live-reload false",
+    "start2": "ng serve -o --host 0.0.0.0 --port 4205",
+    "start22": "ng serve -o --host 0.0.0.0  --live-reload false --port 4205",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

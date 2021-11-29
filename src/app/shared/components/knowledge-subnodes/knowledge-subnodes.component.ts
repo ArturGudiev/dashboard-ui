@@ -12,6 +12,7 @@ export class KnowledgeSubnodesComponent implements OnInit {
   @Input() knowledgeNodes: KnowledgeNode[] = [];
   @Output() addKnowledgeNode = new EventEmitter();
   @Output() refreshKnowledgeNodes = new EventEmitter();
+  @Output() deleteKnowledgeNode = new EventEmitter();
   displayedColumns: string[] = ['select', 'position', 'name'];
 
   selection = new SelectionModel<KnowledgeNode>(true, []);
@@ -39,5 +40,4 @@ export class KnowledgeSubnodesComponent implements OnInit {
   onKnowledgeNodeClick(knowledgeNode: KnowledgeNode) {
     this.router.navigate(['knowledge-tree', 'node', knowledgeNode._id]).then();
   }
-
 }

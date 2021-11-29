@@ -268,4 +268,8 @@ export class ApiService {
   _createNewKnowledgeNode(obj: { name: string; id: number }) {
     return this.http.post<string[]>(`${this.baseUrl}/new-knowledge-node/`, obj);
   }
+
+  _deleteKnowledgeNode(node: KnowledgeNode): Observable<any> {
+    return this.http.delete<string[]>(`${this.baseUrl}/delete-knowledge-node/${node._id}`);
+  }
 }

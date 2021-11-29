@@ -11,13 +11,19 @@
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="addQuestion()">Add a new question</button>
+<!--        <button mat-menu-item (click)="addProblem()">Add a new problem</button>-->
+        <button mat-menu-item (click)="addDefinition()">Add a new definition</button>
+        <button mat-menu-item (click)="addAction()">Add a new action</button>
+        <button mat-menu-item (click)="addKnowledge()">Add a new knowledge</button>
+        <button mat-menu-item (click)="addKnowledgeNode()">Add a new knowledge node</button>
       </mat-menu>
     </div>
     <div>
       <app-knowledge-subnodes
-            [knowledgeNodes]="subnodes"
-            (refreshKnowledgeNodes)="refreshKnowledgeNodes()"
-            (addKnowledgeNode)="addKnowledgeNode()">
+        [knowledgeNodes]="subnodes"
+        (refreshKnowledgeNodes)="refreshKnowledgeNodes()"
+        (deleteKnowledgeNode)="deleteKnowledgeNode($event)"
+        (addKnowledgeNode)="addKnowledgeNode()">
       </app-knowledge-subnodes>
       <app-subquestions
                         (refreshQuestions)="refreshQuestions()"

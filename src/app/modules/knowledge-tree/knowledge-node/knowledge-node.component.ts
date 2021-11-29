@@ -15,6 +15,7 @@ import {ActionDialogComponent} from "../../dialogs/action-dialog/action-dialog.c
 import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
+import {CommandsService} from "../../../services/commands.service";
 
 @Component({
   selector: 'app-knowledge-node',
@@ -32,12 +33,14 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   knowledgeBits: Knowledge[];
 
   refreshQuestionsSubscription: Subscription;
+  private commandsSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private titleService: Title,
               private dialog: MatDialog,
               private questionsService: QuestionsService,
+              private commandsService: CommandsService,
               private knowledgeService: KnowledgeService) { }
 
   ngOnInit(): void {
@@ -62,12 +65,58 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
         this.refreshQuestions();
       }
     });
+    this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
+      this.handleTaskCommand(state.command);
+    });
   }
 
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
     this.refreshQuestionsSubscription.unsubscribe();
+    this.commandsSubscription.unsubscribe();
   }
+
+  private handleTaskCommand(command: string) {
+    const arr = command.split(' ');
+    const args = arr.slice(1);
+    // if (['anonymous'].includes(arr[0])) {
+    //   this.addAnonymousTaskHandler();
+    // }
+    // if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
+    //   this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
+    // }
+    // if (['f', 'ft', 'finish-task'].includes(arr[0])) {
+    //   this.finishTaskHandler(args);
+    // }
+    // if (['fp', 'finish-problem'].includes(arr[0])) {
+    //   this.finishProblemHandler(args);
+    // }
+    // if (['problem'].includes(arr[0])) {
+    //   this.addProblem();
+    // }
+    if (['definition'].includes(arr[0])) {
+      this.addDefinition();
+    }
+    if (['action', 'act'].includes(arr[0])) {
+      this.addAction();
+    }
+    if (['question'].includes(arr[0])) {
+      this.addQuestion();
+    }
+    if (['back', 'b'].includes(arr[0])) {
+      this.onGoToNearestParent();
+    }
+    if (['knowledge'].includes(arr[0])) {
+      this.addKnowledge();
+    }
+    if (['node'].includes(arr[0])) {
+      this.addKnowledgeNode();
+    }
+    // if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
+    //   this.finishAllTasks();
+    // }
+  }
+
 
   //--------------------------------qeustions start---------------------------------------------------------
   refreshQuestions(): Observable<Question[]> {
@@ -185,4 +234,9 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
     });
   }
 
+  deleteKnowledgeNode(node: KnowledgeNode) {
+    this.knowledgeService.deleteKnowledgeNode(node).subscribe((() => {
+      this.refreshKnowledgeNodes();
+    }))
+  }
 }

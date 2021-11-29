@@ -93,5 +93,9 @@ export class KnowledgeService {
   createNewChildKnowledgeNode(obj: { name: string; id: number }): Observable<any> {
     return this.apiService._createNewKnowledgeNode(obj);
   }
+  deleteKnowledgeNode(node: KnowledgeNode): Observable<any> {
+    return this.apiService._deleteKnowledgeNode(node);
+
+  }
   //----------knowledge tree start -----------------
 }

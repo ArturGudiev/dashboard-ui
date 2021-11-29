@@ -120,9 +120,6 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (['question'].includes(arr[0])) {
       this.addQuestion();
     }
-    if (['back', 'b'].includes(arr[0])) {
-      this.onGoToNearestParent();
-    }
     if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
       this.finishAllTasks();
     }

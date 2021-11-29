@@ -5,6 +5,11 @@
     <button mat-mini-fab color="primary" id="add-knowledge-node-button" (click)="addKnowledgeNode.emit()">
       <mat-icon class="knowledge-nodes-icon">add</mat-icon>
     </button>
+    <button mat-mini-fab color="accent" id="delete-knowledge-node-button"
+            (click)="deleteKnowledgeNode.emit(selection.selected[0])"
+            *ngIf="selection.hasValue()">
+      <mat-icon  class="knowledge-nodes-icon">delete</mat-icon>
+    </button>
   </div>
   <table id="knowledge-nodes-table" *ngIf="knowledgeNodes && knowledgeNodes.length > 0"
          mat-table
