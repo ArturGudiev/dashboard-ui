@@ -8,6 +8,7 @@ import {TasksService} from "../../../services/tasks.service";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {take} from "rxjs/operators";
 import {Definition} from "../../../models/definition";
+import {TaskC} from "../../../models/task-class";
 
 @Component({
   selector: 'app-definition',
@@ -21,6 +22,8 @@ export class DefinitionComponent implements OnInit {
   editValue = false;
   @ViewChild('definitionValueInput') definitionValueInput: ElementRef;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
+  subtasks: TaskC[];
+  refreshTasksSubscription: Subscription;
 
 
   constructor(
@@ -40,13 +43,23 @@ export class DefinitionComponent implements OnInit {
       this.knowledgeService.getDefinition(id).subscribe((definition: Definition) => {
         this.definition = definition;
         this.titleService.setTitle(this.definition.getFullDescription());
-
+        this.refreshSubtasks();
         const parentsPath$ = this.knowledgeService.getDefinitionParentsPath(this.definition);
         parentsPath$.subscribe((res: string[]) => {
           this.parentsPath = res;
         });
       });
     });
+
+    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+      if (this.definition === state.taskContainer) { this.refreshSubtasks(); }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.updateDefinitionValue();
+    this.routerSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
   }
 
   goToParentHandler(description: string) {
@@ -56,15 +69,23 @@ export class DefinitionComponent implements OnInit {
     }
   }
 
+  refreshSubtasks(): void {
+    this.tasksService.getTasks(this.definition.getFullDescription())
+      .subscribe(newSubtasks => this.subtasks = newSubtasks);
+  }
+
+  addSubtask() {
+    this.tasksService.openAddTaskDialog(this.definition);
+  }
+
+  onSubtaskDoneClick(subtask: TaskC) {
+    this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
+  }
+
 
   triggerResize() {
     // Wait for changes to be applied, then trigger textarea resize.
     this._ngZone.onStable.pipe(take(1)).subscribe(() => this.autosize.resizeToFitContent(true));
-  }
-
-  ngOnDestroy(): void {
-    this.updateDefinitionValue();
-    this.routerSubscription.unsubscribe();
   }
 
 

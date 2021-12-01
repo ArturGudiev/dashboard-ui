@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {KnowledgeService} from "../../../services/knowledge.service";
@@ -16,6 +16,8 @@ import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
 import {CommandsService} from "../../../services/commands.service";
+import {TasksService} from "../../../services/tasks.service";
+import {TaskC} from "../../../models/task-class";
 
 @Component({
   selector: 'app-knowledge-node',
@@ -30,9 +32,11 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   definitions: Definition[];
   actions: Action[];
   questions: Question[];
+  subtasks: TaskC[];
   knowledgeBits: Knowledge[];
 
   refreshQuestionsSubscription: Subscription;
+  refreshTasksSubscription: Subscription;
   private commandsSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
@@ -40,6 +44,7 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
               private titleService: Title,
               private dialog: MatDialog,
               private questionsService: QuestionsService,
+              private tasksService: TasksService,
               private commandsService: CommandsService,
               private knowledgeService: KnowledgeService) { }
 
@@ -53,6 +58,7 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
         this.refreshDefinitions();
         this.refreshActions();
         this.refreshQuestions();
+        this.refreshSubtasks();
         this.refreshKnowledgeBits();
         const parentsPath$ = this.knowledgeService.getKnowledgeNodeParentsPath(this.knowledgeNode);
         parentsPath$.subscribe((res: string[]) => {
@@ -65,6 +71,10 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
         this.refreshQuestions();
       }
     });
+
+    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+      if (this.knowledgeNode === state.taskContainer) { this.refreshSubtasks(); }
+    });
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
     });
@@ -74,6 +84,25 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
     this.routerSubscription.unsubscribe();
     this.refreshQuestionsSubscription.unsubscribe();
     this.commandsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
+      this.addSubtask();
+    }
+  }
+
+
+  refreshSubtasks() {
+    this.tasksService.getTasks(this.knowledgeNode.getFullDescription()).subscribe(newSubtasks => {
+      this.subtasks = newSubtasks;
+    });
+  }
+
+  onSubtaskDoneClick(subtask: TaskC) {
+    this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
   private handleTaskCommand(command: string) {
@@ -128,6 +157,10 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
 
   addQuestion() {
     this.questionsService.openAddQuestionDialog(this.knowledgeNode);
+  }
+
+  addSubtask() {
+    this.tasksService.openAddTaskDialog(this.knowledgeNode);
   }
 
   answerTheQuestion(question: Question) {

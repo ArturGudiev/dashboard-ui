@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../services/tasks.service';
-import {Task} from '../../../models/task-class';
+import {TaskC} from '../../../models/task-class';
 import {ApiService} from '../../../services/api.service';
 import {getUrlByDescription} from '../../../shared/libs/dashboard.lib';
 import {MatDialog} from '@angular/material/dialog';
@@ -32,8 +32,8 @@ import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge
 })
 export class TaskComponent implements OnInit, OnDestroy {
 
-  task: Task;
-  subtasks: Task[];
+  task: TaskC;
+  subtasks: TaskC[];
   problems: Problem[];
   actions: Action[];
   questions: Question[];
@@ -46,6 +46,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   private routerSubscription: Subscription;
   knowledgeBits: Knowledge[];
   refreshQuestionsSubscription: Subscription;
+  refreshTasksSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private taskApiService: ApiService,
@@ -81,9 +82,10 @@ export class TaskComponent implements OnInit, OnDestroy {
       })
     });
     this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-      if (this.task === state.taskContainer) {
-        this.refreshQuestions();
-      }
+      if (this.task === state.taskContainer) { this.refreshQuestions(); }
+    });
+    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+      if (this.task === state.taskContainer) { this.refreshSubtasks(); }
     });
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
@@ -182,42 +184,12 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-
     if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
-      this.openAddTaskDialog();
+      this.addSubtask();
     }
-
-    // if (event.key === 'u' && this.parentsPath.length > 1) {
-    //   console.log('AAAA', this.parentsPath.slice(-2));
-    //   // this.onParentClick(this.parentsPath.slice(-2)[0]); // todo refactor
-    // }
-    //
-    // if (event.keyCode === KEY_CODE.LEFT_ARROW) {
-    //   this.decrement();
-    // }
   }
 
-  openAddTaskDialog() {
-    const dialogRef = this.dialog.open(NewTaskDialogComponent,
-      {
-        data: {parentTask: this.task},
-        ...NewTaskDialogComponent.DIALOG_OPTIONS
-      });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const description = result.description;
-        const obj = {description: description, tags: [this.task.getFullDescription()]}
-        this.tasksService.createNewTask(obj).subscribe(() => this.refreshSubtasks());
-      }
-    });
-  }
-
-  addSubtask() {
-    this.openAddTaskDialog();
-  }
-
-  onSubtaskDoneClick(subtask: Task) {
+  onSubtaskDoneClick(subtask: TaskC) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
@@ -311,6 +283,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.commandsSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
     this.refreshQuestionsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
     this.isLoading = true;
     this.task = null;
   }
@@ -326,6 +299,9 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.questionsService.openAddQuestionDialog(this.task);
   }
 
+  addSubtask() {
+    this.tasksService.openAddTaskDialog(this.task);
+  }
 
   answerTheQuestion(question: Question) {
     const dialogRef = this.dialog.open(GetValueDialogComponent,

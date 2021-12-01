@@ -1,7 +1,7 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
-import {Task} from "../../../models/task-class";
+import {TaskC} from "../../../models/task-class";
 import {Epic} from "../../../models/epic";
 import {EpicsService} from "../../../services/epics.service";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
@@ -26,7 +26,7 @@ import {QuestionsService} from "../../../services/questions.service";
 })
 export class EpicComponent implements OnInit, OnDestroy {
   epic: Epic;
-  subtasks: Task[];
+  subtasks: TaskC[];
   stories: Story[];
   problems: Problem[];
   questions: Question[];
@@ -34,6 +34,7 @@ export class EpicComponent implements OnInit, OnDestroy {
   routeSubscription: Subscription;
   commandsSubscription: Subscription;
   refreshQuestionsSubscription: Subscription;
+  refreshTasksSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private epicsService: EpicsService,
@@ -69,9 +70,11 @@ export class EpicComponent implements OnInit, OnDestroy {
       this.handleCommand(state.command);
     });
     this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-      if (this.epic === state.taskContainer) {
-        this.refreshQuestions();
-      }
+      if (this.epic === state.taskContainer) { this.refreshQuestions(); }
+    });
+
+    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+      if (this.epic === state.taskContainer) { this.refreshSubtasks(); }
     });
   }
 
@@ -202,7 +205,7 @@ export class EpicComponent implements OnInit, OnDestroy {
   }
 
   addSubtask() {
-    this.openAddTaskDialog();
+    this.tasksService.openAddTaskDialog(this.epic);
   }
 
   openAddTaskDialog() {
@@ -227,7 +230,7 @@ export class EpicComponent implements OnInit, OnDestroy {
   }
 
 
-  onSubtaskDoneClick(subtask: Task) {
+  onSubtaskDoneClick(subtask: TaskC) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
@@ -264,5 +267,6 @@ export class EpicComponent implements OnInit, OnDestroy {
     this.routeSubscription.unsubscribe();
     this.commandsSubscription.unsubscribe();
     this.refreshQuestionsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
   }
 }

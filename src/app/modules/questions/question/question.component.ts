@@ -1,6 +1,6 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {Problem} from "../../../models/problem";
-import {Task} from "../../../models/task-class";
+import {TaskC} from "../../../models/task-class";
 import {Observable, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StoriesService} from "../../../services/stories.service";
@@ -23,7 +23,7 @@ import {QuestionsService} from "../../../services/questions.service";
 })
 export class QuestionComponent implements OnInit {
   question: Question;
-  subtasks: Task[];
+  subtasks: TaskC[];
   parentsPath: string[];
   problems: Problem[];
   questions: Question[];
@@ -31,6 +31,7 @@ export class QuestionComponent implements OnInit {
   commandSubscription: Subscription;
   routerSubscription: Subscription;
   refreshQuestionsSubscription: Subscription;
+  refreshTasksSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -65,11 +66,18 @@ export class QuestionComponent implements OnInit {
       this.handleTaskCommand(state.command);
     });
     this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-      if (this.question === state.taskContainer) {
-        this.refreshQuestions();
-      }
+      if (this.question === state.taskContainer) { this.refreshQuestions(); }
     });
+    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+      if (this.question === state.taskContainer) { this.refreshSubtasks(); }
+    });
+  }
 
+  ngOnDestroy(): void {
+    this.commandSubscription.unsubscribe();
+    this.routerSubscription.unsubscribe();
+    this.refreshQuestionsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -79,12 +87,10 @@ export class QuestionComponent implements OnInit {
     }
   }
 
-
   refreshProblems(): void {
     this.problemsService.getProblems(this.question.getFullDescription())
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
   }
-
 
   addProblem() {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
@@ -180,6 +186,7 @@ export class QuestionComponent implements OnInit {
     }
   }
 
+
   private finishTaskHandler(args: string[]) {
     if (!args || args.length === 0) {
       return;
@@ -202,7 +209,6 @@ export class QuestionComponent implements OnInit {
       }
     }
   }
-
 
   refreshSubtasks(): void {
     this.tasksService.getTasks(this.question.getFullDescription())
@@ -231,7 +237,7 @@ export class QuestionComponent implements OnInit {
   }
 
   addSubtask() {
-    this.openAddTaskDialog();
+    this.tasksService.openAddTaskDialog(this.question);
   }
 
   openAddTaskDialog() {
@@ -252,7 +258,7 @@ export class QuestionComponent implements OnInit {
     });
   }
 
-  onSubtaskDoneClick(subtask: Task) {
+  onSubtaskDoneClick(subtask: TaskC) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
@@ -267,12 +273,6 @@ export class QuestionComponent implements OnInit {
         this.goToParentHandler(description);
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.commandSubscription.unsubscribe();
-    this.routerSubscription.unsubscribe();
-    this.refreshQuestionsSubscription.unsubscribe();
   }
 
 }

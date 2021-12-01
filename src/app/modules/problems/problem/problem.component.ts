@@ -6,7 +6,7 @@ import {Title} from "@angular/platform-browser";
 import {MatDialog} from "@angular/material/dialog";
 import {ProblemsService} from "../../../services/problems.service";
 import {Problem} from "../../../models/problem";
-import {Task} from "../../../models/task-class";
+import {TaskC} from "../../../models/task-class";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
 import {CommandsService} from "../../../services/commands.service";
@@ -23,13 +23,14 @@ import {QuestionsService} from "../../../services/questions.service";
 })
 export class ProblemComponent implements OnInit, OnDestroy {
   problem: Problem;
-  subtasks: Task[];
+  subtasks: TaskC[];
   parentsPath: string[];
   problems: Problem[];
   questions: Question[];
   commandSubscription: Subscription;
   routerSubscription: Subscription;
   refreshQuestionsSubscription: Subscription;
+  refreshTasksSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -65,9 +66,10 @@ export class ProblemComponent implements OnInit, OnDestroy {
     });
 
     this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-      if (this.problem === state.taskContainer) {
-        this.refreshQuestions();
-      }
+      if (this.problem === state.taskContainer) { this.refreshQuestions(); }
+      this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+        if (this.problem === state.taskContainer) { this.refreshSubtasks(); }
+      });
     });
   }
 
@@ -231,7 +233,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
   }
 
   addSubtask() {
-    this.openAddTaskDialog();
+    this.tasksService.openAddTaskDialog(this.problem);
   }
 
   openAddTaskDialog() {
@@ -252,7 +254,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubtaskDoneClick(subtask: Task) {
+  onSubtaskDoneClick(subtask: TaskC) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
@@ -273,5 +275,6 @@ export class ProblemComponent implements OnInit, OnDestroy {
     this.commandSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
     this.refreshQuestionsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
   }
 }

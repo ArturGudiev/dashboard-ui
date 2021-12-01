@@ -10,5 +10,6 @@ export const predefinedRoutes = [
   {routes: ['sched', 'scheduler'], value: ['epic', 10]},
   {routes: ['dash', 'dashboard'], value: ['epic', 4]},
   {routes: ['dash-ui', 'dashui', 'dash ui', 'dash ui', 'dashboardui'], value: ['epic', 38]},
-  {routes: ['memui', 'mem-ui'], value: ['story', 108]}
+  {routes: ['memui', 'mem-ui'], value: ['story', 108]},
+  {routes: ['rest', 'rest_engineer'], value: ['epic', 42]}
 ]

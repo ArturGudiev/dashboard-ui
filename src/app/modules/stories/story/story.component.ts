@@ -1,5 +1,5 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
-import {Task} from "../../../models/task-class";
+import {TaskC} from "../../../models/task-class";
 import {Story} from "../../../models/story";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
@@ -23,7 +23,7 @@ import {QuestionsService} from "../../../services/questions.service";
 })
 export class StoryComponent implements OnInit, OnDestroy {
   story: Story;
-  subtasks: Task[];
+  subtasks: TaskC[];
   problems: Problem[];
   questions: Question[];
   parentsPath: string[];
@@ -32,6 +32,7 @@ export class StoryComponent implements OnInit, OnDestroy {
   commandSubscription: Subscription;
   routerSubscription: Subscription;
   refreshQuestionsSubscription: Subscription;
+  refreshTasksSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,10 +69,12 @@ export class StoryComponent implements OnInit, OnDestroy {
     });
 
     this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-      if (this.story === state.taskContainer) {
-        this.refreshQuestions();
-      }
+      if (this.story === state.taskContainer) { this.refreshQuestions(); }
     });
+    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+      if (this.story === state.taskContainer) { this.refreshSubtasks(); }
+    });
+
   }
 
   //--------------------------------qeustions start---------------------------------------------------------
@@ -159,8 +162,9 @@ export class StoryComponent implements OnInit, OnDestroy {
     });
   }
 
+
   addSubtask() {
-    this.openAddTaskDialog();
+    this.tasksService.openAddTaskDialog(this.story);
   }
 
   openAddTaskDialog() {
@@ -181,7 +185,7 @@ export class StoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubtaskDoneClick(subtask: Task) {
+  onSubtaskDoneClick(subtask: TaskC) {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
@@ -228,5 +232,7 @@ export class StoryComponent implements OnInit, OnDestroy {
     this.routerSubscription.unsubscribe();
     this.commandSubscription.unsubscribe();
     this.refreshQuestionsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
+
   }
 }

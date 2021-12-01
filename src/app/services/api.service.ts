@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Task} from '../models/task-class';
+import {TaskC} from '../models/task-class';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -23,10 +23,10 @@ export class ApiService {
   }
 
 
-  _getTask(id: number): Observable<Task> {
-    return this.http.get<Task>(`${this.baseUrl}/task/${id}`)
+  _getTask(id: number): Observable<TaskC> {
+    return this.http.get<TaskC>(`${this.baseUrl}/task/${id}`)
       .pipe(
-        map((obj) => new Task(obj._id, obj.description, obj.done, obj.tags))
+        map((obj) => new TaskC(obj._id, obj.description, obj.done, obj.tags))
       );
   }
 
@@ -34,23 +34,23 @@ export class ApiService {
     return this.http.post<string[]>(`${this.baseUrl}/task/parents-path/`, obj);
   }
 
-  _getTasks(tag: string): Observable<Task[]> {
+  _getTasks(tag: string): Observable<TaskC[]> {
     return this.http.get(`${this.baseUrl}/get-tasks/`, {
       params: {tag}
     }).pipe(
-      map((tasks: any) => tasks.map((t: Task) => new Task(t._id, t.description, t.done, t.tags))
+      map((tasks: any) => tasks.map((t: TaskC) => new TaskC(t._id, t.description, t.done, t.tags))
       ));
   }
 
-  _createNewTask(obj: { description: any; tags: string[] }): Observable<Task> {
-    return this.http.post<Task>(`${this.baseUrl}/new-task/`, obj);
+  _createNewTask(obj: { description: any; tags: string[] }): Observable<TaskC> {
+    return this.http.post<TaskC>(`${this.baseUrl}/new-task/`, obj);
   }
 
-  _finishTask(task: Task): Observable<any> {
+  _finishTask(task: TaskC): Observable<any> {
     return this.http.put(`${this.baseUrl}/finish-task/${task._id}`, {});
   }
 
-  _finishTasks(tasks: Task[]) {
+  _finishTasks(tasks: TaskC[]) {
     return this.http.put(`${this.baseUrl}/finish-tasks/`, tasks).pipe();
   }
 

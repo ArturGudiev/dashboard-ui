@@ -9,6 +9,14 @@
               (click)="updateDefinitionValue()">
         <mat-icon>save</mat-icon>
       </button>
+
+      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent"
+              *ngIf="definition?.getFullDescription()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="addSubtask()">Add a new task</button>
+      </mat-menu>
     </div>
     <div id="definition-value">
 <!--        <h5 *ngIf="!editValue" style="margin-bottom: 0">Value</h5>-->
@@ -21,6 +29,12 @@
                (focusout)="updateDefinitionValue()">
       </mat-form-field>
     </div>
+    <br>
+    <app-subtasks (refreshSubtasks)="refreshSubtasks()"
+                  (addSubtask)="addSubtask()"
+                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+                  [subtasks]="subtasks">
+    </app-subtasks>
   </div>
   <div id="right-column">
     <app-parents-path [parentsPath]="parentsPath"

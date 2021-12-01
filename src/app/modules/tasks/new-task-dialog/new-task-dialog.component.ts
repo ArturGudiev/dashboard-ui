@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Task} from '../../../models/task-class';
+import {TaskC} from '../../../models/task-class';
 
 @Component({
   selector: 'app-new-task-dialog',
@@ -24,7 +24,7 @@ export class NewTaskDialogComponent implements OnInit {
 
 
   constructor(public dialogRef: MatDialogRef<NewTaskDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {parentTask: Task}
+              @Inject(MAT_DIALOG_DATA) public data: {parentTask: TaskC}
               ) { }
 
   ngOnInit(): void {

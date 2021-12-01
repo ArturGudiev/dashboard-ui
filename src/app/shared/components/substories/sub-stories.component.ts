@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Story} from "../../../models/story";
 import {SelectionModel} from "@angular/cdk/collections";
-import {Task} from "../../../models/task-class";
+import {TaskC} from "../../../models/task-class";
 import {Router} from "@angular/router";
 
 @Component({
@@ -39,7 +39,7 @@ export class SubStoriesComponent implements OnInit {
     return numSelected === numRows;
   }
 
-  onSubstoryClick(task: Task) {
+  onSubstoryClick(task: TaskC) {
     this.router.navigate(['story', task._id]);
   }
 }
