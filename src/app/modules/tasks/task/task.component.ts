@@ -6,7 +6,6 @@ import {TaskC} from '../../../models/task-class';
 import {ApiService} from '../../../services/api.service';
 import {getUrlByDescription} from '../../../shared/libs/dashboard.lib';
 import {MatDialog} from '@angular/material/dialog';
-import {NewTaskDialogComponent} from '../new-task-dialog/new-task-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CommandsService} from "../../../services/commands.service";
 import {Title} from "@angular/platform-browser";
@@ -47,6 +46,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   knowledgeBits: Knowledge[];
   refreshQuestionsSubscription: Subscription;
   refreshTasksSubscription: Subscription;
+  refreshProblemsSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private taskApiService: ApiService,
@@ -87,9 +87,22 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
       if (this.task === state.taskContainer) { this.refreshSubtasks(); }
     });
+    this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
+      if (this.task === state.taskContainer) { this.refreshProblems(); }
+    });
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
     })
+  }
+
+  ngOnDestroy(): void {
+    this.commandsSubscription.unsubscribe();
+    this.routerSubscription.unsubscribe();
+    this.refreshQuestionsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
+    this.refreshProblemsSubscription.unsubscribe();
+    this.isLoading = true;
+    this.task = null;
   }
 
   private handleTaskCommand(command: string) {
@@ -251,7 +264,6 @@ export class TaskComponent implements OnInit, OnDestroy {
     }
   }
 
-
   onGoToNearestParent() {
     if (this.parentsPath && this.parentsPath.length <= 1) {
       return;
@@ -259,33 +271,12 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.goToParentHandler(this.parentsPath.slice(-2, -1)[0]);
   }
 
-  addProblem() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        // this.tasksService.createNewTask(obj).subscribe(() => this.refreshSubtasks());
-        const obj = {description: description, tags: [this.task.getFullDescription()]}
-        this.problemsService.createNewProblem(obj).subscribe(() => this.refreshProblems());
-      }
-    });
+  addProblem(): void {
+    this.problemsService.openAddProblemDialog(this.task);
   }
 
-  solveTheProblem(problem: Problem) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
-    dialogRef.afterClosed().subscribe((solution: string) => {
-      if (solution) {
-        this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.commandsSubscription.unsubscribe();
-    this.routerSubscription.unsubscribe();
-    this.refreshQuestionsSubscription.unsubscribe();
-    this.refreshTasksSubscription.unsubscribe();
-    this.isLoading = true;
-    this.task = null;
+  solveTheProblem(problem: Problem): void {
+    this.problemsService.callSolveTheProblemDialog(problem, this.task);
   }
 
   refreshQuestions(): Observable<Question[]> {

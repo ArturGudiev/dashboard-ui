@@ -31,6 +31,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
   routerSubscription: Subscription;
   refreshQuestionsSubscription: Subscription;
   refreshTasksSubscription: Subscription;
+  refreshProblemsSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,10 +68,26 @@ export class ProblemComponent implements OnInit, OnDestroy {
 
     this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
       if (this.problem === state.taskContainer) { this.refreshQuestions(); }
-      this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
-        if (this.problem === state.taskContainer) { this.refreshSubtasks(); }
-      });
     });
+    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+      if (this.problem === state.taskContainer) { this.refreshSubtasks(); }
+    });
+    this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
+      if (this.problem === state.taskContainer) { this.refreshProblems(); }
+      if(state.lastSolvedProblem === this.problem) {
+        this.onGoToNearestParent();
+      }
+    });
+
+  }
+
+  ngOnDestroy(): void {
+    this.commandSubscription.unsubscribe();
+    this.routerSubscription.unsubscribe();
+    this.refreshQuestionsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
+    this.refreshProblemsSubscription.unsubscribe();
+
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -79,8 +96,8 @@ export class ProblemComponent implements OnInit, OnDestroy {
       this.openAddTaskDialog();
     }
   }
+//--------------------------------questions start---------------------------------------------------------
 
-//--------------------------------qeustions start---------------------------------------------------------
   refreshQuestions(): Observable<Question[]> {
     const questions$ = this.questionsService.getQuestions(this.problem.getFullDescription());
     questions$
@@ -91,7 +108,6 @@ export class ProblemComponent implements OnInit, OnDestroy {
   addQuestion() {
     this.questionsService.openAddQuestionDialog(this.problem);
   }
-
   answerTheQuestion(question: Question) {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Answer'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
@@ -100,36 +116,22 @@ export class ProblemComponent implements OnInit, OnDestroy {
       }
     });
   }
-  //---------------------------------qeustions end----------------------------------------------------------
+
+  //---------------------------------questions end----------------------------------------------------------
 
   refreshProblems(): void {
     this.problemsService.getProblems(this.problem.getFullDescription())
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
   }
 
-
-  addProblem() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        const obj = {description: description, tags: [this.problem.getFullDescription()]}
-        this.problemsService.createNewProblem(obj).subscribe(() => this.refreshProblems());
-      }
-    });
+  addProblem(): void {
+    this.problemsService.openAddProblemDialog(this.problem);
   }
 
-  solveTheProblem(problem = this.problem) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
-    dialogRef.afterClosed().subscribe((solution: string) => {
-      if (solution) {
-        this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
-        if (problem === this.problem) {
-          this.onGoToNearestParent();
-        }
-      }
-    });
-  }
 
+  solveTheProblem(problem: Problem = this.problem): void {
+    this.problemsService.callSolveTheProblemDialog(problem, this.problem);
+  }
 
   private handleTaskCommand(command: string) {
     const arr = command.split(' ');
@@ -156,6 +158,9 @@ export class ProblemComponent implements OnInit, OnDestroy {
       this.finishTaskHandler(args);
       return;
     }
+    if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
+      this.finishAllTasks();
+    }
     if (['fp', 'finish-problem'].includes(arr[0])) {
       this.finishProblemHandler(args);
       return;
@@ -178,6 +183,12 @@ export class ProblemComponent implements OnInit, OnDestroy {
     // }
   }
 
+  finishAllTasks() {
+    const subtasks = this.subtasks;
+    this.subtasks = [];
+    this.tasksService.finishTasks(subtasks).subscribe(() => this.refreshSubtasks());
+  }
+
   private finishProblemHandler(args: string[]) {
     if (!args || args.length === 0) {
       return;
@@ -188,6 +199,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
       this.solveTheProblem(problem);
     }
   }
+
 
   private finishTaskHandler(args: string[]) {
     if (!args || args.length === 0) {
@@ -211,7 +223,6 @@ export class ProblemComponent implements OnInit, OnDestroy {
       }
     }
   }
-
 
   refreshSubtasks(): void {
     this.tasksService.getTasks(this.problem.getFullDescription())
@@ -269,12 +280,5 @@ export class ProblemComponent implements OnInit, OnDestroy {
         this.goToParentHandler(description);
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.commandSubscription.unsubscribe();
-    this.routerSubscription.unsubscribe();
-    this.refreshQuestionsSubscription.unsubscribe();
-    this.refreshTasksSubscription.unsubscribe();
   }
 }

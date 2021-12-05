@@ -8,6 +8,8 @@ import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {take} from "rxjs/operators";
 import {TasksService} from "../../../services/tasks.service";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
+import {ProblemsService} from "../../../services/problems.service";
+import {Problem} from "../../../models/problem";
 
 @Component({
   selector: 'app-action',
@@ -23,7 +25,9 @@ export class ActionComponent implements OnInit, OnDestroy {
   @ViewChild('valueText') valueText: ElementRef;
   @ViewChild('extensionInput') extension: ElementRef;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
+  refreshProblemsSubscription: Subscription;
 
+  problems: Problem[];
 
   constructor(
     private route: ActivatedRoute,
@@ -32,7 +36,8 @@ export class ActionComponent implements OnInit, OnDestroy {
     private knowledgeService: KnowledgeService,
     private tasksService: TasksService,
     private cdr: ChangeDetectorRef,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    private problemsService: ProblemsService
   ) {
   }
 
@@ -42,12 +47,15 @@ export class ActionComponent implements OnInit, OnDestroy {
       this.knowledgeService.getAction(id).subscribe((action: Action) => {
         this.action = action;
         this.titleService.setTitle(this.action.getFullDescription());
-
+        this.refreshProblems();
         const parentsPath$ = this.knowledgeService.getActionParentsPath(this.action);
         parentsPath$.subscribe((res: string[]) => {
           this.parentsPath = res;
         });
       });
+    });
+    this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
+      if (this.action === state.taskContainer) { this.refreshProblems(); }
     });
   }
 
@@ -58,6 +66,18 @@ export class ActionComponent implements OnInit, OnDestroy {
     }
   }
 
+  addProblem(): void {
+    this.problemsService.openAddProblemDialog(this.action);
+  }
+
+  solveTheProblem(problem: Problem): void {
+    this.problemsService.callSolveTheProblemDialog(problem, this.action);
+  }
+
+  refreshProblems() {
+    this.problemsService.getProblems(this.action.getFullDescription())
+      .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
+  }
 
   triggerResize() {
     // Wait for changes to be applied, then trigger textarea resize.
@@ -67,6 +87,7 @@ export class ActionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.updateActionValue();
     this.routerSubscription.unsubscribe();
+    this.refreshProblemsSubscription.unsubscribe();
   }
 
 

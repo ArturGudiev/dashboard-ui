@@ -35,6 +35,7 @@ export class EpicComponent implements OnInit, OnDestroy {
   commandsSubscription: Subscription;
   refreshQuestionsSubscription: Subscription;
   refreshTasksSubscription: Subscription;
+  refreshProblemsSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private epicsService: EpicsService,
@@ -72,10 +73,21 @@ export class EpicComponent implements OnInit, OnDestroy {
     this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
       if (this.epic === state.taskContainer) { this.refreshQuestions(); }
     });
-
     this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
       if (this.epic === state.taskContainer) { this.refreshSubtasks(); }
     });
+    this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
+      if (this.epic === state.taskContainer) { this.refreshProblems(); }
+    });
+
+  }
+
+  ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
+    this.commandsSubscription.unsubscribe();
+    this.refreshQuestionsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
+    this.refreshProblemsSubscription.unsubscribe();
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -132,24 +144,12 @@ export class EpicComponent implements OnInit, OnDestroy {
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
   }
 
-  addProblem() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Description' }});
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        // this.tasksService.createNewTask(obj).subscribe(() => this.refreshSubtasks());
-        const obj = {description: description, tags: [this.epic.getFullDescription()]}
-        this.problemsService.createNewProblem(obj).subscribe(() => this.refreshProblems());
-      }
-    });
+  addProblem(): void {
+    this.problemsService.openAddProblemDialog(this.epic);
   }
 
-  solveTheProblem(problem: Problem) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
-    dialogRef.afterClosed().subscribe((solution: string) => {
-      if (solution) {
-        this.problemsService.solveTheProblem(problem, solution).subscribe(() => this.refreshProblems());
-      }
-    });
+  solveTheProblem(problem: Problem): void {
+    this.problemsService.callSolveTheProblemDialog(problem, this.epic);
   }
 
   private finishTaskHandler(args: string[]) {
@@ -174,8 +174,6 @@ export class EpicComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-
   //--------------------------------qeustions start---------------------------------------------------------
   refreshQuestions(): Observable<Question[]> {
     const questions$ = this.questionsService.getQuestions(this.epic.getFullDescription());
@@ -187,7 +185,6 @@ export class EpicComponent implements OnInit, OnDestroy {
   addQuestion() {
     this.questionsService.openAddQuestionDialog(this.epic);
   }
-
   answerTheQuestion(question: Question) {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Answer'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
@@ -234,7 +231,6 @@ export class EpicComponent implements OnInit, OnDestroy {
     this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
   }
 
-
   onGoToNearseParent() {
     if (this.parentsPath && this.parentsPath.length <= 1) {
       return;
@@ -261,12 +257,5 @@ export class EpicComponent implements OnInit, OnDestroy {
     this.storiesService.getStories(this.epic.getFullDescription()).subscribe(stories => {
       this.stories = stories;
     });
-  }
-
-  ngOnDestroy(): void {
-    this.routeSubscription.unsubscribe();
-    this.commandsSubscription.unsubscribe();
-    this.refreshQuestionsSubscription.unsubscribe();
-    this.refreshTasksSubscription.unsubscribe();
   }
 }

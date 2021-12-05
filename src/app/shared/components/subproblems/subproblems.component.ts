@@ -21,8 +21,7 @@ export class SubproblemsComponent implements OnInit {
   constructor(private problemsService: ProblemsService,
               private router: Router) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   onFinishProblemClick() {
     this.problemsService.finishProblem(this.selection.selected[0]).subscribe(
