@@ -1,29 +1,32 @@
-<ng-container *ngIf="subtasks && subtasks.length > 0">
+<h3 style="margin-left: 3rem" *ngIf="showTitle">{{taskContainer.getFullDescription()}}</h3>
+<div *ngIf="subtasks && subtasks.length > 0" id="outer-container"
+  style="display: flex; flex-flow: row nowrap"
+>
+  <div id="left-table">
+    <div id="subtasks-actions">
+      <h2 id="subtasks-title">Tasks</h2>
+      <button mat-mini-fab color="primary" id="add-task-button" (click)="addSubtask.emit()">
+        <mat-icon class="tasks-icon">add</mat-icon>
+      </button>
 
-  <div id="subtasks-actions">
-    <h2 id="subtasks-title">Tasks</h2>
-    <button mat-mini-fab color="primary" id="add-task-button" (click)="addSubtask.emit()">
-      <mat-icon class="tasks-icon">add</mat-icon>
-    </button>
+      <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()" (click)="onFinishTasksClick()">
+        <mat-icon class="tasks-icon">done</mat-icon>
+      </button>
 
-    <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()" (click)="onFinishTasksClick()">
-      <mat-icon class="tasks-icon">done</mat-icon>
-    </button>
+      <button mat-mini-fab color="primary" [disabled]="this.subtasks?.length === 0"
+              id="done-all-tasks-button" (click)="onFinishAllTasksClick()">
+        <mat-icon class="tasks-icon">done_outline</mat-icon>
+      </button>
 
-    <button mat-mini-fab color="primary" [disabled]="this.subtasks?.length === 0"
-            id="done-all-tasks-button" (click)="onFinishAllTasksClick()">
-      <mat-icon class="tasks-icon">done_outline</mat-icon>
-    </button>
+      <button mat-mini-fab color="accent" id="subtask-list-button"
+              [disabled]="!this.selection.hasValue() || this.selection.selected.length > 1"
+              (click)="onSubtaskListClick()">
+        <mat-icon class="tasks-icon">view_list</mat-icon>
+      </button>
 
-    <button mat-mini-fab color="accent" id="subtask-list-button"
-            [disabled]="!this.selection.hasValue() || this.selection.selected.length > 1"
-            (click)="onSubtaskListClick()">
-      <mat-icon class="tasks-icon">view_list</mat-icon>
-    </button>
+    </div>
 
-  </div>
-
-  <div id="subtasks-table-wrapper">
+    <div id="subtasks-table-wrapper">
     <table id="subtasks-table" mat-table [dataSource]="subtasks"
            class="mat-elevation-z8">
 
@@ -73,33 +76,17 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <div  id="subtasks-of-selected-task" *ngIf="showSelectedSubtask">
-
-      <button mat-mini-fab color="primary" id="add-subtask-button"
-              (click)="addTaskOfSelectedSubtask()">
-        <mat-icon class="tasks-icon">add</mat-icon>
-      </button>
-        <table id="subtasks-of-selected-task-table"  mat-table [dataSource]="tasksOfSelectedSubtask"
-             class="mat-elevation-z8">
-
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef> Description</th>
-          <td mat-cell *matCellDef="let subtask;" (click)="onSubtaskClick(subtask)">
-            <span class="row-link" (click)="onSubtaskClick(subtask)">{{subtask.description}}</span>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef> Actions</th>
-          <td mat-cell *matCellDef="let subtask; let i=index" id="row2-{{i}}" class="row-link">
-            <mat-icon (click)="onTaskOfSelectedSubtaskDoneClick(subtask)">done</mat-icon>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-      </table>
-    </div>
+  </div>
   </div>
 
-</ng-container>
+  <div  id="subtasks-of-selected-task" *ngIf="showSelectedSubtask">
+    <app-subtasks (refreshSubtasks)="refreshTasksOfSelectedSubtask()"
+                  [showTitle]="true"
+                  (addSubtask)="addTaskOfSelectedSubtask()"
+                  (onSubtaskDoneClick)="onTaskOfSelectedSubtaskDoneClick($event)"
+                  [taskContainer]="selectedSubtask"
+                  [subtasks]="tasksOfSelectedSubtask">
+    </app-subtasks>
+  </div>
+</div>
+

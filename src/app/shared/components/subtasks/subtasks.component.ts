@@ -17,6 +17,7 @@ import {CommandsService} from "../../../services/commands.service";
 export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   @Input() taskContainer: TaskContainer;
   @Input() subtasks: TaskC[];
+  @Input() showTitle = false;
   @Output() refreshSubtasks = new EventEmitter();
   @Output() addSubtask = new EventEmitter();
   @Output() onSubtaskDoneClick = new EventEmitter();
@@ -112,7 +113,6 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   onSubtaskListClick() {
     this.selectedSubtask = this.selection.selected[0];
     this.toggleShowTasksOfSelectedSubtask();
-    // this.alertService.showAlert('' + this.selectedSubtaskId);
   }
 
   toggleShowTasksOfSelectedSubtask() {
