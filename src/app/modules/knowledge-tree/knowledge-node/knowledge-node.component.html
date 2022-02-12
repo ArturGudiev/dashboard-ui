@@ -30,6 +30,7 @@
         (refreshSubtasks)="refreshSubtasks()"
         (addSubtask)="addSubtask()"
         (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+        [taskContainer]="knowledgeNode"
         [subtasks]="subtasks">
       </app-subtasks>
       <app-subquestions

@@ -1,0 +1,17 @@
+<ng-container *ngIf="notes || editValue">
+  <div id="knowledge-value">
+    <div>
+      <textarea id="notes-textarea" class="textarea-value notes-content"
+                *ngIf="editValue" (focusout)="updateNotesValue()"
+                name="valueTextArea" #valueTextArea='ngModel'
+                #valueText [ngModel]="notes">
+      </textarea>
+
+    </div>
+    <ng-container *ngIf="!editValue">
+      <div id="value-wrapper" class="textarea-value notes-content" (click)="toggleEditValue()">
+        {{notes}}
+      </div>
+    </ng-container>
+  </div>
+</ng-container>

@@ -1,28 +1,71 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {TaskC} from "../../../models/task-class";
 import {SelectionModel} from "@angular/cdk/collections";
 import {TasksService} from "../../../services/tasks.service";
 import {Router} from "@angular/router";
+import {AlertService} from "../../../services/alert.service";
+import {Subscription} from "rxjs";
+import {every} from "lodash";
+import {TaskContainer} from "../../../interfaces/task-container";
+import {CommandsService} from "../../../services/commands.service";
 
 @Component({
   selector: 'app-subtasks',
   templateUrl: './subtasks.component.html',
   styleUrls: ['./subtasks.component.sass']
 })
-export class SubtasksComponent implements OnInit, OnChanges {
+export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() taskContainer: TaskContainer;
   @Input() subtasks: TaskC[];
   @Output() refreshSubtasks = new EventEmitter();
   @Output() addSubtask = new EventEmitter();
   @Output() onSubtaskDoneClick = new EventEmitter();
   selection = new SelectionModel<TaskC>(true, []);
   displayedColumns: string[] = ['select', 'position', 'description', 'actions'];
+  displayedColumns2: string[] = ['description', 'actions'];
+  showSelectedSubtask = false;
+  selectedSubtask: TaskC = null;
+  tasksOfSelectedSubtask: TaskC[] = [];
+  refreshTasksSubscription: Subscription;
+  commandsSubscription: Subscription;
   constructor(private tasksService: TasksService,
+              private alertService: AlertService,
+              private commandsService: CommandsService,
               private router: Router) { }
 
   ngOnInit(): void {
+    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+      if (this.selectedSubtask === state.taskContainer) { this.refreshTasksOfSelectedSubtask(); }
+    });
+    this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
+      this.handleTaskCommand(state.command);
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.subtasks) {
+      if (every(this.selection.selected.map(task => task._id), x => !this.subtasks.map(t => t._id).includes(x))) {
+        this.clearSelection();
+      }
+    }
+    if (changes.taskContainer) {
+      this.showSelectedSubtask = false;
+    }
+  }
+
+  private handleTaskCommand(command: string) {
+    const arr = command.split(' ');
+    if (['subtask'].includes(arr[0])) {
+      if (this.selectedSubtask) {
+        this.addTaskOfSelectedSubtask();
+      }
+    }
+  }
+
+  private clearSelection() {
+    this.selection.clear();
+    this.selectedSubtask = null;
+    this.showSelectedSubtask = false;
   }
 
   isAllSelected() {
@@ -33,7 +76,7 @@ export class SubtasksComponent implements OnInit, OnChanges {
 
   masterToggle() {
     if (this.isAllSelected()) {
-      this.selection.clear();
+      this.clearSelection();
       return;
     }
     this.selection.select(...this.subtasks);
@@ -43,7 +86,7 @@ export class SubtasksComponent implements OnInit, OnChanges {
     this.tasksService.finishTasks(this.selection.selected).subscribe(
       {
         next: () => {
-          this.selection.clear();
+          this.clearSelection();
           this.refreshSubtasks.emit();
         }
       }
@@ -51,7 +94,7 @@ export class SubtasksComponent implements OnInit, OnChanges {
   }
 
   onFinishAllTasksClick() {
-    this.selection.clear();
+    this.clearSelection();
     const subtasks = this.subtasks;
     this.subtasks = [];
     this.tasksService.finishTasks(subtasks).subscribe(
@@ -59,8 +102,47 @@ export class SubtasksComponent implements OnInit, OnChanges {
   }
 
   onSubtaskClick(task: TaskC) {
+    this.clearSelection();
     this.router.navigate(['task', task._id]).then();
   }
 
+  /**
+   * prerequisite --- only 1 is selected
+   */
+  onSubtaskListClick() {
+    this.selectedSubtask = this.selection.selected[0];
+    this.toggleShowTasksOfSelectedSubtask();
+    // this.alertService.showAlert('' + this.selectedSubtaskId);
+  }
 
+  toggleShowTasksOfSelectedSubtask() {
+    this.showSelectedSubtask = !this.showSelectedSubtask;
+    if (this.showSelectedSubtask) {
+      this.refreshTasksOfSelectedSubtask();
+    }
+  }
+
+  refreshTasksOfSelectedSubtask() {
+    if (!this.selectedSubtask) {
+      return;
+    }
+    this.tasksService.getTasks(this.selectedSubtask.getFullDescription()).subscribe(
+      tasks => this.tasksOfSelectedSubtask = tasks
+    );
+  }
+
+  onTaskOfSelectedSubtaskDoneClick(task: TaskC){
+    this.tasksService.finishTask(task).subscribe(() => this.refreshTasksOfSelectedSubtask())
+  }
+
+  ngOnDestroy(): void {
+    this.selectedSubtask = null;
+    this.tasksOfSelectedSubtask = [];
+    this.refreshTasksSubscription.unsubscribe();
+
+  }
+
+  addTaskOfSelectedSubtask() {
+    this.tasksService.openAddTaskDialog(this.selectedSubtask);
+  }
 }

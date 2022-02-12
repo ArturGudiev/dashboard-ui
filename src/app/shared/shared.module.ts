@@ -11,6 +11,8 @@ import { SubdefinitionsComponent } from './components/subdefinitions/subdefiniti
 import { SubactionsComponent } from './components/subactions/subactions.component';
 import { SubknowledgeComponent } from './components/subknowledge/subknowledge.component';
 import { KnowledgeSubnodesComponent } from './components/knowledge-subnodes/knowledge-subnodes.component';
+import { NotesComponent } from './components/notes/notes.component';
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -26,21 +28,24 @@ import { KnowledgeSubnodesComponent } from './components/knowledge-subnodes/know
     SubactionsComponent,
     SubknowledgeComponent,
     KnowledgeSubnodesComponent,
+    NotesComponent,
   ],
-  exports: [
-    SubtasksComponent,
-    ParentsPathComponent,
-    TaskContainerDescriptionComponent,
-    SubStoriesComponent,
-    SubproblemsComponent,
-    SubquestionsComponent,
-    SubdefinitionsComponent,
-    SubactionsComponent,
-    SubknowledgeComponent,
-    KnowledgeSubnodesComponent
-  ],
+    exports: [
+        SubtasksComponent,
+        ParentsPathComponent,
+        TaskContainerDescriptionComponent,
+        SubStoriesComponent,
+        SubproblemsComponent,
+        SubquestionsComponent,
+        SubdefinitionsComponent,
+        SubactionsComponent,
+        SubknowledgeComponent,
+        KnowledgeSubnodesComponent,
+        NotesComponent
+    ],
   imports: [
     CommonModule,
+    FormsModule,
     DashboardMaterialModule
   ]
 })

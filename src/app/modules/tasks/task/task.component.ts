@@ -13,7 +13,7 @@ import {Problem} from 'src/app/models/problem';
 import {ProblemsService} from "../../../services/problems.service";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 import {AlertService} from "../../../services/alert.service";
-import {forkJoin, Observable, Subscription} from "rxjs";
+import {forkJoin, Observable, Subject, Subscription} from "rxjs";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
 import {KnowledgeService} from "../../../services/knowledge.service";
@@ -30,7 +30,7 @@ import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge
   styleUrls: ['./task.component.sass']
 })
 export class TaskComponent implements OnInit, OnDestroy {
-
+  id: number;
   task: TaskC;
   subtasks: TaskC[];
   problems: Problem[];
@@ -40,6 +40,8 @@ export class TaskComponent implements OnInit, OnDestroy {
   parentsPath: string[];
   isLoading = true;
   commandsSubscription: Subscription;
+
+  toggleNotesEditSubject: Subject<void> = new Subject<void>();
 
   @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   private routerSubscription: Subscription;
@@ -64,22 +66,8 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
-      let id = params['id'];
-      this.tasksService.getTask(id).subscribe(task => {
-        this.task = task;
-        this.titleService.setTitle(this.task.getFullDescription());
-        if (this.task !== null) {
-          const parentsPath$ = this.tasksService.getParentsPath(this.task);
-          parentsPath$.subscribe((res: string[]) => {
-            this.parentsPath = res;
-          });
-          this.refreshDefinitions();
-          this.refreshActions();
-          this.refreshKnowledgeBits();
-          forkJoin([this.refreshSubtasks(), this.refreshProblems(), this.refreshQuestions()]).subscribe(
-            () => this.isLoading = false
-          )}
-      })
+      this.id = params['id'];
+      this.refreshTask();
     });
     this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
       if (this.task === state.taskContainer) { this.refreshQuestions(); }
@@ -92,6 +80,26 @@ export class TaskComponent implements OnInit, OnDestroy {
     });
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
+    })
+  }
+
+  refreshTask() {
+    this.tasksService.getTask(this.id).subscribe(task => {
+      this.task = task;
+      // this.alertService.showAlert(JSON.stringify(task), 30000);
+      this.titleService.setTitle(this.task.getFullDescription());
+      if (this.task !== null) {
+        const parentsPath$ = this.tasksService.getParentsPath(this.task);
+        parentsPath$.subscribe((res: string[]) => {
+          this.parentsPath = res;
+        });
+        this.refreshDefinitions();
+        this.refreshActions();
+        this.refreshKnowledgeBits();
+        forkJoin([this.refreshSubtasks(), this.refreshProblems(), this.refreshQuestions()]).subscribe(
+          () => this.isLoading = false
+        )
+      }
     })
   }
 
@@ -140,6 +148,9 @@ export class TaskComponent implements OnInit, OnDestroy {
     }
     if (['r', 'res', 'resolve'].includes(arr[0])) {
       this.onDoneAllClick();
+    }
+    if (['notes'].includes(arr[0])) {
+      this.callEditNotesEvent();
     }
   }
 
@@ -366,6 +377,18 @@ export class TaskComponent implements OnInit, OnDestroy {
         };
         this.knowledgeService.createNewKnowledge(knowledge).subscribe(() => this.refreshKnowledgeBits());
       }
+    });
+  }
+
+  callEditNotesEvent() {
+    this.toggleNotesEditSubject.next();
+  }
+
+  updateNotes(newNotesValue: string) {
+    this.task.notes = newNotesValue;
+    this.tasksService.updateTask(this.task).subscribe(() => {
+      // this.task = task; //todo find out why this causes error ctx_r1.task.getFullDescription is not a function    ---       <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent" *ngIf="task?.getFullDescription()">
+      this.refreshTask();
     });
   }
 }

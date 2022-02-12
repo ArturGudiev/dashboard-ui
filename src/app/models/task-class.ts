@@ -9,16 +9,19 @@ export class TaskC implements TaskContainer {
   description: string;
   tags: string[];
   done = false;
+  notes: string;
 
   constructor(_id: number,
               description: string,
               done: boolean,
-              tags: string[] = []
+              tags: string[] = [],
+              notes: string = ''
   ) {
     this.description = description;
     this.done = done;
     this.tags = tags;
     this._id = _id;
+    this.notes = notes;
   }
 
   getFullDescription(): string {

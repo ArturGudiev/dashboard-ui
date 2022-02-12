@@ -17,7 +17,7 @@ import {KnowledgeNode} from "../models/knowledge-node";
   providedIn: 'root'
 })
 export class ApiService {
-  baseUrl = 'http://192.168.1.62:3000'
+  baseUrl = 'http://192.168.1.63:3000'
 
   constructor(private http: HttpClient) {
   }
@@ -26,7 +26,7 @@ export class ApiService {
   _getTask(id: number): Observable<TaskC> {
     return this.http.get<TaskC>(`${this.baseUrl}/task/${id}`)
       .pipe(
-        map((obj) => new TaskC(obj._id, obj.description, obj.done, obj.tags))
+        map((obj) => new TaskC(obj._id, obj.description, obj.done, obj.tags, obj.notes))
       );
   }
 
@@ -38,7 +38,7 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/get-tasks/`, {
       params: {tag}
     }).pipe(
-      map((tasks: any) => tasks.map((t: TaskC) => new TaskC(t._id, t.description, t.done, t.tags))
+      map((tasks: any) => tasks.map((t: TaskC) => new TaskC(t._id, t.description, t.done, t.tags, t.notes))
       ));
   }
 
@@ -56,7 +56,10 @@ export class ApiService {
 
   _addAnonymousTask(): Observable<any> {
     return this.http.put(`${this.baseUrl}/add-anonymous-task/`, {});
+  }
 
+  _updateTask(task: TaskC): Observable<TaskC> {
+    return this.http.put<TaskC>(`${this.baseUrl}/update-task/`, task);
   }
 
   _getDoneTasksNumber() {
@@ -272,4 +275,5 @@ export class ApiService {
   _deleteKnowledgeNode(node: KnowledgeNode): Observable<any> {
     return this.http.delete<string[]>(`${this.baseUrl}/delete-knowledge-node/${node._id}`);
   }
+
 }

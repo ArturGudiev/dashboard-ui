@@ -19,6 +19,7 @@
     <app-subtasks (refreshSubtasks)="refreshSubtasks()"
                   (addSubtask)="addSubtask()"
                   (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+                  [taskContainer]="question"
                   [subtasks]="subtasks">
     </app-subtasks>
     <app-subquestions (refreshQuestions)="refreshQuestions()"

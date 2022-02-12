@@ -14,13 +14,19 @@
         <button mat-menu-item (click)="addProblem()">Add a new problem</button>
         <button mat-menu-item (click)="addDefinition()">Add a new definition</button>
         <button mat-menu-item (click)="addAction()">Add a new action</button>
+        <button mat-menu-item (click)="callEditNotesEvent()">Edit notes</button>
       </mat-menu>
     </div>
     <br>
+    <div id="notes-wrapper" >
+      <app-notes [notes]="task.notes" (updateNotes)="updateNotes($event)"
+               [toggleEditEvent]="toggleNotesEditSubject.asObservable()"></app-notes>
+    </div>
     <div>
       <app-subtasks (refreshSubtasks)="refreshSubtasks()"
                     (addSubtask)="addSubtask()"
                     (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+                    [taskContainer]="task"
                     [subtasks]="subtasks">
       </app-subtasks>
 

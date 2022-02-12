@@ -92,4 +92,8 @@ export class TasksService {
       }
     });
   }
+
+  updateTask(task: TaskC): Observable<TaskC> {
+    return this.apiService._updateTask(task)
+  }
 }

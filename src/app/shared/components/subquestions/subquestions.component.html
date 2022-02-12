@@ -50,11 +50,8 @@
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions</th>
-      <td mat-cell class="vegas-color" *matCellDef="let question; let i=index" id="row-{{i}}">
-        <button mat-icon-button (click)="answerTheQuestion.emit(question)"
-                aria-label="Example icon button with a vertical three dot icon">
-          <mat-icon>done</mat-icon>
-        </button>
+      <td mat-cell *matCellDef="let question; let i=index" id="row-{{i}}">
+        <mat-icon (click)="answerTheQuestion.emit(question)">done</mat-icon>
       </td>
     </ng-container>
 
