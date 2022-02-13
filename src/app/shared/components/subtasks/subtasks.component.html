@@ -82,6 +82,7 @@
   <div  id="subtasks-of-selected-task" *ngIf="showSelectedSubtask">
     <app-subtasks (refreshSubtasks)="refreshTasksOfSelectedSubtask()"
                   [showTitle]="true"
+                  [level]="level + 1"
                   (addSubtask)="addTaskOfSelectedSubtask()"
                   (onSubtaskDoneClick)="onTaskOfSelectedSubtaskDoneClick($event)"
                   [taskContainer]="selectedSubtask"

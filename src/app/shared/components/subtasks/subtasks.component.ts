@@ -18,6 +18,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   @Input() taskContainer: TaskContainer;
   @Input() subtasks: TaskC[];
   @Input() showTitle = false;
+  @Input() level = 0;
   @Output() refreshSubtasks = new EventEmitter();
   @Output() addSubtask = new EventEmitter();
   @Output() onSubtaskDoneClick = new EventEmitter();
@@ -57,7 +58,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   private handleTaskCommand(command: string) {
     const arr = command.split(' ');
     if (['subtask'].includes(arr[0])) {
-      if (this.selectedSubtask) {
+      if (this.selectedSubtask && this.level === 0) {
         this.addTaskOfSelectedSubtask();
       }
     }
