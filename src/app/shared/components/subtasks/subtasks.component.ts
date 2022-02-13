@@ -146,4 +146,9 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   addTaskOfSelectedSubtask() {
     this.tasksService.openAddTaskDialog(this.selectedSubtask);
   }
+
+  onSubtaskCancelClick() {
+    this.selectedSubtask = null;
+    this.showSelectedSubtask = false;
+  }
 }

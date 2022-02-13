@@ -18,10 +18,14 @@
         <mat-icon class="tasks-icon">done_outline</mat-icon>
       </button>
 
-      <button mat-mini-fab color="accent" id="subtask-list-button"
+      <button mat-mini-fab color="accent" id="subtask-list-button" *ngIf="!selectedSubtask"
               [disabled]="!this.selection.hasValue() || this.selection.selected.length > 1"
               (click)="onSubtaskListClick()">
         <mat-icon class="tasks-icon">view_list</mat-icon>
+      </button>
+      <button mat-mini-fab color="accent" id="subtask-cancel-button" *ngIf="selectedSubtask"
+              (click)="onSubtaskCancelClick()">
+        <mat-icon class="tasks-icon">close</mat-icon>
       </button>
 
     </div>
