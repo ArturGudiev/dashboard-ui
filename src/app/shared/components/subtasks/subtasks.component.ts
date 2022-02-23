@@ -8,6 +8,8 @@ import {Subscription} from "rxjs";
 import {every} from "lodash";
 import {TaskContainer} from "../../../interfaces/task-container";
 import {CommandsService} from "../../../services/commands.service";
+import {MatDialog} from "@angular/material/dialog";
+import {GetValueDialogComponent} from "../../../modules/dialogs/get-value/get-value-dialog.component";
 
 @Component({
   selector: 'app-subtasks',
@@ -33,6 +35,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private tasksService: TasksService,
               private alertService: AlertService,
               private commandsService: CommandsService,
+              public dialog: MatDialog,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -48,6 +51,17 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.subtasks) {
       if (every(this.selection.selected.map(task => task._id), x => !this.subtasks.map(t => t._id).includes(x))) {
         this.clearSelection();
+      } else {
+        let newSelectedItems: TaskC[] = [];
+        this.selection.selected.forEach(selectedTask => {
+          this.subtasks.map(t => t._id)
+          if (this.subtasks.some(subtask => subtask._id === selectedTask._id)) {
+            const element = this.subtasks.find(subtask => subtask._id === selectedTask._id);
+            newSelectedItems.push(element);
+          }
+        });
+        this.selection.clear();
+        this.selection = new SelectionModel<TaskC>(true, newSelectedItems);
       }
     }
     if (changes.taskContainer) {
@@ -62,6 +76,36 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
         this.addTaskOfSelectedSubtask();
       }
     }
+    if (['subsubtask'].includes(arr[0])) {
+      if (this.selectedSubtask && this.level === 1) {
+        this.addTaskOfSelectedSubtask();
+      }
+    }
+    if (['select-subtask'].includes(arr[0])) {
+      if (this.level === 0) {
+        this.handleSelectSubtaskAction()
+      }
+    }
+    if (['select-subsubtask'].includes(arr[0])) {
+      if (this.level === 1) {
+        this.handleSelectSubtaskAction()
+      }
+    }
+    if (['deselect-subtask'].includes(arr[0])) {
+      if (this.level === 0) {
+        if (this.selectedSubtask) {
+          this.unselectSelectedSubtask();
+        }
+      }
+    }
+    if (['deselect-subsubtask'].includes(arr[0])) {
+      if (this.level === 1) {
+        if (this.selectedSubtask) {
+          this.unselectSelectedSubtask();
+        }
+      }
+    }
+
   }
 
   private clearSelection() {
@@ -147,8 +191,24 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
     this.tasksService.openAddTaskDialog(this.selectedSubtask);
   }
 
-  onSubtaskCancelClick() {
+  unselectSelectedSubtask() {
     this.selectedSubtask = null;
     this.showSelectedSubtask = false;
+    this.clearSelection();
+  }
+
+  private handleSelectSubtaskAction() {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
+    dialogRef.afterClosed().subscribe((value: string) => {
+      if (value && !isNaN(+value)) {
+        const index = +value;
+        if (index > 0 && index <= this.subtasks.length) {
+          this.selection = new SelectionModel<TaskC>(true, [this.subtasks[index - 1]]);
+          this.selectedSubtask = this.selection.selected[0];
+          this.showSelectedSubtask = true;
+          this.refreshTasksOfSelectedSubtask();
+        }
+      }
+    });
   }
 }

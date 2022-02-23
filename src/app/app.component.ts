@@ -21,6 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.dashboardService.updateDoneTasksNumber();
+    setInterval(() => this.dashboardService.updateDoneTasksNumber(), 30000);
     this.alertSubscription = this.alertService.getDataStateChange()
       .subscribe((alertState: IAlertsDataState) => {
         this.alertState = alertState;

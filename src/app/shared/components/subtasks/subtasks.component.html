@@ -24,7 +24,7 @@
         <mat-icon class="tasks-icon">view_list</mat-icon>
       </button>
       <button mat-mini-fab color="accent" id="subtask-cancel-button" *ngIf="selectedSubtask"
-              (click)="onSubtaskCancelClick()">
+              (click)="unselectSelectedSubtask()">
         <mat-icon class="tasks-icon">close</mat-icon>
       </button>
 

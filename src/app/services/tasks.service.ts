@@ -21,6 +21,7 @@ export class TasksService {
     taskContainer: null
   }
   private refreshTasksState = new BehaviorSubject<RefreshTasksState>(this.initialRefreshTasksState);
+  private addTaskDialogOpened = false;
 
   constructor(private apiService: ApiService,
               private dialog: MatDialog,
@@ -79,11 +80,16 @@ export class TasksService {
   }
 
   openAddTaskDialog(taskContainer: TaskContainer): void {
+    if (this.addTaskDialogOpened) {
+      return;
+    }
+    this.addTaskDialogOpened = true;
     const dialogRef = this.dialog.open(GetValueDialogComponent,
       {data: {title: 'Description', inputWidth: '40rem'},
         ...NEW_TASK_DIALOG_OPTIONS
       });
     dialogRef.afterClosed().subscribe((description: string) => {
+      this.addTaskDialogOpened = false;
       if (description) {
         const obj = {description: description, tags: [taskContainer.getFullDescription()]}
         const state = this.getRefreshTasksDataCurrentState();
