@@ -41,7 +41,7 @@ export class SubquestionsComponent implements OnInit {
   }
 
 
-  masterToggle() {
+  onMainCheckboxClick() {
     if (this.isAllSelected()) {
       this.selection.clear();
       return;

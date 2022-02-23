@@ -29,7 +29,7 @@ export class KnowledgeSubnodesComponent implements OnInit {
   }
 
 
-  masterToggle() {
+  onMainCheckboxClick() {
     if (this.isAllSelected()) {
       this.selection.clear();
       return;

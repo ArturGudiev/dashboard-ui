@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TaskC} from "../../../models/task-class";
 import {Story} from "../../../models/story";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -133,6 +133,9 @@ export class StoryComponent implements OnInit, OnDestroy {
       this.finishProblemHandler(args);
       return;
     }
+    if (['task'].includes(arr[0])) {
+      this.addSubtask();
+    }
   }
 
 
@@ -153,14 +156,6 @@ export class StoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-
-    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
-      this.openAddTaskDialog();
-    }
-
-  }
 
   navigateToStory(story: Story) {
     this.router.navigate(['story', story._id]).then();

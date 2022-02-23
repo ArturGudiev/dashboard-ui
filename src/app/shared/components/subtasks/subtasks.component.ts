@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {TaskC} from "../../../models/task-class";
 import {SelectionModel} from "@angular/cdk/collections";
 import {TasksService} from "../../../services/tasks.service";
@@ -36,6 +46,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
               private alertService: AlertService,
               private commandsService: CommandsService,
               public dialog: MatDialog,
+              public cdr: ChangeDetectorRef,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -120,7 +131,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
     return numSelected === numRows;
   }
 
-  masterToggle() {
+  onMainCheckboxClick() {
     if (this.isAllSelected()) {
       this.clearSelection();
       return;

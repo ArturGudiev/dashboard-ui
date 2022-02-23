@@ -19,7 +19,7 @@
 
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox class="vegas-color" [disabled]="true" (change)="$event ? masterToggle() : null"
+        <mat-checkbox class="vegas-color" [disabled]="true" (change)="$event ? onMainCheckboxClick() : null"
                       [checked]="selection.hasValue() && isAllSelected()"
                       [indeterminate]="selection.hasValue() && !isAllSelected()">
         </mat-checkbox>

@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {StoriesService} from "../../../services/stories.service";
 import {TasksService} from "../../../services/tasks.service";
@@ -90,12 +90,6 @@ export class ProblemComponent implements OnInit, OnDestroy {
 
   }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
-      this.openAddTaskDialog();
-    }
-  }
 //--------------------------------questions start---------------------------------------------------------
 
   refreshQuestions(): Observable<Question[]> {
@@ -172,6 +166,9 @@ export class ProblemComponent implements OnInit, OnDestroy {
     if (['problem'].includes(arr[0])) {
       this.addProblem();
       return;
+    }
+    if (['task'].includes(arr[0])) {
+      this.addSubtask();
     }
     // if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
     //   this.finishAllTasks();

@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TasksService} from '../../../services/tasks.service';
 import {TaskC} from '../../../models/task-class';
@@ -152,6 +152,9 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (['notes'].includes(arr[0])) {
       this.callEditNotesEvent();
     }
+    if (['task'].includes(arr[0])) {
+      this.addSubtask();
+    }
   }
 
   private addAnonymousTaskHandler() {
@@ -195,21 +198,6 @@ export class TaskComponent implements OnInit, OnDestroy {
       if (Number.isInteger(index) && index >= 1 && index <= this.subtasks.length) {
         this.tasksService.finishTask(this.subtasks[index - 1]).subscribe(() => this.refreshSubtasks());
       }
-    }
-  }
-
-  // @HostListener('keydown.alt.u', ['$event'])
-  // onKeyDown(event: KeyboardEvent) {
-  //   // optionally use preventDefault() if your combination
-  //   // triggers other events (moving focus in case of Shift+Tab)
-  //   // e.preventDefault();
-  //   console.log('alt and u ');
-  // }
-
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
-      this.addSubtask();
     }
   }
 
@@ -386,9 +374,8 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   updateNotes(newNotesValue: string) {
     this.task.notes = newNotesValue;
-    this.tasksService.updateTask(this.task).subscribe(() => {
-      // this.task = task; //todo find out why this causes error ctx_r1.task.getFullDescription is not a function    ---       <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent" *ngIf="task?.getFullDescription()">
-      this.refreshTask();
+    this.tasksService.updateTask(this.task).subscribe((task: TaskC) => {
+      this.task.notes = task.notes;
     });
   }
 }

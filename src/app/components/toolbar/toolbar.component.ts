@@ -48,7 +48,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.hotkeys.addShortcut({keys: 'Control.k'}).subscribe(() => this.commandService.setCommand('knowledge'));
     this.hotkeys.addShortcut({keys: 'Control.a'}).subscribe(() => this.commandService.setCommand('action'));
     this.hotkeys.addShortcut({keys: 'Control.m'}).subscribe(() => this.commandService.setCommand('notes'));
-    // this.hotkeys.addShortcut({keys: 'Control.='}).subscribe(() => this.commandService.setCommand('subtask'));
+    this.hotkeys.addShortcut({keys: 'Control.='}).subscribe(() => this.commandService.setCommand('task'));
+    this.hotkeys.addShortcut({keys: '='}).subscribe(() => this.commandService.setCommand('task'));
     this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('subtask'));
     this.hotkeys.addShortcut({keys: 'Control.Shift.o'}).subscribe(() => this.commandService.setCommand('subsubtask'));
     this.hotkeys.addShortcut({keys: 'Control.s'}).subscribe(() => this.commandService.setCommand('select-subtask'));

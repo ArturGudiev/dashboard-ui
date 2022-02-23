@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {KnowledgeService} from "../../../services/knowledge.service";
@@ -87,14 +87,6 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
     this.refreshTasksSubscription.unsubscribe();
   }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
-      this.addSubtask();
-    }
-  }
-
-
   refreshSubtasks() {
     this.tasksService.getTasks(this.knowledgeNode.getFullDescription()).subscribe(newSubtasks => {
       this.subtasks = newSubtasks;
@@ -140,6 +132,9 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
     }
     if (['node'].includes(arr[0])) {
       this.addKnowledgeNode();
+    }
+    if (['task'].includes(arr[0])) {
+      this.addSubtask();
     }
     // if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
     //   this.finishAllTasks();

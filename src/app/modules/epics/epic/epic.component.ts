@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
 import {TaskC} from "../../../models/task-class";
@@ -90,15 +90,6 @@ export class EpicComponent implements OnInit, OnDestroy {
     this.refreshProblemsSubscription.unsubscribe();
   }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-
-    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
-      this.openAddTaskDialog();
-    }
-
-  }
-
   private handleCommand(command: string) {
     const arr = command.split(' ');
     const args = arr.slice(1);
@@ -125,6 +116,9 @@ export class EpicComponent implements OnInit, OnDestroy {
     if (['back', 'b'].includes(arr[0])) {
       this.onGoToNearseParent();
       return;
+    }
+    if (['task'].includes(arr[0])) {
+      this.addSubtask();
     }
   }
 

@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Problem} from "../../../models/problem";
 import {TaskC} from "../../../models/task-class";
 import {Observable, Subscription} from "rxjs";
@@ -85,13 +85,6 @@ export class QuestionComponent implements OnInit {
     this.refreshProblemsSubscription.unsubscribe();
   }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (event.key === 'Insert' || event.key === '+' || event.key === '=') {
-      this.openAddTaskDialog();
-    }
-  }
-
   refreshProblems(): void {
     this.problemsService.getProblems(this.question.getFullDescription())
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
@@ -158,6 +151,9 @@ export class QuestionComponent implements OnInit {
     if (['problem'].includes(arr[0])) {
       this.addProblem();
       return;
+    }
+    if (['task'].includes(arr[0])) {
+      this.addSubtask();
     }
     // if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
     //   this.finishAllTasks();
