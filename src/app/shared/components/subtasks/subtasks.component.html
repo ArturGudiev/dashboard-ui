@@ -72,7 +72,12 @@
         <th mat-header-cell *matHeaderCellDef> Actions</th>
         <td mat-cell *matCellDef="let subtask; let i=index" id="row-{{i}}" class="row-link"
             [ngClass]="{'highlight': selection.selected.includes(subtask)}">
-          <mat-icon (click)="onSubtaskDoneClick.emit(subtask)">done</mat-icon>
+          <div style="display: flex; flex-flow: row nowrap">
+            <mat-icon (click)="onSubtaskDoneClick.emit(subtask)">done</mat-icon>
+            <mat-icon (click)="onSubtaskViewListClick(subtask)" style="margin-left: 1rem">
+              view_list
+            </mat-icon>
+          </div>
         </td>
       </ng-container>
 

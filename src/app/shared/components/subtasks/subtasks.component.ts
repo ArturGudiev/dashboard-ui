@@ -222,4 +222,11 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
   }
+
+  onSubtaskViewListClick(subtask: TaskC) {
+    this.selection = new SelectionModel<TaskC>(true, [subtask]);
+    this.selectedSubtask = subtask;
+    this.showSelectedSubtask = true;
+    this.refreshTasksOfSelectedSubtask();
+  }
 }
