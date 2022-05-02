@@ -15,6 +15,9 @@ import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.
 import {Observable, Subscription} from "rxjs";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
+import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
+import {KnowledgeService} from "../../../services/knowledge.service";
+import {Knowledge} from "../../../models/knowledge";
 
 @Component({
   selector: 'app-problem',
@@ -27,6 +30,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
   parentsPath: string[];
   problems: Problem[];
   questions: Question[];
+  knowledgeBits: Knowledge[];
   commandSubscription: Subscription;
   routerSubscription: Subscription;
   refreshQuestionsSubscription: Subscription;
@@ -43,6 +47,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
     private problemsService: ProblemsService,
     private commandsService: CommandsService,
     private questionsService: QuestionsService,
+    private knowledgeService: KnowledgeService
   ) {
   }
 
@@ -53,11 +58,11 @@ export class ProblemComponent implements OnInit, OnDestroy {
         this.problem = problem;
         this.titleService.setTitle(this.problem.getFullDescription());
         if (this.problem !== null) {
-          this.tasksService.getParentsPath(this.problem)
-            .subscribe((res: string[]) => this.parentsPath = res);
+          this.tasksService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath = res);
           this.refreshSubtasks();
           this.refreshProblems();
           this.refreshQuestions();
+          this.refreshKnowledgeBits();
         }
       });
     })
@@ -78,7 +83,6 @@ export class ProblemComponent implements OnInit, OnDestroy {
         this.onGoToNearestParent();
       }
     });
-
   }
 
   ngOnDestroy(): void {
@@ -278,4 +282,29 @@ export class ProblemComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  refreshKnowledgeBits() {
+    const knowledgeBitsSubscription$ = this.knowledgeService.getKnowledgeBits(this.problem.getFullDescription());
+    knowledgeBitsSubscription$.subscribe(knowledgeBits => this.knowledgeBits = knowledgeBits);
+    return knowledgeBitsSubscription$;
+  }
+
+  addKnowledge(): void {
+    const dialogRef = this.dialog.open(KnowledgeDialogComponent, {
+      height: '600px',
+      width: '800px',
+    });
+    dialogRef.afterClosed().subscribe((obj: any) => {
+      if (obj) {
+        const knowledge = {
+          name: obj.name,
+          value: obj.value,
+          tags: [this.problem.getFullDescription()],
+          extension: obj.extension
+        };
+        this.knowledgeService.createNewKnowledge(knowledge).subscribe(() => this.refreshKnowledgeBits());
+      }
+    });
+  }
+
 }

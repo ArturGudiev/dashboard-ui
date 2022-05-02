@@ -13,6 +13,7 @@
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="addQuestion()">Add a new question</button>
         <button mat-menu-item (click)="addProblem()">Add a new problem</button>
+        <button mat-menu-item (click)="addKnowledge()">Add a new knowledge</button>
       </mat-menu>
 
     </div>
@@ -33,9 +34,24 @@
                      (onProblemSolvedClick)="solveTheProblem($event)"
                      [problems]="problems">
     </app-subproblems>
-
   </div>
-  <app-parents-path [parentsPath]="parentsPath"
-                    (onParentClick)="goToParentHandler($event)"
-  ></app-parents-path>
+  <div id="right-column">
+    <app-parents-path [parentsPath]="parentsPath"
+                      (onParentClick)="goToParentHandler($event)">
+
+    </app-parents-path>
+<!--    <app-subdefinitions [definitions]="definitions"-->
+<!--                        (addDefinition)="addDefinition()"-->
+<!--                        (refreshDefinitions)="refreshDefinitions()">-->
+<!--    </app-subdefinitions>-->
+
+<!--    <app-subactions [actions]="actions"-->
+<!--                    (addAction)="addAction()"-->
+<!--                    (refreshActions)="refreshActions()">-->
+<!--    </app-subactions>-->
+    <app-subknowledge [knowledgeBits]="knowledgeBits"
+                      (addKnowledge)="addKnowledge()"
+                      (refreshKnowledge)="refreshKnowledgeBits()">
+    </app-subknowledge>
+  </div>
 </div>

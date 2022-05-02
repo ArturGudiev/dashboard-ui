@@ -13,6 +13,7 @@ import { SubknowledgeComponent } from './components/subknowledge/subknowledge.co
 import { KnowledgeSubnodesComponent } from './components/knowledge-subnodes/knowledge-subnodes.component';
 import { NotesComponent } from './components/notes/notes.component';
 import {FormsModule} from "@angular/forms";
+import { HoverClassDirective } from './directives/hover-class.directive';
 
 
 
@@ -29,6 +30,7 @@ import {FormsModule} from "@angular/forms";
     SubknowledgeComponent,
     KnowledgeSubnodesComponent,
     NotesComponent,
+    HoverClassDirective,
   ],
     exports: [
         SubtasksComponent,
