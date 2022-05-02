@@ -23,6 +23,7 @@ const routes: Routes = [
   {path: 'knowledge', loadChildren: () => import('./modules/knowledge/knowledge.module').then(m => m.KnowledgeModule)},
   {path: 'problem', loadChildren: () => import('./modules/problems/problems.module').then(m => m.ProblemsModule)},
   {path: 'question', loadChildren: () => import('./modules/questions/questions.module').then(m => m.QuestionsModule)},
+  {path: 'questions', loadChildren: () => import('./modules/questions/questions.module').then(m => m.QuestionsModule)},
   {path: 'definition', loadChildren: () => import('./modules/definitions/definitions.module').then(m => m.DefinitionsModule)},
   {path: 'story', loadChildren: () => import('./modules/stories/stories.module').then(m => m.StoriesModule)},
   {path: 'task', loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule)},

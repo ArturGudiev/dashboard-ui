@@ -5,9 +5,9 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {tap} from "rxjs/operators";
 import {DashboardService} from "./dashboard.service";
 import {TaskContainer} from "../interfaces/task-container";
-import {GetValueDialogComponent} from "../modules/dialogs/get-value/get-value-dialog.component";
 import {NEW_TASK_DIALOG_OPTIONS} from "../shared/constants";
 import {MatDialog} from "@angular/material/dialog";
+import {NewTaskDialogComponent} from "../modules/tasks/new-task-dialog/new-task-dialog.component";
 
 export interface RefreshTasksState {
   taskContainer: TaskContainer;
@@ -84,14 +84,18 @@ export class TasksService {
       return;
     }
     this.addTaskDialogOpened = true;
-    const dialogRef = this.dialog.open(GetValueDialogComponent,
+    const dialogRef = this.dialog.open(NewTaskDialogComponent,
       {data: {title: 'Description', inputWidth: '40rem'},
         ...NEW_TASK_DIALOG_OPTIONS
       });
-    dialogRef.afterClosed().subscribe((description: string) => {
+    dialogRef.afterClosed().subscribe((responseObj: any) => {
       this.addTaskDialogOpened = false;
+      if (!responseObj) {
+        return;
+      }
+      const description = responseObj.description;
       if (description) {
-        const obj = {description: description, tags: [taskContainer.getFullDescription()]}
+        const obj = {description: description, tags: [taskContainer.getFullDescription()], notes: responseObj.notes}
         const state = this.getRefreshTasksDataCurrentState();
         this.createNewTask(obj).subscribe(() =>
           this.setRefreshTasksDataState({...state, taskContainer: taskContainer}));

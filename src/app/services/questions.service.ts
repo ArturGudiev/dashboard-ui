@@ -40,7 +40,7 @@ export class QuestionsService {
     this.refreshQuestionsState.next(state);
   }
 
-  getQuestions(tag: string): Observable<Question[]> {
+  getQuestions(tag: string = ''): Observable<Question[]> {
     return this.apiService._getQuestions(tag);
 
   }

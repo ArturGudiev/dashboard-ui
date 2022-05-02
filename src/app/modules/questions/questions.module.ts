@@ -5,11 +5,13 @@ import { QuestionsRoutingModule } from './questions-routing.module';
 import { QuestionComponent } from './question/question.component';
 import {SharedModule} from "../../shared/shared.module";
 import {DashboardMaterialModule} from "../../shared/material/dashboard-material.module";
+import { QuestionsComponent } from './questions/questions.component';
 
 
 @NgModule({
   declarations: [
-    QuestionComponent
+    QuestionComponent,
+    QuestionsComponent
   ],
   imports: [
     CommonModule,

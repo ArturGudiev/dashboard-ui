@@ -54,20 +54,10 @@ export class NotesComponent implements OnInit, OnDestroy {
   private editNotesValue() {
     this.updateNotesValue();
     this.toggleEditValue();
+  }
 
-    // todo unfocus below doesn't work find out why
-    // if (!this.editValue && this.valueText && this.valueText.nativeElement) {
-    //   setTimeout(() => this.valueText.nativeElement.blur(), 30);
-    //   this.cdr.detectChanges();
-    // }
-
-    // todo if use code below focus will be in the beginning
-    // this.editValue = true;
-    // setTimeout(() => {
-    //   if(this.valueText && this.valueText.nativeElement){
-    //     this.valueText.nativeElement.focus();
-    //   }
-    //   this.cdr.detectChanges(); // without it it won't focus automatically todo find out why
-    // }, 25)
+  onFocusIn() {
+    this.valueText.nativeElement.selectionStart = this.notes ? this.notes.length : 0;
+    this.valueText.nativeElement.selectionEnd = this.notes ? this.notes.length : 0;
   }
 }

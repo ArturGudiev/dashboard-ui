@@ -1,17 +1,17 @@
 <ng-container *ngIf="notes || editValue">
   <div id="knowledge-value">
-    <div>
-      <textarea id="notes-textarea" class="textarea-value notes-content"
-                *ngIf="editValue" (focusout)="updateNotesValue()"
-                name="valueTextArea" #valueTextArea='ngModel'
-                #valueText [ngModel]="notes">
-      </textarea>
+    <mat-form-field  appearance="fill" style="width: 40rem" [style.fontSize]="'16px'">
+      <mat-label>Notes</mat-label>
+      <textarea matInput
+                cdkTextareaAutosize
+                (focusout)="updateNotesValue()"
+                (focusin)="onFocusIn()"
+                [ngModel]="notes"
+                #valueText
+                #autosize="cdkTextareaAutosize"
 
-    </div>
-    <ng-container *ngIf="!editValue">
-      <div id="value-wrapper" class="textarea-value notes-content" (click)="toggleEditValue()">
-        {{notes}}
-      </div>
-    </ng-container>
+                cdkAutosizeMinRows="5"
+                cdkAutosizeMaxRows="30"></textarea>
+    </mat-form-field>
   </div>
 </ng-container>
