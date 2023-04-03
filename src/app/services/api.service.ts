@@ -17,7 +17,10 @@ import {KnowledgeNode} from "../models/knowledge-node";
   providedIn: 'root'
 })
 export class ApiService {
-  baseUrl = 'http://192.168.1.62:3000'
+  // baseUrl = 'http://192.168.1.62:3000'
+  // baseUrl = 'http://192.168.1.107:3000'
+  // baseUrl = 'http://172.20.10.11:3000'
+  baseUrl = 'http://192.168.0.11:3000'
 
   constructor(private http: HttpClient) {
   }

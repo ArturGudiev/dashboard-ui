@@ -23,6 +23,7 @@ import {Action} from "../../../models/action";
 import {ActionDialogComponent} from "../../dialogs/action-dialog/action-dialog.component";
 import {Knowledge} from "../../../models/knowledge";
 import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
+import {DashboardService} from "../../../services/dashboard.service";
 
 @Component({
   selector: 'app-task',
@@ -56,6 +57,7 @@ export class TaskComponent implements OnInit, OnDestroy {
               public dialog: MatDialog,
               private _snackBar: MatSnackBar,
               private titleService: Title,
+              private dashboardService: DashboardService,
               private commandsService: CommandsService,
               private problemsService: ProblemsService,
               private knowledgeService: KnowledgeService,

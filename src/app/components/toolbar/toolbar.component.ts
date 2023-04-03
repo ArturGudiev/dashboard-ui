@@ -50,6 +50,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.hotkeys.addShortcut({keys: 'Control.m'}).subscribe(() => this.commandService.setCommand('notes'));
     this.hotkeys.addShortcut({keys: 'Control.='}).subscribe(() => this.commandService.setCommand('task'));
     this.hotkeys.addShortcut({keys: '='}).subscribe(() => this.commandService.setCommand('task'));
+    this.hotkeys.addShortcut({keys: '\\'}).subscribe(() => this.commandService.setCommand('anonymous'));
     this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('subtask'));
     this.hotkeys.addShortcut({keys: 'Control.Shift.o'}).subscribe(() => this.commandService.setCommand('subsubtask'));
     this.hotkeys.addShortcut({keys: 'Control.s'}).subscribe(() => this.commandService.setCommand('select-subtask'));
@@ -85,9 +86,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   keyEvent(event: KeyboardEvent) {
     console.log('CCC', event, event.key);
     // this.alertService.showAlert(`'CCC', ${event}, ${event.key}`)
-    if (event.key === '\\') {
-      this.commandService.setCommand('anonymous');
-    }
+    // if (event.key === '\\') {
+    //   this.commandService.setCommand('anonymous');
+    // }
   }
 
   @HostListener('keydown.shift', ['$event'])
