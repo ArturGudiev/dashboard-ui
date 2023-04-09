@@ -1,0 +1,327 @@
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {TaskContainer} from "../../../interfaces/task-container";
+import {QuestionsService} from "../../../services/questions.service";
+import {ProblemsService} from "../../../services/problems.service";
+import {DefinitionDialogComponent} from "../../../modules/dialogs/definition/definition-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {KnowledgeService} from "../../../services/knowledge.service";
+import {forkJoin, Observable, Subject, Subscription} from "rxjs";
+import {Definition} from "../../../models/definition";
+import {TaskC} from "../../../models/task-class";
+import {Problem} from "../../../models/problem";
+import {Action} from "../../../models/action";
+import {Question} from "../../../models/question";
+import {ActionDialogComponent} from "../../../modules/dialogs/action-dialog/action-dialog.component";
+import {KnowledgeDialogComponent} from "../../../modules/dialogs/knowledge-dialog/knowledge-dialog.component";
+import {Knowledge} from 'src/app/models/knowledge';
+import {TasksService} from "../../../services/tasks.service";
+import {GetValueDialogComponent} from "../../../modules/dialogs/get-value/get-value-dialog.component";
+import {getUrlByDescription} from "../../libs/dashboard.lib";
+import {Router} from "@angular/router";
+import {CommandsService} from "../../../services/commands.service";
+import * as _ from "lodash";
+
+@Component({
+  selector: 'app-task-container',
+  templateUrl: './task-container.component.html',
+  styleUrls: ['./task-container.component.sass']
+})
+export class TaskContainerComponent implements OnInit, OnDestroy {
+  @Input() taskContainer: TaskContainer;
+  @Output() onDoneAllClick = new EventEmitter();
+  @Output() goToNearestParent = new EventEmitter<string>();
+  @Output() updateTaskContainer = new EventEmitter();
+  @Output() resolve = new EventEmitter();
+
+  refreshQuestionsSubscription: Subscription;
+  refreshTasksSubscription: Subscription;
+  refreshProblemsSubscription: Subscription;
+  commandsSubscription: Subscription;
+
+  subtasks: TaskC[];
+  problems: Problem[];
+  actions: Action[];
+  questions: Question[];
+  definitions: Definition[];
+  knowledgeBits: Knowledge[];
+  parentsPath: string[];
+
+  toggleNotesEditSubject: Subject<void> = new Subject<void>();
+  routerSubscription: Subscription;
+
+  constructor(private questionsService: QuestionsService,
+              private problemsService: ProblemsService,
+              public dialog: MatDialog,
+              public tasksService: TasksService,
+              public commandsService: CommandsService,
+              public router: Router,
+              public knowledgeService: KnowledgeService) {
+  }
+
+  ngOnInit(): void {
+    const parentsPath$ = this.tasksService.getParentsPath(this.taskContainer);
+    parentsPath$.subscribe((res: string[]) => this.parentsPath = res);
+    this.refreshSubtasks();
+    this.refreshDefinitions();
+    this.refreshActions();
+    this.refreshKnowledgeBits();
+    forkJoin([this.refreshSubtasks(), this.refreshProblems(), this.refreshQuestions()]).subscribe(
+      () => console.log('isLoading = False')
+    )
+    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
+      if (this.taskContainer === state.taskContainer) { this.refreshQuestions(); }
+    });
+    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+      if (this.taskContainer === state.taskContainer) { this.refreshSubtasks(); }
+    });
+    this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
+      if (this.taskContainer === state.taskContainer) { this.refreshProblems(); }
+    });
+    this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
+      this.handleTaskCommand(state.command);
+    })
+  }
+
+
+  private handleTaskCommand(command: string): void {
+    const arr = command.split(' ');
+    const args = arr.slice(1);
+    if (['back', 'b'].includes(arr[0])) {
+      this.goToNearestParent.emit();
+    }
+    if (['anonymous'].includes(arr[0])) {
+      this.addAnonymousTaskHandler();
+    }
+    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
+      this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
+    }
+    if (['f', 'ft', 'finish-task'].includes(arr[0])) {
+      this.finishTaskHandler(args);
+    }
+    if (['fp', 'finish-problem'].includes(arr[0])) {
+      this.finishProblemHandler(args);
+    }
+    if (['problem'].includes(arr[0])) {
+      this.addProblem();
+    }
+    if (['definition'].includes(arr[0])) {
+      this.addDefinition();
+    }
+    if (['action', 'act'].includes(arr[0])) {
+      this.addAction();
+    }
+    if (['question'].includes(arr[0])) {
+      this.addQuestion();
+    }
+    if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
+      this.finishAllTasks();
+    }
+    if (['r', 'res', 'resolve'].includes(arr[0])) {
+      this.resolve.emit();
+    }
+    if (['notes'].includes(arr[0])) {
+      this.callEditNotesEvent();
+    }
+    if (['task'].includes(arr[0])) {
+      this.addSubtask();
+    }
+  }
+
+  finishAllTasks() {
+    const subtasks = this.subtasks;
+    this.subtasks = [];
+    this.tasksService.finishTasks(subtasks).subscribe(() => this.refreshSubtasks());
+  }
+
+
+  private finishProblemHandler(args: string[]) {
+    if (!args || args.length === 0) {
+      return;
+    }
+    const index = +args[0];
+    if (Number.isInteger(index) && index >= 1 && index <= this.problems.length) {
+      const problem = this.problems[index - 1];
+      this.solveTheProblem(problem);
+    }
+  }
+
+
+  private finishTaskHandler(args: string[]) {
+    if (!args || args.length === 0) {
+      return;
+    }
+    if (args.length > 0 && args[0] && /^\d+-\d+$/.test(args[0])) {
+      const numbers = args[0].split('-');
+      const num1 = +numbers[0] - 1;
+      const num2 = +numbers[1] - 1;
+      const rangeNumbers = _.range(num1, num2 + 1);
+      const tasksToFinish = rangeNumbers.map((number: number) => this.subtasks[number]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
+    } else if (args.length > 0 && args[0] && args[0].includes(',')) {
+      const numbers = args[0].split(',').map(str => +str);
+      const tasksToFinish = numbers.map((number: number) => this.subtasks[number - 1]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
+    } else {
+      const index = +args[0];
+      if (Number.isInteger(index) && index >= 1 && index <= this.subtasks.length) {
+        this.tasksService.finishTask(this.subtasks[index - 1]).subscribe(() => this.refreshSubtasks());
+      }
+    }
+  }
+
+
+  private addAnonymousTaskHandler() {
+    this.tasksService.addAnonymousTask().subscribe();
+  }
+
+  addQuestion(): void {
+    this.questionsService.openAddQuestionDialog(this.taskContainer);
+  }
+
+  addProblem(): void {
+    this.problemsService.openAddProblemDialog(this.taskContainer);
+  }
+
+  refreshDefinitions(): Observable<Definition[]> {
+    const definitions$ = this.knowledgeService.getDefinitions(this.taskContainer.getFullDescription());
+    definitions$.subscribe(definitions => {
+      return this.definitions = definitions;
+    });
+    return definitions$;
+  }
+
+  goToParentHandler(description: string) {
+    const urls = getUrlByDescription(description);
+    if (urls) {
+      this.router.navigate(urls).then();
+    }
+  }
+
+
+  addDefinition(): void {
+    // this.knowledgeService.addDefinition();
+    const dialogRef = this.dialog.open(DefinitionDialogComponent, {
+      height: '400px',
+      width: '800px',
+    });
+    dialogRef.afterClosed().subscribe((obj: any) => {
+      if (obj) {
+        const definitionObject = {name: obj.name, value: obj.value, tags: [this.taskContainer.getFullDescription()]}
+        this.knowledgeService.createNewDefinition(definitionObject).subscribe(() => this.refreshDefinitions());
+      }
+    });
+  }
+
+  refreshActions() {
+    const actionsSubscription$ = this.knowledgeService.getActions(this.taskContainer.getFullDescription());
+    actionsSubscription$.subscribe(actions => {
+      this.actions = actions;
+    });
+    return actionsSubscription$;
+  }
+
+
+  addAction(): void {
+    const dialogRef = this.dialog.open(ActionDialogComponent, {
+      height: '600px',
+      width: '800px',
+    });
+    dialogRef.afterClosed().subscribe((obj: any) => {
+      if (obj) {
+        const action = {
+          name: obj.name,
+          value: obj.value,
+          tags: [this.taskContainer.getFullDescription()],
+          extension: obj.extension
+        };
+        this.knowledgeService.createNewAction(action).subscribe(() => this.refreshActions());
+      }
+    });
+  }
+
+  refreshKnowledgeBits() {
+    const knowledgeBitsSubscription$ = this.knowledgeService.getKnowledgeBits(this.taskContainer.getFullDescription());
+    knowledgeBitsSubscription$.subscribe(knowledgeBits => this.knowledgeBits = knowledgeBits);
+    return knowledgeBitsSubscription$;
+  }
+
+  addKnowledge(): void {
+    const dialogRef = this.dialog.open(KnowledgeDialogComponent, {
+      height: '600px',
+      width: '800px',
+    });
+    dialogRef.afterClosed().subscribe((obj: any) => {
+      if (obj) {
+        const knowledge = {
+          name: obj.name,
+          value: obj.value,
+          tags: [this.taskContainer.getFullDescription()],
+          extension: obj.extension
+        };
+        this.knowledgeService.createNewKnowledge(knowledge).subscribe(() => this.refreshKnowledgeBits());
+      }
+    });
+  }
+
+  callEditNotesEvent() {
+    this.toggleNotesEditSubject.next();
+  }
+
+  updateNotes(newNotesValue: string) {
+    this.taskContainer.notes = newNotesValue;
+    this.updateTaskContainer.emit();
+  }
+
+  refreshSubtasks() {
+    console.log('TaskContainerComponent.refreshSubtasks', this.taskContainer);
+    const tasksObservable = this.tasksService.getTasks(this.taskContainer.getFullDescription());
+    tasksObservable.subscribe(newSubtasks => {
+      this.subtasks = newSubtasks;
+    });
+    return tasksObservable;
+  }
+
+  addSubtask() {
+    this.tasksService.openAddTaskDialog(this.taskContainer);
+  }
+
+  onSubtaskDoneClick(subtask: TaskC) {
+    this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
+  }
+
+  refreshQuestions(): Observable<Question[]> {
+    const questions$ = this.questionsService.getQuestions(this.taskContainer.getFullDescription());
+    questions$
+      .subscribe(questions => this.questions = questions.filter((p: Question) => !p.answer));
+    return questions$;
+  }
+
+  answerTheQuestion(question: Question) {
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {data: {title: 'Answer'}});
+    dialogRef.afterClosed().subscribe((solution: string) => {
+      if (solution) {
+        this.questionsService.answerTheQuestion(question, solution)
+          .subscribe(() => this.refreshQuestions());
+      }
+    });
+  }
+
+  refreshProblems(): Observable<Problem[]> {
+    const problems$ = this.problemsService.getProblems(this.taskContainer.getFullDescription());
+    problems$
+      .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
+    return problems$;
+  }
+
+  solveTheProblem(problem: Problem): void {
+    this.problemsService.callSolveTheProblemDialog(problem, this.taskContainer);
+  }
+
+  ngOnDestroy(): void {
+    this.refreshQuestionsSubscription.unsubscribe();
+    this.refreshTasksSubscription.unsubscribe();
+    this.refreshProblemsSubscription.unsubscribe();
+    this.commandsSubscription.unsubscribe();
+  }
+}

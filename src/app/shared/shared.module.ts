@@ -14,6 +14,7 @@ import { KnowledgeSubnodesComponent } from './components/knowledge-subnodes/know
 import { NotesComponent } from './components/notes/notes.component';
 import {FormsModule} from "@angular/forms";
 import { HoverClassDirective } from './directives/hover-class.directive';
+import { TaskContainerComponent } from './components/task-container/task-container.component';
 
 
 
@@ -31,6 +32,7 @@ import { HoverClassDirective } from './directives/hover-class.directive';
     KnowledgeSubnodesComponent,
     NotesComponent,
     HoverClassDirective,
+    TaskContainerComponent,
   ],
     exports: [
         SubtasksComponent,
@@ -43,7 +45,8 @@ import { HoverClassDirective } from './directives/hover-class.directive';
         SubactionsComponent,
         SubknowledgeComponent,
         KnowledgeSubnodesComponent,
-        NotesComponent
+        NotesComponent,
+        TaskContainerComponent
     ],
   imports: [
     CommonModule,

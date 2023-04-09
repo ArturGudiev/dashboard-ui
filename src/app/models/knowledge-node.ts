@@ -7,6 +7,7 @@ export class KnowledgeNode implements TaskContainer{
   _id: number;
   name: string;
   children: KnowledgeNode[];
+  notes: string;
 
   constructor(id: number, name: string, children: KnowledgeNode[]) {
     this._id = id;

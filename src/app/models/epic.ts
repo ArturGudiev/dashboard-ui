@@ -10,7 +10,7 @@ export class Epic implements TaskContainer{
   active: boolean;
   closed = false;
   tags: string[];
-
+  notes: string;
 
   constructor(id: number, description: string, tags: string[], active: boolean, closed = false) {
     this._id = id;

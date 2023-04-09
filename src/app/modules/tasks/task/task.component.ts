@@ -68,21 +68,22 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
+      this.isLoading = true;
       this.id = params['id'];
       this.refreshTask();
     });
-    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-      if (this.task === state.taskContainer) { this.refreshQuestions(); }
-    });
-    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
-      if (this.task === state.taskContainer) { this.refreshSubtasks(); }
-    });
-    this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
-      if (this.task === state.taskContainer) { this.refreshProblems(); }
-    });
-    this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
-      this.handleTaskCommand(state.command);
-    })
+    // this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
+    //   if (this.task === state.taskContainer) { this.refreshQuestions(); }
+    // });
+    // this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
+    //   if (this.task === state.taskContainer) { this.refreshSubtasks(); }
+    // });
+    // this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
+    //   if (this.task === state.taskContainer) { this.refreshProblems(); }
+    // });
+    // this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
+    //   this.handleTaskCommand(state.command);
+    // })
   }
 
   refreshTask() {
@@ -379,5 +380,9 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.tasksService.updateTask(this.task).subscribe((task: TaskC) => {
       this.task.notes = task.notes;
     });
+  }
+
+  updateTask() {
+    this.tasksService.updateTask(this.task).subscribe((task: TaskC) => this.task = task);
   }
 }

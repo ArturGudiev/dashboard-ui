@@ -9,6 +9,7 @@ export class Problem implements TaskContainer {
   description: string;
   tags: string[];
   solution?: string;
+  notes: string;
 
 
   constructor(id: number, description: string, tags: string[], solution?: string) {

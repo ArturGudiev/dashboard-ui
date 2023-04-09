@@ -10,6 +10,7 @@ export class Story implements TaskContainer{
   closed = false;
   deferred = false;
   tags: string[];
+  notes: string;
 
 
   constructor(id: number, description: string, tags: string[], active: boolean, closed = false, deferred = false) {

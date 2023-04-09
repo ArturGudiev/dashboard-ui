@@ -8,6 +8,7 @@ export class Knowledge implements TaskContainer{
   value: string;
   tags: string[]
   extension?: string;
+  notes: string;
 
   constructor(id: number, name: string, value: string, tags: string[], extension?: string) {
     this._id = id;

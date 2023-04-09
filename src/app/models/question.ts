@@ -8,6 +8,7 @@ export class Question implements TaskContainer {
   description: string;
   tags: string[];
   answer?: string;
+  notes: string;
 
   constructor(id: number, description: string, tags: string[], answer?: string) {
     this._id = id;

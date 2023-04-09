@@ -9,7 +9,7 @@ export class Action implements TaskContainer{
   value: string;
   tags: string[];
   extension: string;
-
+  notes: string;
 
   constructor(_id: number, name: string, value: string, tags: string[], extension: string) {
     this._id = _id;

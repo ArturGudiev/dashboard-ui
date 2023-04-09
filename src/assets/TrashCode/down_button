@@ -1,0 +1,11 @@
+
+<button mat-mini-fab color="primary" (click)="onDownClick()" id="bottom-button">
+  <mat-icon class="tasks-icon">south</mat-icon>
+</button>
+
+
+  onDownClick() {
+    // this.scrollToBottom();
+    document.getElementById(`row-${this.subtasks.length - 1}`).scrollIntoView({behavior: 'smooth', block: 'center'});
+    // window.scrollTo(0,document.body.scrollHeight);
+  }

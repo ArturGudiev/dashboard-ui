@@ -10,6 +10,7 @@ export interface TaskContainer {
   // getAllTasks(): Task[];
   //
   getFullDescription(): string;
+  notes: string;
 
   // interactive(): Promise<void>;
 }
