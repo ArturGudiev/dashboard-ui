@@ -72,24 +72,11 @@ export class TaskComponent implements OnInit, OnDestroy {
       this.id = params['id'];
       this.refreshTask();
     });
-    // this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-    //   if (this.task === state.taskContainer) { this.refreshQuestions(); }
-    // });
-    // this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
-    //   if (this.task === state.taskContainer) { this.refreshSubtasks(); }
-    // });
-    // this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
-    //   if (this.task === state.taskContainer) { this.refreshProblems(); }
-    // });
-    // this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
-    //   this.handleTaskCommand(state.command);
-    // })
   }
 
   refreshTask() {
     this.tasksService.getTask(this.id).subscribe(task => {
       this.task = task;
-      // this.alertService.showAlert(JSON.stringify(task), 30000);
       this.titleService.setTitle(this.task.getFullDescription());
       if (this.task !== null) {
         const parentsPath$ = this.tasksService.getParentsPath(this.task);
@@ -116,92 +103,10 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.task = null;
   }
 
-  private handleTaskCommand(command: string) {
-    const arr = command.split(' ');
-    const args = arr.slice(1);
-    if (['back', 'b'].includes(arr[0])) {
-      this.onGoToNearestParent();
-    }
-    if (['anonymous'].includes(arr[0])) {
-      this.addAnonymousTaskHandler();
-    }
-    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
-      this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
-    }
-    if (['f', 'ft', 'finish-task'].includes(arr[0])) {
-      this.finishTaskHandler(args);
-    }
-    if (['fp', 'finish-problem'].includes(arr[0])) {
-      this.finishProblemHandler(args);
-    }
-    if (['problem'].includes(arr[0])) {
-      this.addProblem();
-    }
-    if (['definition'].includes(arr[0])) {
-      this.addDefinition();
-    }
-    if (['action', 'act'].includes(arr[0])) {
-      this.addAction();
-    }
-    if (['question'].includes(arr[0])) {
-      this.addQuestion();
-    }
-    if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
-      this.finishAllTasks();
-    }
-    if (['r', 'res', 'resolve'].includes(arr[0])) {
-      this.onDoneAllClick();
-    }
-    if (['notes'].includes(arr[0])) {
-      this.callEditNotesEvent();
-    }
-    if (['task'].includes(arr[0])) {
-      this.addSubtask();
-    }
-  }
-
-  private addAnonymousTaskHandler() {
-    this.tasksService.addAnonymousTask().subscribe();
-  }
-
   finishAllTasks() {
     const subtasks = this.subtasks;
     this.subtasks = [];
     this.tasksService.finishTasks(subtasks).subscribe(() => this.refreshSubtasks());
-  }
-
-  private finishProblemHandler(args: string[]) {
-    if (!args || args.length === 0) {
-      return;
-    }
-    const index = +args[0];
-    if (Number.isInteger(index) && index >= 1 && index <= this.problems.length) {
-      const problem = this.problems[index - 1];
-      this.solveTheProblem(problem);
-    }
-  }
-
-  private finishTaskHandler(args: string[]) {
-    if (!args || args.length === 0) {
-      return;
-    }
-    if (args.length > 0 && args[0] && /^\d+-\d+$/.test(args[0])) {
-      const numbers = args[0].split('-');
-      const num1 = +numbers[0] - 1;
-      const num2 = +numbers[1] - 1;
-      const rangeNumbers = _.range(num1, num2 + 1);
-      const tasksToFinish = rangeNumbers.map((number: number) => this.subtasks[number]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
-    } else if (args.length > 0 && args[0] && args[0].includes(',')) {
-      const numbers = args[0].split(',').map(str => +str);
-      const tasksToFinish = numbers.map((number: number) => this.subtasks[number - 1]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
-    } else {
-      const index = +args[0];
-      if (Number.isInteger(index) && index >= 1 && index <= this.subtasks.length) {
-        this.tasksService.finishTask(this.subtasks[index - 1]).subscribe(() => this.refreshSubtasks());
-      }
-    }
   }
 
   onSubtaskDoneClick(subtask: TaskC) {
@@ -209,7 +114,6 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   openSnackBar() {
-    // this._snackBar.openFromComponent('A', 'B');
     this._snackBar.open('message', 'action', {
       duration: 2000
     });
@@ -220,19 +124,6 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (this.parentsPath && this.parentsPath.length > 1) {
       const description = this.parentsPath.slice(-2, -1)[0];
       this.goToParentHandler(description);
-    }
-  }
-
-  onDownClick() {
-    // this.scrollToBottom();
-    document.getElementById(`row-${this.subtasks.length - 1}`).scrollIntoView({behavior: 'smooth', block: 'center'});
-    // window.scrollTo(0,document.body.scrollHeight);
-  }
-
-  scrollToBottom(): void {
-    try {
-      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-    } catch (err) {
     }
   }
 
@@ -308,7 +199,6 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   addDefinition() {
-    // this.knowledgeService.addDefinition();
     const dialogRef = this.dialog.open(DefinitionDialogComponent, {
       height: '400px',
       width: '800px',
@@ -369,10 +259,6 @@ export class TaskComponent implements OnInit, OnDestroy {
         this.knowledgeService.createNewKnowledge(knowledge).subscribe(() => this.refreshKnowledgeBits());
       }
     });
-  }
-
-  callEditNotesEvent() {
-    this.toggleNotesEditSubject.next();
   }
 
   updateNotes(newNotesValue: string) {

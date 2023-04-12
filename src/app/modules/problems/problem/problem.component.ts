@@ -36,6 +36,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
   refreshQuestionsSubscription: Subscription;
   refreshTasksSubscription: Subscription;
   refreshProblemsSubscription: Subscription;
+  isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -53,6 +54,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
+      this.isLoading = true;
       let id = params['id'];
       this.problemsService.getProblem(id).subscribe((problem: Problem) => {
         this.problem = problem;

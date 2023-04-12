@@ -1,57 +1,69 @@
-<div id="content-wrapper">
-  <div id="problem-content">
-    <div class="flex-center-container">
-      <app-task-container-description (goToParent)="onGoToNearestParent()"
-                                      [showDoneAll]="true"
-                                      (onDoneAllClick)="onDoneAllClick()"
-                                      [taskContainer]="problem">
-      </app-task-container-description>
-      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent"
-              *ngIf="problem?.getFullDescription()">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="addQuestion()">Add a new question</button>
-        <button mat-menu-item (click)="addProblem()">Add a new problem</button>
-        <button mat-menu-item (click)="addKnowledge()">Add a new knowledge</button>
-      </mat-menu>
+<!--<mat-spinner *ngIf="isLoading"></mat-spinner>-->
+<!--<ng-container *ngIf="!isLoading">-->
+<!--  <app-task-container [taskContainer]="task"-->
+<!--                      (onDoneAllClick)="onDoneAllClick()"-->
+<!--                      (goToNearestParent)="onGoToNearestParent()"-->
+<!--                      (updateTaskContainer)="updateTask()"-->
+<!--                      (resolve)="onDoneAllClick()"-->
 
-    </div>
-    <br>
-    <app-subtasks (refreshSubtasks)="refreshSubtasks()"
-                  (addSubtask)="addSubtask()"
-                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
-                  [taskContainer]="problem"
-                  [subtasks]="subtasks">
-    </app-subtasks>
-    <app-subquestions (refreshQuestions)="refreshQuestions()"
-                      (addQuestion)="addQuestion()"
-                      (answerTheQuestion)="answerTheQuestion($event)"
-                      [questions]="questions">
-    </app-subquestions>
-    <app-subproblems (refreshProblems)="refreshProblems()"
-                     (addProblem)="addProblem()"
-                     (onProblemSolvedClick)="solveTheProblem($event)"
-                     [problems]="problems">
-    </app-subproblems>
-  </div>
-  <div id="right-column">
-    <app-parents-path [parentsPath]="parentsPath"
-                      (onParentClick)="goToParentHandler($event)">
+<!--  ></app-task-container>-->
+<!--</ng-container>-->
 
-    </app-parents-path>
-<!--    <app-subdefinitions [definitions]="definitions"-->
-<!--                        (addDefinition)="addDefinition()"-->
-<!--                        (refreshDefinitions)="refreshDefinitions()">-->
-<!--    </app-subdefinitions>-->
 
-<!--    <app-subactions [actions]="actions"-->
-<!--                    (addAction)="addAction()"-->
-<!--                    (refreshActions)="refreshActions()">-->
-<!--    </app-subactions>-->
-    <app-subknowledge [knowledgeBits]="knowledgeBits"
-                      (addKnowledge)="addKnowledge()"
-                      (refreshKnowledge)="refreshKnowledgeBits()">
-    </app-subknowledge>
-  </div>
-</div>
+<!--<div id="content-wrapper">-->
+<!--  <div id="problem-content">-->
+<!--    <div class="flex-center-container">-->
+<!--      <app-task-container-description (goToParent)="onGoToNearestParent()"-->
+<!--                                      [showDoneAll]="true"-->
+<!--                                      (onDoneAllClick)="onDoneAllClick()"-->
+<!--                                      [taskContainer]="problem">-->
+<!--      </app-task-container-description>-->
+<!--      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent"-->
+<!--              *ngIf="problem?.getFullDescription()">-->
+<!--        <mat-icon>more_vert</mat-icon>-->
+<!--      </button>-->
+<!--      <mat-menu #menu="matMenu">-->
+<!--        <button mat-menu-item (click)="addQuestion()">Add a new question</button>-->
+<!--        <button mat-menu-item (click)="addProblem()">Add a new problem</button>-->
+<!--        <button mat-menu-item (click)="addKnowledge()">Add a new knowledge</button>-->
+<!--      </mat-menu>-->
+
+<!--    </div>-->
+<!--    <br>-->
+<!--    <app-subtasks (refreshSubtasks)="refreshSubtasks()"-->
+<!--                  (addSubtask)="addSubtask()"-->
+<!--                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"-->
+<!--                  [taskContainer]="problem"-->
+<!--                  [subtasks]="subtasks">-->
+<!--    </app-subtasks>-->
+<!--    <app-subquestions (refreshQuestions)="refreshQuestions()"-->
+<!--                      (addQuestion)="addQuestion()"-->
+<!--                      (answerTheQuestion)="answerTheQuestion($event)"-->
+<!--                      [questions]="questions">-->
+<!--    </app-subquestions>-->
+<!--    <app-subproblems (refreshProblems)="refreshProblems()"-->
+<!--                     (addProblem)="addProblem()"-->
+<!--                     (onProblemSolvedClick)="solveTheProblem($event)"-->
+<!--                     [problems]="problems">-->
+<!--    </app-subproblems>-->
+<!--  </div>-->
+<!--  <div id="right-column">-->
+<!--    <app-parents-path [parentsPath]="parentsPath"-->
+<!--                      (onParentClick)="goToParentHandler($event)">-->
+
+<!--    </app-parents-path>-->
+<!--&lt;!&ndash;    <app-subdefinitions [definitions]="definitions"&ndash;&gt;-->
+<!--&lt;!&ndash;                        (addDefinition)="addDefinition()"&ndash;&gt;-->
+<!--&lt;!&ndash;                        (refreshDefinitions)="refreshDefinitions()">&ndash;&gt;-->
+<!--&lt;!&ndash;    </app-subdefinitions>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <app-subactions [actions]="actions"&ndash;&gt;-->
+<!--&lt;!&ndash;                    (addAction)="addAction()"&ndash;&gt;-->
+<!--&lt;!&ndash;                    (refreshActions)="refreshActions()">&ndash;&gt;-->
+<!--&lt;!&ndash;    </app-subactions>&ndash;&gt;-->
+<!--    <app-subknowledge [knowledgeBits]="knowledgeBits"-->
+<!--                      (addKnowledge)="addKnowledge()"-->
+<!--                      (refreshKnowledge)="refreshKnowledgeBits()">-->
+<!--    </app-subknowledge>-->
+<!--  </div>-->
+<!--</div>-->
