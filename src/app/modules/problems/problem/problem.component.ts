@@ -18,6 +18,7 @@ import {QuestionsService} from "../../../services/questions.service";
 import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
 import {KnowledgeService} from "../../../services/knowledge.service";
 import {Knowledge} from "../../../models/knowledge";
+import {TaskContainerService} from "../../../services/task-container.service";
 
 @Component({
   selector: 'app-problem',
@@ -25,30 +26,21 @@ import {Knowledge} from "../../../models/knowledge";
   styleUrls: ['./problem.component.sass']
 })
 export class ProblemComponent implements OnInit, OnDestroy {
+  id: number;
   problem: Problem;
-  subtasks: TaskC[];
+
   parentsPath: string[];
-  problems: Problem[];
-  questions: Question[];
-  knowledgeBits: Knowledge[];
-  commandSubscription: Subscription;
   routerSubscription: Subscription;
-  refreshQuestionsSubscription: Subscription;
-  refreshTasksSubscription: Subscription;
-  refreshProblemsSubscription: Subscription;
+  problemSubscription: Subscription;
   isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
-    private storiesService: StoriesService,
-    private tasksService: TasksService,
     private router: Router,
     private titleService: Title,
     public dialog: MatDialog,
     private problemsService: ProblemsService,
-    private commandsService: CommandsService,
-    private questionsService: QuestionsService,
-    private knowledgeService: KnowledgeService
+    private taskContainerService: TaskContainerService,
   ) {
   }
 
@@ -58,29 +50,19 @@ export class ProblemComponent implements OnInit, OnDestroy {
       let id = params['id'];
       this.problemsService.getProblem(id).subscribe((problem: Problem) => {
         this.problem = problem;
+        this.isLoading = false;
         this.titleService.setTitle(this.problem.getFullDescription());
         if (this.problem !== null) {
-          this.tasksService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath = res);
-          this.refreshSubtasks();
-          this.refreshProblems();
-          this.refreshQuestions();
-          this.refreshKnowledgeBits();
+          this.taskContainerService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath = res);
         }
       });
     })
 
-    this.commandSubscription = this.commandsService.getDataStateChange().subscribe(state => {
-      this.handleTaskCommand(state.command);
-    });
+    // this.commandSubscription = this.commandsService.getDataStateChange().subscribe(state => {
+    //   this.handleTaskCommand(state.command);
+    // });
 
-    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-      if (this.problem === state.taskContainer) { this.refreshQuestions(); }
-    });
-    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
-      if (this.problem === state.taskContainer) { this.refreshSubtasks(); }
-    });
-    this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
-      if (this.problem === state.taskContainer) { this.refreshProblems(); }
+    this.problemSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
       if(state.lastSolvedProblem === this.problem) {
         this.onGoToNearestParent();
       }
@@ -88,44 +70,8 @@ export class ProblemComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.commandSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
-    this.refreshQuestionsSubscription.unsubscribe();
-    this.refreshTasksSubscription.unsubscribe();
-    this.refreshProblemsSubscription.unsubscribe();
-
-  }
-
-//--------------------------------questions start---------------------------------------------------------
-
-  refreshQuestions(): Observable<Question[]> {
-    const questions$ = this.questionsService.getQuestions(this.problem.getFullDescription());
-    questions$
-      .subscribe((questions: Question[]) => this.questions = questions.filter((q: Question) => !q.answer));
-    return questions$;
-  }
-
-  addQuestion() {
-    this.questionsService.openAddQuestionDialog(this.problem);
-  }
-  answerTheQuestion(question: Question) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Answer'}});
-    dialogRef.afterClosed().subscribe((solution: string) => {
-      if (solution) {
-        this.questionsService.answerTheQuestion(question, solution).subscribe(() => this.refreshQuestions());
-      }
-    });
-  }
-
-  //---------------------------------questions end----------------------------------------------------------
-
-  refreshProblems(): void {
-    this.problemsService.getProblems(this.problem.getFullDescription())
-      .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
-  }
-
-  addProblem(): void {
-    this.problemsService.openAddProblemDialog(this.problem);
+    this.problemSubscription.unsubscribe();
   }
 
 
@@ -136,100 +82,11 @@ export class ProblemComponent implements OnInit, OnDestroy {
   private handleTaskCommand(command: string) {
     const arr = command.split(' ');
     const args = arr.slice(1);
-    if (['back', 'b'].includes(arr[0])) {
-      this.onGoToNearestParent();
-      return;
-    }
-    // if (['anonymous'].includes(arr[0])) {
-    //   this.addAnonymousTaskHandler();
-    //   return;
-    // }
-    // if (arr.length === 1 && arr[0].startsWith('f')) {
-    //   const newCommand = command.slice(1);
-    //   const newArgs = newCommand.split(' ');
-    //   this.finishTaskHandler(newArgs);
-    //   return;
-    // }
-    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
-      this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
-      return;
-    }
-    if (['f', 'ft', 'finish-task'].includes(arr[0])) {
-      this.finishTaskHandler(args);
-      return;
-    }
-    if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
-      this.finishAllTasks();
-    }
-    if (['fp', 'finish-problem'].includes(arr[0])) {
-      this.finishProblemHandler(args);
-      return;
-    }
+
     if (['r', 'resolve'].includes(arr[0])) {
       this.solveTheProblem();
       return;
     }
-    if (['problem'].includes(arr[0])) {
-      this.addProblem();
-      return;
-    }
-    if (['task'].includes(arr[0])) {
-      this.addSubtask();
-    }
-    // if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
-    //   this.finishAllTasks();
-    //   return;
-    // }
-    // if (['r', 'res', 'resolve'].includes(arr[0])) {
-    //   this.onDoneAllClick();
-    //   return;
-    // }
-  }
-
-  finishAllTasks() {
-    const subtasks = this.subtasks;
-    this.subtasks = [];
-    this.tasksService.finishTasks(subtasks).subscribe(() => this.refreshSubtasks());
-  }
-
-  private finishProblemHandler(args: string[]) {
-    if (!args || args.length === 0) {
-      return;
-    }
-    const index = +args[0];
-    if (Number.isInteger(index) && index >= 1 && index <= this.problems.length) {
-      const problem = this.problems[index - 1];
-      this.solveTheProblem(problem);
-    }
-  }
-
-
-  private finishTaskHandler(args: string[]) {
-    if (!args || args.length === 0) {
-      return;
-    }
-    if (args.length > 0 && args[0] && /^\d+-\d+$/.test(args[0])) {
-      const numbers = args[0].split('-');
-      const num1 = +numbers[0] - 1;
-      const num2 = +numbers[1] - 1;
-      const rangeNumbers = _.range(num1, num2 + 1);
-      const tasksToFinish = rangeNumbers.map((number: number) => this.subtasks[number]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
-    } else if (args.length > 0 && args[0] && args[0].includes(',')) {
-      const numbers = args[0].split(',').map(str => +str);
-      const tasksToFinish = numbers.map((number: number) => this.subtasks[number - 1]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
-    } else {
-      const index = +args[0];
-      if (Number.isInteger(index) && index >= 1 && index <= this.subtasks.length) {
-        this.tasksService.finishTask(this.subtasks[index - 1]).subscribe(() => this.refreshSubtasks());
-      }
-    }
-  }
-
-  refreshSubtasks(): void {
-    this.tasksService.getTasks(this.problem.getFullDescription())
-      .subscribe(newSubtasks => this.subtasks = newSubtasks);
   }
 
   onGoToNearestParent() {
@@ -246,31 +103,6 @@ export class ProblemComponent implements OnInit, OnDestroy {
     }
   }
 
-  addSubtask() {
-    this.tasksService.openAddTaskDialog(this.problem);
-  }
-
-  openAddTaskDialog() {
-    const dialogRef = this.dialog.open(NewTaskDialogComponent,
-      {
-        data: {parentTask: this.problem},
-        ...NewTaskDialogComponent.DIALOG_OPTIONS
-      });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const description = result.description;
-        const obj = {description: description, tags: [this.problem.getFullDescription()]}
-        this.tasksService.createNewTask(obj).subscribe(() => {
-          this.refreshSubtasks();
-        });
-      }
-    });
-  }
-
-  onSubtaskDoneClick(subtask: TaskC) {
-    this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
-  }
 
   onDoneAllClick() {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
@@ -281,30 +113,6 @@ export class ProblemComponent implements OnInit, OnDestroy {
       if (this.parentsPath && this.parentsPath.length > 1) {
         const description = this.parentsPath.slice(-2, -1)[0];
         this.goToParentHandler(description);
-      }
-    });
-  }
-
-  refreshKnowledgeBits() {
-    const knowledgeBitsSubscription$ = this.knowledgeService.getKnowledgeBits(this.problem.getFullDescription());
-    knowledgeBitsSubscription$.subscribe(knowledgeBits => this.knowledgeBits = knowledgeBits);
-    return knowledgeBitsSubscription$;
-  }
-
-  addKnowledge(): void {
-    const dialogRef = this.dialog.open(KnowledgeDialogComponent, {
-      height: '600px',
-      width: '800px',
-    });
-    dialogRef.afterClosed().subscribe((obj: any) => {
-      if (obj) {
-        const knowledge = {
-          name: obj.name,
-          value: obj.value,
-          tags: [this.problem.getFullDescription()],
-          extension: obj.extension
-        };
-        this.knowledgeService.createNewKnowledge(knowledge).subscribe(() => this.refreshKnowledgeBits());
       }
     });
   }
