@@ -1,46 +1,64 @@
-<div id="content-wrapper" *ngIf="definition">
-  <div id="definition-content">
-    <div class="flex-container" id="description-line">
-      <app-task-container-description (goToParent)="onGoToNearestParent()"
-                                      [showDoneAll]="false"
-                                      [taskContainer]="definition">
-      </app-task-container-description>
-      <button id="save-icon"  mat-mini-fab color="primary" [disabled]="isSaveIconDisabled()"
-              (click)="updateDefinitionValue()">
-        <mat-icon>save</mat-icon>
-      </button>
-
-      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent"
-              *ngIf="definition?.getFullDescription()">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="addSubtask()">Add a new task</button>
-      </mat-menu>
-    </div>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<ng-container *ngIf="!isLoading">
+  <app-task-container [taskContainer]="definition"
+                      (goToNearestParent)="onGoToNearestParent()">
     <div id="definition-value">
-<!--        <h5 *ngIf="!editValue" style="margin-bottom: 0">Value</h5>-->
-        <div *ngIf="!editValue" class="textarea-value" id="value-wrapper" (click)="toggleEditValue()">
-          {{definition.value}}
-        </div>
-      <mat-form-field *ngIf="editValue" appearance="fill" id="definition-value-input">
+      <div *ngIf="!editValue" class="textarea-value" id="value-wrapper" (click)="toggleEditValue()">
+        {{definition.value}}
+      </div>
+      <mat-form-field *ngIf="editValue" appearance="fill"
+                      id="definition-value-input">
         <mat-label>Value</mat-label>
         <input id="description-input"  matInput [ngModel]="definition.value" #definitionValueInput
                (focusout)="updateDefinitionValue()">
       </mat-form-field>
     </div>
-    <br>
-    <app-subtasks (refreshSubtasks)="refreshSubtasks()"
-                  (addSubtask)="addSubtask()"
-                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
-                  [taskContainer]="definition"
-                  [subtasks]="subtasks">
-    </app-subtasks>
-  </div>
-  <div id="right-column">
-    <app-parents-path [parentsPath]="parentsPath"
-                      (onParentClick)="goToParentHandler($event)">
+  </app-task-container>
+</ng-container>
 
-    </app-parents-path>
-  </div>
-</div>
+
+<!--<div id="content-wrapper" *ngIf="definition">-->
+<!--  <div id="definition-content">-->
+<!--    <div class="flex-container" id="description-line">-->
+<!--&lt;!&ndash;      <app-task-container-description (goToParent)="onGoToNearestParent()"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      [showDoneAll]="false"&ndash;&gt;-->
+<!--&lt;!&ndash;                                      [taskContainer]="definition">&ndash;&gt;-->
+<!--&lt;!&ndash;      </app-task-container-description>&ndash;&gt;-->
+<!--      <button id="save-icon"  mat-mini-fab color="primary" [disabled]="isSaveIconDisabled()"-->
+<!--              (click)="updateDefinitionValue()">-->
+<!--        <mat-icon>save</mat-icon>-->
+<!--      </button>-->
+
+<!--      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent"-->
+<!--              *ngIf="definition?.getFullDescription()">-->
+<!--        <mat-icon>more_vert</mat-icon>-->
+<!--      </button>-->
+<!--      <mat-menu #menu="matMenu">-->
+<!--        <button mat-menu-item (click)="addSubtask()">Add a new task</button>-->
+<!--      </mat-menu>-->
+<!--    </div>-->
+<!--    <div id="definition-value">-->
+<!--        <div *ngIf="!editValue" class="textarea-value" id="value-wrapper" (click)="toggleEditValue()">-->
+<!--          {{definition.value}}-->
+<!--        </div>-->
+<!--      <mat-form-field *ngIf="editValue" appearance="fill" id="definition-value-input">-->
+<!--        <mat-label>Value</mat-label>-->
+<!--        <input id="description-input"  matInput [ngModel]="definition.value" #definitionValueInput-->
+<!--               (focusout)="updateDefinitionValue()">-->
+<!--      </mat-form-field>-->
+<!--    </div>-->
+<!--    <br>-->
+<!--    <app-subtasks (refreshSubtasks)="refreshSubtasks()"-->
+<!--                  (addSubtask)="addSubtask()"-->
+<!--                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"-->
+<!--                  [taskContainer]="definition"-->
+<!--                  [subtasks]="subtasks">-->
+<!--    </app-subtasks>-->
+<!--  </div>-->
+<!--  <div id="right-column">-->
+<!--    <app-parents-path [parentsPath]="parentsPath"-->
+<!--                      (onParentClick)="goToParentHandler($event)">-->
+
+<!--    </app-parents-path>-->
+<!--  </div>-->
+<!--</div>-->

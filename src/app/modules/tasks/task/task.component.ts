@@ -36,7 +36,6 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   refreshTask() {
     this.tasksService.getTask(this.id).subscribe(task => {
-      this.isLoading = false;
       this.task = task;
       this.titleService.setTitle(this.task.getFullDescription());
       if (this.task !== null) {
@@ -45,6 +44,7 @@ export class TaskComponent implements OnInit, OnDestroy {
           this.parentsPath = res;
         });
       }
+      this.isLoading = false;
     })
   }
 

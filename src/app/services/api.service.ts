@@ -62,7 +62,10 @@ export class ApiService {
   }
 
   _updateTask(task: TaskC): Observable<TaskC> {
-    return this.http.put<TaskC>(`${this.baseUrl}/update-task/`, task);
+    return this.http.put<TaskC>(`${this.baseUrl}/update-task/`, task)
+      .pipe(
+        map((obj) => new TaskC(obj._id, obj.description, obj.done, obj.tags, obj.notes))
+      );
   }
 
   _getDoneTasksNumber() {

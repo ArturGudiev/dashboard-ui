@@ -9,6 +9,7 @@ import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {take} from "rxjs/operators";
 import {Definition} from "../../../models/definition";
 import {TaskC} from "../../../models/task-class";
+import {TaskContainerService} from "../../../services/task-container.service";
 
 @Component({
   selector: 'app-definition',
@@ -24,6 +25,7 @@ export class DefinitionComponent implements OnInit {
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
   subtasks: TaskC[];
   refreshTasksSubscription: Subscription;
+  isLoading = true;
 
 
   constructor(
@@ -33,6 +35,7 @@ export class DefinitionComponent implements OnInit {
     private knowledgeService: KnowledgeService,
     private tasksService: TasksService,
     private cdr: ChangeDetectorRef,
+    private taskContainerService: TaskContainerService,
     private _ngZone: NgZone
   ) {
   }
@@ -42,9 +45,10 @@ export class DefinitionComponent implements OnInit {
       let id = params['id'];
       this.knowledgeService.getDefinition(id).subscribe((definition: Definition) => {
         this.definition = definition;
+        this.isLoading = false;
         this.titleService.setTitle(this.definition.getFullDescription());
         this.refreshSubtasks();
-        const parentsPath$ = this.knowledgeService.getDefinitionParentsPath(this.definition);
+        const parentsPath$ = this.taskContainerService.getParentsPath(this.definition);
         parentsPath$.subscribe((res: string[]) => {
           this.parentsPath = res;
         });
@@ -57,6 +61,7 @@ export class DefinitionComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.isLoading = true;
     this.updateDefinitionValue();
     this.routerSubscription.unsubscribe();
     this.refreshTasksSubscription.unsubscribe();
