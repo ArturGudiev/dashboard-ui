@@ -28,6 +28,7 @@ import * as _ from "lodash";
 })
 export class TaskContainerComponent implements OnInit, OnDestroy {
   @Input() taskContainer: TaskContainer;
+  @Input() parentsPath: string[];
   @Output() onDoneAllClick = new EventEmitter();
   @Output() goToNearestParent = new EventEmitter<string>();
   @Output() updateTaskContainer = new EventEmitter();
@@ -44,7 +45,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   questions: Question[];
   definitions: Definition[];
   knowledgeBits: Knowledge[];
-  parentsPath: string[];
+  // parentsPath: string[];
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
   routerSubscription: Subscription;
@@ -59,8 +60,8 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const parentsPath$ = this.tasksService.getParentsPath(this.taskContainer);
-    parentsPath$.subscribe((res: string[]) => this.parentsPath = res);
+    // const parentsPath$ = this.tasksService.getParentsPath(this.taskContainer);
+    // parentsPath$.subscribe((res: string[]) => this.parentsPath = res);
     this.refreshSubtasks();
     this.refreshDefinitions();
     this.refreshActions();
@@ -273,7 +274,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   }
 
   refreshSubtasks() {
-    console.log('TaskContainerComponent.refreshSubtasks', this.taskContainer);
     const tasksObservable = this.tasksService.getTasks(this.taskContainer.getFullDescription());
     tasksObservable.subscribe(newSubtasks => {
       this.subtasks = newSubtasks;

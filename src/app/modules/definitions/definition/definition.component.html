@@ -1,6 +1,7 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <ng-container *ngIf="!isLoading">
   <app-task-container [taskContainer]="definition"
+                      [parentsPath]="parentsPath$ | async"
                       (goToNearestParent)="onGoToNearestParent()">
     <div id="definition-value">
       <div *ngIf="!editValue" class="textarea-value" id="value-wrapper" (click)="toggleEditValue()">

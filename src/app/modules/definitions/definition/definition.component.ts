@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {CdkTextareaAutosize} from "@angular/cdk/text-field";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Title} from "@angular/platform-browser";
@@ -26,6 +26,7 @@ export class DefinitionComponent implements OnInit {
   subtasks: TaskC[];
   refreshTasksSubscription: Subscription;
   isLoading = true;
+  parentsPath$: Observable<string[]>;
 
 
   constructor(
@@ -44,6 +45,7 @@ export class DefinitionComponent implements OnInit {
     this.routerSubscription = this.route.params.subscribe(params => {
       let id = params['id'];
       this.knowledgeService.getDefinition(id).subscribe((definition: Definition) => {
+        this.parentsPath$ = this.knowledgeService.getDefinitionParentsPath(definition);
         this.definition = definition;
         this.isLoading = false;
         this.titleService.setTitle(this.definition.getFullDescription());

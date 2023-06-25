@@ -39,8 +39,7 @@ export class TaskComponent implements OnInit, OnDestroy {
       this.task = task;
       this.titleService.setTitle(this.task.getFullDescription());
       if (this.task !== null) {
-        const parentsPath$ = this.tasksService.getParentsPath(this.task);
-        parentsPath$.subscribe((res: string[]) => {
+        this.tasksService.getParentsPath(this.task).subscribe((res: string[]) => {
           this.parentsPath = res;
         });
       }
