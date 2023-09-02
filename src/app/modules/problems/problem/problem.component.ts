@@ -1,23 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {StoriesService} from "../../../services/stories.service";
-import {TasksService} from "../../../services/tasks.service";
 import {Title} from "@angular/platform-browser";
 import {MatDialog} from "@angular/material/dialog";
 import {ProblemsService} from "../../../services/problems.service";
 import {Problem} from "../../../models/problem";
-import {TaskC} from "../../../models/task-class";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
-import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
-import {CommandsService} from "../../../services/commands.service";
-import * as _ from "lodash";
 import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
 import {Observable, Subscription} from "rxjs";
-import {Question} from "../../../models/question";
-import {QuestionsService} from "../../../services/questions.service";
-import {KnowledgeDialogComponent} from "../../dialogs/knowledge-dialog/knowledge-dialog.component";
-import {KnowledgeService} from "../../../services/knowledge.service";
-import {Knowledge} from "../../../models/knowledge";
 import {TaskContainerService} from "../../../services/task-container.service";
 
 @Component({
@@ -33,6 +22,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
   routerSubscription: Subscription;
   problemSubscription: Subscription;
   isLoading = true;
+  parentsPath$: Observable<string[]>;
 
   constructor(
     private route: ActivatedRoute,
@@ -51,6 +41,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
       this.problemsService.getProblem(id).subscribe((problem: Problem) => {
         this.problem = problem;
         this.isLoading = false;
+        this.parentsPath$ = this.problemsService.getParentsPath(this.problem);
         this.titleService.setTitle(this.problem.getFullDescription());
         if (this.problem !== null) {
           this.taskContainerService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath = res);

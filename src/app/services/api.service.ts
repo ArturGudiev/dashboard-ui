@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {TaskC} from '../models/task-class';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {EMPTY, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Epic} from "../models/epic";
 import {TaskContainer} from "../interfaces/task-container";
@@ -12,6 +12,8 @@ import {Definition} from "../models/definition";
 import {Action} from "../models/action";
 import {Knowledge} from "../models/knowledge";
 import {KnowledgeNode} from "../models/knowledge-node";
+import {AliasesRecord} from "../models/alias-record";
+import {RecordItem} from "../models/record-item";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,7 @@ export class ApiService {
   // baseUrl = 'http://192.168.1.62:3000'
   // baseUrl = 'http://192.168.1.107:3000'
   // baseUrl = 'http://172.20.10.11:3000'
-  baseUrl = 'http://192.168.0.13:3000'
+  baseUrl = 'http://192.168.0.18:3000'
 
   constructor(private http: HttpClient) {
   }
@@ -124,7 +126,21 @@ export class ApiService {
   _createNewProblem(obj: { description: string; tags: string[] }): Observable<Problem> {
     return this.http.post<Problem>(`${this.baseUrl}/new-problem/`, obj);
   }
+
+  _getProblemParentsPath(problem: any): Observable<string[]> {
+    return this.http.post<string[]>(`${this.baseUrl}/problem/parents-path/`, problem);
+  }
+
   //----------------------------------------problems-----------------------------------------
+  //----------------------------------------aliases----------------------------------------
+  _getAlias(alias: string): Observable<AliasesRecord> {
+    return this.http.get<AliasesRecord>(`${this.baseUrl}/alias-record/${alias}`)
+      .pipe(
+        map((obj) => new AliasesRecord(obj))
+      );
+  }
+
+  //----------------------------------------aliases----------------------------------------
   //----------------------------------------questions----------------------------------------
   _getQuestions(tag: string): Observable<Question[]> {
     return this.http.get(`${this.baseUrl}/get-questions/`, {
@@ -281,5 +297,30 @@ export class ApiService {
   _deleteKnowledgeNode(node: KnowledgeNode): Observable<any> {
     return this.http.delete<string[]>(`${this.baseUrl}/delete-knowledge-node/${node._id}`);
   }
+  //------------------------------------knowledge bits end----------------------------------------
+  _getRecordItems(tag?: string): Observable<RecordItem[]> {
+    const url = tag ? `${this.baseUrl}/records/${tag}` : `${this.baseUrl}/records`;
+    return this.http.post<RecordItem[]>(url, {
+    }, {
+      params: {
+        limit: 100,
+        offset: 0,
+        count: 25
+      }
+    }).pipe(
+      map((arr: any[]) => arr.map((el: any) => RecordItem.createRecordsItemFromObj(el)))
+    );
+  }
 
+  _addRecord(message: string, tag?: string): Observable<RecordItem> {
+    const bodyObj: any = {
+      message: message,
+    };
+    if (tag) {
+      bodyObj.tags = [tag];
+    }
+    console.log(bodyObj);
+    return this.http.post<RecordItem>(`${this.baseUrl}/new-record/`, bodyObj);
+  }
+  //------------------------------------knowledge bits end----------------------------------------
 }

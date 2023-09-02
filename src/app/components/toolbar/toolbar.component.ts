@@ -11,6 +11,7 @@ import {CommandsService} from "../../services/commands.service";
 import {AlertService} from "../../services/alert.service";
 import {GetValueDialogComponent} from "../../modules/dialogs/get-value/get-value-dialog.component";
 import {Subscription} from "rxjs";
+import {NavigationService} from "../../services/navigation.service";
 
 @Component({
   selector: 'app-toolbar',
@@ -28,6 +29,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
               private hotkeys: Hotkeys,
               private commandService: CommandsService,
               private alertService: AlertService,
+              private navigateService: NavigationService,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -35,13 +37,27 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       this.doneTasks = state.doneTasks;
     });
 
+    const symbols = {
+      meta: '&#8984;', // ⌘
+      shift: '&#8679;', // ⇧
+      left: '&#8592;', // ←
+      right: '&#8594;', // →
+      up: '&#8593;', // ↑
+      down: '&#8595;' // ↓
+    };
+
     for (let i = 1; i <= 9; i++) {
       this.hotkeys.addShortcut({keys: `Control.${i}`}).subscribe(() => this.commandService.setCommand(i.toString()));
     }
-    this.hotkeys.addShortcut({ keys: 'meta.g' }).subscribe(() => this.onNavToClick());
-    this.hotkeys.addShortcut({keys: 'Control.r'}).subscribe(() => this.commandService.setCommand('resolve'));
+    this.hotkeys.addShortcut({ keys: 'Control.g' }).subscribe(() => this.onNavToClick());
+    this.hotkeys.addShortcut({keys: 'Control.Shift.r'}).subscribe(() => this.commandService.setCommand('resolve'));
     this.hotkeys.addShortcut({keys: 'Control.p'}).subscribe(() => this.commandService.setCommand('problem'));
-    this.hotkeys.addShortcut({keys: 'Control.n'}).subscribe(() => this.commandService.setCommand('node'));
+    // this.hotkeys.addShortcut({keys: 'Control.n'}).subscribe(() => this.commandService.setCommand('node'));
+    // this.hotkeys.addShortcut({keys: 'Alt.n'}).subscribe(() => this.commandService.setCommand('records'));
+    // this.hotkeys.addShortcut({keys: 'Alt.Shift.n'}).subscribe(() => this.commandService.setCommand('new-record'));
+    this.hotkeys.addShortcut({keys: '®'}).subscribe(() => this.commandService.setCommand('records'));
+    this.hotkeys.addShortcut({keys: 'option.r'}).subscribe(() => this.commandService.setCommand('records'));
+    this.hotkeys.addShortcut({keys: 'Â'}).subscribe(() => this.commandService.setCommand('new-record'));
     this.hotkeys.addShortcut({keys: 'Control.q'}).subscribe(() => this.commandService.setCommand('question'));
     this.hotkeys.addShortcut({keys: 'Control.t'}).subscribe(() => this.commandService.setCommand('fta'));
     this.hotkeys.addShortcut({keys: 'Control.d'}).subscribe(() => this.commandService.setCommand('definition'));
@@ -85,6 +101,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     console.log('CCC', event, event.key);
+    // this.alertService.showAlert(event.key);
     // this.alertService.showAlert(`'CCC', ${event}, ${event.key}`)
     // if (event.key === '\\') {
     //   this.commandService.setCommand('anonymous');
@@ -109,26 +126,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         return;
       }
       const navItem = result.navItem;
-
-      if (navItem) {
-        if (isPredefinedRoute(navItem)) {
-          this.router.navigate(getPredefinedRouteValue(navItem)).then();
-        }
-        if (Number.isInteger(+navItem)) {
-          this.router.navigate(['task', navItem]).then();
-        }
-        const arr = navItem.split(' ');
-        if (['e', 'epic'].includes(arr[0]) && Number.isInteger(+arr[1])) {
-          this.router.navigate(['epic', arr[1]]).then();
-        }
-        if (['t', 'task'].includes(arr[0]) && Number.isInteger(+arr[1])) {
-          this.router.navigate(['epic', arr[1]]).then();
-        }
-        if (['s', 'story'].includes(arr[0]) && Number.isInteger(+arr[1])) {
-          this.router.navigate(['story', arr[1]]).then();
-        }
-
-      }
+      this.navigateService.navigateByInput(navItem);
     });
   }
 

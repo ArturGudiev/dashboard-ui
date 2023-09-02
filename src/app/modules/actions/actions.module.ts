@@ -10,6 +10,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {DashboardMaterialModule} from "../../shared/material/dashboard-material.module";
 import {HighlightModule} from "ngx-highlightjs";
 import { NewActionComponent } from './new-action/new-action.component';
+import {RouterModule} from "@angular/router";
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { NewActionComponent } from './new-action/new-action.component';
         HttpClientModule,
         QuillModule.forRoot(),
         HighlightModule,
+
     ]
 })
 export class ActionsModule { }

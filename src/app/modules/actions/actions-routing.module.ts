@@ -6,11 +6,10 @@ import {NewActionComponent} from "./new-action/new-action.component";
 const routes: Routes = [
   { path: '',
     children: [
-      {path: 'new', component: NewActionComponent},
       {path: ':id', component: ActionComponent},
-      {path: '', component: ActionComponent}
+      {path: 'new', component: NewActionComponent},
     ] },
-  { path: '**', redirectTo: '' },
+  { path: '**', component: ActionComponent },
 ];
 
 

@@ -92,4 +92,10 @@ export class ProblemsService {
     });
 
     }
+
+  getParentsPath(problem: Problem): Observable<string[]> {
+    return this.apiService._getProblemParentsPath(problem);
+  }
+
+
 }

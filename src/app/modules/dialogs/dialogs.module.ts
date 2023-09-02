@@ -8,6 +8,7 @@ import { GetValueDialogComponent } from './get-value/get-value-dialog.component'
 import { DefinitionDialogComponent } from './definition/definition-dialog.component';
 import { ActionDialogComponent } from './action-dialog/action-dialog.component';
 import { KnowledgeDialogComponent } from './knowledge-dialog/knowledge-dialog.component';
+import {RecordsListDialogComponent} from "./records-list-dialog/records-list-dialog.component";
 
 
 
@@ -18,7 +19,8 @@ import { KnowledgeDialogComponent } from './knowledge-dialog/knowledge-dialog.co
     GetValueDialogComponent,
     DefinitionDialogComponent,
     ActionDialogComponent,
-    KnowledgeDialogComponent
+    KnowledgeDialogComponent,
+    RecordsListDialogComponent
   ],
   imports: [
     CommonModule,

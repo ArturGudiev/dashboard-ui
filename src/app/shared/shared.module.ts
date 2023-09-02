@@ -15,6 +15,7 @@ import { NotesComponent } from './components/notes/notes.component';
 import {FormsModule} from "@angular/forms";
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { TaskContainerComponent } from './components/task-container/task-container.component';
+import {HotkeyModule} from "angular2-hotkeys";
 
 
 
@@ -51,6 +52,7 @@ import { TaskContainerComponent } from './components/task-container/task-contain
   imports: [
     CommonModule,
     FormsModule,
+    HotkeyModule,
     DashboardMaterialModule
   ]
 })

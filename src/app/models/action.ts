@@ -1,6 +1,6 @@
 import {TaskContainer} from "../interfaces/task-container";
 
-export class Action implements TaskContainer{
+export class Action implements TaskContainer {
   static readonly prefix = 'Action-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Action.prefix + '(\\d+)\\s');
 

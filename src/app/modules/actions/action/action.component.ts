@@ -44,6 +44,7 @@ export class ActionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
       let id = params['id'];
+      // id = 247; // todo remove
       this.knowledgeService.getAction(id).subscribe((action: Action) => {
         this.action = action;
         this.titleService.setTitle(this.action.getFullDescription());

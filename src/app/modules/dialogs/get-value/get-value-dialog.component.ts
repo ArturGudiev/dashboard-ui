@@ -17,7 +17,7 @@ export class GetValueDialogComponent implements OnInit {
 
 
   constructor(public dialogRef: MatDialogRef<GetValueDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {title: string, inputWidth?: number}
+              @Inject(MAT_DIALOG_DATA) public data: {title: string, inputWidth?: number, multiline?: boolean}
   ) { }
 
   ngOnInit(): void {

@@ -3,6 +3,7 @@ import {DashboardService} from "./services/dashboard.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AlertService, IAlertsDataState} from "./services/alert.service";
 import {Subscription} from "rxjs";
+import {ApiService} from "./services/api.service";
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(private dashboardService: DashboardService,
               private alertService: AlertService,
+              private apiService: ApiService,
               private _snackBar: MatSnackBar) {
   }
 
@@ -32,6 +34,8 @@ export class AppComponent implements OnInit, OnDestroy {
           this.alertService.setAlertClosed();
         }
       });
+
+    this.apiService._getAlias('amdocse').subscribe( val => console.log(val))
   }
 
   ngOnDestroy(): void {

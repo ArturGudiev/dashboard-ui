@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {TaskContainer} from "../../../interfaces/task-container";
 import {QuestionsService} from "../../../services/questions.service";
 import {ProblemsService} from "../../../services/problems.service";
@@ -20,6 +20,12 @@ import {getUrlByDescription} from "../../libs/dashboard.lib";
 import {Router} from "@angular/router";
 import {CommandsService} from "../../../services/commands.service";
 import * as _ from "lodash";
+import {getRootDirs} from "@angular/compiler-cli/src/ngtsc/util/src/typescript";
+import {RecordsService} from "../../../services/records.service";
+import {RecordItem} from "../../../models/record-item";
+import {RecordsListDialogComponent} from "../../../modules/dialogs/records-list-dialog/records-list-dialog.component";
+import {Hotkey, HotkeysService} from "angular2-hotkeys";
+import {AlertService} from "../../../services/alert.service";
 
 @Component({
   selector: 'app-task-container',
@@ -53,13 +59,25 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   constructor(private questionsService: QuestionsService,
               private problemsService: ProblemsService,
               public dialog: MatDialog,
+              private recordsService: RecordsService,
               public tasksService: TasksService,
               public commandsService: CommandsService,
               public router: Router,
+              private _hotkeysService: HotkeysService,
+              public alertService: AlertService,
               public knowledgeService: KnowledgeService) {
   }
 
   ngOnInit(): void {
+    this._hotkeysService.add(new Hotkey('alt+r', (event: KeyboardEvent): boolean => {
+      this.showRecords();
+      return false; // Prevent bubbling
+    }));
+    this._hotkeysService.add(new Hotkey('alt+shift+r', (event: KeyboardEvent): boolean => {
+      this.addRecord();
+      return false; // Prevent bubbling
+    }));
+
     // const parentsPath$ = this.tasksService.getParentsPath(this.taskContainer);
     // parentsPath$.subscribe((res: string[]) => this.parentsPath = res);
     this.refreshSubtasks();
@@ -125,6 +143,12 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
     }
     if (['task'].includes(arr[0])) {
       this.addSubtask();
+    }
+    if (['records'].includes(arr[0])) {
+      this.showRecords();
+    }
+    if (['new-record'].includes(arr[0])) {
+      this.addRecord();
     }
   }
 
@@ -323,5 +347,30 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
     this.refreshTasksSubscription.unsubscribe();
     this.refreshProblemsSubscription.unsubscribe();
     this.commandsSubscription.unsubscribe();
+  }
+  // @HostListener('document:keydown.code.meta.keyk', ['$event'])
+  // openDialog(e: KeyboardEvent) {
+  //   e.preventDefault();
+  // }
+  @HostListener('document:keydown.code.Alt.r', ['$event'])
+  showRecords(): void {
+    // const records = getRootDirs
+    // this.recordsService.getRecords(this.taskContainer.getFullDescription()).subscribe(
+    //   (records: RecordItem[]) => { console.log('AAAAAA', records); }
+    // )
+    const dialogRef = this.dialog.open(RecordsListDialogComponent,
+      {
+        panelClass: 'custom-dialog-container',
+        height: '600px',
+        width: '1000px',
+        data: {tag: this.taskContainer.getFullDescription()}});
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('Dialog was closed RecordsListDialogComponent');
+    });
+  }
+
+  addRecord() {
+    this.recordsService.callAddRecordDialog(this.taskContainer.getFullDescription());
+
   }
 }
