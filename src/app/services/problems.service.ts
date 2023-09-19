@@ -7,6 +7,7 @@ import {DashboardService} from "./dashboard.service";
 import {GetValueDialogComponent} from "../modules/dialogs/get-value/get-value-dialog.component";
 import {TaskContainer} from "../interfaces/task-container";
 import {MatDialog} from "@angular/material/dialog";
+import {TaskContainerDescription} from "../interfaces/types";
 
 export interface RefreshProblemsState {
   taskContainer: TaskContainer;
@@ -42,8 +43,8 @@ export class ProblemsService {
     this.refreshProblemsState.next(state);
   }
 
-  getProblems(tag: string): Observable<Problem[]> {
-    return this.apiService._getProblems(tag);
+  getProblems(ids: number[]): Observable<Problem[]> {
+    return this.apiService._getProblems(ids);
   }
 
   finishProblem(problem: Problem): Observable<any> {
@@ -61,7 +62,7 @@ export class ProblemsService {
       }));
   }
 
-  createNewProblem(obj: { description: string; tags: string[] }): Observable<Problem> {
+  createNewProblem(obj: any): Observable<Problem> {
     return this.apiService._createNewProblem(obj);
   }
 
@@ -70,7 +71,9 @@ export class ProblemsService {
       {data: {title: 'Description'}});
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
-        const obj = {description: description, tags: [taskContainer.getFullDescription()]}
+        const obj: any = {description: description, tags: [],
+          parents: [taskContainer.getTaskContainerDescription()]
+        }
         const state = this.getRefreshProblemsDataCurrentState();
         this.createNewProblem(obj).subscribe(() =>
           this.setRefreshProblemsDataState({...state, taskContainer: taskContainer}));

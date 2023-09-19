@@ -40,6 +40,7 @@ export class NavigationService {
     this.aliasService.getAliasRecord(navItem).subscribe(
       {
         next: val => {
+          console.log('ALIAS HERE', val);
           this.navigateByAlias(val);
         },
         error: (error) => {

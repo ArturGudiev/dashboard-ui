@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {TaskC} from '../models/task-class';
 import {HttpClient} from '@angular/common/http';
-import {EMPTY, Observable} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Epic} from "../models/epic";
 import {TaskContainer} from "../interfaces/task-container";
@@ -14,6 +14,15 @@ import {Knowledge} from "../models/knowledge";
 import {KnowledgeNode} from "../models/knowledge-node";
 import {AliasesRecord} from "../models/alias-record";
 import {RecordItem} from "../models/record-item";
+import {IArrayParams} from "../interfaces/array-params";
+import {TaskContainerDescription} from "../interfaces/types";
+
+export interface IArrayResponse<T> {
+  arrInfo: {
+    length: number
+  },
+  items: T[]
+}
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +31,7 @@ export class ApiService {
   // baseUrl = 'http://192.168.1.62:3000'
   // baseUrl = 'http://192.168.1.107:3000'
   // baseUrl = 'http://172.20.10.11:3000'
-  baseUrl = 'http://192.168.0.18:3000'
+  baseUrl = 'http://localhost:3000'
 
   constructor(private http: HttpClient) {
   }
@@ -31,7 +40,7 @@ export class ApiService {
   _getTask(id: number): Observable<TaskC> {
     return this.http.get<TaskC>(`${this.baseUrl}/task/${id}`)
       .pipe(
-        map((obj) => new TaskC(obj._id, obj.description, obj.done, obj.tags, obj.notes))
+        map((obj) => TaskC.createFromObj(obj))
       );
   }
 
@@ -39,15 +48,16 @@ export class ApiService {
     return this.http.post<string[]>(`${this.baseUrl}/task/parents-path/`, obj);
   }
 
-  _getTasks(tag: string): Observable<TaskC[]> {
-    return this.http.get(`${this.baseUrl}/get-tasks/`, {
-      params: {tag}
-    }).pipe(
-      map((tasks: any) => tasks.map((t: TaskC) => new TaskC(t._id, t.description, t.done, t.tags, t.notes))
+  _getTasks(ids: number[]): Observable<TaskC[]> {
+    return this.http.post(`${this.baseUrl}/get-tasks/`,
+      { ids }
+    ).pipe(
+      map((tasks: any) => tasks.map((t: TaskC) => TaskC.createFromObj(t))
       ));
   }
 
-  _createNewTask(obj: { description: any; tags: string[] }): Observable<TaskC> {
+  _createNewTask(obj: any): Observable<TaskC> {
+    console.log('_createNewTask', obj);
     return this.http.post<TaskC>(`${this.baseUrl}/new-task/`, obj);
   }
 
@@ -66,7 +76,7 @@ export class ApiService {
   _updateTask(task: TaskC): Observable<TaskC> {
     return this.http.put<TaskC>(`${this.baseUrl}/update-task/`, task)
       .pipe(
-        map((obj) => new TaskC(obj._id, obj.description, obj.done, obj.tags, obj.notes))
+        map((obj) => TaskC.createFromObj(obj))
       );
   }
 
@@ -79,7 +89,7 @@ export class ApiService {
   _getEpic(id: number) {
     return this.http.get<Epic>(`${this.baseUrl}/epic/${id}`)
       .pipe(
-        map((obj) => new Epic(obj._id, obj.description, obj.tags, obj.active, obj.closed))
+        map((obj) => Epic.createFromObj(obj))
       );
   }
 
@@ -87,35 +97,33 @@ export class ApiService {
   _getStory(id: number) {
     return this.http.get<Story>(`${this.baseUrl}/story/${id}`)
       .pipe(
-        map((obj) => new Story(obj._id, obj.description, obj.tags, obj.active, obj.closed))
+        map((obj) => Story.createFromObj(obj))
       );
   }
 
-  _getStories(tag: string): Observable<Story[]> {
-    return this.http.get(`${this.baseUrl}/get-stories/`, {
-      params: {tag}
-    }).pipe(
+  _getStories(ids: number[]): Observable<Story[]> {
+    return this.http.post(`${this.baseUrl}/get-stories/`,
+      { ids }
+    ).pipe(
       map((stories: any) => stories.map(
-        (s: Story) => new Story(s._id, s.description, s.tags, s.active, s.closed, s.deferred))
+        (s: Story) => Story.createFromObj(s))
       ));
 
   }
   //------------------------------------stories-------------------------------------------------
   //------------------------------------problems-------------------------------------------------
 
-  _getProblems(tag: string): Observable<Problem[]> {
-    return this.http.get(`${this.baseUrl}/get-problems/`, {
-      params: {tag}
-    }).pipe(
+  _getProblems(ids: number[]): Observable<Problem[]> {
+    return this.http.post(`${this.baseUrl}/get-problems/`, { ids }).pipe(
       map((problems: any) => problems.map(
-        (p: Problem) => new Problem(p._id, p.description, p.tags, p.solution)
+        (p: Problem) => Problem.createFromObj(p)
       )));
   }
 
   _getProblem(id: any) {
     return this.http.get<Problem>(`${this.baseUrl}/problem/${id}`)
       .pipe(
-        map((obj) => new Problem(obj._id, obj.description, obj.tags, obj.solution))
+        map((obj) => Problem.createFromObj(obj))
       );
   }
 
@@ -123,7 +131,7 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/solve-problem/${_id}`, {solution});
   }
 
-  _createNewProblem(obj: { description: string; tags: string[] }): Observable<Problem> {
+  _createNewProblem(obj: any): Observable<Problem> {
     return this.http.post<Problem>(`${this.baseUrl}/new-problem/`, obj);
   }
 
@@ -142,16 +150,14 @@ export class ApiService {
 
   //----------------------------------------aliases----------------------------------------
   //----------------------------------------questions----------------------------------------
-  _getQuestions(tag: string): Observable<Question[]> {
-    return this.http.get(`${this.baseUrl}/get-questions/`, {
-      params: {tag}
-    }).pipe(
+  _getQuestions(ids: number[]): Observable<Question[]> {
+    return this.http.post(`${this.baseUrl}/get-questions/`, { ids }).pipe(
       map((questions: any) => questions.map(
-        (p: Question) => new Question(p._id, p.description, p.tags, p.answer)
+        (p: Question) => Question.createFromObj(p)
       )));
   }
 
-  _createNewQuestion(obj: {description: string; tags: string[]}): Observable<Question> {
+  _createNewQuestion(obj: any): Observable<Question> {
     return this.http.post<Question>(`${this.baseUrl}/new-question/`, obj);
   }
 
@@ -162,7 +168,7 @@ export class ApiService {
   _getQuestion(id: number): Observable<Question> {
     return this.http.get<Question>(`${this.baseUrl}/question/${id}`)
       .pipe(
-        map((obj) => new Question(obj._id, obj.description, obj.tags, obj.answer))
+        map((obj) => Question.createFromObj(obj))
       );
   }
 
@@ -171,30 +177,29 @@ export class ApiService {
   }
   //----------------------------------------questions------------------------------------------
   //----------------------------------------definitions----------------------------------------
-  _getDefinitions(tag: string): Observable<Definition[]> {
-    return this.http.get(`${this.baseUrl}/get-definitions/`, {
-      params: {tag}
-    }).pipe(
+  _getDefinitions(ids: number[]): Observable<Definition[]> {
+    console.log('_getDefinitions', ids);
+    return this.http.post(`${this.baseUrl}/get-definitions/`, { ids }).pipe(
       map((definitions: any) => definitions.map(
-        (p: Definition) => new Definition(p._id, p.name, p.value, p.tags)
+        (p: Definition) => Definition.createFromObj(p)
       )));
   }
 
-  _createNewDefinition(definitionObject: {name: any; value: any; tags: string[]}): Observable<Definition> {
+  _createNewDefinition(definitionObject: any): Observable<Definition> {
     return this.http.post<Definition>(`${this.baseUrl}/new-definition/`, definitionObject);
   }
 
   _getDefinition(id: number) {
     return this.http.get<Definition>(`${this.baseUrl}/definition/${id}`)
       .pipe(
-        map((obj: Definition) => new Definition(obj._id, obj.name, obj.value, obj.tags))
+        map((obj: Definition) => Definition.createFromObj(obj))
       );
   }
 
   _updateDefinition(definition: Definition): Observable<Definition> {
     return this.http.post<Definition>(`${this.baseUrl}/update-definition/`, definition)
       .pipe(
-        map((obj: Definition) => new Definition(obj._id, obj.name, obj.value, obj.tags))
+        map((obj: Definition) => Definition.createFromObj(obj))
       );
   }
 
@@ -204,12 +209,10 @@ export class ApiService {
 
   //------------------------------------definitions----------------------------------------
   //------------------------------------actions----------------------------------------
-  _getActions(tag: string) {
-    return this.http.get(`${this.baseUrl}/get-actions/`, {
-      params: {tag}
-    }).pipe(
+  _getActions(ids: number[]) {
+    return this.http.post(`${this.baseUrl}/get-actions/`, { ids }).pipe(
       map((actions: any) => actions.map(
-        (a: Action) => new Action(a._id, a.name, a.value, a.tags, a.extension)
+        (a: Action) => Action.createFromObj(a)
       )));
   }
 
@@ -220,14 +223,14 @@ export class ApiService {
   _getAction(id: number) {
     return this.http.get<Action>(`${this.baseUrl}/action/${id}`)
       .pipe(
-        map((obj: Action) => new Action(obj._id, obj.name, obj.value, obj.tags, obj.extension))
+        map((obj: Action) => Action.createFromObj(obj))
       );
   }
 
   _updateAction(action: Action): Observable<Action> {
     return this.http.post<Action>(`${this.baseUrl}/update-action/`, action)
       .pipe(
-        map((obj: Action) => new Action(obj._id, obj.name, obj.value, obj.tags, obj.extension))
+        map((obj: Action) => Action.createFromObj(action))
       );
   }
 
@@ -236,12 +239,10 @@ export class ApiService {
   }
   //------------------------------------actions----------------------------------------
   //------------------------------------knowledge bits start----------------------------------------
-  _getKnowledgeBits(tag: string) {
-    return this.http.get(`${this.baseUrl}/get-knowledge-bits/`, {
-      params: {tag}
-    }).pipe(
+  _getKnowledgeBits(ids: number[]) {
+    return this.http.post(`${this.baseUrl}/get-knowledge-bits/`, { ids }).pipe(
       map((knowledgeBits: any) => knowledgeBits.map(
-        (a: Knowledge) => new Knowledge(a._id, a.name, a.value, a.tags, a.extension)
+        (a: Knowledge) => Knowledge.createFromObj(a)
       )));
   }
 
@@ -252,14 +253,14 @@ export class ApiService {
   _getKnowledge(id: number) {
     return this.http.get<Knowledge>(`${this.baseUrl}/knowledge/${id}`)
       .pipe(
-        map((obj: Knowledge) => new Knowledge(obj._id, obj.name, obj.value, obj.tags, obj.extension))
+        map((obj: Knowledge) => Knowledge.createFromObj(obj))
       );
   }
 
   _updateKnowledge(knowledge: Knowledge): Observable<Knowledge> {
     return this.http.post<Knowledge>(`${this.baseUrl}/update-knowledge/`, knowledge)
       .pipe(
-        map((obj: Knowledge) => new Knowledge(obj._id, obj.name, obj.value, obj.tags, obj.extension))
+        map((obj: Knowledge) => Knowledge.createFromObj(obj))
       );
   }
 
@@ -272,7 +273,7 @@ export class ApiService {
 
   _getKnowledgeNode(id: number): Observable<KnowledgeNode> {
     return this.http.get(`${this.baseUrl}/get-knowledge-node/${id}`).pipe(
-      map((obj: any) => KnowledgeNode.constructKnowledgeNode(obj))
+      map((obj: any) => KnowledgeNode.createFromObj(obj))
     );
   }
 
@@ -284,7 +285,7 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/get-knowledge-node-children/${id}`)
       .pipe(
         map((nodes: any) => nodes.map(
-          (a: any) => new KnowledgeNode(a._id, a.name, a.children)
+          (a: any) => KnowledgeNode.createFromObj(a)
         ))
       );
   }
@@ -298,17 +299,20 @@ export class ApiService {
     return this.http.delete<string[]>(`${this.baseUrl}/delete-knowledge-node/${node._id}`);
   }
   //------------------------------------knowledge bits end----------------------------------------
-  _getRecordItems(tag?: string): Observable<RecordItem[]> {
+  _getRecordItems(arrayParams: IArrayParams, tag?: string): Observable<IArrayResponse<RecordItem>> {
+    console.log('_getRecordItems', arrayParams);
     const url = tag ? `${this.baseUrl}/records/${tag}` : `${this.baseUrl}/records`;
-    return this.http.post<RecordItem[]>(url, {
+    return this.http.post<IArrayResponse<RecordItem>>(url, {
     }, {
       params: {
-        limit: 100,
-        offset: 0,
-        count: 25
+        offset: arrayParams.offset,
+        count: arrayParams.pageSize
       }
     }).pipe(
-      map((arr: any[]) => arr.map((el: any) => RecordItem.createRecordsItemFromObj(el)))
+      map((obj: IArrayResponse<RecordItem>) => {
+        obj.items = obj.items.map((el: any) => RecordItem.createRecordsItemFromObj(el));
+        return obj;
+      })
     );
   }
 

@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {RecordItem} from "../models/record-item";
-import {ApiService} from "./api.service";
+import {ApiService, IArrayResponse} from "./api.service";
 import {Observable} from "rxjs";
 import {GetValueDialogComponent} from "../modules/dialogs/get-value/get-value-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {IArrayParams} from "../interfaces/array-params";
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class RecordsService {
   constructor(private apiService: ApiService,
               private dialog: MatDialog) { }
 
-  getRecords(tag?: string): Observable<RecordItem[]> {
-    return this.apiService._getRecordItems(tag);
+  getRecords(arrayParams: IArrayParams, tag?: string): Observable<IArrayResponse<RecordItem>> {
+    return this.apiService._getRecordItems(arrayParams, tag);
   }
 
   addRecord(message: string, tag?: string): Observable<RecordItem> {

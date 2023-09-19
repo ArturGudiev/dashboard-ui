@@ -3,8 +3,8 @@
 
   <div class="options-paginator-container">
     <mat-button-toggle-group id="record-filter-options"
-                             [value]="selectedOption"
-                             (valueChange)="selectedOptionChange($event)"
+                             [value]="'all'"
+                            (change)="selectedOptionChange($event)"
                              name="favoriteColor" aria-label="Favorite Color">
       <mat-button-toggle value="all">All</mat-button-toggle>
       <mat-button-toggle value="node">Node</mat-button-toggle>
@@ -12,17 +12,18 @@
     </mat-button-toggle-group>
 
 
-    <mat-paginator [length]="100" #paginator
-                   [pageSize]="25"
+    <mat-paginator [length]="recordItemsResponse?.arrInfo?.length" #paginator
+                   [pageSize]="10"
                    [pageSizeOptions]="[25, 50, 100]"
+                   (page)="paginationParamsChanged($event)"
                    aria-label="Select page">
     </mat-paginator>
   </div>
   <div class="list-part">
-    <div *ngIf="(records$ | async) as records;">
+    <div *ngIf="(records$ | async)?.items as records;">
       <div *ngIf="records !== undefined; else loading" >
       <!--  TODO if empty array fix it -->
-        <div class="record-item" *ngFor="let item of records$ | async">
+        <div class="record-item" *ngFor="let item of (records$ | async)?.items">
           <!--    {{ item | json }}-->
           <div class="record-message">{{item.message}}</div>
           <div class="record-date">{{item.date}}</div>

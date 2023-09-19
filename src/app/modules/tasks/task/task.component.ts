@@ -34,7 +34,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     });
   }
 
-  refreshTask() {
+  refreshTask(): void {
     this.tasksService.getTask(this.id).subscribe(task => {
       this.task = task;
       this.titleService.setTitle(this.task.getFullDescription());

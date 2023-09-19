@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import {TaskC} from '../models/task-class';
 import {ApiService} from './api.service';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {tap} from "rxjs/operators";
+import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
+import {concatMap, tap} from "rxjs/operators";
 import {DashboardService} from "./dashboard.service";
 import {TaskContainer} from "../interfaces/task-container";
 import {NEW_TASK_DIALOG_OPTIONS} from "../shared/constants";
 import {MatDialog} from "@angular/material/dialog";
 import {NewTaskDialogComponent} from "../modules/tasks/new-task-dialog/new-task-dialog.component";
+import {TaskContainerDescription} from "../interfaces/types";
 
 export interface RefreshTasksState {
   taskContainer: TaskContainer;
@@ -21,7 +22,7 @@ export class TasksService {
     taskContainer: null
   }
   private refreshTasksState = new BehaviorSubject<RefreshTasksState>(this.initialRefreshTasksState);
-  private addTaskDialogOpened = false;
+  addTaskDialogOpened = false;
 
   constructor(private apiService: ApiService,
               private dialog: MatDialog,
@@ -48,11 +49,11 @@ export class TasksService {
     return this.apiService._getParentsPath(taskContainer);
   }
 
-  getTasks(tag: string): Observable<TaskC[]> {
-    return this.apiService._getTasks(tag);
+  getTasks(ids: number[]): Observable<TaskC[]> {
+    return this.apiService._getTasks(ids);
   }
 
-  createNewTask(obj: { description: any; tags: string[] }): Observable<TaskC> {
+  createNewTask(obj: any): Observable<TaskC> {
     return this.apiService._createNewTask(obj);
   }
 
@@ -79,7 +80,30 @@ export class TasksService {
     );
   }
 
-  openAddTaskDialog(taskContainer: TaskContainer): void {
+  /**
+   *
+   * @param taskContainer
+   * @param callback is called when create new task is finished
+   */
+  openAddTaskDialog(taskContainer: TaskContainer): Observable<any> {
+    if (this.addTaskDialogOpened) {
+      return EMPTY;
+    }
+    this.addTaskDialogOpened = true;
+    const dialogRef = this.dialog.open(NewTaskDialogComponent,
+      {data: {title: 'Description', inputWidth: '40rem'},
+        ...NEW_TASK_DIALOG_OPTIONS
+      });
+    return dialogRef.afterClosed();
+  }
+
+
+  /**
+   *
+   * @param taskContainer
+   * @param callback is called when create new task is finished
+   */
+  openAddTaskDialog2(taskContainer: TaskContainer, callback: () => Observable<any> = () => EMPTY): void {
     if (this.addTaskDialogOpened) {
       return;
     }
@@ -95,10 +119,16 @@ export class TasksService {
       }
       const description = responseObj.description;
       if (description) {
-        const obj = {description: description, tags: [taskContainer.getFullDescription()], notes: responseObj.notes}
+        const obj: any = {description: description, tags: [],
+          notes: responseObj.notes,
+            parents: [taskContainer.getTaskContainerDescription()]
+        }
         const state = this.getRefreshTasksDataCurrentState();
-        this.createNewTask(obj).subscribe(() =>
-          this.setRefreshTasksDataState({...state, taskContainer: taskContainer}));
+        this.createNewTask(obj)
+          .pipe(
+            concatMap(() => callback())
+          )
+          .subscribe(() => this.setRefreshTasksDataState({...state, taskContainer: taskContainer}))
       }
     });
   }

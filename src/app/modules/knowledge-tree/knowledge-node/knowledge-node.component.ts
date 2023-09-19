@@ -88,7 +88,7 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   }
 
   refreshSubtasks() {
-    this.tasksService.getTasks(this.knowledgeNode.getFullDescription()).subscribe(newSubtasks => {
+    this.tasksService.getTasks(this.knowledgeNode.tasks).subscribe(newSubtasks => {
       this.subtasks = newSubtasks;
     });
   }
@@ -144,7 +144,7 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
 
   //--------------------------------qeustions start---------------------------------------------------------
   refreshQuestions(): Observable<Question[]> {
-    const questions$ = this.questionsService.getQuestions(this.knowledgeNode.getFullDescription());
+    const questions$ = this.questionsService.getQuestions(this.knowledgeNode.questions);
     questions$
       .subscribe((questions: Question[]) => this.questions = questions.filter((q: Question) => !q.answer));
     return questions$;
@@ -155,7 +155,7 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   }
 
   addSubtask() {
-    this.tasksService.openAddTaskDialog(this.knowledgeNode);
+    this.tasksService.openAddTaskDialog2(this.knowledgeNode);
   }
 
   answerTheQuestion(question: Question) {
@@ -201,7 +201,7 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   }
 
   refreshDefinitions(): Observable<Definition[]> {
-    const definitions$ = this.knowledgeService.getDefinitions(this.knowledgeNode.getFullDescription());
+    const definitions$ = this.knowledgeService.getDefinitions(this.knowledgeNode.definitions);
     definitions$.subscribe(definitions => {
       return this.definitions = definitions;
     });
@@ -216,14 +216,17 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((obj: any) => {
       if (obj) {
-        const definitionObject = {name: obj.name, value: obj.value, tags: [this.knowledgeNode.getFullDescription()]}
+        const definitionObject = {name: obj.name, value: obj.value,
+          tags: [this.knowledgeNode.getFullDescription()],
+            parents: [this.knowledgeNode.getTaskContainerDescription()]
+        }
         this.knowledgeService.createNewDefinition(definitionObject).subscribe(() => this.refreshDefinitions());
       }
     });
   }
 
   refreshActions() {
-    const actionsSubscription$ = this.knowledgeService.getActions(this.knowledgeNode.getFullDescription());
+    const actionsSubscription$ = this.knowledgeService.getActions(this.knowledgeNode.actions);
     actionsSubscription$.subscribe(actions => {
       this.actions = actions;
     });
@@ -231,7 +234,8 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   }
 
   refreshKnowledgeBits() {
-    const knowledgeBitsSubscription$ = this.knowledgeService.getKnowledgeBits(this.knowledgeNode.getFullDescription());
+    const knowledgeBitsSubscription$ = this.knowledgeService
+      .getKnowledgeBits(this.knowledgeNode.knowledgeBits);
     knowledgeBitsSubscription$.subscribe(knowledgeBits => this.knowledgeBits = knowledgeBits);
     return knowledgeBitsSubscription$;
   }

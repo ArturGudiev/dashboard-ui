@@ -77,12 +77,12 @@ export class DefinitionComponent implements OnInit {
   }
 
   refreshSubtasks(): void {
-    this.tasksService.getTasks(this.definition.getFullDescription())
+    this.tasksService.getTasks(this.definition.tasks)
       .subscribe(newSubtasks => this.subtasks = newSubtasks);
   }
 
   addSubtask() {
-    this.tasksService.openAddTaskDialog(this.definition);
+    this.tasksService.openAddTaskDialog2(this.definition);
   }
 
   onSubtaskDoneClick(subtask: TaskC) {

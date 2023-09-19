@@ -1,4 +1,14 @@
-import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {TaskContainer} from "../../../interfaces/task-container";
 import {QuestionsService} from "../../../services/questions.service";
 import {ProblemsService} from "../../../services/problems.service";
@@ -26,18 +36,20 @@ import {RecordItem} from "../../../models/record-item";
 import {RecordsListDialogComponent} from "../../../modules/dialogs/records-list-dialog/records-list-dialog.component";
 import {Hotkey, HotkeysService} from "angular2-hotkeys";
 import {AlertService} from "../../../services/alert.service";
+import {concatMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-task-container',
   templateUrl: './task-container.component.html',
   styleUrls: ['./task-container.component.sass']
 })
-export class TaskContainerComponent implements OnInit, OnDestroy {
+export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   @Input() taskContainer: TaskContainer;
   @Input() parentsPath: string[];
   @Output() onDoneAllClick = new EventEmitter();
   @Output() goToNearestParent = new EventEmitter<string>();
   @Output() updateTaskContainer = new EventEmitter();
+  @Output() refreshTaskContainer = new EventEmitter();
   @Output() resolve = new EventEmitter();
 
   refreshQuestionsSubscription: Subscription;
@@ -80,13 +92,8 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
 
     // const parentsPath$ = this.tasksService.getParentsPath(this.taskContainer);
     // parentsPath$.subscribe((res: string[]) => this.parentsPath = res);
-    this.refreshSubtasks();
-    this.refreshDefinitions();
-    this.refreshActions();
-    this.refreshKnowledgeBits();
-    forkJoin([this.refreshSubtasks(), this.refreshProblems(), this.refreshQuestions()]).subscribe(
-      () => console.log('isLoading = False')
-    )
+    this.refreshTaskContainerParts();
+
     this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
       if (this.taskContainer === state.taskContainer) { this.refreshQuestions(); }
     });
@@ -101,6 +108,13 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
     })
   }
 
+
+  private refreshTaskContainerParts() {
+    this.refreshSubtasks();
+    this.refreshDefinitions();
+    this.refreshActions();
+    this.refreshKnowledgeBits();
+  }
 
   private handleTaskCommand(command: string): void {
     const arr = command.split(' ');
@@ -208,7 +222,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   }
 
   refreshDefinitions(): Observable<Definition[]> {
-    const definitions$ = this.knowledgeService.getDefinitions(this.taskContainer.getFullDescription());
+    const definitions$ = this.knowledgeService.getDefinitions(this.taskContainer.definitions);
     definitions$.subscribe(definitions => {
       return this.definitions = definitions;
     });
@@ -231,14 +245,17 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((obj: any) => {
       if (obj) {
-        const definitionObject = {name: obj.name, value: obj.value, tags: [this.taskContainer.getFullDescription()]}
+        const definitionObject =
+          {name: obj.name, value: obj.value, tags: [this.taskContainer.getFullDescription()],
+              parents: [this.taskContainer.getTaskContainerDescription()]
+          }
         this.knowledgeService.createNewDefinition(definitionObject).subscribe(() => this.refreshDefinitions());
       }
     });
   }
 
   refreshActions() {
-    const actionsSubscription$ = this.knowledgeService.getActions(this.taskContainer.getFullDescription());
+    const actionsSubscription$ = this.knowledgeService.getActions(this.taskContainer.actions);
     actionsSubscription$.subscribe(actions => {
       this.actions = actions;
     });
@@ -265,7 +282,8 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   }
 
   refreshKnowledgeBits() {
-    const knowledgeBitsSubscription$ = this.knowledgeService.getKnowledgeBits(this.taskContainer.getFullDescription());
+    const knowledgeBitsSubscription$ =
+      this.knowledgeService.getKnowledgeBits(this.taskContainer.knowledgeBits);
     knowledgeBitsSubscription$.subscribe(knowledgeBits => this.knowledgeBits = knowledgeBits);
     return knowledgeBitsSubscription$;
   }
@@ -298,7 +316,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   }
 
   refreshSubtasks() {
-    const tasksObservable = this.tasksService.getTasks(this.taskContainer.getFullDescription());
+    const tasksObservable = this.tasksService.getTasks(this.taskContainer.tasks);
     tasksObservable.subscribe(newSubtasks => {
       this.subtasks = newSubtasks;
     });
@@ -306,7 +324,22 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   }
 
   addSubtask() {
-    this.tasksService.openAddTaskDialog(this.taskContainer);
+    this.tasksService.openAddTaskDialog(this.taskContainer)
+      .subscribe((responseObj: any) => {
+        this.tasksService.addTaskDialogOpened = false;
+        if (!responseObj) {
+          return;
+        }
+        const description = responseObj.description;
+        if (description) {
+          const obj: any = {description: description, tags: [],
+            notes: responseObj.notes,
+            parents: [this.taskContainer.getTaskContainerDescription()]
+          }
+          this.tasksService.createNewTask(obj)
+            .subscribe(() => this.refreshTaskContainer.emit())
+        }
+      });
   }
 
   onSubtaskDoneClick(subtask: TaskC) {
@@ -314,7 +347,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   }
 
   refreshQuestions(): Observable<Question[]> {
-    const questions$ = this.questionsService.getQuestions(this.taskContainer.getFullDescription());
+    const questions$ = this.questionsService.getQuestions(this.taskContainer.questions);
     questions$
       .subscribe(questions => this.questions = questions.filter((p: Question) => !p.answer));
     return questions$;
@@ -332,7 +365,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   }
 
   refreshProblems(): Observable<Problem[]> {
-    const problems$ = this.problemsService.getProblems(this.taskContainer.getFullDescription());
+    const problems$ = this.problemsService.getProblems(this.taskContainer.problems);
     problems$
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
     return problems$;
@@ -372,5 +405,11 @@ export class TaskContainerComponent implements OnInit, OnDestroy {
   addRecord() {
     this.recordsService.callAddRecordDialog(this.taskContainer.getFullDescription());
 
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.taskContainer) {
+      this.refreshTaskContainerParts();
+    }
   }
 }

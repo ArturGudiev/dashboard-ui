@@ -13,7 +13,7 @@ export class QuestionsComponent implements OnInit, OnChanges {
   constructor(private questionsService: QuestionsService) { }
 
   ngOnInit(): void {
-    this.questionsService.getQuestions().subscribe(questions => {
+    this.questionsService.getQuestions([]).subscribe(questions => {
       this.questions = questions;
     });
   }

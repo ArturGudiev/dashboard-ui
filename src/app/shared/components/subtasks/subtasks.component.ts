@@ -182,7 +182,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.selectedSubtask) {
       return;
     }
-    this.tasksService.getTasks(this.selectedSubtask.getFullDescription()).subscribe(
+    this.tasksService.getTasks(this.selectedSubtask.tasks).subscribe(
       tasks => this.tasksOfSelectedSubtask = tasks
     );
   }
@@ -199,7 +199,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   addTaskOfSelectedSubtask() {
-    this.tasksService.openAddTaskDialog(this.selectedSubtask);
+    this.tasksService.openAddTaskDialog2(this.selectedSubtask);
   }
 
   unselectSelectedSubtask() {

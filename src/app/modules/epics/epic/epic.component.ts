@@ -26,206 +26,47 @@ import {QuestionsService} from "../../../services/questions.service";
 })
 export class EpicComponent implements OnInit, OnDestroy {
   epic: Epic;
-  subtasks: TaskC[];
-  stories: Story[];
-  problems: Problem[];
-  questions: Question[];
   parentsPath: string[];
   routeSubscription: Subscription;
-  commandsSubscription: Subscription;
-  refreshQuestionsSubscription: Subscription;
-  refreshTasksSubscription: Subscription;
-  refreshProblemsSubscription: Subscription;
-
+  isLoading = true;
+  id: number;
   constructor(private route: ActivatedRoute,
               private epicsService: EpicsService,
               private tasksService: TasksService,
               private router: Router,
-              private storiesService: StoriesService,
               private commandsService: CommandsService,
               private titleService: Title,
               public dialog: MatDialog,
-              private problemsService: ProblemsService,
-              private questionsService: QuestionsService
   ) {
   }
 
   ngOnInit(): void {
     this.routeSubscription = this.route.params.subscribe(params => {
-      let id = params['id'];
-      this.epicsService.getEpic(id).subscribe((epic: Epic) => {
-        this.epic = epic;
-        this.titleService.setTitle(this.epic.getFullDescription());
-        if (this.epic !== null) {
-          this.tasksService.getParentsPath(this.epic).subscribe((res: string[]) => {
-            this.parentsPath = res;
-          });
-          this.refreshSubtasks();
-          this.refreshSubstories();
-          this.refreshProblems();
-          this.refreshQuestions();
-        }
-      })
+      this.id = params['id'];
+      this.refreshEpic();
     });
-    this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
-      this.handleCommand(state.command);
-    });
-    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-      if (this.epic === state.taskContainer) { this.refreshQuestions(); }
-    });
-    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
-      if (this.epic === state.taskContainer) { this.refreshSubtasks(); }
-    });
-    this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
-      if (this.epic === state.taskContainer) { this.refreshProblems(); }
-    });
+  }
 
+  refreshEpic() {
+    this.isLoading = true;
+    this.epicsService.getEpic(this.id).subscribe((epic: Epic) => {
+      this.epic = epic;
+      this.titleService.setTitle(this.epic.getFullDescription());
+      if (this.epic !== null) {
+        this.tasksService.getParentsPath(this.epic).subscribe((res: string[]) => {
+          this.parentsPath = res;
+        });
+      }
+      this.isLoading = false;
+    });
   }
 
   ngOnDestroy(): void {
     this.routeSubscription.unsubscribe();
-    this.commandsSubscription.unsubscribe();
-    this.refreshQuestionsSubscription.unsubscribe();
-    this.refreshTasksSubscription.unsubscribe();
-    this.refreshProblemsSubscription.unsubscribe();
-  }
-
-  private handleCommand(command: string) {
-    const arr = command.split(' ');
-    const args = arr.slice(1);
-    if (['back', 'b'].includes(arr[0])) {
-      this.onGoToNearseParent();
-      return;
-    }
-    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
-      this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
-      return;
-    }
-    if (['f', 'ft', 'finish-task'].includes(arr[0])) {
-      this.finishTaskHandler(args);
-      return;
-    }
-    if (['fp', 'finish-problem'].includes(arr[0])) {
-      this.finishProblemHandler(args);
-      return;
-    }
-    if (['problem'].includes(arr[0])) {
-      this.addProblem();
-      return;
-    }
-    if (['back', 'b'].includes(arr[0])) {
-      this.onGoToNearseParent();
-      return;
-    }
-    if (['task'].includes(arr[0])) {
-      this.addSubtask();
-    }
-  }
-
-  private finishProblemHandler(args: string[]) {
-    if (!args || args.length === 0) {
-      return;
-    }
-    const index = +args[0];
-    if (Number.isInteger(index) && index >= 1 && index <= this.problems.length) {
-      const problem = this.problems[index - 1];
-      this.solveTheProblem(problem);
-    }
-  }
-
-  refreshProblems() {
-    this.problemsService.getProblems(this.epic.getFullDescription())
-      .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
-  }
-
-  addProblem(): void {
-    this.problemsService.openAddProblemDialog(this.epic);
-  }
-
-  solveTheProblem(problem: Problem): void {
-    this.problemsService.callSolveTheProblemDialog(problem, this.epic);
-  }
-
-  private finishTaskHandler(args: string[]) {
-    if (!args || args.length === 0) {
-      return;
-    }
-    if (args.length > 0 && args[0] && /^\d+-\d+$/.test(args[0])) {
-      const numbers = args[0].split('-');
-      const num1 = +numbers[0] - 1;
-      const num2 = +numbers[1] - 1;
-      const rangeNumbers = _.range(num1, num2 + 1);
-      const tasksToFinish = rangeNumbers.map((number: number) => this.subtasks[number]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
-    } else if (args.length > 0 && args[0] && args[0].includes(',')) {
-      const numbers = args[0].split(',').map(str => +str);
-      const tasksToFinish = numbers.map((number: number) => this.subtasks[number - 1]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
-    } else {
-      const index = +args[0];
-      if (Number.isInteger(index) && index >= 1 && index <= this.subtasks.length) {
-        this.tasksService.finishTask(this.subtasks[index - 1]).subscribe(() => this.refreshSubtasks());
-      }
-    }
-  }
-  //--------------------------------qeustions start---------------------------------------------------------
-  refreshQuestions(): Observable<Question[]> {
-    const questions$ = this.questionsService.getQuestions(this.epic.getFullDescription());
-    questions$
-      .subscribe((questions: Question[]) => this.questions = questions.filter((q: Question) => !q.answer));
-    return questions$;
-  }
-
-  addQuestion() {
-    this.questionsService.openAddQuestionDialog(this.epic);
-  }
-  answerTheQuestion(question: Question) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Answer'}});
-    dialogRef.afterClosed().subscribe((solution: string) => {
-      if (solution) {
-        this.questionsService.answerTheQuestion(question, solution).subscribe(() => this.refreshQuestions());
-      }
-    });
-  }
-  //---------------------------------qeustions end----------------------------------------------------------
-
-  refreshSubtasks() {
-    this.tasksService.getTasks(this.epic.getFullDescription()).subscribe(newSubtasks => {
-      this.subtasks = newSubtasks;
-    });
-  }
-
-  addSubtask() {
-    this.tasksService.openAddTaskDialog(this.epic);
-  }
-
-  openAddTaskDialog() {
-    const dialogRef = this.dialog.open(NewTaskDialogComponent,
-      {
-        data: {parentTask: this.epic},
-        ...NewTaskDialogComponent.DIALOG_OPTIONS
-      });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const description = result.description;
-        const obj = {description: description, tags: [this.epic.getFullDescription()]}
-        console.log(obj);
-        this.tasksService.createNewTask(obj).subscribe(() => {
-          this.tasksService.getTasks(this.epic.getFullDescription()).subscribe(res => {
-            this.subtasks = res;
-          });
-        });
-      }
-    });
   }
 
 
-  onSubtaskDoneClick(subtask: TaskC) {
-    this.tasksService.finishTask(subtask).subscribe(() => this.refreshSubtasks());
-  }
-
-  onGoToNearseParent() {
+  onGoToNearestParent() {
     if (this.parentsPath && this.parentsPath.length <= 1) {
       return;
     }
@@ -239,17 +80,4 @@ export class EpicComponent implements OnInit, OnDestroy {
     }
   }
 
-  navigateToStory(story: Story) {
-    this.router.navigate(['story', story._id]).then();
-  }
-
-  addSubstory() {
-
-  }
-
-  private refreshSubstories() {
-    this.storiesService.getStories(this.epic.getFullDescription()).subscribe(stories => {
-      this.stories = stories;
-    });
-  }
 }

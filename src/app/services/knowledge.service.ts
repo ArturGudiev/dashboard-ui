@@ -5,6 +5,7 @@ import {Definition} from "../models/definition";
 import {Action} from "../models/action";
 import {Knowledge} from "../models/knowledge";
 import {KnowledgeNode} from "../models/knowledge-node";
+import {TaskContainerDescription} from "../interfaces/types";
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,11 @@ export class KnowledgeService {
   constructor(private apiService: ApiService) { }
 
   //----------Definitions start -----------------
-  getDefinitions(tag: string): Observable<Definition[]> {
-    return this.apiService._getDefinitions(tag);
+  getDefinitions(ids: number[]): Observable<Definition[]> {
+    return this.apiService._getDefinitions(ids);
   }
 
-  createNewDefinition(definitionObject: { name: any; value: any; tags: string[] }): Observable<Definition> {
+  createNewDefinition(definitionObject: any): Observable<Definition> {
     return this.apiService._createNewDefinition(definitionObject);
   }
 
@@ -35,8 +36,8 @@ export class KnowledgeService {
   }
   //----------Definitions end -----------------
   //----------Actions start -----------------
-  getActions(tag: string): Observable<Action[]> {
-    return this.apiService._getActions(tag);
+  getActions(ids: number[]): Observable<Action[]> {
+    return this.apiService._getActions(ids);
   }
 
   createNewAction(actionObject: {name: any; value: any; tags: string[], extension: string}) {
@@ -57,8 +58,8 @@ export class KnowledgeService {
   //----------Actions end -----------------
   //----------knowledge bits start -----------------
 
-  getKnowledgeBits(tag: string): Observable<Knowledge[]> {
-    return this.apiService._getKnowledgeBits(tag);
+  getKnowledgeBits(ids: number[]): Observable<Knowledge[]> {
+    return this.apiService._getKnowledgeBits(ids);
   }
 
   createNewKnowledge(knowledgeObject: {name: any; value: any; tags: string[], extension: string}) {

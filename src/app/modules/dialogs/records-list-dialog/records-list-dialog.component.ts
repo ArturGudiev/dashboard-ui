@@ -1,9 +1,12 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {RecordsService} from "../../../services/records.service";
 import {Observable} from "rxjs";
 import {RecordItem} from "../../../models/record-item";
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {IArrayParams} from "../../../interfaces/array-params";
+import {IArrayResponse} from "../../../services/api.service";
+import {MatButtonToggleChange} from "@angular/material/button-toggle";
 
 type SelectedOptionType = 'node' | 'all' | 'node_plus_children';
 
@@ -13,28 +16,34 @@ type SelectedOptionType = 'node' | 'all' | 'node_plus_children';
   styleUrls: ['./records-list-dialog.component.sass']
 })
 export class RecordsListDialogComponent implements OnInit {
-  records$: Observable<RecordItem[]>;
+  records$: Observable<IArrayResponse<RecordItem>>;
   selectedOption: SelectedOptionType = 'all';
   @ViewChild('paginator') paginator: MatPaginator;
+  private arrayParams: IArrayParams = {
+    offset: 0,
+    pageSize: 10
+  };
+  listLength: number | null = null;
+  recordItemsResponse: IArrayResponse<RecordItem>;
   constructor(
     private recordsService: RecordsService,
     public dialogRef: MatDialogRef<RecordsListDialogComponent>,
+    public cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: { tag: string } ) { }
 
   ngOnInit(): void {
     console.log(this.data.tag);
     // this.records$ = this.recordsService.getRecords(this.data.tag)
-    this.records$ = this.recordsService.getRecords();
+    this.refreshRecords();
   }
 
-  selectedOptionChange(val: SelectedOptionType) {
-    if (val === 'node') {
-      this.records$ = this.recordsService.getRecords(this.data.tag);
-    }
-    if (val === 'all') {
-      this.records$ = this.recordsService.getRecords();
-    }
-    console.log('selectedOptionChange', val);
+  selectedOptionChange($event: MatButtonToggleChange) {
+    // console.log('selectedOptionChange', $event);
+    // this.selectedOption = $event.value;
+    // this.selectedOption = 'node';
+    this.selectedOption = $event.value;
+    // console.log('AAAAAAAAA', this.selectedOption);
+    this.refreshRecords();
   }
 
   f() {
@@ -43,4 +52,31 @@ export class RecordsListDialogComponent implements OnInit {
     console.log(this.paginator.pageSize);
     console.log(this.paginator.pageIndex  );
   }
+
+  paginationParamsChanged(obj: PageEvent) {
+    console.log('g ', obj);
+    this.arrayParams.pageSize = obj.pageSize;
+    this.arrayParams.offset = obj.pageSize * obj.pageIndex;
+    this.refreshRecords();
+  }
+
+  refreshRecords() {
+    if (this.selectedOption === 'node') {
+      this.records$ = this.recordsService.getRecords(this.arrayParams, this.data.tag);
+      // this.records$ = this.recordsService.getRecords(this.arrayParams);
+
+    } else
+    if (this.selectedOption === 'all') {
+      this.records$ = this.recordsService.getRecords(this.arrayParams);
+    } else {
+      this.records$ = this.recordsService.getRecords(this.arrayParams);
+    }
+    this.records$.subscribe(resp => {
+      console.log('resp length', resp.arrInfo);
+      this.recordItemsResponse = resp;
+    });
+
+    this.cdr.detectChanges();
+  }
+
 }

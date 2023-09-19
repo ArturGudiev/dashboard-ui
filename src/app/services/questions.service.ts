@@ -8,6 +8,7 @@ import {GetValueDialogComponent} from "../modules/dialogs/get-value/get-value-di
 import {NEW_QUESTION_DIALOG_OPTIONS} from "../shared/constants";
 import {MatDialog} from "@angular/material/dialog";
 import {TaskContainer} from "../interfaces/task-container";
+import {TaskContainerDescription} from "../interfaces/types";
 
 export interface RefreshQuestionsState {
   taskContainer: TaskContainer;
@@ -40,12 +41,14 @@ export class QuestionsService {
     this.refreshQuestionsState.next(state);
   }
 
-  getQuestions(tag: string = ''): Observable<Question[]> {
-    return this.apiService._getQuestions(tag);
+  getQuestions(ids: number[]): Observable<Question[]> {
+    return this.apiService._getQuestions(ids);
 
   }
 
-  createNewQuestion(obj: { description: string; tags: string[] }): Observable<Question> {
+  createNewQuestion(obj: { description: string; tags: string[],
+      parents: TaskContainerDescription[]
+    }): Observable<Question> {
     return this.apiService._createNewQuestion(obj);
   }
 
@@ -76,7 +79,9 @@ export class QuestionsService {
       });
     dialogRef.afterClosed().subscribe((description: string) => {
       if (description) {
-        const obj = {description: description, tags: [taskContainer.getFullDescription()]}
+        const obj: any = {description: description, tags: [],
+            parents: [taskContainer.getTaskContainerDescription()]
+          }
         const state = this.getRefreshQuestionsDataCurrentState();
         this.createNewQuestion(obj).subscribe(() =>
           this.setRefreshQuestionsDataState({...state, taskContainer: taskContainer}));

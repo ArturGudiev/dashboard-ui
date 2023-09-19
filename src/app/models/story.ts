@@ -1,26 +1,55 @@
 import { TaskContainer } from "../interfaces/task-container";
+import {TaskContainerDescription} from "../interfaces/types";
+import {pick} from "lodash";
 
 export class Story implements TaskContainer{
   static readonly PREFIX = 'STORY-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Story.PREFIX + '(\\d+)\\s');
 
   _id: number;
+
   description: string;
   active: boolean;
   closed = false;
   deferred = false;
   tags: string[];
-  notes: string;
+  notes = '';
+  tasks: number[];
+  problems: number[];
+  questions: number[];
+  actions: number[] = [];
+  definitions: number[] = [];
+  knowledgeBits: number[] = [];
+  stories: number[];
+  parents: TaskContainerDescription[];
 
-
-  constructor(id: number, description: string, tags: string[], active: boolean, closed = false, deferred = false) {
+  constructor(id: number, description: string, tags: string[], active: boolean,
+              closed = false,
+              otherFields: {
+                tasks?: any,
+                stories?: any,
+                problems?: any,
+                questions?: any,
+                definitions?: any,
+                actions?: any,
+                knowledgeBits?: any,
+                parents?: TaskContainerDescription[],
+              } = {}) {
     this._id = id;
     this.description = description;
     this.tags = tags;
     this.active = active;
     this.closed = closed;
-    this.deferred = deferred;
+    this.tasks = otherFields?.tasks ?? [];
+    this.problems = otherFields?.problems ?? [];
+    this.questions = otherFields?.questions ?? [];
+    this.stories = otherFields?.stories ?? [];
+    this.parents = otherFields?.parents ?? [];
+    this.actions = otherFields?.actions ?? [];
+    this.definitions = otherFields?.definitions ?? [];
+    this.knowledgeBits = otherFields?.knowledgeBits ?? [];
   }
+
 
   // static async createStoryInteractively(originalTags: string): Promise<Story | null> {
   //     let description = await getUserInput('Enter story description');
@@ -125,4 +154,17 @@ export class Story implements TaskContainer{
   // getHistoryRecord(): HistoryRecord {
   //     return new HistoryRecord(this.getFullDescription());
   // }
+
+  static createFromObj(storyObj: any): Story {
+    // check here object has all necessary fields
+    return new Story(storyObj._id, storyObj.description, storyObj.tags, storyObj.closed, storyObj.notes,
+      pick(storyObj, ['parents', 'tasks', 'stories', 'problems', 'questions',
+        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
+  }
+
+  getTaskContainerDescription(): TaskContainerDescription {
+    return ['story', this._id];
+  }
+
+
 }

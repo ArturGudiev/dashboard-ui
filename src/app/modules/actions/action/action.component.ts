@@ -76,7 +76,7 @@ export class ActionComponent implements OnInit, OnDestroy {
   }
 
   refreshProblems() {
-    this.problemsService.getProblems(this.action.getFullDescription())
+    this.problemsService.getProblems(this.action.problems)
       .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
   }
 

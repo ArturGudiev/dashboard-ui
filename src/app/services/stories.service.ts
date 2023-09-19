@@ -14,7 +14,7 @@ export class StoriesService {
     return this.apiService._getStory(id);
   }
 
-  getStories(tag: string): Observable<Story[]> {
-    return this.apiService._getStories(tag);
+  getStories(ids: number[]): Observable<Story[]> {
+    return this.apiService._getStories(ids);
   }
 }

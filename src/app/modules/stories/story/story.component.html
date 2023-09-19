@@ -1,42 +1,57 @@
-<div id="content-wrapper">
-  <div id="story-content">
-    <div class="flex-container">
-      <app-task-container-description (goToParent)="onGoToNearestParent()"
-                                      [showDoneAll]="false"
-                                      [taskContainer]="story">
-      </app-task-container-description>
-      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent" *ngIf="story?.getFullDescription()">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="addQuestion()">Add a new question</button>
-        <button mat-menu-item (click)="addProblem()">Add a new problem</button>
-      </mat-menu>
-
-    </div>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<ng-container *ngIf="!isLoading">
+  <app-task-container [taskContainer]="story"
+                      [parentsPath]="parentsPath"
+                      (goToNearestParent)="onGoToNearestParent()"
+                      (refreshTaskContainer)="refreshStory()"
 
 
-    <br>
-    <app-subtasks (refreshSubtasks)="refreshSubtasks()"
-                  (addSubtask)="addSubtask()"
-                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
-                  [taskContainer]="story"
-                  [subtasks]="subtasks">
-    </app-subtasks>
-    <app-subquestions (refreshQuestions)="refreshQuestions()"
-                      (addQuestion)="addQuestion()"
-                      (answerTheQuestion)="answerTheQuestion($event)"
-                      [questions]="questions">
-    </app-subquestions>
-    <app-subproblems (refreshProblems)="refreshProblems()"
-                     (addProblem)="addProblem()"
-                     (onProblemSolvedClick)="solveTheProblem($event)"
-                     [problems]="problems">
-    </app-subproblems>
+  ></app-task-container>
+</ng-container>
+
+<!--(resolve)="onDoneAllClick()"-->
+<!--(updateTaskContainer)="updateStory()"-->
+<!--(onDoneAllClick)="onDoneAllClick()"-->
+
+<!--<div id="content-wrapper">-->
+<!--  <div id="story-content">-->
+<!--    <div class="flex-container">-->
+<!--      <app-task-container-description (goToParent)="onGoToNearestParent()"-->
+<!--                                      [showDoneAll]="false"-->
+<!--                                      [taskContainer]="story">-->
+<!--      </app-task-container-description>-->
+<!--      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent" *ngIf="story?.getFullDescription()">-->
+<!--        <mat-icon>more_vert</mat-icon>-->
+<!--      </button>-->
+<!--      <mat-menu #menu="matMenu">-->
+<!--        <button mat-menu-item (click)="addQuestion()">Add a new question</button>-->
+<!--        <button mat-menu-item (click)="addProblem()">Add a new problem</button>-->
+<!--      </mat-menu>-->
+
+<!--    </div>-->
 
 
-  </div>
-  <app-parents-path [parentsPath]="parentsPath"
-                    (onParentClick)="goToParentHandler($event)"
-  ></app-parents-path>
-</div>
+<!--    <br>-->
+<!--    <app-subtasks (refreshSubtasks)="refreshSubtasks()"-->
+<!--                  (addSubtask)="addSubtask()"-->
+<!--                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"-->
+<!--                  [taskContainer]="story"-->
+<!--                  [subtasks]="subtasks">-->
+<!--    </app-subtasks>-->
+<!--    <app-subquestions (refreshQuestions)="refreshQuestions()"-->
+<!--                      (addQuestion)="addQuestion()"-->
+<!--                      (answerTheQuestion)="answerTheQuestion($event)"-->
+<!--                      [questions]="questions">-->
+<!--    </app-subquestions>-->
+<!--    <app-subproblems (refreshProblems)="refreshProblems()"-->
+<!--                     (addProblem)="addProblem()"-->
+<!--                     (onProblemSolvedClick)="solveTheProblem($event)"-->
+<!--                     [problems]="problems">-->
+<!--    </app-subproblems>-->
+
+
+<!--  </div>-->
+<!--  <app-parents-path [parentsPath]="parentsPath"-->
+<!--                    (onParentClick)="goToParentHandler($event)"-->
+<!--  ></app-parents-path>-->
+<!--</div>-->
