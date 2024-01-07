@@ -14,7 +14,6 @@ export interface ITaskContainerChildElements {
 
 export interface TaskContainer extends ITaskContainerChildElements{
   tags: string[];
-
   tasks: number[];
   problems: number[];
   epics?: number[];

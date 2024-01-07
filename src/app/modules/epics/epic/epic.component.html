@@ -1,9 +1,12 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <ng-container *ngIf="!isLoading">
-  <app-task-container [taskContainer]="epic"
-                      [parentsPath]="parentsPath"
-                      (goToNearestParent)="onGoToNearestParent()"
-                      (refreshTaskContainer)="refreshEpic()"
+  <app-task-container 
+    [showEpics]="true"
+    [showStories]="true"
+    [taskContainer]="epic"
+    [parentsPath]="parentsPath"
+    (goToNearestParent)="onGoToNearestParent()"
+    (refreshTaskContainer)="refreshEpic()"
 
 
   ></app-task-container>

@@ -1,23 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {TasksService} from "../../../services/tasks.service";
-import {TaskC} from "../../../models/task-class";
-import {Epic} from "../../../models/epic";
-import {EpicsService} from "../../../services/epics.service";
-import {NewTaskDialogComponent} from "../../tasks/new-task-dialog/new-task-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
-import {Story} from "../../../models/story";
-import {StoriesService} from "../../../services/stories.service";
-import {Title} from "@angular/platform-browser";
-import {Observable, Subscription} from "rxjs";
-import {CommandsService} from "../../../services/commands.service";
-import {Problem} from "../../../models/problem";
-import {GetValueDialogComponent} from "../../dialogs/get-value/get-value-dialog.component";
-import {ProblemsService} from "../../../services/problems.service";
-import * as _ from "lodash";
-import {Question} from "../../../models/question";
-import {QuestionsService} from "../../../services/questions.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from "@angular/material/dialog";
+import { Title } from "@angular/platform-browser";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Subscription } from "rxjs";
+import { Epic } from "../../../models/epic";
+import { CommandsService } from "../../../services/commands.service";
+import { EpicsService } from "../../../services/epics.service";
+import { TasksService } from "../../../services/tasks.service";
+import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 
 @Component({
   selector: 'app-epic',

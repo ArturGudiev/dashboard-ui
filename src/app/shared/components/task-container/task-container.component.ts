@@ -9,34 +9,36 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {TaskContainer} from "../../../interfaces/task-container";
-import {QuestionsService} from "../../../services/questions.service";
-import {ProblemsService} from "../../../services/problems.service";
-import {DefinitionDialogComponent} from "../../../modules/dialogs/definition/definition-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {KnowledgeService} from "../../../services/knowledge.service";
-import {forkJoin, Observable, Subject, Subscription} from "rxjs";
-import {Definition} from "../../../models/definition";
-import {TaskC} from "../../../models/task-class";
-import {Problem} from "../../../models/problem";
-import {Action} from "../../../models/action";
-import {Question} from "../../../models/question";
-import {ActionDialogComponent} from "../../../modules/dialogs/action-dialog/action-dialog.component";
-import {KnowledgeDialogComponent} from "../../../modules/dialogs/knowledge-dialog/knowledge-dialog.component";
-import {Knowledge} from 'src/app/models/knowledge';
-import {TasksService} from "../../../services/tasks.service";
-import {GetValueDialogComponent} from "../../../modules/dialogs/get-value/get-value-dialog.component";
-import {getUrlByDescription} from "../../libs/dashboard.lib";
-import {Router} from "@angular/router";
-import {CommandsService} from "../../../services/commands.service";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
+import { Hotkey, HotkeysService } from "angular2-hotkeys";
 import * as _ from "lodash";
-import {getRootDirs} from "@angular/compiler-cli/src/ngtsc/util/src/typescript";
-import {RecordsService} from "../../../services/records.service";
-import {RecordItem} from "../../../models/record-item";
-import {RecordsListDialogComponent} from "../../../modules/dialogs/records-list-dialog/records-list-dialog.component";
-import {Hotkey, HotkeysService} from "angular2-hotkeys";
-import {AlertService} from "../../../services/alert.service";
-import {concatMap} from "rxjs/operators";
+import { Observable, Subject, Subscription } from "rxjs";
+import { map, tap } from "rxjs/operators";
+import { Epic } from 'src/app/models/epic';
+import { Knowledge } from 'src/app/models/knowledge';
+import { EpicsService } from 'src/app/services/epics.service';
+import { TaskContainer } from "../../../interfaces/task-container";
+import { Action } from "../../../models/action";
+import { Definition } from "../../../models/definition";
+import { Problem } from "../../../models/problem";
+import { Question } from "../../../models/question";
+import { Story } from "../../../models/story";
+import { TaskC } from "../../../models/task-class";
+import { ActionDialogComponent } from "../../../modules/dialogs/action-dialog/action-dialog.component";
+import { DefinitionDialogComponent } from "../../../modules/dialogs/definition/definition-dialog.component";
+import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
+import { KnowledgeDialogComponent } from "../../../modules/dialogs/knowledge-dialog/knowledge-dialog.component";
+import { RecordsListDialogComponent } from "../../../modules/dialogs/records-list-dialog/records-list-dialog.component";
+import { AlertService } from "../../../services/alert.service";
+import { CommandsService } from "../../../services/commands.service";
+import { KnowledgeService } from "../../../services/knowledge.service";
+import { ProblemsService } from "../../../services/problems.service";
+import { QuestionsService } from "../../../services/questions.service";
+import { RecordsService } from "../../../services/records.service";
+import { StoriesService } from "../../../services/stories.service";
+import { TasksService } from "../../../services/tasks.service";
+import { getUrlByDescription } from "../../libs/dashboard.lib";
 
 @Component({
   selector: 'app-task-container',
@@ -46,8 +48,10 @@ import {concatMap} from "rxjs/operators";
 export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   @Input() taskContainer: TaskContainer;
   @Input() parentsPath: string[];
+  @Input() showEpics = false;
+  @Input() showStories = false;
   @Output() onDoneAllClick = new EventEmitter();
-  @Output() goToNearestParent = new EventEmitter<string>();
+  // @Output() goToNearestParent = new EventEmitter<string>();
   @Output() updateTaskContainer = new EventEmitter();
   @Output() refreshTaskContainer = new EventEmitter();
   @Output() resolve = new EventEmitter();
@@ -58,6 +62,8 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   commandsSubscription: Subscription;
 
   subtasks: TaskC[];
+  epics: Epic[] = [];
+  stories: Story[] = [];
   problems: Problem[];
   actions: Action[];
   questions: Question[];
@@ -69,6 +75,8 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   routerSubscription: Subscription;
 
   constructor(private questionsService: QuestionsService,
+              private storiesService: StoriesService,
+              private epicsService: EpicsService,
               private problemsService: ProblemsService,
               public dialog: MatDialog,
               private recordsService: RecordsService,
@@ -111,16 +119,26 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
 
   private refreshTaskContainerParts() {
     this.refreshSubtasks();
+    this.refreshProblems();
+    this.refreshQuestions();
     this.refreshDefinitions();
     this.refreshActions();
     this.refreshKnowledgeBits();
+    if (this.showStories) {
+      this.refreshSubstories();
+    }
+    if (this.showEpics) {
+      this.refreshSubepics();
+    }
+    
   }
 
   private handleTaskCommand(command: string): void {
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['back', 'b'].includes(arr[0])) {
-      this.goToNearestParent.emit();
+      // this.goToNearestParent.emit();
+      this.goToNearestParent();
     }
     if (['anonymous'].includes(arr[0])) {
       this.addAnonymousTaskHandler();
@@ -214,11 +232,13 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   addQuestion(): void {
-    this.questionsService.openAddQuestionDialog(this.taskContainer);
+    this.questionsService.createNewQuestionFromDialog(this.taskContainer)
+      .subscribe(() => this.refreshTaskContainer.emit());
   }
 
   addProblem(): void {
-    this.problemsService.openAddProblemDialog(this.taskContainer);
+    this.problemsService.createProblemFromDialog(this.taskContainer)
+      .subscribe(() => this.refreshTaskContainer.emit());
   }
 
   refreshDefinitions(): Observable<Definition[]> {
@@ -229,11 +249,20 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     return definitions$;
   }
 
-  goToParentHandler(description: string) {
+  goToParentHandler(description: string): void {
     const urls = getUrlByDescription(description);
     if (urls) {
       this.router.navigate(urls).then();
     }
+  }
+
+  goToNearestParent(): void {
+    if (!this.taskContainer.parents || this.taskContainer.parents.length === 0) {
+      return;
+    }
+    const parent = this.taskContainer.parents[0];
+    this.router.navigate([parent[0], parent[1]]).then();
+
   }
 
 
@@ -323,6 +352,18 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     return tasksObservable;
   }
 
+  refreshSubstories():Observable<Story[]> {
+    const stories$ = this.storiesService.getStories(this.taskContainer.stories);
+    stories$.subscribe(stories => this.stories = stories);
+    return stories$
+  }
+
+  refreshSubepics():Observable<Epic[]> {
+    const epics$ = this.epicsService.getEpics(this.taskContainer.epics);
+    epics$.subscribe(epics => this.epics = epics);
+    return epics$;
+  }
+
   addSubtask() {
     this.tasksService.openAddTaskDialog(this.taskContainer)
       .subscribe((responseObj: any) => {
@@ -332,7 +373,10 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
         }
         const description = responseObj.description;
         if (description) {
-          const obj: any = {description: description, tags: [],
+          const obj: any = {
+            description: description,
+            tags: [],
+            done: false,
             notes: responseObj.notes,
             parents: [this.taskContainer.getTaskContainerDescription()]
           }
@@ -364,10 +408,34 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
+  // openAddProblemDialog(taskContainer: TaskContainer) {
+  //   const dialogRef = this.dialog.open(GetValueDialogComponent,
+  //     {data: {title: 'Description'}});
+  //   dialogRef.afterClosed().subscribe((description: string) => {
+  //     if (description) {
+  //       const obj: any = {
+  //         description: description, 
+  //         tags: [],
+  //         parents: [taskContainer.getTaskContainerDescription()]
+  //       }
+  //       this.problemsService.createNewProblem(obj)
+  //       .subscribe( () => this.refreshTaskContainer.emit());
+  //     }
+  //   });
+  // }
+
   refreshProblems(): Observable<Problem[]> {
+    console.log('refreshProblems', this.taskContainer.problems);
     const problems$ = this.problemsService.getProblems(this.taskContainer.problems);
     problems$
-      .subscribe(problems => this.problems = problems.filter((p: Problem) => !p.solution));
+      .pipe(
+        map((problems: Problem[]) => problems.filter(p => !p.solution)),
+        tap(val => console.log('tap', val))
+      )
+      .subscribe((problems: Problem[]) => {
+        console.log('problems in subscribe', problems);
+        this.problems = problems;
+      });
     return problems$;
   }
 
@@ -412,4 +480,13 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
       this.refreshTaskContainerParts();
     }
   }
+
+  addSubstory() {
+    // TODO fill it
+  }
+
+  navigateToStory(story: Story) {
+    this.router.navigate(['story', story._id]).then();
+  }
+
 }

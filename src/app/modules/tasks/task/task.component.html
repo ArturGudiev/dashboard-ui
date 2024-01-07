@@ -1,12 +1,13 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <ng-container *ngIf="!isLoading">
-  <app-task-container [taskContainer]="task"
-                      [parentsPath]="parentsPath"
-                      (onDoneAllClick)="onDoneAllClick()"
-                      (goToNearestParent)="onGoToNearestParent()"
-                      (updateTaskContainer)="updateTask()"
-                      (refreshTaskContainer)="refreshTask()"
-                      (resolve)="onDoneAllClick()"
+  <app-task-container
+    [taskContainer]="task"
+    [parentsPath]="parentsPath"
+    (onDoneAllClick)="onDoneAllClick()"
+    (goToNearestParent)="onGoToNearestParent()"
+    (updateTaskContainer)="updateTask()"
+    (refreshTaskContainer)="refreshTask()"
+    (resolve)="onDoneAllClick()"
 
   ></app-task-container>
 </ng-container>

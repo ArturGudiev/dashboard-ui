@@ -14,5 +14,8 @@ export class EpicsService {
     return this.apiService._getEpic(id);
   }
 
+  getEpics(ids: number[]): Observable<Epic[]> {
+    return this.apiService._getEpics(ids);
+  }
 
 }

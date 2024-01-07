@@ -151,7 +151,7 @@ export class KnowledgeNodeComponent implements OnInit, OnDestroy {
   }
 
   addQuestion() {
-    this.questionsService.openAddQuestionDialog(this.knowledgeNode);
+    this.questionsService.createNewQuestionFromDialog(this.knowledgeNode);
   }
 
   addSubtask() {

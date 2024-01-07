@@ -100,7 +100,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log('CCC', event, event.key);
+    // console.log('CCC', event, event.key);
     // this.alertService.showAlert(event.key);
     // this.alertService.showAlert(`'CCC', ${event}, ${event.key}`)
     // if (event.key === '\\') {

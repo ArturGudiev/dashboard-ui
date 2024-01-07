@@ -36,6 +36,7 @@ export class Problem implements TaskContainer {
     this._id = id;
     this.description = description;
     this.tags = tags;
+    this.notes = notes ?? '';
     if (solution) {
       this.solution = solution;
     }

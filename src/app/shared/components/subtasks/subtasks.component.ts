@@ -15,7 +15,7 @@ import {TasksService} from "../../../services/tasks.service";
 import {Router} from "@angular/router";
 import {AlertService} from "../../../services/alert.service";
 import {Subscription} from "rxjs";
-import {every} from "lodash";
+import {every, findIndex} from "lodash";
 import {TaskContainer} from "../../../interfaces/task-container";
 import {CommandsService} from "../../../services/commands.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -182,9 +182,13 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.selectedSubtask) {
       return;
     }
-    this.tasksService.getTasks(this.selectedSubtask.tasks).subscribe(
-      tasks => this.tasksOfSelectedSubtask = tasks
-    );
+    this.tasksService.getTask(this.selectedSubtask._id).subscribe((updatedTask) => {
+      const index = this.subtasks.findIndex(el => el._id = this.selectedSubtask._id);
+      this.subtasks[index] = updatedTask;
+      this.selectedSubtask = updatedTask;
+      this.tasksService.getTasks(this.selectedSubtask.tasks)
+        .subscribe(tasks => this.tasksOfSelectedSubtask = tasks);
+    })
   }
 
   onTaskOfSelectedSubtaskDoneClick(task: TaskC){
@@ -199,7 +203,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   addTaskOfSelectedSubtask() {
-    this.tasksService.openAddTaskDialog2(this.selectedSubtask);
+    this.tasksService.openAddTaskDialog2(this.selectedSubtask).subscribe(() => this.refreshTasksOfSelectedSubtask());
   }
 
   unselectSelectedSubtask() {

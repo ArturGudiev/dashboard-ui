@@ -68,7 +68,7 @@ export class ActionComponent implements OnInit, OnDestroy {
   }
 
   addProblem(): void {
-    this.problemsService.openAddProblemDialog(this.action);
+    this.problemsService.createProblemFromDialog(this.action);
   }
 
   solveTheProblem(problem: Problem): void {

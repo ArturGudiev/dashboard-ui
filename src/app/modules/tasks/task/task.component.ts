@@ -4,7 +4,7 @@ import {TasksService} from '../../../services/tasks.service';
 import {TaskC} from '../../../models/task-class';
 import {getUrlByDescription} from '../../../shared/libs/dashboard.lib';
 import {Title} from "@angular/platform-browser";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-task',
@@ -46,6 +46,8 @@ export class TaskComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     })
   }
+
+  refreshFunction: () => Observable<TaskC> = () => this.tasksService.getTask(this.id)
 
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();

@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import { EpicsService } from 'src/app/services/epics.service';
 
 @Component({
   selector: 'app-main-page',
@@ -6,10 +7,15 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./main-page.component.sass']
 })
 export class MainPageComponent implements OnInit {
-  constructor() {
+  constructor(
+    private epicsService: EpicsService
+  ) {
   }
 
   ngOnInit():    void {
+    console.log('MAIN PAGE');
+    this.epicsService.getEpics([1,30]).subscribe(val => console.log('val epics$', val));
+
   }
 
 }

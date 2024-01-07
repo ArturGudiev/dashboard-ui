@@ -29,9 +29,9 @@ export interface IArrayResponse<T> {
 })
 export class ApiService {
   // baseUrl = 'http://192.168.1.62:3000'
-  // baseUrl = 'http://192.168.1.107:3000'
+  baseUrl = 'http://192.168.1.107:3000'
   // baseUrl = 'http://172.20.10.11:3000'
-  baseUrl = 'http://localhost:3000'
+  // baseUrl = 'http://localhost:3000'
 
   constructor(private http: HttpClient) {
   }
@@ -93,6 +93,14 @@ export class ApiService {
       );
   }
 
+  _getEpics(ids: number[]): Observable<Epic[]> {
+    return this.http.post<Epic[]>(`${this.baseUrl}/get-epics`, {ids})
+      .pipe(
+        map((epicsObjArr: Epic[]) => epicsObjArr.map(epicObj => Epic.createFromObj(epicObj)))
+      );
+  }
+
+
 //------------------------------------stories-------------------------------------------------
   _getStory(id: number) {
     return this.http.get<Story>(`${this.baseUrl}/story/${id}`)
@@ -131,8 +139,15 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/solve-problem/${_id}`, {solution});
   }
 
+  updateProblem(problem: Problem): Observable<Problem> {
+    return this.http.put<Problem>(`${this.baseUrl}/update-problem/`, problem)
+      .pipe(
+        map((obj) => Problem.createFromObj(obj))
+      );
+  }
+
   _createNewProblem(obj: any): Observable<Problem> {
-    return this.http.post<Problem>(`${this.baseUrl}/new-problem/`, obj);
+    return this.http.post<Problem>(`${this.baseUrl}/new-problem`, obj);
   }
 
   _getProblemParentsPath(problem: any): Observable<string[]> {
@@ -157,6 +172,13 @@ export class ApiService {
       )));
   }
 
+  updateQuestion(question: Question): Observable<Question> {
+    return this.http.put<Question>(`${this.baseUrl}/update-question/`, question)
+      .pipe(
+        map((obj) => Question.createFromObj(obj))
+      );
+  }
+
   _createNewQuestion(obj: any): Observable<Question> {
     return this.http.post<Question>(`${this.baseUrl}/new-question/`, obj);
   }
@@ -175,6 +197,7 @@ export class ApiService {
   _getQuestionParentsPath(question: Question): Observable<string[]> {
     return this.http.post<string[]>(`${this.baseUrl}/question/parents-path/`, question);
   }
+
   //----------------------------------------questions------------------------------------------
   //----------------------------------------definitions----------------------------------------
   _getDefinitions(ids: number[]): Observable<Definition[]> {

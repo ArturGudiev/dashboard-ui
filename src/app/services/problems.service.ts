@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from "./api.service";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, Observable, of} from "rxjs";
 import {Problem} from "../models/problem";
-import {tap} from "rxjs/operators";
+import {filter, switchMap, tap} from "rxjs/operators";
 import {DashboardService} from "./dashboard.service";
 import {GetValueDialogComponent} from "../modules/dialogs/get-value/get-value-dialog.component";
 import {TaskContainer} from "../interfaces/task-container";
@@ -66,19 +66,31 @@ export class ProblemsService {
     return this.apiService._createNewProblem(obj);
   }
 
-  openAddProblemDialog(taskContainer: TaskContainer) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent,
-      {data: {title: 'Description'}});
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        const obj: any = {description: description, tags: [],
-          parents: [taskContainer.getTaskContainerDescription()]
-        }
-        const state = this.getRefreshProblemsDataCurrentState();
-        this.createNewProblem(obj).subscribe(() =>
-          this.setRefreshProblemsDataState({...state, taskContainer: taskContainer}));
-      }
-    });
+  createProblemFromDialog(taskContainer: TaskContainer): Observable<Problem> {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    return dialogRef.afterClosed()
+      .pipe(
+        filter((description: string) => !!description),
+        switchMap((description: string) => {
+          const obj: any = {
+            description: description,
+            tags: [],
+            parents: [taskContainer.getTaskContainerDescription()]
+          };
+          return this.createNewProblem(obj);
+        })
+      )
+    // subscribe((description: string) => {
+    //   if (description) {
+    //     const obj: any = {description: description, tags: [],
+    //       parents: [taskContainer.getTaskContainerDescription()]
+    //     }
+    //     const state = this.getRefreshProblemsDataCurrentState();
+    //     this.createNewProblem(obj).subscribe(() =>
+    //       this.setRefreshProblemsDataState({...state, taskContainer: taskContainer}));
+    //   }
+    // });
+    // return of(null);
   }
 
   callSolveTheProblemDialog(problem: Problem, taskContainer: TaskContainer) {
@@ -100,5 +112,7 @@ export class ProblemsService {
     return this.apiService._getProblemParentsPath(problem);
   }
 
-
+  updateProblem(problem: Problem): Observable<Problem> {
+    return this.apiService.updateProblem(problem);
+  }
 }

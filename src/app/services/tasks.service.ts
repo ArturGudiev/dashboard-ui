@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import {TaskC} from '../models/task-class';
-import {ApiService} from './api.service';
-import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
-import {concatMap, tap} from "rxjs/operators";
-import {DashboardService} from "./dashboard.service";
-import {TaskContainer} from "../interfaces/task-container";
-import {NEW_TASK_DIALOG_OPTIONS} from "../shared/constants";
-import {MatDialog} from "@angular/material/dialog";
-import {NewTaskDialogComponent} from "../modules/tasks/new-task-dialog/new-task-dialog.component";
-import {TaskContainerDescription} from "../interfaces/types";
+import { TaskC } from '../models/task-class';
+import { ApiService } from './api.service';
+import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { concatMap, switchMap, tap } from "rxjs/operators";
+import { DashboardService } from "./dashboard.service";
+import { TaskContainer } from "../interfaces/task-container";
+import { NEW_TASK_DIALOG_OPTIONS } from "../shared/constants";
+import { MatDialog } from "@angular/material/dialog";
+import { NewTaskDialogComponent } from "../modules/tasks/new-task-dialog/new-task-dialog.component";
 
 export interface RefreshTasksState {
   taskContainer: TaskContainer;
@@ -25,8 +24,8 @@ export class TasksService {
   addTaskDialogOpened = false;
 
   constructor(private apiService: ApiService,
-              private dialog: MatDialog,
-              private dashboardService: DashboardService) { }
+    private dialog: MatDialog,
+    private dashboardService: DashboardService) { }
 
 
   getRefreshTasksDataCurrentState(): RefreshTasksState {
@@ -60,7 +59,7 @@ export class TasksService {
   finishTask(task: TaskC): Observable<TaskC> {
     return this.apiService._finishTask(task).pipe(
       tap({
-      complete: () => this.dashboardService.updateDoneTasksNumber()
+        complete: () => this.dashboardService.updateDoneTasksNumber()
       })
     );
   }
@@ -91,7 +90,8 @@ export class TasksService {
     }
     this.addTaskDialogOpened = true;
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
-      {data: {title: 'Description', inputWidth: '40rem'},
+      {
+        data: { title: 'Description', inputWidth: '40rem' },
         ...NEW_TASK_DIALOG_OPTIONS
       });
     return dialogRef.afterClosed();
@@ -103,34 +103,37 @@ export class TasksService {
    * @param taskContainer
    * @param callback is called when create new task is finished
    */
-  openAddTaskDialog2(taskContainer: TaskContainer, callback: () => Observable<any> = () => EMPTY): void {
+  openAddTaskDialog2(taskContainer: TaskContainer): Observable<any> {
     if (this.addTaskDialogOpened) {
-      return;
+      return of({});
     }
     this.addTaskDialogOpened = true;
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
-      {data: {title: 'Description', inputWidth: '40rem'},
+      {
+        data: { title: 'Description', inputWidth: '40rem' },
         ...NEW_TASK_DIALOG_OPTIONS
       });
-    dialogRef.afterClosed().subscribe((responseObj: any) => {
-      this.addTaskDialogOpened = false;
-      if (!responseObj) {
-        return;
-      }
-      const description = responseObj.description;
-      if (description) {
-        const obj: any = {description: description, tags: [],
-          notes: responseObj.notes,
-            parents: [taskContainer.getTaskContainerDescription()]
-        }
-        const state = this.getRefreshTasksDataCurrentState();
-        this.createNewTask(obj)
-          .pipe(
-            concatMap(() => callback())
-          )
-          .subscribe(() => this.setRefreshTasksDataState({...state, taskContainer: taskContainer}))
-      }
-    });
+    return dialogRef.afterClosed()
+      .pipe(
+        switchMap((responseObj: any) => {
+          this.addTaskDialogOpened = false;
+          if (!responseObj) {
+            return of({});
+          }
+          const description = responseObj.description;
+          if (description) {
+            const obj: any = {
+              description: description,
+              tags: [],
+              done: false,
+              notes: responseObj.notes,
+              parents: [taskContainer.getTaskContainerDescription()]
+            }
+            return this.createNewTask(obj);
+          }
+          return of({});
+        })
+      )
   }
 
   updateTask(task: TaskC): Observable<TaskC> {

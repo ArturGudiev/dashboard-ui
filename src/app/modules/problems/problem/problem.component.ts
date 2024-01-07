@@ -37,32 +37,26 @@ export class ProblemComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
       this.isLoading = true;
-      let id = params['id'];
-      this.problemsService.getProblem(id).subscribe((problem: Problem) => {
-        this.problem = problem;
-        this.isLoading = false;
-        this.parentsPath$ = this.problemsService.getParentsPath(this.problem);
-        this.titleService.setTitle(this.problem.getFullDescription());
-        if (this.problem !== null) {
-          this.taskContainerService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath = res);
-        }
-      });
+      this.id = params['id'];
+      this.refreshProblem();
     })
+  }
 
-    // this.commandSubscription = this.commandsService.getDataStateChange().subscribe(state => {
-    //   this.handleTaskCommand(state.command);
-    // });
-
-    this.problemSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
-      if(state.lastSolvedProblem === this.problem) {
-        this.onGoToNearestParent();
+  refreshProblem(): void {
+    this.problemsService.getProblem(this.id)
+    .subscribe((problem: Problem) => {
+      this.problem = problem;
+      this.isLoading = false;
+      this.parentsPath$ = this.problemsService.getParentsPath(this.problem);
+      this.titleService.setTitle(this.problem.getFullDescription());
+      if (this.problem !== null) {
+        this.taskContainerService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath = res);
       }
     });
   }
 
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
-    this.problemSubscription.unsubscribe();
   }
 
 
@@ -84,6 +78,7 @@ export class ProblemComponent implements OnInit, OnDestroy {
     if (this.parentsPath && this.parentsPath.length <= 1) {
       return;
     }
+    // const parent = getParent(taskContainer);
     this.goToParentHandler(this.parentsPath.slice(-2, -1)[0]);
   }
 
@@ -100,12 +95,17 @@ export class ProblemComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.problemsService.solveTheProblem(this.problem, solution).subscribe();
-      }
-      if (this.parentsPath && this.parentsPath.length > 1) {
-        const description = this.parentsPath.slice(-2, -1)[0];
-        this.goToParentHandler(description);
+        this.onGoToNearestParent();
       }
     });
+  }
+
+  updateProblem() {
+    this.problemsService.updateProblem(this.problem)
+      .subscribe((problem: Problem) => {
+        console.log('SUBSCRIBE Update problem', this.problem);
+        this.problem = problem;
+      });
   }
 
 }

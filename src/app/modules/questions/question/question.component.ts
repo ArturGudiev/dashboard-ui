@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TasksService} from "../../../services/tasks.service";
 import {Title} from "@angular/platform-browser";
@@ -10,6 +10,7 @@ import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {Question} from "../../../models/question";
 import {QuestionsService} from "../../../services/questions.service";
 import {TaskContainerService} from "../../../services/task-container.service";
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-question',
@@ -19,14 +20,16 @@ import {TaskContainerService} from "../../../services/task-container.service";
 export class QuestionComponent implements OnInit {
   question: Question;
   parentsPath: string[];
+  parentsPath$: Observable<string[]>;
   isLoading = true;
   commandSubscription: Subscription;
   routerSubscription: Subscription;
+  id: number;
+
 
 
   constructor(
     private route: ActivatedRoute,
-    private tasksService: TasksService,
     private router: Router,
     private titleService: Title,
     public dialog: MatDialog,
@@ -38,22 +41,21 @@ export class QuestionComponent implements OnInit {
 
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
-      let id = params['id'];
-
-      this.questionsService.getQuestion(id).subscribe((question: Question) => {
-        this.question = question;
-        this.isLoading = false;
-        this.titleService.setTitle(this.question.getFullDescription());
-        if (this.question !== null) {
-          this.taskContainerService.getParentsPath(this.question)
-            .subscribe((res: string[]) => this.parentsPath = res);
-
-        }
-      });
+      this.isLoading = true;
+      this.id = params['id'];
+      this.refreshQuestion();
     })
-    // this.commandSubscription = this.commandsService.getDataStateChange().subscribe(state => {
-    //   this.handleTaskCommand(state.command);
-    // });
+  }
+
+  refreshQuestion(): void {
+    this.questionsService.getQuestion(this.id)
+    .subscribe((question: Question) => {
+      this.question = question;
+      this.isLoading = false;
+      this.titleService.setTitle(this.question.getFullDescription());
+      this.parentsPath$ = this.questionsService.getQuestionParentsPath(this.question);
+      this.parentsPath$.subscribe((res: string[]) => this.parentsPath = res);
+    });
   }
 
   ngOnDestroy(): void {
@@ -111,15 +113,20 @@ export class QuestionComponent implements OnInit {
 
   onDoneAllClick() {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
-    dialogRef.afterClosed().subscribe((solution: string) => {
-      if (solution) {
-        this.questionsService.answerTheQuestion(this.question, solution).subscribe();
-      }
-      if (this.parentsPath && this.parentsPath.length > 1) {
-        const description = this.parentsPath.slice(-2, -1)[0];
-        this.goToParentHandler(description);
+    dialogRef.afterClosed().subscribe((answer: string) => {
+      console.log('after closed dialog', answer);
+      if (answer) {
+        this.questionsService.answerTheQuestion(this.question, answer).subscribe();
+        this.onGoToNearestParent();
       }
     });
+  }
+
+  updateQuestion() {
+    this.questionsService.updateQuestion(this.question)
+      .subscribe((question: Question) => {
+        this.question = question;
+      });
   }
 
 }

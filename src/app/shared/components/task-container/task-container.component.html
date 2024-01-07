@@ -2,7 +2,7 @@
   <div id="task-content">
     <div class="flex-center-container">
       <app-task-container-description (onDoneAllClick)="this.onDoneAllClick.emit()"
-                                      (goToParent)="this.goToNearestParent.emit()"
+                                      (goToParent)="goToNearestParent()"
                                       [taskContainer]="taskContainer">
       </app-task-container-description>
       <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent">
@@ -21,10 +21,26 @@
     </div>
     <br>
     <div id="notes-wrapper" >
-      <app-notes [notes]="taskContainer.notes" (updateNotes)="updateNotes($event)"
-                 [toggleEditEvent]="toggleNotesEditSubject.asObservable()"></app-notes>
+      <app-notes 
+        [notes]="taskContainer.notes" 
+        (updateNotes)="updateNotes($event)"
+        [toggleEditEvent]="toggleNotesEditSubject.asObservable()"
+      >
+    </app-notes>
     </div>
     <div>
+      
+      <app-epics-list *ngIf="this.showEpics && epics && epics.length > 0" [epics]="epics"></app-epics-list>
+
+      <app-substories 
+        *ngIf="this.showStories && stories && stories.length > 0" 
+        [stories]="stories" 
+        (onStoryClick)="navigateToStory($event)"
+        (addSubstory)="addSubstory()"
+      >
+      </app-substories>
+<!--      TODO remove navigate to story-->
+
       <app-subtasks (refreshSubtasks)="refreshSubtasks()"
                     (addSubtask)="addSubtask()"
                     (onSubtaskDoneClick)="onSubtaskDoneClick($event)"

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {Question} from "../models/question";
 import {ApiService} from "./api.service";
-import {tap} from "rxjs/operators";
+import {filter, switchMap, tap} from "rxjs/operators";
 import {DashboardService} from "./dashboard.service";
 import {GetValueDialogComponent} from "../modules/dialogs/get-value/get-value-dialog.component";
 import {NEW_QUESTION_DIALOG_OPTIONS} from "../shared/constants";
@@ -72,20 +72,38 @@ export class QuestionsService {
     return this.apiService._getQuestionParentsPath(question);
   }
 
-  openAddQuestionDialog(taskContainer: TaskContainer): void {
+  createNewQuestionFromDialog(taskContainer: TaskContainer): Observable<Question> {
     const dialogRef = this.dialog.open(GetValueDialogComponent,
       {data: {title: 'Description', inputWidth: '40rem'},
         ...NEW_QUESTION_DIALOG_OPTIONS
       });
-    dialogRef.afterClosed().subscribe((description: string) => {
-      if (description) {
-        const obj: any = {description: description, tags: [],
-            parents: [taskContainer.getTaskContainerDescription()]
-          }
-        const state = this.getRefreshQuestionsDataCurrentState();
-        this.createNewQuestion(obj).subscribe(() =>
-          this.setRefreshQuestionsDataState({...state, taskContainer: taskContainer}));
-      }
-    });
+    return dialogRef.afterClosed()
+    .pipe(
+      filter((description: string) => !!description),
+      switchMap((description: string) => {
+        const obj: any = {
+          description: description,
+          tags: [],
+          parents: [taskContainer.getTaskContainerDescription()]
+        };
+        return this.createNewQuestion(obj);
+      })
+    )
+  
+    // .subscribe((description: string) => {
+    //   if (description) {
+    //     const obj: any = {description: description, tags: [],
+    //         parents: [taskContainer.getTaskContainerDescription()]
+    //       }
+    //     const state = this.getRefreshQuestionsDataCurrentState();
+    //     this.createNewQuestion(obj).subscribe(() =>
+    //       this.setRefreshQuestionsDataState({...state, taskContainer: taskContainer}));
+    //   }
+    // });
+
+  }
+
+  updateQuestion(question: Question): Observable<Question> {
+    return this.apiService.updateQuestion(question);
   }
 }

@@ -39,7 +39,7 @@ export class SubStoriesComponent implements OnInit {
     return numSelected === numRows;
   }
 
-  onSubstoryClick(task: TaskC) {
-    this.router.navigate(['story', task._id]);
+  onSubstoryClick(story: Story) {
+    this.router.navigate(['story', story._id]);
   }
 }
