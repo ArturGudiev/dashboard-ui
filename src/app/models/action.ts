@@ -1,11 +1,11 @@
 import {TaskContainer} from "../interfaces/task-container";
-import {TaskContainerDescription} from "../interfaces/types";
+import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
 import {pick} from "lodash";
 
 export class Action implements TaskContainer {
   static readonly prefix = 'Action-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Action.prefix + '(\\d+)\\s');
-
+  type: TaskContainerType = 'action';
   _id: number;
   name: string;
   value: string;

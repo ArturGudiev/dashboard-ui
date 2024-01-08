@@ -13,9 +13,6 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit():    void {
-    console.log('MAIN PAGE');
-    this.epicsService.getEpics([1,30]).subscribe(val => console.log('val epics$', val));
-
   }
 
 }

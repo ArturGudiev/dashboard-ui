@@ -1,10 +1,10 @@
 import {TaskContainer} from "../interfaces/task-container";
-import {TaskContainerDescription} from "../interfaces/types";
+import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
 import {pick} from "lodash";
 
 export class Knowledge implements TaskContainer{
   static readonly prefix = 'Knowledge-';
-
+  type: TaskContainerType = 'knowledge-bit';
   _id: number;
   name: string;
   value: string;

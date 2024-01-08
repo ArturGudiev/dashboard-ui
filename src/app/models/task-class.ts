@@ -1,12 +1,12 @@
 import {TaskContainer} from '../interfaces/task-container';
-import {TaskContainerDescription} from "../interfaces/types";
+import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
 import {pick} from "lodash";
 import {KnowledgeNode} from "./knowledge-node";
 
 export class TaskC implements TaskContainer {
   static readonly PREFIX = 'Task-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + TaskC.PREFIX + '(\\d+)\\s');
-
+  type: TaskContainerType = 'task';
   _id: number;
   description: string;
   tags: string[];

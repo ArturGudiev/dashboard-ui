@@ -15,6 +15,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {HIGHLIGHT_OPTIONS, HighlightModule} from "ngx-highlightjs";
 import {RecordsListDialogComponent} from './modules/dialogs/records-list-dialog/records-list-dialog.component';
 import {HotkeyModule} from "angular2-hotkeys";
+import { SharedModule } from './shared/shared.module';
 
 
 const routes: Routes = [
@@ -58,7 +59,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     // AppRoutingModule,
     ReactiveFormsModule,
-    HighlightModule
+    HighlightModule,
+    SharedModule
   ],
   providers: [
     {

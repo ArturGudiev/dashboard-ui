@@ -1,0 +1,15 @@
+<p>multitasking-item works!</p>
+
+<div>{{taskContainer.getFullDescription()}}</div>
+
+<ng-container *ngIf="this.subtasks.length > 0">
+    <app-subtasks 
+        [taskContainer]="taskContainer"
+        [subtasks]="subtasks"
+        (refreshTaskContainer)="refreshTaskContainer.emit()"
+        (refreshSubtasks)="refreshSubtasks()"
+        (addSubtask)="addSubtask()"
+        (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+    >
+    </app-subtasks>
+</ng-container>

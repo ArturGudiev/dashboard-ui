@@ -1,0 +1,15 @@
+<p>multitasking works!</p>
+<div style="margin-left: 5rem">
+    <input [(ngModel)]="taskContainerInput">
+    <button (clicK)="addTaskContainer()">add it</button>
+    <button mat-flat-button color="primary" (click)="addTaskContainer()">Primary</button>
+    
+    <div *ngFor="let container of taskContainers, let i = index">
+        <app-multitasking-item 
+        [taskContainer]="container"
+        (refreshTaskContainer)="refreshTaskContainer(container, i)"
+        ></app-multitasking-item>
+        <button>remove it</button>
+    </div>
+
+</div>

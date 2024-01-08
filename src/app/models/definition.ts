@@ -1,9 +1,9 @@
 import {TaskContainer} from "../interfaces/task-container";
-import {TaskContainerDescription} from "../interfaces/types";
+import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
 
 export class Definition implements TaskContainer {
   static readonly prefix = 'Definition-';
-
+  type: TaskContainerType = 'definition';
   _id: number;
 
   name: string;

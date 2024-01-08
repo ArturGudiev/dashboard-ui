@@ -1,4 +1,4 @@
-import {TaskContainerDescription} from "./types";
+import {TaskContainerDescription, TaskContainerType} from "./types";
 
 export interface ITaskContainerChildElements {
   tasks: number[]
@@ -13,6 +13,7 @@ export interface ITaskContainerChildElements {
 
 
 export interface TaskContainer extends ITaskContainerChildElements{
+  _id: number;
   tags: string[];
   tasks: number[];
   problems: number[];
@@ -32,6 +33,7 @@ export interface TaskContainer extends ITaskContainerChildElements{
   //
   getFullDescription(): string;
   getTaskContainerDescription(): TaskContainerDescription;
+  type: TaskContainerType;
   notes: string;
 
   // interactive(): Promise<void>;

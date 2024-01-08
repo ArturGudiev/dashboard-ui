@@ -1,11 +1,11 @@
 import {TaskContainer} from "../interfaces/task-container";
-import {TaskContainerDescription} from "../interfaces/types";
+import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
 import {pick} from "lodash";
 
 export class KnowledgeNode implements TaskContainer {
   static readonly PREFIX = 'KnowledgeNode-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + KnowledgeNode.PREFIX + '(\\d+)\\s');
-
+  type: TaskContainerType = 'knowledge-node';
   _id: number;
   name: string;
   notes = '';

@@ -1,11 +1,11 @@
 import {TaskContainer} from "../interfaces/task-container";
-import {TaskContainerDescription} from "../interfaces/types";
+import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
 import {pick} from "lodash";
 
 export class Question implements TaskContainer {
   static readonly QUESTION = 'Question-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Question.QUESTION + '(\\d+)\\s');
-
+  type: TaskContainerType = 'question';
   _id: number;
   description: string;
   tags: string[];

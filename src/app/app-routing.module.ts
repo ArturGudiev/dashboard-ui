@@ -4,6 +4,7 @@ import {MainPageComponent} from "./components/main-page/main-page.component";
 
 const routes: Routes = [
   {path: '',  component: MainPageComponent},
+  {path: '/m', component: MainPageComponent},
   {path: 'epic', loadChildren: () => import('./modules/epics/epics.module').then(m => m.EpicsModule)},
   {path: 'action', loadChildren: () => import('./modules/actions/actions.module').then(m => m.ActionsModule)},
   {path: 'knowledge', loadChildren: () => import('./modules/knowledge/knowledge.module').then(m => m.KnowledgeModule)},

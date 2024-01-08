@@ -17,6 +17,8 @@ import { TaskContainerComponent } from './components/task-container/task-contain
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DashboardMaterialModule } from "./material/dashboard-material.module";
 import { EpicsListComponent } from './components/epics-list/epics-list.component';
+import { MultitaskingComponent } from './components/multitasking/multitasking.component';
+import { MultitaskingItemComponent } from './components/multitasking-item/multitasking-item.component';
 
 
 
@@ -35,7 +37,9 @@ import { EpicsListComponent } from './components/epics-list/epics-list.component
     NotesComponent,
     HoverClassDirective,
     TaskContainerComponent,
-    EpicsListComponent
+    EpicsListComponent,
+    MultitaskingComponent,
+    MultitaskingItemComponent
   ],
     exports: [
         SubtasksComponent,
@@ -49,7 +53,8 @@ import { EpicsListComponent } from './components/epics-list/epics-list.component
         SubknowledgeComponent,
         KnowledgeSubnodesComponent,
         NotesComponent,
-        TaskContainerComponent
+        TaskContainerComponent,
+        MultitaskingComponent
     ],
   imports: [
     CommonModule,

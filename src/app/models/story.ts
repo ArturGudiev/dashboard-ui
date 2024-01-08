@@ -1,11 +1,11 @@
 import { TaskContainer } from "../interfaces/task-container";
-import {TaskContainerDescription} from "../interfaces/types";
+import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
 import {pick} from "lodash";
 
 export class Story implements TaskContainer{
   static readonly PREFIX = 'STORY-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Story.PREFIX + '(\\d+)\\s');
-
+  type: TaskContainerType = 'story';
   _id: number;
 
   description: string;
