@@ -1,8 +1,17 @@
-<p>multitasking-item works!</p>
 
-<div>{{taskContainer.getFullDescription()}}</div>
-
-<ng-container *ngIf="this.subtasks.length > 0">
+<div style="display: flex; align-items: baseline; margin-bottom: 1rem">
+    <div>{{taskContainer.getFullDescription()}}</div>
+    <button 
+        mat-icon-button
+        (click)="remoteItem.emit()"
+        color="basic"
+    >
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<ng-container 
+    *ngIf="this.subtasks.length > 0"
+>
     <app-subtasks 
         [taskContainer]="taskContainer"
         [subtasks]="subtasks"

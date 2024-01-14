@@ -11,6 +11,7 @@ import { TasksService } from 'src/app/services/tasks.service';
 export class MultitaskingItemComponent implements OnInit, OnChanges {
   @Input() taskContainer: TaskContainer;
   @Output() refreshTaskContainer = new EventEmitter();
+  @Output() remoteItem = new EventEmitter();
   subtasks: TaskC[] = [];
   constructor(
     private tasksService: TasksService

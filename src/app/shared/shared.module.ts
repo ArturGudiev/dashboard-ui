@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HotkeyModule } from "angular2-hotkeys";
 import { KnowledgeSubnodesComponent } from './components/knowledge-subnodes/knowledge-subnodes.component';
 import { NotesComponent } from './components/notes/notes.component';
@@ -60,7 +60,8 @@ import { MultitaskingItemComponent } from './components/multitasking-item/multit
     CommonModule,
     FormsModule,
     HotkeyModule,
-    DashboardMaterialModule
+    DashboardMaterialModule,
+    ReactiveFormsModule,
   ]
 })
 export class SharedModule { }

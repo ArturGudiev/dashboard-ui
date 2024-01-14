@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { TaskC } from '../models/task-class';
-import { ApiService } from './api.service';
-import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
-import { concatMap, switchMap, tap } from "rxjs/operators";
-import { DashboardService } from "./dashboard.service";
-import { TaskContainer } from "../interfaces/task-container";
-import { NEW_TASK_DIALOG_OPTIONS } from "../shared/constants";
-import { MatDialog } from "@angular/material/dialog";
-import { NewTaskDialogComponent } from "../modules/tasks/new-task-dialog/new-task-dialog.component";
+import {Injectable} from '@angular/core';
+import {TaskC} from '../models/task-class';
+import {ApiService} from './api.service';
+import {BehaviorSubject, EMPTY, Observable, of} from 'rxjs';
+import {switchMap, tap} from "rxjs/operators";
+import {DashboardService} from "./dashboard.service";
+import {TaskContainer} from "../interfaces/task-container";
+import {NEW_TASK_DIALOG_OPTIONS} from "../shared/constants";
+import {MatDialog} from "@angular/material/dialog";
+import {NewTaskDialogComponent} from "../modules/tasks/new-task-dialog/new-task-dialog.component";
 
 export interface RefreshTasksState {
   taskContainer: TaskContainer;
