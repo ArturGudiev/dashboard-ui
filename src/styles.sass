@@ -16,3 +16,26 @@ html, body
 .flex-center-container
   display: flex
   align-items: center
+
+.flex-container
+  display: flex
+
+  &-start
+    display: flex
+    align-items: flex-start
+
+
+
+
+@for $i from 1 through 5
+  .mt-#{$i}
+    margin-top: #{$i}rem
+
+  .mb-#{$i}
+    margin-bottom: #{$i}rem
+
+  .mr-#{$i}
+    margin-right: #{$i}rem
+
+  .ml-#{$i}
+    margin-left: #{$i}rem

@@ -23,7 +23,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private titleService: Title,
-              private tasksService: TasksService) {
+              public tasksService: TasksService) {
   }
 
   ngOnInit(): void {

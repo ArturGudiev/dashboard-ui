@@ -16,6 +16,9 @@ import {HIGHLIGHT_OPTIONS, HighlightModule} from "ngx-highlightjs";
 import {RecordsListDialogComponent} from './modules/dialogs/records-list-dialog/records-list-dialog.component';
 import {HotkeyModule} from "angular2-hotkeys";
 import { SharedModule } from './shared/shared.module';
+import { NgxsModule } from '@ngxs/store';
+import { AppState } from "./state/app.state";
+import { ToastrModule } from "ngx-toastr";
 
 
 const routes: Routes = [
@@ -48,6 +51,9 @@ const routes: Routes = [
     MainPageComponent
   ],
   imports: [
+    NgxsModule.forRoot([AppState], {
+      developmentMode: true
+    }),
     HotkeyModule.forRoot(),
     HammerModule,
     MatIconModule,
@@ -60,7 +66,9 @@ const routes: Routes = [
     // AppRoutingModule,
     ReactiveFormsModule,
     HighlightModule,
-    SharedModule
+    SharedModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(), // ToastrModule added
   ],
   providers: [
     {
@@ -68,8 +76,7 @@ const routes: Routes = [
       useValue: {
         fullLibraryLoader: () => import('highlight.js'),
       }
-    }
-  ],
+    },],
   bootstrap: [AppComponent]
 })
 export class AppModule {

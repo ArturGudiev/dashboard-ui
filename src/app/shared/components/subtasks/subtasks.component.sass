@@ -1,3 +1,7 @@
+#subtasks-task-container-title
+  margin-left: 3rem
+  cursor: pointer
+
 #subtasks-actions
   display: flex
   margin-left: 3.5rem
@@ -6,6 +10,7 @@
 #subtasks-table
   margin-left: 2rem
   margin-bottom: 2rem
+  max-width: 40rem
 
 .row-link
   cursor: pointer
@@ -17,7 +22,10 @@
   padding-right: 1rem
 
 .mat-column-actions
-  padding-left: 2rem
+  padding-left: 3rem
+
+.mat-column-showSubtasks
+  padding-left: 3rem
 
 #subtasks-title
   padding-right: 1rem
@@ -30,7 +38,6 @@
 
 #subtask-cancel-button
   margin-left: 1rem
-
 
 .mat-row,  .table-row
   height: 2rem !important
@@ -45,10 +52,7 @@
 .highlight
   background: #FF4081
 
-#subtasks-table-wrapper
-  display: flex
-
-#subtasks-of-selected-task
+#subtasks-of-selected-tasks
   display: flex
   flex-flow: column nowrap
 
@@ -59,3 +63,6 @@
 
 #subtasks-of-selected-task-table
   margin-left: 1rem
+
+.selected-for-subtasks
+  border: 1px solid yellow

@@ -39,7 +39,13 @@ import { RecordsService } from "../../../services/records.service";
 import { StoriesService } from "../../../services/stories.service";
 import { TasksService } from "../../../services/tasks.service";
 import { getUrlByDescription } from "../../libs/dashboard.lib";
+import { Store } from "@ngxs/store";
+import { AppState, ToDoProfessorStateModel } from "../../../state/app.state";
+import { TaskContainerService } from "../../../services/task-container.service";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { ToastrService } from "ngx-toastr";
 
+@UntilDestroy()
 @Component({
   selector: 'app-task-container',
   templateUrl: './task-container.component.html',
@@ -75,6 +81,8 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   routerSubscription: Subscription;
 
   constructor(private questionsService: QuestionsService,
+              private taskContainerService: TaskContainerService,
+              private toastr: ToastrService,
               private storiesService: StoriesService,
               private epicsService: EpicsService,
               private problemsService: ProblemsService,
@@ -85,6 +93,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
               public router: Router,
               private _hotkeysService: HotkeysService,
               public alertService: AlertService,
+              private store: Store,
               public knowledgeService: KnowledgeService) {
   }
 
@@ -114,8 +123,19 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
     })
+
+    this.taskContainerService.refreshSubtasks$
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.refreshTaskContainer.emit());
+
   }
 
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === '1') {
+      console.log('1');
+    }
+  }
 
   private refreshTaskContainerParts() {
     this.refreshSubtasks();
@@ -130,7 +150,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     if (this.showEpics) {
       this.refreshSubepics();
     }
-    
+
   }
 
   private handleTaskCommand(command: string): void {
@@ -202,7 +222,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-
   private finishTaskHandler(args: string[]) {
     if (!args || args.length === 0) {
       return;
@@ -225,7 +244,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
       }
     }
   }
-
 
   private addAnonymousTaskHandler() {
     this.tasksService.addAnonymousTask().subscribe();
@@ -265,6 +283,11 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
 
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.taskContainer) {
+      this.refreshTaskContainerParts();
+    }
+  }
 
   addDefinition(): void {
     // this.knowledgeService.addDefinition();
@@ -283,6 +306,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
+
   refreshActions() {
     const actionsSubscription$ = this.knowledgeService.getActions(this.taskContainer.actions);
     actionsSubscription$.subscribe(actions => {
@@ -290,7 +314,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     });
     return actionsSubscription$;
   }
-
 
   addAction(): void {
     const dialogRef = this.dialog.open(ActionDialogComponent, {
@@ -348,6 +371,8 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     const tasksObservable = this.tasksService.getTasks(this.taskContainer.tasks);
     tasksObservable.subscribe(newSubtasks => {
       this.subtasks = newSubtasks;
+      console.log('task-container.component.ts -- refreshSubtasks ===', this.subtasks);
+
     });
     return tasksObservable;
   }
@@ -408,22 +433,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
-  // openAddProblemDialog(taskContainer: TaskContainer) {
-  //   const dialogRef = this.dialog.open(GetValueDialogComponent,
-  //     {data: {title: 'Description'}});
-  //   dialogRef.afterClosed().subscribe((description: string) => {
-  //     if (description) {
-  //       const obj: any = {
-  //         description: description, 
-  //         tags: [],
-  //         parents: [taskContainer.getTaskContainerDescription()]
-  //       }
-  //       this.problemsService.createNewProblem(obj)
-  //       .subscribe( () => this.refreshTaskContainer.emit());
-  //     }
-  //   });
-  // }
-
   refreshProblems(): Observable<Problem[]> {
     console.log('refreshProblems', this.taskContainer.problems);
     const problems$ = this.problemsService.getProblems(this.taskContainer.problems);
@@ -449,10 +458,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     this.refreshProblemsSubscription.unsubscribe();
     this.commandsSubscription.unsubscribe();
   }
-  // @HostListener('document:keydown.code.meta.keyk', ['$event'])
-  // openDialog(e: KeyboardEvent) {
-  //   e.preventDefault();
-  // }
+
   @HostListener('document:keydown.code.Alt.r', ['$event'])
   showRecords(): void {
     // const records = getRootDirs
@@ -470,15 +476,19 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
-  addRecord() {
-    this.recordsService.callAddRecordDialog(this.taskContainer.getFullDescription());
-
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if ((event.altKey || event.metaKey) && event.key === 'o') {
+      console.log('Alt + O pressed');
+      const taskToAddSubtaskTo = this.store.selectSnapshot(AppState.getFocusedTaskForSubtasks);
+      if (taskToAddSubtaskTo) {
+        this.tasksService.openAddTaskDialog2(taskToAddSubtaskTo).subscribe(() => this.refreshTaskContainer.emit());
+      }
+    }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.taskContainer) {
-      this.refreshTaskContainerParts();
-    }
+  addRecord() {
+    this.recordsService.callAddRecordDialog(this.taskContainer.getFullDescription());
   }
 
   addSubstory() {
@@ -489,4 +499,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     this.router.navigate(['story', story._id]).then();
   }
 
+  temp() {
+    this.toastr.success('Hello');
+  }
 }

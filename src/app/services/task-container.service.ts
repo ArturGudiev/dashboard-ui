@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {TaskContainer} from "../interfaces/task-container";
-import {Observable, of} from "rxjs";
+import { Observable, of, Subject } from "rxjs";
 import {ApiService} from "./api.service";
 import { Question } from '../models/question';
 import { TaskContainerType } from '../interfaces/types';
@@ -12,7 +12,9 @@ import { QuestionsService } from './questions.service';
   providedIn: 'root'
 })
 export class TaskContainerService {
-  
+
+  refreshSubtasks$ = new Subject<void>();
+
   constructor(
     private apiService: ApiService,
     private tasksService: TasksService,

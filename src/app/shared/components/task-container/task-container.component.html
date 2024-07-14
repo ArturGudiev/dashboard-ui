@@ -1,85 +1,98 @@
-<div id="content-wrapper">
-  <div id="task-content">
-    <div class="flex-center-container">
-      <app-task-container-description (onDoneAllClick)="this.onDoneAllClick.emit()"
-                                      (goToParent)="goToNearestParent()"
-                                      [taskContainer]="taskContainer">
-      </app-task-container-description>
-      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="addQuestion()">Add a new question</button>
-        <button mat-menu-item (click)="addProblem()">Add a new problem</button>
-        <button mat-menu-item (click)="addDefinition()">Add a new definition</button>
-        <button mat-menu-item (click)="addAction()">Add a new action</button>
-        <button mat-menu-item (click)="addKnowledge()">Add a new knowledge</button>
-        <button mat-menu-item (click)="callEditNotesEvent()">Edit notes</button>
-        <button mat-menu-item (click)="addRecord()">Add record</button>
-        <button mat-menu-item (click)="showRecords()">Show records</button>
-      </mat-menu>
+<div
+  id="content-wrapper"
+  style="width: 100%"
+>
+  <div
+    id="task-content"
+    style="width: 100%"
+  >
+    <div
+      class="flex-container-start mt-1"
+    >
+      <div
+        style="display: flex; justify-content: center"
+        class="description-wrapper">
+        <app-task-container-description
+          (onDoneAllClick)="this.onDoneAllClick.emit()"
+          (goToParent)="goToNearestParent()"
+          [taskContainer]="taskContainer"
+        >
+        </app-task-container-description>
+        <button
+          id="more-icon"
+          [matMenuTriggerFor]="menu"
+          mat-mini-fab color="accent"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="addQuestion()">Add a new question</button>
+          <button mat-menu-item (click)="addProblem()">Add a new problem</button>
+          <button mat-menu-item (click)="addDefinition()">Add a new definition</button>
+          <button mat-menu-item (click)="addAction()">Add a new action</button>
+          <button mat-menu-item (click)="addKnowledge()">Add a new knowledge</button>
+          <button mat-menu-item (click)="callEditNotesEvent()">Edit notes</button>
+          <button mat-menu-item (click)="addRecord()">Add record</button>
+          <button mat-menu-item (click)="showRecords()">Show records</button>
+        </mat-menu>
+      </div>
+      <app-parents-path
+        style="margin-left: 5rem"
+        [parentsPath]="parentsPath"
+        (onParentClick)="goToParentHandler($event)"
+      >
+      </app-parents-path>
     </div>
     <br>
-    <div id="notes-wrapper" >
-      <app-notes 
-        [notes]="taskContainer.notes" 
+    <div id="notes-wrapper">
+      <app-notes
+        [notes]="taskContainer.notes"
         (updateNotes)="updateNotes($event)"
         [toggleEditEvent]="toggleNotesEditSubject.asObservable()"
       >
-    </app-notes>
+      </app-notes>
     </div>
     <div>
-      
-      <app-epics-list *ngIf="this.showEpics && epics && epics.length > 0" [epics]="epics"></app-epics-list>
 
-      <app-substories 
-        *ngIf="this.showStories && stories && stories.length > 0" 
-        [stories]="stories" 
+      <app-epics-list
+        *ngIf="this.showEpics && epics && epics.length > 0"
+        [epics]="epics"
+      >
+      </app-epics-list>
+
+      <app-substories
+        *ngIf="this.showStories && stories && stories.length > 0"
+        [stories]="stories"
         (onStoryClick)="navigateToStory($event)"
         (addSubstory)="addSubstory()"
       >
       </app-substories>
-<!--      TODO remove navigate to story-->
 
-      <app-subtasks (refreshSubtasks)="refreshSubtasks()"
-                    (addSubtask)="addSubtask()"
-                    (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
-                    [taskContainer]="taskContainer"
-                    [subtasks]="subtasks">
+      <app-subtasks
+        (refreshSubtasks)="refreshSubtasks()"
+        (addSubtask)="addSubtask()"
+        (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+        [taskContainer]="taskContainer"
+        [subtasks]="subtasks"
+      >
       </app-subtasks>
 
-      <app-subquestions (refreshQuestions)="refreshQuestions()"
-                        (addQuestion)="addQuestion()"
-                        (answerTheQuestion)="answerTheQuestion($event)"
-                        [questions]="questions">
+      <app-subquestions
+        (refreshQuestions)="refreshQuestions()"
+        (addQuestion)="addQuestion()"
+        (answerTheQuestion)="answerTheQuestion($event)"
+        [questions]="questions"
+      >
       </app-subquestions>
 
-      <app-subproblems (refreshProblems)="refreshProblems()"
-                       (addProblem)="addProblem()"
-                       (onProblemSolvedClick)="solveTheProblem($event)"
-                       [problems]="problems">
+      <app-subproblems
+        (refreshProblems)="refreshProblems()"
+        (addProblem)="addProblem()"
+        (onProblemSolvedClick)="solveTheProblem($event)"
+        [problems]="problems"
+      >
       </app-subproblems>
     </div>
-  </div>
-
-  <div id="right-column">
-    <app-parents-path [parentsPath]="parentsPath"
-                      (onParentClick)="goToParentHandler($event)">
-
-    </app-parents-path>
-    <app-subdefinitions [definitions]="definitions"
-                        (addDefinition)="addDefinition()"
-                        (refreshDefinitions)="refreshDefinitions()">
-    </app-subdefinitions>
-
-    <app-subactions [actions]="actions"
-                    (addAction)="addAction()"
-                    (refreshActions)="refreshActions()">
-    </app-subactions>
-    <app-subknowledge [knowledgeBits]="knowledgeBits"
-                      (addKnowledge)="addKnowledge()"
-                      (refreshKnowledge)="refreshKnowledgeBits()">
-    </app-subknowledge>
   </div>
 </div>
 

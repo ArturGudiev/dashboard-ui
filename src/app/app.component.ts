@@ -4,6 +4,9 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {AlertService, IAlertsDataState} from "./services/alert.service";
 import {Subscription} from "rxjs";
 import {ApiService} from "./services/api.service";
+import { Store } from '@ngxs/store';
+import { AppState } from "./state/app.state";
+import { MyAction } from "./state/app.actions";
 
 @Component({
   selector: 'app-root',
@@ -18,6 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private dashboardService: DashboardService,
               private alertService: AlertService,
               private apiService: ApiService,
+              private store: Store,
               private _snackBar: MatSnackBar) {
   }
 
