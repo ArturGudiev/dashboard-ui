@@ -478,7 +478,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if ((event.altKey || event.metaKey) && event.key === 'o') {
+    if ((event.ctrlKey) && event.key === 'o') {
       console.log('Alt + O pressed');
       const taskToAddSubtaskTo = this.store.selectSnapshot(AppState.getFocusedTaskForSubtasks);
       if (taskToAddSubtaskTo) {

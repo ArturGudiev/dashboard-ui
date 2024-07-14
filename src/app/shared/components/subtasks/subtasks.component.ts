@@ -15,7 +15,7 @@ import { TasksService } from "../../../services/tasks.service";
 import { Router } from "@angular/router";
 import { AlertService } from "../../../services/alert.service";
 import { Observable, Subscription } from "rxjs";
-import { every, some } from "lodash";
+import { every, isNaN, some } from "lodash";
 import { TaskContainer } from "../../../interfaces/task-container";
 import { CommandsService } from "../../../services/commands.service";
 import { MatDialog } from "@angular/material/dialog";
@@ -26,6 +26,7 @@ import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { AppState } from "../../../state/app.state";
 import { distinctUntilChanged, map } from "rxjs/operators";
+import { state } from "@angular/animations";
 
 @UntilDestroy()
 @Component({
@@ -34,8 +35,19 @@ import { distinctUntilChanged, map } from "rxjs/operators";
   styleUrls: ['./subtasks.component.sass']
 })
 export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
+  get subtasks(): TaskC[] {
+    return this._subtasks;
+  }
+
+  @Input()
+  set subtasks(value: TaskC[]) {
+    this._subtasks = value;
+    this.tasksWithSubtasksToShow = this.tasksWithSubtasksToShow
+      .filter(el => this.subtasks.some(e => e._id === el.instance._id));
+  }
+
+  private _subtasks: TaskC[] = [];
   @Input() taskContainer: TaskContainer;
-  @Input() subtasks: TaskC[];
   @Input() showTitle = false;
   @Input() level = 0;
   @Output() refreshSubtasks = new EventEmitter();
@@ -78,7 +90,6 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.subtasks) {
-      console.log('subtasks.component.ts -- ngOnChanges', this.subtasks);
       if (every(this.selection.selected.map(task => task._id), x => !this.subtasks.map(t => t._id).includes(x))) {
         this.clearSelection();
       } else {
