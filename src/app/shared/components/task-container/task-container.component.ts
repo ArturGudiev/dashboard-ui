@@ -25,10 +25,7 @@ import { Problem } from "../../../models/problem";
 import { Question } from "../../../models/question";
 import { Story } from "../../../models/story";
 import { TaskC } from "../../../models/task-class";
-import { ActionDialogComponent } from "../../../modules/dialogs/action-dialog/action-dialog.component";
-import { DefinitionDialogComponent } from "../../../modules/dialogs/definition/definition-dialog.component";
 import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
-import { KnowledgeDialogComponent } from "../../../modules/dialogs/knowledge-dialog/knowledge-dialog.component";
 import { RecordsListDialogComponent } from "../../../modules/dialogs/records-list-dialog/records-list-dialog.component";
 import { AlertService } from "../../../services/alert.service";
 import { CommandsService } from "../../../services/commands.service";
@@ -40,7 +37,7 @@ import { StoriesService } from "../../../services/stories.service";
 import { TasksService } from "../../../services/tasks.service";
 import { getUrlByDescription } from "../../libs/dashboard.lib";
 import { Store } from "@ngxs/store";
-import { AppState, ToDoProfessorStateModel } from "../../../state/app.state";
+import { AppState } from "../../../state/app.state";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { ToastrService } from "ngx-toastr";
@@ -76,10 +73,8 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   questions: Question[];
   definitions: Definition[];
   knowledgeBits: Knowledge[];
-  // parentsPath: string[];
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
-  routerSubscription: Subscription;
 
   get subtasksIds(): number[] {
     return this.taskContainer.tasks;
@@ -169,12 +164,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     }
     if (['problem'].includes(arr[0])) {
       this.addProblem();
-    }
-    if (['definition'].includes(arr[0])) {
-      this.addDefinition();
-    }
-    if (['action', 'act'].includes(arr[0])) {
-      this.addAction();
     }
     if (['question'].includes(arr[0])) {
       this.addQuestion();
@@ -282,24 +271,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  addDefinition(): void {
-    // this.knowledgeService.addDefinition();
-    const dialogRef = this.dialog.open(DefinitionDialogComponent, {
-      height: '400px',
-      width: '800px',
-    });
-    dialogRef.afterClosed().subscribe((obj: any) => {
-      if (obj) {
-        const definitionObject =
-          {name: obj.name, value: obj.value, tags: [this.taskContainer.getFullDescription()],
-              parents: [this.taskContainer.getTaskContainerDescription()]
-          }
-        this.knowledgeService.createNewDefinition(definitionObject).subscribe(() => this.refreshDefinitions());
-      }
-    });
-  }
-
-
   refreshActions() {
     const actionsSubscription$ = this.knowledgeService.getActions(this.taskContainer.actions);
     actionsSubscription$.subscribe(actions => {
@@ -308,47 +279,11 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     return actionsSubscription$;
   }
 
-  addAction(): void {
-    const dialogRef = this.dialog.open(ActionDialogComponent, {
-      height: '600px',
-      width: '800px',
-    });
-    dialogRef.afterClosed().subscribe((obj: any) => {
-      if (obj) {
-        const action = {
-          name: obj.name,
-          value: obj.value,
-          tags: [this.taskContainer.getFullDescription()],
-          extension: obj.extension
-        };
-        this.knowledgeService.createNewAction(action).subscribe(() => this.refreshActions());
-      }
-    });
-  }
-
   refreshKnowledgeBits() {
     const knowledgeBitsSubscription$ =
       this.knowledgeService.getKnowledgeBits(this.taskContainer.knowledgeBits);
     knowledgeBitsSubscription$.subscribe(knowledgeBits => this.knowledgeBits = knowledgeBits);
     return knowledgeBitsSubscription$;
-  }
-
-  addKnowledge(): void {
-    const dialogRef = this.dialog.open(KnowledgeDialogComponent, {
-      height: '600px',
-      width: '800px',
-    });
-    dialogRef.afterClosed().subscribe((obj: any) => {
-      if (obj) {
-        const knowledge = {
-          name: obj.name,
-          value: obj.value,
-          tags: [this.taskContainer.getFullDescription()],
-          extension: obj.extension
-        };
-        this.knowledgeService.createNewKnowledge(knowledge).subscribe(() => this.refreshKnowledgeBits());
-      }
-    });
   }
 
   callEditNotesEvent() {
@@ -486,7 +421,4 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     this.router.navigate(['story', story._id]).then();
   }
 
-  temp() {
-    this.toastr.success('Hello');
-  }
 }

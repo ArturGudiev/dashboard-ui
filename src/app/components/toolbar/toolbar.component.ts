@@ -27,7 +27,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
               private dashboardService: DashboardService,
               private hotkeys: Hotkeys,
               private commandService: CommandsService,
-              private alertService: AlertService,
               private navigateService: NavigationService,
               private router: Router) { }
 

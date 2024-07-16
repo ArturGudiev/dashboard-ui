@@ -9,11 +9,9 @@ import {ToolbarComponent} from './components/toolbar/toolbar.component';
 import {HttpClientModule} from '@angular/common/http';
 import {DialogsModule} from "./modules/dialogs/dialogs.module";
 import {ReactiveFormsModule} from "@angular/forms";
-import {CommandCardComponent} from './components/command-card/command-card.component';
 import {MainPageComponent} from './components/main-page/main-page.component';
 import {MatIconModule} from "@angular/material/icon";
 import {HIGHLIGHT_OPTIONS, HighlightModule} from "ngx-highlightjs";
-import {RecordsListDialogComponent} from './modules/dialogs/records-list-dialog/records-list-dialog.component';
 import {HotkeyModule} from "angular2-hotkeys";
 import { SharedModule } from './shared/shared.module';
 import { NgxsModule } from '@ngxs/store';
@@ -37,7 +35,6 @@ const routes: Routes = [
     AppComponent,
     SidenavComponent,
     ToolbarComponent,
-    CommandCardComponent,
     MainPageComponent
   ],
   imports: [
