@@ -8,7 +8,6 @@ export interface ITaskContainerChildElements {
   knowledgeBits: number[]
   actions: number[]
   knowledgeNodes?: number[];
-  // childNodes?: KnowledgeNode[];
 }
 
 
@@ -21,20 +20,9 @@ export interface TaskContainer extends ITaskContainerChildElements{
   stories?: number[];
   parents: TaskContainerDescription[];
 
-  // tags: string[];
-  //
-  // getProblems(): Problem[];
-  //
-  // getQuestions(): Question[];
-  //
-  // getTasks(): Task[];
-  //
-  // getAllTasks(): Task[];
-  //
   getFullDescription(): string;
   getTaskContainerDescription(): TaskContainerDescription;
   type: TaskContainerType;
   notes: string;
 
-  // interactive(): Promise<void>;
 }

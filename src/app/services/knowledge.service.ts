@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import {ApiService} from "./api.service";
-import {Definition} from "../models/definition";
 import {Action} from "../models/action";
 import {Knowledge} from "../models/knowledge";
 import {KnowledgeNode} from "../models/knowledge-node";
@@ -14,27 +13,6 @@ export class KnowledgeService {
 
   constructor(private apiService: ApiService) { }
 
-  //----------Definitions start -----------------
-  getDefinitions(ids: number[]): Observable<Definition[]> {
-    return this.apiService._getDefinitions(ids);
-  }
-
-  createNewDefinition(definitionObject: any): Observable<Definition> {
-    return this.apiService._createNewDefinition(definitionObject);
-  }
-
-  getDefinition(id: number) {
-    return this.apiService._getDefinition(id);
-  }
-
-  updateDefinition(definition: Definition) {
-    return this.apiService._updateDefinition(definition);
-  }
-
-  getDefinitionParentsPath(definition: Definition) {
-    return this.apiService._getDefinitionParentsPath(definition);
-  }
-  //----------Definitions end -----------------
   //----------Actions start -----------------
   getActions(ids: number[]): Observable<Action[]> {
     return this.apiService._getActions(ids);

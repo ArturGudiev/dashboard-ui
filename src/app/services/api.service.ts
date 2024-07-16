@@ -8,14 +8,12 @@ import {TaskContainer} from "../interfaces/task-container";
 import {Story} from "../models/story";
 import {Problem} from "../models/problem";
 import {Question} from "../models/question";
-import {Definition} from "../models/definition";
 import {Action} from "../models/action";
 import {Knowledge} from "../models/knowledge";
 import {KnowledgeNode} from "../models/knowledge-node";
 import {AliasesRecord} from "../models/alias-record";
 import {RecordItem} from "../models/record-item";
 import {IArrayParams} from "../interfaces/array-params";
-import {TaskContainerDescription} from "../interfaces/types";
 
 export interface IArrayResponse<T> {
   arrInfo: {
@@ -208,38 +206,7 @@ export class ApiService {
   }
 
   //----------------------------------------questions------------------------------------------
-  //----------------------------------------definitions----------------------------------------
-  _getDefinitions(ids: number[]): Observable<Definition[]> {
-    console.log('_getDefinitions', ids);
-    return this.http.post(`${this.baseUrl}/get-definitions/`, { ids }).pipe(
-      map((definitions: any) => definitions.map(
-        (p: Definition) => Definition.createFromObj(p)
-      )));
-  }
 
-  _createNewDefinition(definitionObject: any): Observable<Definition> {
-    return this.http.post<Definition>(`${this.baseUrl}/new-definition/`, definitionObject);
-  }
-
-  _getDefinition(id: number) {
-    return this.http.get<Definition>(`${this.baseUrl}/definition/${id}`)
-      .pipe(
-        map((obj: Definition) => Definition.createFromObj(obj))
-      );
-  }
-
-  _updateDefinition(definition: Definition): Observable<Definition> {
-    return this.http.post<Definition>(`${this.baseUrl}/update-definition/`, definition)
-      .pipe(
-        map((obj: Definition) => Definition.createFromObj(obj))
-      );
-  }
-
-  _getDefinitionParentsPath(definition: Definition): Observable<string[]> {
-    return this.http.post<string[]>(`${this.baseUrl}/definition/parents-path/`, definition);
-  }
-
-  //------------------------------------definitions----------------------------------------
   //------------------------------------actions----------------------------------------
   _getActions(ids: number[]) {
     return this.http.post(`${this.baseUrl}/get-actions/`, { ids }).pipe(

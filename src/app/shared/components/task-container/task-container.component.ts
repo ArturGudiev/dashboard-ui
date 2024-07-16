@@ -20,14 +20,12 @@ import { Knowledge } from 'src/app/models/knowledge';
 import { EpicsService } from 'src/app/services/epics.service';
 import { TaskContainer } from "../../../interfaces/task-container";
 import { Action } from "../../../models/action";
-import { Definition } from "../../../models/definition";
 import { Problem } from "../../../models/problem";
 import { Question } from "../../../models/question";
 import { Story } from "../../../models/story";
 import { TaskC } from "../../../models/task-class";
 import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
 import { RecordsListDialogComponent } from "../../../modules/dialogs/records-list-dialog/records-list-dialog.component";
-import { AlertService } from "../../../services/alert.service";
 import { CommandsService } from "../../../services/commands.service";
 import { KnowledgeService } from "../../../services/knowledge.service";
 import { ProblemsService } from "../../../services/problems.service";
@@ -71,7 +69,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   problems: Problem[];
   actions: Action[];
   questions: Question[];
-  definitions: Definition[];
   knowledgeBits: Knowledge[];
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
@@ -92,7 +89,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
               public commandsService: CommandsService,
               public router: Router,
               private _hotkeysService: HotkeysService,
-              public alertService: AlertService,
               private store: Store,
               public knowledgeService: KnowledgeService) {
   }
@@ -131,7 +127,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   private refreshTaskContainerParts() {
     this.refreshProblems();
     this.refreshQuestions();
-    this.refreshDefinitions();
     this.refreshActions();
     this.refreshKnowledgeBits();
     if (this.showStories) {
@@ -239,14 +234,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   addProblem(): void {
     this.problemsService.createProblemFromDialog(this.taskContainer)
       .subscribe(() => this.refreshTaskContainer.emit());
-  }
-
-  refreshDefinitions(): Observable<Definition[]> {
-    const definitions$ = this.knowledgeService.getDefinitions(this.taskContainer.definitions);
-    definitions$.subscribe(definitions => {
-      return this.definitions = definitions;
-    });
-    return definitions$;
   }
 
   goToParentHandler(description: string): void {
