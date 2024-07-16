@@ -47,6 +47,10 @@ export class TaskComponent implements OnInit, OnDestroy {
     })
   }
 
+  refreshSubtasks() {
+    this.tasksService.getTask(this.id).subscribe(task => this.task.tasks = task.tasks)
+  }
+
   refreshFunction: () => Observable<TaskC> = () => this.tasksService.getTask(this.id)
 
   ngOnDestroy(): void {

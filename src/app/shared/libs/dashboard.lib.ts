@@ -1,6 +1,5 @@
 import {TaskC} from '../../models/task-class';
 import {Epic} from "../../models/epic";
-import {predefinedRoutes} from "../constants/predefined-routes";
 import {Story} from "../../models/story";
 import {Problem} from "../../models/problem";
 import {Question} from "../../models/question";
@@ -58,9 +57,3 @@ export function getUrlByDescription(description: string): string[] {
   }
   return null;
 }
-
-export const isPredefinedRoute = (val: string) => predefinedRoutes.some(obj => obj.routes.includes(val.trim()));
-export const getPredefinedRouteValue = (val: string) => {
-  return predefinedRoutes.find(obj => obj.routes.includes(val.trim())).value;
-};
-

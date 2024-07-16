@@ -68,14 +68,14 @@
       >
       </app-substories>
 
-      <app-subtasks
-        (refreshSubtasks)="refreshSubtasks()"
+      <app-tasks-list
+        (refreshTasks)="refreshSubtasks()"
         (addSubtask)="addSubtask()"
-        (onSubtaskDoneClick)="onSubtaskDoneClick($event)"
+        (onTaskDoneClick)="onSubtaskDoneClick($event)"
         [taskContainer]="taskContainer"
-        [subtasks]="subtasks"
+        [tasksIds]="taskContainer.tasks"
       >
-      </app-subtasks>
+      </app-tasks-list>
 
       <app-subquestions
         (refreshQuestions)="refreshQuestions()"

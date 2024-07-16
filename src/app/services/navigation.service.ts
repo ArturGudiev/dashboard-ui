@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {Router} from "@angular/router";
-import {getPredefinedRouteValue, isPredefinedRoute} from "../shared/libs/dashboard.lib";
 import {AliasesService} from "./aliases.service";
 import {AliasesRecord} from "../models/alias-record";
 import {AlertService} from "./alert.service";
@@ -18,10 +17,6 @@ export class NavigationService {
   navigateByInput(navItem: string) {
     if ( !navItem ) {
       return;
-    }
-
-    if (isPredefinedRoute(navItem)) {
-      this.router.navigate(getPredefinedRouteValue(navItem)).then();
     }
     if (Number.isInteger(+navItem)) {
       this.router.navigate(['task', navItem]).then();

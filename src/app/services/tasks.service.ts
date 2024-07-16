@@ -17,28 +17,12 @@ export interface RefreshTasksState {
   providedIn: 'root'
 })
 export class TasksService {
-  private initialRefreshTasksState: RefreshTasksState = {
-    taskContainer: null
-  }
-  private refreshTasksState = new BehaviorSubject<RefreshTasksState>(this.initialRefreshTasksState);
   addTaskDialogOpened = false;
 
   constructor(private apiService: ApiService,
     private dialog: MatDialog,
     private dashboardService: DashboardService) { }
 
-
-  getRefreshTasksDataCurrentState(): RefreshTasksState {
-    return this.refreshTasksState.getValue();
-  }
-
-  getRefreshTasksDataStateChange(): Observable<RefreshTasksState> {
-    return this.refreshTasksState.asObservable();
-  }
-
-  setRefreshTasksDataState(state: RefreshTasksState): void {
-    this.refreshTasksState.next(state);
-  }
 
   getTask(id: number): Observable<TaskC> {
     return this.apiService._getTask(id);
@@ -64,12 +48,28 @@ export class TasksService {
     );
   }
 
+  finishTaskById(id: number): Observable<TaskC> {
+    return this.apiService._finishTaskById(id).pipe(
+      tap({
+        complete: () => this.dashboardService.updateDoneTasksNumber()
+      })
+    );
+  }
+
   finishTasks(tasks: TaskC[]): Observable<any> {
     return this.apiService._finishTasks(tasks).pipe(
       tap({
         complete: () => this.dashboardService.updateDoneTasksNumber()
       }));
   }
+
+  finishTasksByIds(tasks: number[]): Observable<any> {
+    return this.apiService._finishTasksByIds(tasks).pipe(
+      tap({
+        complete: () => this.dashboardService.updateDoneTasksNumber()
+      }));
+  }
+
 
   addAnonymousTask() {
     return this.apiService._addAnonymousTask().pipe(

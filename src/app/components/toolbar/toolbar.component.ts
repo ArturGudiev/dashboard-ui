@@ -4,7 +4,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {NavToDialogComponent} from "../../modules/dialogs/nav-task-dialog/nav-to-dialog.component";
 import {DashboardService, DashboardStateInterface} from "../../services/dashboard.service";
-import {getPredefinedRouteValue, isPredefinedRoute} from "../../shared/libs/dashboard.lib";
 import {Hotkeys} from "../../classes/hotkeys";
 import {CommandDialogComponent} from "../../modules/dialogs/command-dialog/command-dialog.component";
 import {CommandsService} from "../../services/commands.service";

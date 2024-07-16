@@ -13,9 +13,8 @@ import { TaskC } from "../../../models/task-class";
 import { SelectionModel } from "@angular/cdk/collections";
 import { TasksService } from "../../../services/tasks.service";
 import { Router } from "@angular/router";
-import { AlertService } from "../../../services/alert.service";
 import { Observable, Subscription } from "rxjs";
-import { every, isNaN, some } from "lodash";
+import { every, isNaN } from "lodash";
 import { TaskContainer } from "../../../interfaces/task-container";
 import { CommandsService } from "../../../services/commands.service";
 import { MatDialog } from "@angular/material/dialog";
@@ -26,39 +25,35 @@ import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { AppState } from "../../../state/app.state";
 import { distinctUntilChanged, map } from "rxjs/operators";
-import { state } from "@angular/animations";
+import { replaceInArrayIfFind } from "../../libs/utils.lib";
 
 @UntilDestroy()
 @Component({
-  selector: 'app-subtasks',
-  templateUrl: './subtasks.component.html',
-  styleUrls: ['./subtasks.component.sass']
+  selector: 'app-tasks-list',
+  templateUrl: './tasks-list.component.html',
+  styleUrls: ['./tasks-list.component.sass']
 })
-export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
-  get subtasks(): TaskC[] {
-    return this._subtasks;
-  }
+export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
+
+  private _tasksIds: number[] = [];
+  tasks: TaskC[] = [];
 
   @Input()
-  set subtasks(value: TaskC[]) {
-    this._subtasks = value;
-    this.tasksWithSubtasksToShow = this.tasksWithSubtasksToShow
-      .filter(el => this.subtasks.some(e => e._id === el.instance._id));
-  }
+  tasksIds: number[];
 
-  private _subtasks: TaskC[] = [];
+
+
   @Input() taskContainer: TaskContainer;
   @Input() showTitle = false;
   @Input() level = 0;
-  @Output() refreshSubtasks = new EventEmitter();
+  @Output() refreshTasks = new EventEmitter();
   @Output() addSubtask = new EventEmitter();
-  @Output() onSubtaskDoneClick = new EventEmitter();
+  @Output() onTaskDoneClick = new EventEmitter();
 
-  selection = new SelectionModel<TaskC>(true, []);
+  selection = new SelectionModel<TaskC>(true, []); // TODO make a separate table component
   displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
   showSelectedSubtask = false;
-  tasksWithSubtasksToShow: {instance: TaskC, subtasks$: Observable<TaskC[]>}[] = [];
-
+  tasksWithSubtasksToShow: TaskC[] = [];
 
   tasksOfSelectedSubtask: TaskC[] = [];
   commandsSubscription: Subscription;
@@ -89,33 +84,41 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.subtasks) {
-      if (every(this.selection.selected.map(task => task._id), x => !this.subtasks.map(t => t._id).includes(x))) {
-        this.clearSelection();
-      } else {
-        let newSelectedItems: TaskC[] = [];
-        this.selection.selected.forEach(selectedTask => {
-          this.subtasks.map(t => t._id)
-          if (this.subtasks.some(subtask => subtask._id === selectedTask._id)) {
-            const element = this.subtasks.find(subtask => subtask._id === selectedTask._id);
-            newSelectedItems.push(element);
-          }
-        });
-        this.selection.clear();
-        this.selection = new SelectionModel<TaskC>(true, newSelectedItems);
-        this.cdr.detectChanges();
-      }
-      this.tasksWithSubtasksToShow.forEach(el => {
-        const index = this.subtasks?.findIndex(e => e._id === el.instance._id);
-        if (index !== undefined && index >= 0) {
-          el.instance = this.subtasks[index];
-          el.subtasks$ = this.tasksService.getTasks(this.subtasks[index].tasks);
-        }
+    if (changes.tasksIds) {
+      console.log(changes.tasksIds);
+      this.tasksService.getTasks(this.tasksIds).subscribe(res => {
+        this.tasks = res;
+        this.makeChangesAfterTasksChanged();
       })
     }
     if (changes.taskContainer) {
       this.showSelectedSubtask = false;
     }
+  }
+
+  private makeChangesAfterTasksChanged() {
+    if (every(this.selection.selected.map(task => task._id), x => !this.tasks.map(t => t._id).includes(x))) {
+      this.clearSelection();
+    } else {
+      let newSelectedItems: TaskC[] = [];
+      this.selection.selected.forEach(selectedTask => {
+        this.tasks.map(t => t._id)
+        if (this.tasks.some(subtask => subtask._id === selectedTask._id)) {
+          const element = this.tasks.find(subtask => subtask._id === selectedTask._id);
+          newSelectedItems.push(element);
+        }
+      });
+      this.selection.clear();
+      this.selection = new SelectionModel<TaskC>(true, newSelectedItems);
+      this.cdr.detectChanges();
+    }
+
+    this.tasks.forEach(taskFromTasks => {
+      const index = this.tasksWithSubtasksToShow.findIndex(taskWithSubtasksToShow => taskWithSubtasksToShow._id === taskFromTasks._id);
+      if (index !== undefined && index >= 0) {
+        this.tasksWithSubtasksToShow[index] = taskFromTasks;
+      }
+    })
   }
 
   private handleTaskCommand(command: string) {
@@ -155,7 +158,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.subtasks.length;
+    const numRows = this.tasks.length;
     return numSelected === numRows;
   }
 
@@ -164,7 +167,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
       this.clearSelection();
       return;
     }
-    this.selection.select(...this.subtasks);
+    this.selection.select(...this.tasks);
   }
 
   onFinishTasksClick() {
@@ -172,7 +175,7 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
       {
         next: () => {
           this.clearSelection();
-          this.refreshSubtasks.emit();
+          this.refreshTasks.emit();
         }
       }
     );
@@ -180,10 +183,10 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
 
   onFinishAllTasksClick() {
     this.clearSelection();
-    const subtasks = this.subtasks;
-    this.subtasks = [];
+    const subtasks = this.tasks;
+    this.tasks = [];
     this.tasksService.finishTasks(subtasks).subscribe(
-      () => this.refreshSubtasks.emit());
+      () => this.refreshTasks.emit());
   }
 
   onSubtaskClick(task: TaskC) {
@@ -191,48 +194,42 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
     this.router.navigate(['task', task._id]).then();
   }
 
-  /**
-   * prerequisite --- only 1 is selected
-   */
-  onShowSubtasksList() {
-    // this.selectedSubtask = this.selection.selected[0];
-    this.toggleShowTasksOfSelectedSubtask();
+  refreshTasksOfSelectedSubtask(item: TaskC) {
+    this.tasksService.getTask(item._id).subscribe(updatedTask => {
+      this.refreshUpdatedTaskInAllRelatedArrays(updatedTask);
+    })
   }
 
-  toggleShowTasksOfSelectedSubtask() {
-    this.showSelectedSubtask = !this.showSelectedSubtask;
-    if (this.showSelectedSubtask) {
-      this.refreshTasksOfSelectedSubtask();
-    }
+  private refreshUpdatedTaskInAllRelatedArrays(updatedTask: TaskC) {
+    replaceInArrayIfFind(this.tasks, e => e._id === updatedTask._id, updatedTask)
+    replaceInArrayIfFind(this.tasksWithSubtasksToShow, e => e._id === updatedTask._id, updatedTask)
+
+    const selected = [...this.selection.selected];
+    replaceInArrayIfFind(selected, e => e._id === updatedTask._id, updatedTask)
+    this.selection.clear();
+    this.selection = new SelectionModel<TaskC>(true, selected);
   }
 
-  refreshTasksOfSelectedSubtask() {
+  onTaskOfSelectedSubtaskDoneClick(task: TaskC, parentTask: TaskC){
+    this.tasksService.finishTask(task).subscribe(() => {
+      this.updateAndRefreshTaskInAllRelatedArrays(parentTask);
+    })
   }
 
-  onTaskOfSelectedSubtaskDoneClick(task: TaskC){
-    this.tasksService.finishTask(task).subscribe(() => this.refreshTasksOfSelectedSubtask())
+  private updateAndRefreshTaskInAllRelatedArrays(parentTask: TaskC) {
+    this.tasksService.getTask(parentTask._id).subscribe(res => {
+      this.refreshUpdatedTaskInAllRelatedArrays(res);
+    })
   }
 
   ngOnDestroy(): void {
     this.tasksOfSelectedSubtask = [];
   }
 
-  addTaskOfSelectedSubtask(taskWithSubtasksToShow: TaskC) {
-    // this.tasksService.getTask(taskWithSubtasksToShowId).subscribe(
-    //   t => this.tasksService.openAddTaskDialog2(t).subscribe(() => this.refreshTasksOfSelectedSubtask())
-    // )
-    // ;
-    this.tasksService.openAddTaskDialog2(taskWithSubtasksToShow).subscribe(() => this.refreshTasksOfSelectedSubtask());
-  }
-
-  getTask(id: number): Observable<TaskC> {
-    return this.tasksService.getTask(id);
-  }
-
-  unselectSelectedSubtask() {
-    // this.selectedSubtask = null;
-    this.showSelectedSubtask = false;
-    this.clearSelection();
+  addTaskOfSelectedSubtask(parentTask: TaskC) {
+    this.tasksService.openAddTaskDialog2(parentTask).subscribe(() => {
+      this.updateAndRefreshTaskInAllRelatedArrays(parentTask);
+    });
   }
 
   private handleSelectSubtaskAction() {
@@ -240,36 +237,24 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
     dialogRef.afterClosed().subscribe((value: string) => {
       if (value && !isNaN(+value)) {
         const index = +value;
-        if (index > 0 && index <= this.subtasks.length) {
-          this.selection = new SelectionModel<TaskC>(true, [this.subtasks[index - 1]]);
-          // this.selectedSubtask = this.selection.selected[0];
+        if (index > 0 && index <= this.tasks.length) {
+          this.selection = new SelectionModel<TaskC>(true, [this.tasks[index - 1]]);
           this.showSelectedSubtask = true;
-          this.refreshTasksOfSelectedSubtask();
         }
       }
     });
   }
 
-  onSubtaskViewListClick(subtask: TaskC) {
-    this.selection = new SelectionModel<TaskC>(true, [subtask]);
-    // this.selectedSubtask = subtask;
-    this.showSelectedSubtask = true;
-    this.refreshTasksOfSelectedSubtask();
-  }
-
   setShowSubtasksField($event: MatCheckboxChange, subtask: TaskC, i: number) {
     if ($event.checked) {
 
-      this.tasksWithSubtasksToShow.push({
-        instance: subtask,
-        subtasks$: this.tasksService.getTasks(subtask.tasks)
-      });
+      this.tasksWithSubtasksToShow.push(subtask);
       if ( this.level === 0 && this.tasksWithSubtasksToShow.length === 1 ) {
         this.store.dispatch(new SetFocusedTaskForSubtasks(subtask));
       }
     } else {
       this.tasksWithSubtasksToShow = this.tasksWithSubtasksToShow
-        .filter(el => el.instance._id !== subtask._id);
+        .filter(el => el._id !== subtask._id);
     }
   }
 
@@ -278,6 +263,6 @@ export class SubtasksComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   checkedElement(subtask: TaskC) {
-    return !!this.tasksWithSubtasksToShow.find(el => el.instance._id === subtask._id);
+    return !!this.tasksWithSubtasksToShow.find(el => el._id === subtask._id);
   }
 }

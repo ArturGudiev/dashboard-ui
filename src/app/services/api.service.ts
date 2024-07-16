@@ -65,8 +65,17 @@ export class ApiService {
     return this.http.put(`${this.baseUrl}/finish-task/${task._id}`, {});
   }
 
+  _finishTaskById(id: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/finish-task/${id}`, {});
+  }
+
+
   _finishTasks(tasks: TaskC[]) {
     return this.http.put(`${this.baseUrl}/finish-tasks/`, tasks).pipe();
+  }
+
+  _finishTasksByIds(ids: number[]) {
+    return this.http.put(`${this.baseUrl}/finish-tasks-by-ids/`, ids).pipe();
   }
 
   _addAnonymousTask(): Observable<any> {
@@ -350,4 +359,5 @@ export class ApiService {
     return this.http.post<RecordItem>(`${this.baseUrl}/new-record/`, bodyObj);
   }
   //------------------------------------knowledge bits end----------------------------------------
+
 }

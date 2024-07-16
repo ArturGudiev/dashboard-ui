@@ -1,10 +1,9 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <ng-container *ngIf="!isLoading">
-  <app-task-container 
+  <app-task-container
     [taskContainer]="question"
     [parentsPath]="parentsPath$ | async"
     (onDoneAllClick)="onDoneAllClick()"
-    (goToNearestParent)="onGoToNearestParent()"
     (updateTaskContainer)="updateQuestion()"
     (refreshTaskContainer)="refreshQuestion()"
     (resolve)="onDoneAllClick()"
@@ -31,12 +30,12 @@
 
 <!--    </div>-->
 <!--    <br>-->
-<!--    <app-subtasks (refreshSubtasks)="refreshSubtasks()"-->
+<!--    <app-tasks-list (refreshSubtasks)="refreshSubtasks()"-->
 <!--                  (addSubtask)="addSubtask()"-->
 <!--                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"-->
 <!--                  [taskContainer]="question"-->
-<!--                  [subtasks]="subtasks">-->
-<!--    </app-subtasks>-->
+<!--                  [tasks-list]="tasks-list">-->
+<!--    </app-tasks-list>-->
 <!--    <app-subquestions (refreshQuestions)="refreshQuestions()"-->
 <!--                      (addQuestion)="addQuestion()"-->
 <!--                      (answerTheQuestion)="answerTheQuestion($event)"-->

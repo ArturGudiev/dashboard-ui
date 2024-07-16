@@ -2,15 +2,12 @@
 
     <div id="subepics-actions">
       <h2 id="subepics-title">Epics</h2>
-      <!-- <button mat-mini-fab color="primary" id="add-epic-button">
-        <mat-icon class="epics-icon">add</mat-icon>
-      </button> -->
-  
+
     </div>
-  
+
     <table id="subepics-table" *ngIf="epics && epics.length > 0" mat-table [dataSource]="epics"
            class="mat-elevation-z8">
-  
+
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef>
           <mat-checkbox (change)="$event ? epicsSelectAllToggle() : null"
@@ -26,7 +23,7 @@
           </mat-checkbox>
         </td>
       </ng-container>
-  
+
       <!-- Position Column -->
       <ng-container matColumnDef="position">
         <th mat-header-cell *matHeaderCellDef> No.</th>
@@ -34,24 +31,23 @@
           <span>{{i + 1}}</span>
         </td>
       </ng-container>
-  
+
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef> Description</th>
         <td mat-cell *matCellDef="let epic;" (click)="onSubepicClick(epic)">
           <span class="row-link" (click)="onSubepicClick(epic)">{{epic.description}}</span>
         </td>
       </ng-container>
-  
+
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions</th>
         <td mat-cell *matCellDef="let epic; let i=index" id="row-{{i}}">
         </td>
       </ng-container>
-  
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-  
+
   </ng-container>
-  
-  
+

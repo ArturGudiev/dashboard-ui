@@ -57,9 +57,10 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   @Input() showEpics = false;
   @Input() showStories = false;
   @Output() onDoneAllClick = new EventEmitter();
-  // @Output() goToNearestParent = new EventEmitter<string>();
+
   @Output() updateTaskContainer = new EventEmitter();
   @Output() refreshTaskContainer = new EventEmitter();
+  @Output() refreshTaskContainerTasks = new EventEmitter();
   @Output() resolve = new EventEmitter();
 
   refreshQuestionsSubscription: Subscription;
@@ -67,7 +68,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   refreshProblemsSubscription: Subscription;
   commandsSubscription: Subscription;
 
-  subtasks: TaskC[];
+  // tasks-list: TaskC[];
   epics: Epic[] = [];
   stories: Story[] = [];
   problems: Problem[];
@@ -79,6 +80,10 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
   routerSubscription: Subscription;
+
+  get subtasksIds(): number[] {
+    return this.taskContainer.tasks;
+  }
 
   constructor(private questionsService: QuestionsService,
               private taskContainerService: TaskContainerService,
@@ -111,15 +116,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     // parentsPath$.subscribe((res: string[]) => this.parentsPath = res);
     this.refreshTaskContainerParts();
 
-    this.refreshQuestionsSubscription = this.questionsService.getRefreshQuestionsDataStateChange().subscribe(state => {
-      if (this.taskContainer === state.taskContainer) { this.refreshQuestions(); }
-    });
-    this.refreshTasksSubscription = this.tasksService.getRefreshTasksDataStateChange().subscribe(state => {
-      if (this.taskContainer === state.taskContainer) { this.refreshSubtasks(); }
-    });
-    this.refreshProblemsSubscription = this.problemsService.getRefreshProblemsDataStateChange().subscribe(state => {
-      if (this.taskContainer === state.taskContainer) { this.refreshProblems(); }
-    });
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
       this.handleTaskCommand(state.command);
     })
@@ -138,7 +134,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private refreshTaskContainerParts() {
-    this.refreshSubtasks();
     this.refreshProblems();
     this.refreshQuestions();
     this.refreshDefinitions();
@@ -163,8 +158,8 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     if (['anonymous'].includes(arr[0])) {
       this.addAnonymousTaskHandler();
     }
-    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasks.length) {
-      this.router.navigate(['task', this.subtasks[+arr[0] - 1]._id]).then();
+    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.subtasksIds.length) {
+      this.router.navigate(['task', this.subtasksIds[+arr[0] - 1]]).then();
     }
     if (['f', 'ft', 'finish-task'].includes(arr[0])) {
       this.finishTaskHandler(args);
@@ -205,9 +200,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   finishAllTasks() {
-    const subtasks = this.subtasks;
-    this.subtasks = [];
-    this.tasksService.finishTasks(subtasks).subscribe(() => this.refreshSubtasks());
+    this.tasksService.finishTasksByIds(this.subtasksIds).subscribe(() => this.refreshSubtasks());
   }
 
 
@@ -231,16 +224,16 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
       const num1 = +numbers[0] - 1;
       const num2 = +numbers[1] - 1;
       const rangeNumbers = _.range(num1, num2 + 1);
-      const tasksToFinish = rangeNumbers.map((number: number) => this.subtasks[number]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
+      const tasksToFinish = rangeNumbers.map((index: number) => this.subtasksIds[index]);
+      this.tasksService.finishTasksByIds(tasksToFinish).subscribe(() => this.refreshSubtasks());
     } else if (args.length > 0 && args[0] && args[0].includes(',')) {
       const numbers = args[0].split(',').map(str => +str);
-      const tasksToFinish = numbers.map((number: number) => this.subtasks[number - 1]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshSubtasks());
+      const tasksToFinish = numbers.map((number: number) => this.subtasksIds[number - 1]);
+      this.tasksService.finishTasksByIds(tasksToFinish).subscribe(() => this.refreshSubtasks());
     } else {
       const index = +args[0];
-      if (Number.isInteger(index) && index >= 1 && index <= this.subtasks.length) {
-        this.tasksService.finishTask(this.subtasks[index - 1]).subscribe(() => this.refreshSubtasks());
+      if (Number.isInteger(index) && index >= 1 && index <= this.subtasksIds.length) {
+        this.tasksService.finishTaskById(this.subtasksIds[index - 1]).subscribe(() => this.refreshSubtasks());
       }
     }
   }
@@ -368,13 +361,7 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   refreshSubtasks() {
-    const tasksObservable = this.tasksService.getTasks(this.taskContainer.tasks);
-    tasksObservable.subscribe(newSubtasks => {
-      this.subtasks = newSubtasks;
-      console.log('task-container.component.ts -- refreshSubtasks ===', this.subtasks);
-
-    });
-    return tasksObservable;
+    this.refreshTaskContainerTasks.emit();
   }
 
   refreshSubstories():Observable<Story[]> {

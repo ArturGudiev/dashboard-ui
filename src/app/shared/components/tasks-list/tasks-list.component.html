@@ -8,7 +8,7 @@
 </h3>
 
 <div
-  *ngIf="subtasks && subtasks.length > 0"
+  *ngIf="tasks && tasks.length > 0"
 >
     <div id="subtasks-actions">
       <h2 id="subtasks-title">Tasks</h2>
@@ -20,7 +20,7 @@
         <mat-icon class="tasks-icon">done</mat-icon>
       </button>
 
-      <button mat-mini-fab color="primary" [disabled]="this.subtasks?.length === 0"
+      <button mat-mini-fab color="primary" [disabled]="this.tasks?.length === 0"
               id="done-all-tasks-button" (click)="onFinishAllTasksClick()">
         <mat-icon class="tasks-icon">done_outline</mat-icon>
       </button>
@@ -29,13 +29,13 @@
 
 </div>
 <div
-  *ngIf="subtasks && subtasks.length > 0"
+  *ngIf="tasks && tasks.length > 0"
   style="display: flex; align-items: flex-start">
 
   <table
     id="subtasks-table"
     mat-table
-    [dataSource]="subtasks"
+    [dataSource]="tasks"
     class="mat-elevation-z8"
   >
     <ng-container matColumnDef="select">
@@ -77,7 +77,7 @@
       <td mat-cell *matCellDef="let subtask; let i=index" id="row-{{i}}" class="row-link"
           [ngClass]="{'highlight': selection.selected.includes(subtask)}">
         <div style="display: flex; flex-flow: row nowrap">
-          <mat-icon (click)="onSubtaskDoneClick.emit(subtask)">done</mat-icon>
+          <mat-icon (click)="onTaskDoneClick.emit(subtask)">done</mat-icon>
         </div>
       </td>
     </ng-container>
@@ -107,15 +107,15 @@
     style="margin-left: 1rem;"
   >
         <ng-container *ngFor="let item of tasksWithSubtasksToShow">
-          <app-subtasks
-            (refreshSubtasks)="refreshTasksOfSelectedSubtask()"
+          <app-tasks-list
+            (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
             [showTitle]="true"
             [level]="level + 1"
-            (addSubtask)="addTaskOfSelectedSubtask(item.instance)"
-            (onSubtaskDoneClick)="onTaskOfSelectedSubtaskDoneClick($event)"
-            [taskContainer]="item.instance"
-            [subtasks]="item.subtasks$ | async">
-          </app-subtasks>
+            (addSubtask)="addTaskOfSelectedSubtask(item)"
+            (onTaskDoneClick)="onTaskOfSelectedSubtaskDoneClick($event, item)"
+            [taskContainer]="item"
+            [tasksIds]="item.tasks">
+          </app-tasks-list>
         </ng-container>
 
   </div>
