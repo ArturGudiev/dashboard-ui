@@ -84,7 +84,7 @@ export class TasksService {
    * @param taskContainer
    * @param callback is called when create new task is finished
    */
-  openAddTaskDialog(taskContainer: TaskContainer): Observable<any> {
+  openAddTaskDialog(): Observable<any> {
     if (this.addTaskDialogOpened) {
       return EMPTY;
     }

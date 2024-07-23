@@ -50,9 +50,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.hotkeys.addShortcut({ keys: 'Control.g' }).subscribe(() => this.onNavToClick());
     this.hotkeys.addShortcut({keys: 'Control.Shift.r'}).subscribe(() => this.commandService.setCommand('resolve'));
     this.hotkeys.addShortcut({keys: 'Control.p'}).subscribe(() => this.commandService.setCommand('problem'));
-    // this.hotkeys.addShortcut({keys: 'Control.n'}).subscribe(() => this.commandService.setCommand('node'));
-    // this.hotkeys.addShortcut({keys: 'Alt.n'}).subscribe(() => this.commandService.setCommand('records'));
-    // this.hotkeys.addShortcut({keys: 'Alt.Shift.n'}).subscribe(() => this.commandService.setCommand('new-record'));
+
+    this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('new-task'));
+    this.hotkeys.addShortcut({keys: '='}).subscribe(() => this.commandService.setCommand('task'));
+
     this.hotkeys.addShortcut({keys: '®'}).subscribe(() => this.commandService.setCommand('records'));
     this.hotkeys.addShortcut({keys: 'option.r'}).subscribe(() => this.commandService.setCommand('records'));
     this.hotkeys.addShortcut({keys: 'Â'}).subscribe(() => this.commandService.setCommand('new-record'));
@@ -60,10 +61,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.hotkeys.addShortcut({keys: 'Control.t'}).subscribe(() => this.commandService.setCommand('fta'));
     this.hotkeys.addShortcut({keys: 'Control.d'}).subscribe(() => this.commandService.setCommand('definition'));
     this.hotkeys.addShortcut({keys: 'Control.k'}).subscribe(() => this.commandService.setCommand('knowledge'));
-    // this.hotkeys.addShortcut({keys: 'Control.a'}).subscribe(() => this.commandService.setCommand('action'));
     this.hotkeys.addShortcut({keys: 'Control.m'}).subscribe(() => this.commandService.setCommand('notes'));
     this.hotkeys.addShortcut({keys: 'Control.='}).subscribe(() => this.commandService.setCommand('task'));
-    this.hotkeys.addShortcut({keys: '='}).subscribe(() => this.commandService.setCommand('task'));
     this.hotkeys.addShortcut({keys: '\\'}).subscribe(() => this.commandService.setCommand('anonymous'));
     this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('subtask'));
     this.hotkeys.addShortcut({keys: 'Control.Shift.o'}).subscribe(() => this.commandService.setCommand('subsubtask'));

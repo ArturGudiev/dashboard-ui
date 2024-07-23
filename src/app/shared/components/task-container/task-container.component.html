@@ -66,29 +66,28 @@
       </app-substories>
 
       <app-tasks-list
-        (refreshTasks)="refreshSubtasks()"
-        (addSubtask)="addSubtask()"
-        (onTaskDoneClick)="onSubtaskDoneClick($event)"
-        [taskContainer]="taskContainer"
-        [tasksIds]="taskContainer.tasks"
+        (refreshTasks)="refreshTasks()"
+        [tasks]="tasks"
+        [level]="0"
+        [container]="taskContainer"
       >
       </app-tasks-list>
 
-      <app-subquestions
-        (refreshQuestions)="refreshQuestions()"
-        (addQuestion)="addQuestion()"
-        (answerTheQuestion)="answerTheQuestion($event)"
-        [questions]="questions"
-      >
-      </app-subquestions>
+<!--      <app-subquestions-->
+<!--        (refreshQuestions)="refreshQuestions()"-->
+<!--        (addQuestion)="addQuestion()"-->
+<!--        (answerTheQuestion)="answerTheQuestion($event)"-->
+<!--        [questions]="questions"-->
+<!--      >-->
+<!--      </app-subquestions>-->
 
-      <app-subproblems
-        (refreshProblems)="refreshProblems()"
-        (addProblem)="addProblem()"
-        (onProblemSolvedClick)="solveTheProblem($event)"
-        [problems]="problems"
-      >
-      </app-subproblems>
+<!--      <app-subproblems-->
+<!--        (refreshProblems)="refreshProblems()"-->
+<!--        (addProblem)="addProblem()"-->
+<!--        (onProblemSolvedClick)="solveTheProblem($event)"-->
+<!--        [problems]="problems"-->
+<!--      >-->
+<!--      </app-subproblems>-->
     </div>
   </div>
 </div>

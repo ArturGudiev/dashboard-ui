@@ -3,54 +3,11 @@
   <app-task-container
     [taskContainer]="story"
     [parentsPath]="parentsPath"
+    (updateTaskContainer)="updateStory()"
     (refreshTaskContainer)="refreshStory()"
+    (refreshTaskContainerTasksList)="refreshSubtasks()"
+    [refreshTasks$]="refreshSubtasks$"
+
   >
   </app-task-container>
 </ng-container>
-
-<!--(resolve)="onDoneAllClick()"-->
-<!--(updateTaskContainer)="updateStory()"-->
-<!--(onDoneAllClick)="onDoneAllClick()"-->
-
-<!--<div id="content-wrapper">-->
-<!--  <div id="story-content">-->
-<!--    <div class="flex-container">-->
-<!--      <app-task-container-description (goToParent)="onGoToNearestParent()"-->
-<!--                                      [showDoneAll]="false"-->
-<!--                                      [taskContainer]="story">-->
-<!--      </app-task-container-description>-->
-<!--      <button id="more-icon" [matMenuTriggerFor]="menu" mat-mini-fab color="accent" *ngIf="story?.getFullDescription()">-->
-<!--        <mat-icon>more_vert</mat-icon>-->
-<!--      </button>-->
-<!--      <mat-menu #menu="matMenu">-->
-<!--        <button mat-menu-item (click)="addQuestion()">Add a new question</button>-->
-<!--        <button mat-menu-item (click)="addProblem()">Add a new problem</button>-->
-<!--      </mat-menu>-->
-
-<!--    </div>-->
-
-
-<!--    <br>-->
-<!--    <app-tasks-list (refreshSubtasks)="refreshSubtasks()"-->
-<!--                  (addSubtask)="addSubtask()"-->
-<!--                  (onSubtaskDoneClick)="onSubtaskDoneClick($event)"-->
-<!--                  [taskContainer]="story"-->
-<!--                  [tasks-list]="tasks-list">-->
-<!--    </app-tasks-list>-->
-<!--    <app-subquestions (refreshQuestions)="refreshQuestions()"-->
-<!--                      (addQuestion)="addQuestion()"-->
-<!--                      (answerTheQuestion)="answerTheQuestion($event)"-->
-<!--                      [questions]="questions">-->
-<!--    </app-subquestions>-->
-<!--    <app-subproblems (refreshProblems)="refreshProblems()"-->
-<!--                     (addProblem)="addProblem()"-->
-<!--                     (onProblemSolvedClick)="solveTheProblem($event)"-->
-<!--                     [problems]="problems">-->
-<!--    </app-subproblems>-->
-
-
-<!--  </div>-->
-<!--  <app-parents-path [parentsPath]="parentsPath"-->
-<!--                    (onParentClick)="goToParentHandler($event)"-->
-<!--  ></app-parents-path>-->
-<!--</div>-->

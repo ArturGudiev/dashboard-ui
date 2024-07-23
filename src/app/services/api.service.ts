@@ -10,7 +10,6 @@ import {Problem} from "../models/problem";
 import {Question} from "../models/question";
 import {Action} from "../models/action";
 import {Knowledge} from "../models/knowledge";
-import {KnowledgeNode} from "../models/knowledge-node";
 import {AliasesRecord} from "../models/alias-record";
 import {RecordItem} from "../models/record-item";
 import {IArrayParams} from "../interfaces/array-params";
@@ -55,7 +54,6 @@ export class ApiService {
   }
 
   _createNewTask(obj: any): Observable<TaskC> {
-    console.log('_createNewTask', obj);
     return this.http.post<TaskC>(`${this.baseUrl}/new-task/`, obj);
   }
 
@@ -266,38 +264,7 @@ export class ApiService {
   _getKnowledgeParentsPath(knowledge: Knowledge): Observable<string[]> {
     return this.http.post<string[]>(`${this.baseUrl}/knowledge/parents-path/`, knowledge);
   }
-  //------------------------------------knowledge bits end----------------------------------------
-  //------------------------------------knowledge bits start----------------------------------------
 
-
-  _getKnowledgeNode(id: number): Observable<KnowledgeNode> {
-    return this.http.get(`${this.baseUrl}/get-knowledge-node/${id}`).pipe(
-      map((obj: any) => KnowledgeNode.createFromObj(obj))
-    );
-  }
-
-  _getKnowledgeNodeParentsPath(node: KnowledgeNode): Observable<string[]> {
-    return this.http.post<string[]>(`${this.baseUrl}/knowledge-node/parents-path/`, node);
-  }
-
-  _getKnowledgeNodeChildren(id: any): Observable<KnowledgeNode[]> {
-    return this.http.get(`${this.baseUrl}/get-knowledge-node-children/${id}`)
-      .pipe(
-        map((nodes: any) => nodes.map(
-          (a: any) => KnowledgeNode.createFromObj(a)
-        ))
-      );
-  }
-  //------------------------------------knowledge bits end----------------------------------------
-
-  _createNewKnowledgeNode(obj: { name: string; id: number }) {
-    return this.http.post<string[]>(`${this.baseUrl}/new-knowledge-node/`, obj);
-  }
-
-  _deleteKnowledgeNode(node: KnowledgeNode): Observable<any> {
-    return this.http.delete<string[]>(`${this.baseUrl}/delete-knowledge-node/${node._id}`);
-  }
-  //------------------------------------knowledge bits end----------------------------------------
   _getRecordItems(arrayParams: IArrayParams, tag?: string): Observable<IArrayResponse<RecordItem>> {
     console.log('_getRecordItems', arrayParams);
     const url = tag ? `${this.baseUrl}/records/${tag}` : `${this.baseUrl}/records`;

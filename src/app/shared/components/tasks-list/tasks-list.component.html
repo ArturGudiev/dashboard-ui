@@ -4,24 +4,43 @@
   (click)="focusSubtask($event)"
   [ngClass]="{ 'selected-for-subtasks': isContainerFocused$ | async }"
 >
-  {{ taskContainer.getFullDescription() }}
+  {{ container.getFullDescription() }}
 </h3>
 
-<div
-  *ngIf="tasks && tasks.length > 0"
->
+<div *ngIf="tasks && tasks.length > 0">
     <div id="subtasks-actions">
       <h2 id="subtasks-title">Tasks</h2>
-      <button mat-mini-fab color="primary" id="add-task-button" (click)="addSubtask.emit()">
+
+      <!-- Иконка плюса -->
+      <button
+        id="add-task-button"
+        mat-mini-fab
+        color="primary"
+        (click)="addSubtask()"
+      >
         <mat-icon class="tasks-icon">add</mat-icon>
       </button>
 
-      <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()" (click)="onFinishTasksClick()">
+      <!-- Завершить выделенные задачи -->
+      <button
+        mat-mini-fab color="primary"
+        class="finish-tasks-button"
+        *ngIf="this.selection.hasValue() && this.selection.selected.length < this.tasks.length"
+        [disabled]="!this.selection.hasValue()"
+        (click)="onFinishTasksClick()"
+      >
         <mat-icon class="tasks-icon">done</mat-icon>
       </button>
 
-      <button mat-mini-fab color="primary" [disabled]="this.tasks?.length === 0"
-              id="done-all-tasks-button" (click)="onFinishAllTasksClick()">
+      <!-- Завершить все задачи -->
+      <button
+        mat-mini-fab
+        class="finish-tasks-button"
+        *ngIf="!this.selection.hasValue() || this.selection.selected.length === this.tasks.length"
+        color="primary"
+        [disabled]="this.tasks?.length === 0"
+         (click)="onFinishAllTasksClick()"
+      >
         <mat-icon class="tasks-icon">done_outline</mat-icon>
       </button>
 
@@ -40,16 +59,21 @@
   >
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? onMainCheckboxClick() : null"
-                      [checked]="selection.hasValue() && isAllSelected()"
-                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+        <mat-checkbox
+          (change)="$event ? onMainCheckboxClick() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+        >
         </mat-checkbox>
       </th>
 
-      <td mat-cell *matCellDef="let row; let i = index" [ngClass]="{'highlight': selection.selected.includes(row)}">
-        <mat-checkbox (click)="$event.stopPropagation()"
-                      (change)="$event ? selection.toggle(row) : null"
-                      [checked]="selection.isSelected(row)">
+      <td mat-cell
+          *matCellDef="let row; let i = index" [ngClass]="{'highlight': selection.selected.includes(row._id)}">
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          (change)="$event ? selection.toggle(row._id) : null"
+          [checked]="selection.isSelected(row._id)"
+        >
         </mat-checkbox>
       </td>
     </ng-container>
@@ -57,8 +81,12 @@
     <!-- Position Column -->
     <ng-container matColumnDef="position">
       <th mat-header-cell *matHeaderCellDef> No.</th>
-      <td mat-cell class="row-link" [ngClass]="{'highlight': selection.selected.includes(subtask)}"
-          (click)="onSubtaskClick(subtask)" *matCellDef="let subtask; let i = index">
+      <td mat-cell
+          class="row-link"
+          [ngClass]="{'highlight': selection.selected.includes(subtask._id)}"
+          (click)="onSubtaskClick(subtask)"
+          *matCellDef="let subtask; let i = index"
+      >
         <span>{{ i + 1 }}</span>
       </td>
     </ng-container>
@@ -66,34 +94,45 @@
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef> Description</th>
       <td mat-cell *matCellDef="let subtask;" (click)="onSubtaskClick(subtask)"
-          [ngClass]="{'highlight': selection.selected.includes(subtask)}"
+          [ngClass]="{'highlight': selection.selected.includes(subtask._id)}"
       >
         <span class="row-link" (click)="onSubtaskClick(subtask)">{{ subtask.description }}</span>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions</th>
-      <td mat-cell *matCellDef="let subtask; let i=index" id="row-{{i}}" class="row-link"
-          [ngClass]="{'highlight': selection.selected.includes(subtask)}">
+      <th
+        mat-header-cell
+        *matHeaderCellDef>
+        Actions
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let subtask; let i=index"
+        id="row-{{i}}"
+        class="row-link"
+        [ngClass]="{'highlight': selection.selected.includes(subtask._id)}"
+      >
         <div style="display: flex; flex-flow: row nowrap">
-          <mat-icon (click)="onTaskDoneClick.emit(subtask)">done</mat-icon>
+          <mat-icon (click)="finishSubtask(subtask)">done</mat-icon>
         </div>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="showSubtasks">
       <th mat-header-cell *matHeaderCellDef>Subtasks</th>
-      <td mat-cell *matCellDef="let subtask; let i=index" id="row-{{i}}" class="row-link"
-          [ngClass]="{'highlight': selection.selected.includes(subtask)}">
+      <td
+        mat-cell
+        *matCellDef="let subtask; let i=index"
+        id="row-{{i}}"
+        class="row-link"
+        [ngClass]="{'highlight': selection.selected.includes(subtask._id)}"
+      >
         <mat-checkbox
           [checked]="checkedElement(subtask)"
           (change)="setShowSubtasksField($event, subtask, i)"
         >
         </mat-checkbox>
-        <!--          (click)="$event.stopPropagation()"-->
-
-        <!--          [checked]="showSubtasksMap[subtask._id]"-->
       </td>
     </ng-container>
 
@@ -106,15 +145,14 @@
     id="subtasks-of-selected-tasks"
     style="margin-left: 1rem;"
   >
-        <ng-container *ngFor="let item of tasksWithSubtasksToShow">
+        <ng-container *ngFor="let item of Object.keys(tasksByIdMap)">
           <app-tasks-list
+            [container]="tasksByIdMap[+item].container"
+            [tasks]="tasksByIdMap[+item].tasks"
             (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
             [showTitle]="true"
             [level]="level + 1"
-            (addSubtask)="addTaskOfSelectedSubtask(item)"
-            (onTaskDoneClick)="onTaskOfSelectedSubtaskDoneClick($event, item)"
-            [taskContainer]="item"
-            [tasksIds]="item.tasks">
+          >
           </app-tasks-list>
         </ng-container>
 

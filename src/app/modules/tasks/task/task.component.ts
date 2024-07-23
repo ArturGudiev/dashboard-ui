@@ -5,6 +5,7 @@ import {TaskC} from '../../../models/task-class';
 import {getUrlByDescription} from '../../../shared/libs/dashboard.lib';
 import {Title} from "@angular/platform-browser";
 import {Observable, Subscription} from "rxjs";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: 'app-task',
@@ -17,9 +18,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   parentsPath: string[];
   isLoading = true;
 
-  @ViewChild('scrollMe') private myScrollContainer: ElementRef;
   private routerSubscription: Subscription;
-
   constructor(private route: ActivatedRoute,
               private router: Router,
               private titleService: Title,
@@ -28,13 +27,13 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routerSubscription = this.route.params.subscribe(params => {
-      this.isLoading = true;
       this.id = params['id'];
       this.refreshTask();
     });
   }
 
   refreshTask(): void {
+    this.isLoading = true;
     this.tasksService.getTask(this.id).subscribe(task => {
       this.task = task;
       this.titleService.setTitle(this.task.getFullDescription());
@@ -51,7 +50,9 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.tasksService.getTask(this.id).subscribe(task => this.task.tasks = task.tasks)
   }
 
-  refreshFunction: () => Observable<TaskC> = () => this.tasksService.getTask(this.id)
+  refreshSubtasks$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.tasks));
+
+
 
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
@@ -72,13 +73,6 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (urls) {
       this.router.navigate(urls).then();
     }
-  }
-
-  onGoToNearestParent() {
-    if (this.parentsPath && this.parentsPath.length <= 1) {
-      return;
-    }
-    this.goToParentHandler(this.parentsPath.slice(-2, -1)[0]);
   }
 
   updateTask() {

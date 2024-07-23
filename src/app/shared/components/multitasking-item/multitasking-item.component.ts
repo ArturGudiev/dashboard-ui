@@ -16,12 +16,12 @@ export class MultitaskingItemComponent implements OnInit, OnChanges {
   constructor(
     private tasksService: TasksService
   ) { }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.taskContainer) {
       this.refreshSubtasks();
     }
-    
+
   }
 
   ngOnInit(): void {
@@ -40,7 +40,7 @@ export class MultitaskingItemComponent implements OnInit, OnChanges {
   }
 
   addSubtask() {
-    this.tasksService.openAddTaskDialog(this.taskContainer)
+    this.tasksService.openAddTaskDialog()
       .subscribe((responseObj: any) => {
         this.tasksService.addTaskDialogOpened = false;
         if (!responseObj) {
@@ -60,5 +60,5 @@ export class MultitaskingItemComponent implements OnInit, OnChanges {
         }
       });
   }
-    
+
 }

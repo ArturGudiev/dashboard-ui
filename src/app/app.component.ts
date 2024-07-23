@@ -38,8 +38,6 @@ export class AppComponent implements OnInit, OnDestroy {
           this.alertService.setAlertClosed();
         }
       });
-
-    this.apiService._getAlias('amdocse').subscribe( val => console.log(val))
   }
 
   ngOnDestroy(): void {

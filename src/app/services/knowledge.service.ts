@@ -3,7 +3,6 @@ import {Observable} from "rxjs";
 import {ApiService} from "./api.service";
 import {Action} from "../models/action";
 import {Knowledge} from "../models/knowledge";
-import {KnowledgeNode} from "../models/knowledge-node";
 import {TaskContainerDescription} from "../interfaces/types";
 
 @Injectable({
@@ -57,24 +56,5 @@ export class KnowledgeService {
   }
 
   //----------knowledge bits stop -----------------
-  //----------knowledge tree start -----------------
-  getKnowledgeNode(id: number): Observable<KnowledgeNode> {
-    return this.apiService._getKnowledgeNode(id);
-  }
-  getKnowledgeNodeParentsPath(node: KnowledgeNode) {
-    return this.apiService._getKnowledgeNodeParentsPath(node);
-  }
 
-  getKnowledgeNodeChildren(id: any) {
-    return this.apiService._getKnowledgeNodeChildren(id);
-  }
-
-  createNewChildKnowledgeNode(obj: { name: string; id: number }): Observable<any> {
-    return this.apiService._createNewKnowledgeNode(obj);
-  }
-  deleteKnowledgeNode(node: KnowledgeNode): Observable<any> {
-    return this.apiService._deleteKnowledgeNode(node);
-
-  }
-  //----------knowledge tree start -----------------
 }

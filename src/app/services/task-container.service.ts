@@ -13,7 +13,7 @@ import { QuestionsService } from './questions.service';
 })
 export class TaskContainerService {
 
-  refreshSubtasks$ = new Subject<void>();
+  refreshSubtasks$ = new Subject<TaskContainer>();
 
   constructor(
     private apiService: ApiService,

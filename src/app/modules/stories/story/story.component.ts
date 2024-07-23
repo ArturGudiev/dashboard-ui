@@ -6,6 +6,8 @@ import {StoriesService} from "../../../services/stories.service";
 import {getUrlByDescription} from "../../../shared/libs/dashboard.lib";
 import {Title} from "@angular/platform-browser";
 import {Subscription} from "rxjs";
+import { TaskC } from "../../../models/task-class";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: 'app-story',
@@ -13,12 +15,13 @@ import {Subscription} from "rxjs";
   styleUrls: ['./story.component.sass']
 })
 export class StoryComponent implements OnInit, OnDestroy {
+  id: number;
   story: Story;
   parentsPath: string[];
   isLoading = true;
 
   routerSubscription: Subscription;
-  private id: number;
+  refreshSubtasks$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.tasks));
 
   constructor(
     private route: ActivatedRoute,
@@ -49,22 +52,19 @@ export class StoryComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     })
   }
+
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
   }
 
-  onGoToNearestParent() {
-    if (this.parentsPath && this.parentsPath.length <= 1) {
-      return;
-    }
-    this.goToParentHandler(this.parentsPath.slice(-2, -1)[0]);
+  updateStory() {
+    // this.storiesService.updateStory(this.task).subscribe((task: TaskC) => this.task = task);
   }
 
-  goToParentHandler(description: string) {
-    const urls = getUrlByDescription(description);
-    if (urls) {
-      this.router.navigate(urls).then();
-    }
+  refreshSubtasks() {
+    this.storiesService
+      .getStory(this.id)
+      .subscribe(story => this.story.tasks = story.tasks)
   }
 
 }

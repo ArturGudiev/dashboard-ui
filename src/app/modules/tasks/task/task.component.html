@@ -6,8 +6,9 @@
     (onDoneAllClick)="onDoneAllClick()"
     (updateTaskContainer)="updateTask()"
     (refreshTaskContainer)="refreshTask()"
-    (refreshTaskContainerTasks)="refreshSubtasks()"
+    (refreshTaskContainerTasksList)="refreshSubtasks()"
+    [refreshTasks$]="refreshSubtasks$"
     (resolve)="onDoneAllClick()"
-
-  ></app-task-container>
+  >
+  </app-task-container>
 </ng-container>
