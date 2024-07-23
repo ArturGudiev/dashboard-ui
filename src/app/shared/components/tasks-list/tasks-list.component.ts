@@ -24,7 +24,7 @@ import { Store } from "@ngxs/store";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { AppState } from "../../../state/app.state";
-import { distinctUntilChanged, map } from "rxjs/operators";
+import { distinctUntilChanged, map, tap } from "rxjs/operators";
 import { replaceInArrayIfFind, taskContainerDescriptionsAreEqual } from "../../libs/utils.lib";
 import { TaskContainerService } from "../../../services/task-container.service";
 
@@ -73,11 +73,13 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
   tasksOfSelectedSubtask: TaskC[] = [];
   commandsSubscription: Subscription;
 
+  isContainerFocused: boolean = false;
   isContainerFocused$: Observable<boolean> = this.store.select(AppState.getFocusedTaskForSubtasks).pipe(
-    map((el: TaskContainer | null) => this.showTitle && el && this.container.getFullDescription() === el.getFullDescription() )
+    map((el: TaskContainer | null) => this.showTitle && el && this.container.getFullDescription() === el.getFullDescription()),
+    tap(el => this.isContainerFocused = el)
   )
 
-  tasksByIdMap: { [key: number]: {tasks: TaskC[], container: TaskContainer}; } = {};
+  tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
 
 
   constructor(
@@ -88,7 +90,8 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
     public cdr: ChangeDetectorRef,
     private router: Router,
     private store: Store,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.commandsSubscription = this.commandsService.getDataStateChange().subscribe(state => {
@@ -116,8 +119,6 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
       this.showSelectedSubtask = false;
     }
   }
-
-
 
 
   private makeChangesAfterTasksChanged() {
@@ -155,7 +156,10 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
       }
     }
     if (['task'].includes(arr[0]) && this.level === 0) {
-    this.addTask();
+      this.addTask();
+    }
+    if (['new-task'].includes(arr[0]) && this.isContainerFocused) {
+      this.addTask();
     }
   }
 
@@ -212,7 +216,7 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
     })
   }
 
-  onTaskOfSelectedSubtaskDoneClick(task: TaskC, parentTaskId: string){
+  onTaskOfSelectedSubtaskDoneClick(task: TaskC, parentTaskId: string) {
     this.tasksService.finishTask(task).subscribe(() => {
       this.tasksService.getTask(+parentTaskId).subscribe(res => {
         this.tasksService.getTasks(res.tasks).subscribe(tasks => {
@@ -239,7 +243,14 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  setShowSubtasksField($event: MatCheckboxChange, subtask: TaskC, i: number) {
+  /**
+   * Обработка события нажатия на show subtasks checkbox. Если события добавляет галочку, то
+   * берутся подзадачи выбранной задачи, добавляются запись по id {container, tasks} в tasksByIdMap.
+   * Если мы сейчас находимся на нулевом уровне, и это первая выделеннвя подзадача, то она сразу фокусируется.
+   *
+   * Если же событие снимает галку, то запись соответствующая удаляется из tasksByIdMap.
+   */
+  setShowSubtasksField($event: MatCheckboxChange, subtask: TaskC) {
     if ($event.checked) {
       this.tasksService.getTasks(subtask.tasks).subscribe(res => {
         this.tasksByIdMap[subtask._id] = {container: subtask, tasks: res};
@@ -248,7 +259,6 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
         }
       })
       ;
-      // if ( this.level === 0 && Object.keys(this.tasksWithSubtasksToShow.length === 1 ) {
     } else {
       delete this.tasksByIdMap[subtask._id];
     }
@@ -269,7 +279,7 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   getTasksObs(id: number): Observable<TaskC[]> {
-    const item =  this.tasks.find(e => e._id === id);
+    const item = this.tasks.find(e => e._id === id);
     if (item) {
       return this.tasksService.getTasks(item.tasks);
     }

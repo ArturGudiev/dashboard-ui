@@ -144,10 +144,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.tasks.length) {
       this.router.navigate(['task', this.tasks[+arr[0] - 1]]).then();
     }
-    if (['new-task'].includes(arr[0])) {
-      // console.log('HERE new task');
-      this.addSubtaskHandler();
-    }
     if (['f', 'ft', 'finish-task'].includes(arr[0])) {
       this.finishTaskHandler(args);
     }

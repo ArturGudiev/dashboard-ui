@@ -119,6 +119,8 @@
       </td>
     </ng-container>
 
+
+    <!-- Subtasks checkbox -->
     <ng-container matColumnDef="showSubtasks">
       <th mat-header-cell *matHeaderCellDef>Subtasks</th>
       <td
@@ -130,7 +132,7 @@
       >
         <mat-checkbox
           [checked]="checkedElement(subtask)"
-          (change)="setShowSubtasksField($event, subtask, i)"
+          (change)="setShowSubtasksField($event, subtask)"
         >
         </mat-checkbox>
       </td>
