@@ -44,7 +44,7 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output() refreshTasks = new EventEmitter();
 
-  addSubtask() {
+  addTask() {
     this.tasksService.openAddTaskDialog()
       .subscribe((responseObj: any) => {
         this.tasksService.addTaskDialogOpened = false;
@@ -153,6 +153,9 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
     if (['deselect-subtask'].includes(arr[0])) {
       if (this.level === 0) {
       }
+    }
+    if (['task'].includes(arr[0]) && this.level === 0) {
+    this.addTask();
     }
   }
 

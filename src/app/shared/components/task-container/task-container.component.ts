@@ -169,9 +169,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     if (['notes'].includes(arr[0])) {
       this.callEditNotesEvent();
     }
-    if (['task'].includes(arr[0])) {
-      this.addSubtask();
-    }
     if (['records'].includes(arr[0])) {
       this.showRecords();
     }
@@ -297,32 +294,6 @@ export class TaskContainerComponent implements OnInit, OnDestroy, OnChanges {
     const epics$ = this.epicsService.getEpics(this.taskContainer.epics);
     epics$.subscribe(epics => this.epics = epics);
     return epics$;
-  }
-
-  addSubtask() {
-    this.tasksService.openAddTaskDialog()
-      .subscribe((responseObj: any) => {
-        this.tasksService.addTaskDialogOpened = false;
-        if (!responseObj) {
-          return;
-        }
-        const description = responseObj.description;
-        if (description) {
-          const obj: any = {
-            description: description,
-            tags: [],
-            done: false,
-            notes: responseObj.notes,
-            parents: [this.taskContainer.getTaskContainerDescription()]
-          }
-          this.tasksService.createNewTask(obj)
-            .subscribe(() => this.refreshTaskContainer.emit())
-        }
-      });
-  }
-
-  onSubtaskDoneClick(subtask: TaskC) {
-    this.tasksService.finishTask(subtask).subscribe(() => this.refreshTasks());
   }
 
   refreshQuestions(): Observable<Question[]> {
