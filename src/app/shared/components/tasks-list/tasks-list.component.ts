@@ -4,7 +4,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
   SimpleChanges
@@ -13,7 +12,6 @@ import { TaskC } from "../../../models/task-class";
 import { SelectionModel } from "@angular/cdk/collections";
 import { TasksService } from "../../../services/tasks.service";
 import { Router } from "@angular/router";
-import { Observable, of, Subscription } from "rxjs";
 import { every, isNaN } from "lodash";
 import { TaskContainer } from "../../../interfaces/task-container";
 import { CommandsService } from "../../../services/commands.service";
@@ -24,8 +22,8 @@ import { Store } from "@ngxs/store";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { AppState } from "../../../state/app.state";
-import { distinctUntilChanged, map, tap } from "rxjs/operators";
-import { replaceInArrayIfFind, taskContainerDescriptionsAreEqual } from "../../libs/utils.lib";
+import { distinctUntilChanged, map } from "rxjs/operators";
+import { taskContainerDescriptionsAreEqual } from "../../libs/utils.lib";
 import { TaskContainerService } from "../../../services/task-container.service";
 
 @UntilDestroy()
@@ -34,9 +32,7 @@ import { TaskContainerService } from "../../../services/task-container.service";
   templateUrl: './tasks-list.component.html',
   styleUrls: ['./tasks-list.component.sass']
 })
-export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
-
-
+export class TasksListComponent implements OnInit, OnChanges {
   @Input() container: TaskContainer;
   @Input() showTitle = false;
   @Input() tasks: TaskC[] = [];
@@ -44,8 +40,69 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output() refreshTasks = new EventEmitter();
 
+  selection = new SelectionModel<number>(true, []);
+  displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
+
+  isContainerFocused: boolean = false;
+  tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
+
+  get tasksByIdMapKeys(): number[] {
+    return Object.keys(this.tasksByIdMap).map(e => Number(e));
+  }
+
+  get showFinishAllTasksIcon(): boolean {
+    return !this.selection.hasValue() || this.selection.selected.length === this.tasks.length
+  }
+
+  get showFinishSelectedTasksIcon(): boolean {
+    return this.selection.hasValue() && this.selection.selected.length < this.tasks.length
+  }
+
+  constructor(
+    public tasksService: TasksService,
+    private taskContainerService: TaskContainerService,
+    private commandsService: CommandsService,
+    public dialog: MatDialog,
+    public cdr: ChangeDetectorRef,
+    private router: Router,
+    private store: Store,
+  ) {
+  }
+
+  /**
+   * Инициализация компонента. Подписка на
+   * 1) команды (горячие клавиши)
+   * 2) isContainerFocused
+   * 3) подписка на subject refresh subtasks
+   */
+  ngOnInit(): void {
+    this.commandsService.getDataStateChange()
+      .pipe(untilDestroyed(this))
+      .subscribe(state => {
+        this.handleTaskCommand(state.command);
+      })
+
+    this.store.select(AppState.getFocusedTaskForSubtasks).pipe(
+      untilDestroyed(this),
+      map((el: TaskContainer | null) => this.showTitle && el && this.container.getFullDescription() === el.getFullDescription(),
+      distinctUntilChanged()
+      )).subscribe((el) => {
+        this.isContainerFocused = el;
+        this.cdr.detectChanges();
+      });
+
+    this.taskContainerService.refreshSubtasks$.pipe(untilDestroyed(this)).subscribe(v => {
+      if (taskContainerDescriptionsAreEqual(v.getTaskContainerDescription(), this.container.getTaskContainerDescription())) {
+        this.refreshTasks.emit();
+      }
+    })
+
+  }
+
+  /**
+   * Добавление новой задачи для данного контейнера
+   */
   addTask() {
-    console.log('tasks-list.component.ts -- addTask', this.container.getFullDescription(), this.isContainerFocused);
     this.tasksService.openAddTaskDialog()
       .subscribe((responseObj: any) => {
         this.tasksService.addTaskDialogOpened = false;
@@ -68,62 +125,14 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
       })
   }
 
-  selection = new SelectionModel<number>(true, []); // TODO make a separate table component
-  displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
-  showSelectedSubtask = false;
-
-  tasksOfSelectedSubtask: TaskC[] = [];
-  commandsSubscription: Subscription;
-
-  isContainerFocused: boolean = false;
-  isContainerFocused$: Observable<boolean> = this.store.select(AppState.getFocusedTaskForSubtasks).pipe(
-    map((el: TaskContainer | null) => this.showTitle && el && this.container.getFullDescription() === el.getFullDescription()),
-    tap(el => this.isContainerFocused = el)
-  )
-
-  tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
-
-
-  constructor(
-    public tasksService: TasksService,
-    private taskContainerService: TaskContainerService,
-    private commandsService: CommandsService,
-    public dialog: MatDialog,
-    public cdr: ChangeDetectorRef,
-    private router: Router,
-    private store: Store,
-  ) {
-  }
-
-  ngOnInit(): void {
-    this.commandsSubscription = this.commandsService.getDataStateChange()
-      .pipe(untilDestroyed(this))
-      .subscribe(state => {
-      this.handleTaskCommand(state.command);
-    })
-
-    this.isContainerFocused$.pipe(
-      untilDestroyed(this),
-      distinctUntilChanged()
-    ).subscribe(() => this.cdr.detectChanges());
-
-    this.taskContainerService.refreshSubtasks$.pipe(untilDestroyed(this)).subscribe(v => {
-      if (taskContainerDescriptionsAreEqual(v.getTaskContainerDescription(), this.container.getTaskContainerDescription())) {
-        this.refreshTasks.emit();
-      }
-    })
-
-  }
-
+  /**
+   * При изменении задач tasks, вызываются изменения зависимых объектов (вылеоение,  idsMap)
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.tasks) {
       this.makeChangesAfterTasksChanged();
     }
-    if (changes.taskContainer) {
-      this.showSelectedSubtask = false;
-    }
   }
-
 
   private makeChangesAfterTasksChanged() {
     // выделение
@@ -192,7 +201,6 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
 
   private clearSelection() {
     this.selection.clear();
-    this.showSelectedSubtask = false;
   }
 
   isAllSelected() {
@@ -232,19 +240,19 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
     this.router.navigate(['task', task._id]).then();
   }
 
-  refreshTasksOfSelectedSubtask(id: string) {
-    console.log('tasks-list.component.ts -- refreshTasksOfSelectedSubtask');
-    this.tasksService.getTask(+id).pipe(untilDestroyed(this)).subscribe(task => {
-      console.log('tasks-list.component.ts -- ', task);
+  /**
+   * Метод по заданному id
+   *  1) подгружает задачу с бэкенда
+   *  2) по списку id задачи подгружает список подзадач
+   *  3) в tasksByIdMap добавляет запись {container: uploadedTask, tasks}
+   * @param id
+   */
+  refreshTasksOfSelectedSubtask(id: number) {
+    this.tasksService.getTask(id).pipe(untilDestroyed(this)).subscribe(task => {
       this.tasksService.getTasks(task.tasks).pipe(untilDestroyed(this)).subscribe(tasks => {
-        console.log('tasks-list.component.ts -- ', tasks);
-        this.tasksByIdMap[+id] = {tasks, container: task};
+        this.tasksByIdMap[id] = {tasks, container: task};
       })
     })
-  }
-
-  ngOnDestroy(): void {
-    this.tasksOfSelectedSubtask = [];
   }
 
   private handleSelectSubtaskAction() {
@@ -254,7 +262,6 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
         const index = +value;
         if (index > 0 && index <= this.tasks.length) {
           this.selection = new SelectionModel<number>(true, [this.tasks[index - 1]._id]);
-          this.showSelectedSubtask = true;
         }
       }
     });
@@ -281,27 +288,15 @@ export class TasksListComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  focusSubtask($event: MouseEvent) {
+  focusSubtask() {
     this.store.dispatch(new SetFocusedTaskForSubtasks(this.container));
   }
 
   checkedElement(subtask: TaskC): boolean {
-    // return !!this.tasksWithSubtasksToShow.find(el => el === subtask._id);
     return Object.keys(this.tasksByIdMap).includes(String(subtask._id));
   }
 
   finishSubtask(subtask: TaskC) {
     this.tasksService.finishTask(subtask).pipe(untilDestroyed(this)).subscribe(() => this.refreshTasks.emit())
-    // this.onTaskDoneClick.emit(subtask)
   }
-
-  getTasksObs(id: number): Observable<TaskC[]> {
-    const item = this.tasks.find(e => e._id === id);
-    if (item) {
-      return this.tasksService.getTasks(item.tasks);
-    }
-    return of([]);
-  }
-
-  Object = Object;
 }
