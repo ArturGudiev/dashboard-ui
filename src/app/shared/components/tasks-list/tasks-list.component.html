@@ -68,8 +68,8 @@
       >
         <mat-checkbox
           (change)="$event ? onMainCheckboxClick() : null"
-          [checked]="selection.hasValue() && isAllSelected()"
-          [indeterminate]="selection.hasValue() && !isAllSelected()"
+          [checked]="selection.hasValue() && areAllSelected()"
+          [indeterminate]="selection.hasValue() && !areAllSelected()"
         >
         </mat-checkbox>
       </th>

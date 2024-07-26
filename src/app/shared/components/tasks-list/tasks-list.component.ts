@@ -152,6 +152,10 @@ export class TasksListComponent implements OnInit, OnChanges {
 
   }
 
+  /**
+   * При изменении this.tasks изменяется выделение
+   * @private
+   */
   private makeSelectionChangesAfterTasksChanged() {
     if (this.tasks === undefined) {
       return;
@@ -175,6 +179,11 @@ export class TasksListComponent implements OnInit, OnChanges {
 
   }
 
+  /**
+   * Обработка горячих клавиш
+   * @param command
+   * @private
+   */
   private handleTaskCommand(command: string) {
     const arr = command.split(' ');
     if (['select-subtask'].includes(arr[0])) {
@@ -199,24 +208,36 @@ export class TasksListComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Очистить выделение
+   */
   private clearSelection() {
     this.selection.clear();
   }
 
-  isAllSelected() {
+  /**
+   * Проверка, выделены ли все элементы в таблице (на этой странице)
+   */
+  areAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.tasks.length;
     return numSelected === numRows;
   }
 
+  /**
+   * Обработчик клика на главный чекбокс
+   */
   onMainCheckboxClick() {
-    if (this.isAllSelected()) {
+    if (this.areAllSelected()) {
       this.clearSelection();
       return;
     }
     this.selection.select(...this.tasks.map(e => e._id));
   }
 
+  /**
+   * Обработчик клика на завершение задачи
+   */
   onFinishTasksClick() {
     this.tasksService.finishTasksByIds(this.selection.selected).pipe(untilDestroyed(this)).subscribe(
       {
@@ -228,6 +249,9 @@ export class TasksListComponent implements OnInit, OnChanges {
     );
   }
 
+  /**
+   * Обработчик щакрытия всех задач
+   */
   onFinishAllTasksClick() {
     this.clearSelection();
     const subtasks = this.tasks;
@@ -235,6 +259,9 @@ export class TasksListComponent implements OnInit, OnChanges {
       () => this.refreshTasks.emit());
   }
 
+  /**
+   * обработчик клика на подзадачу
+   */
   onSubtaskClick(task: TaskC) {
     this.clearSelection();
     this.router.navigate(['task', task._id]).then();
@@ -255,13 +282,25 @@ export class TasksListComponent implements OnInit, OnChanges {
     })
   }
 
+  /**
+   * Обработчик команды select-subtask
+   * @private
+   */
   private handleSelectSubtaskAction() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Select subtask'}});
     dialogRef.afterClosed().pipe(untilDestroyed(this)).subscribe((value: string) => {
       if (value && !isNaN(+value)) {
         const index = +value;
         if (index > 0 && index <= this.tasks.length) {
-          this.selection = new SelectionModel<number>(true, [this.tasks[index - 1]._id]);
+          const task = this.tasks[index - 1];
+          if ( this.tasksByIdMap[task._id] !== undefined ) {
+            delete this.tasksByIdMap[task._id];
+            return;
+          }
+          this.tasksService.getTasks(task.tasks).subscribe(tasks => {
+            this.tasksByIdMap[task._id] = {tasks, container: task};
+            this.store.dispatch(new SetFocusedTaskForSubtasks(task));
+          });
         }
       }
     });
@@ -288,14 +327,25 @@ export class TasksListComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Фокусирование задачи
+   */
   focusSubtask() {
     this.store.dispatch(new SetFocusedTaskForSubtasks(this.container));
   }
 
+  /**
+   * Выделен ли элемент для отображение подзадач
+   * @param subtask
+   */
   checkedElement(subtask: TaskC): boolean {
     return Object.keys(this.tasksByIdMap).includes(String(subtask._id));
   }
 
+  /**
+   * Завершить подзадачу
+   * @param subtask
+   */
   finishSubtask(subtask: TaskC) {
     this.tasksService.finishTask(subtask).pipe(untilDestroyed(this)).subscribe(() => this.refreshTasks.emit())
   }
