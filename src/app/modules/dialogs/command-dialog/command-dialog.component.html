@@ -1,0 +1,15 @@
+<form autocomplete="on"
+      [formGroup]="myForm"
+      (ngSubmit)="onSubmit()"
+>
+  <mat-form-field appearance="fill" id="nav-input-field">
+    <mat-label>Command</mat-label>
+    <input id="description-input"  matInput formControlName="command">
+  </mat-form-field>
+
+  <div mat-dialog-actions>
+    <button mat-button type="button" (click)="onNoClick()">No Thanks</button>
+    <button mat-button type="submit" [disabled]="!myForm.valid">Ok</button>
+  </div>
+
+</form>

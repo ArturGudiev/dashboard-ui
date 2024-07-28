@@ -1,0 +1,12 @@
+
+<div style="display: flex; align-items: baseline; margin-bottom: 1rem">
+    <div>{{taskContainer.getFullDescription()}}</div>
+    <button
+        mat-icon-button
+        (click)="remoteItem.emit()"
+
+    >
+        <mat-icon>clear</mat-icon>
+    </button>
+</div>
+<ng-container *ngIf="this.subtasks.length > 0"></ng-container>

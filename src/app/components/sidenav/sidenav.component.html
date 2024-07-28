@@ -1,0 +1,38 @@
+<mat-sidenav-container class="app-sidenav-container"
+                       [class.dark-theme]="isDarkTheme" [dir]="dir"
+>
+  <mat-sidenav #sidenav class="app-sidenav mat-elevation-z10"
+    [mode]="'over'"
+  >
+
+    <mat-toolbar color="primary">Menu</mat-toolbar>
+    <mat-nav-list>
+      <mat-list-item>
+        <a matLine>Epics</a>
+      </mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Stories</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Scheduled tasks</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Tasks</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Questions</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Problems</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Logs</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Definitions</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Actions</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Knowledge Bits</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Knowledge Tree</a></mat-list-item>
+      <mat-list-item><a matLine (click)="sidenav.opened = false">Learning</a></mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!--                   (toggleTheme)="toggleTheme()"-->
+  <!--                   (toggleDir)="toggleDir()"-->
+  <div class="app-sidenav-content">
+    <app-toolbar (toggleSidenav)="sidenav.toggle()"
+
+    ></app-toolbar>
+    <div class="wrapper">
+      <router-outlet></router-outlet>
+      <br>
+    </div>
+  </div>
+</mat-sidenav-container>

@@ -1,0 +1,8 @@
+<div id="parents-path-container">
+  <div class="parent-node" *ngFor="let node of parentsPath; let i = index"
+       [ngStyle]="{'padding-left': (parentsPath.indexOf(node)) * .5 + 'rem'}">
+    <h4 class="parent-title"><span class="parent-title-label" hover-class="hover-border"
+                                   (click)="onParentClick.emit(node)">{{node}}</span>
+    </h4>
+  </div>
+</div>
