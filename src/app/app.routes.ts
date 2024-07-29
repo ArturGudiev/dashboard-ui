@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { MainPageComponent } from "./components/main-page/main-page.component";
+import { TaskComponent } from "./components/tasks/task/task.component";
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},
@@ -8,5 +9,8 @@ export const routes: Routes = [
   // {path: 'question', loadChildren: () => import('./modules/questions/questions.module').then(m => m.QuestionsModule)},
   // {path: 'questions', loadChildren: () => import('./modules/questions/questions.module').then(m => m.QuestionsModule)},
   // {path: 'story', loadChildren: () => import('./modules/stories/stories.module').then(m => m.StoriesModule)},
-  // {path: 'task', loadChildren: () => import('./modules/tasks/tasks.module').then(m => m.TasksModule)},
+  { path: 'task/:id', component: TaskComponent},
+
+  // {path: 'memory-node/:id', component: MemoryNodeComponent, resolve: {memoryNode: memoryNodeResolverResolver}, canActivate: [authGuard]},
+  // {path: 'card-inspector/:id', component: CardInspectorComponent, resolve: {card: cardResolver}, canActivate: [authGuard]},
 ];

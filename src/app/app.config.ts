@@ -6,12 +6,17 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { NgxsModule } from "@ngxs/store";
 import { AppState } from "./state/app.state";
 import { ToastrModule } from "ngx-toastr";
+import { provideHttpClient } from "@angular/common/http";
+import { HotkeyModule } from "angular2-hotkeys";
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideAnimationsAsync(),
+  providers: [
+    provideRouter(routes), provideAnimationsAsync(),
+    provideHttpClient(),
     importProvidersFrom(
       NgxsModule.forRoot([AppState]),
-      ToastrModule.forRoot()
+      ToastrModule.forRoot(),
+      HotkeyModule.forRoot(),
     )
   ]
 };

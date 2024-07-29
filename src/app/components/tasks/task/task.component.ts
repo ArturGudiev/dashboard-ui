@@ -7,17 +7,25 @@ import {Title} from "@angular/platform-browser";
 import { Observable, Subscription, takeUntil } from "rxjs";
 import { map } from "rxjs/operators";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { SharedModule } from "../../../shared/shared.module";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { CommonModule } from "@angular/common";
 
 @UntilDestroy()
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
   standalone: true,
+  imports: [
+    SharedModule,
+    MatProgressSpinner,
+    CommonModule,
+  ],
   styleUrls: ['./task.component.sass']
 })
 export class TaskComponent implements OnInit, OnDestroy {
   id!: number;
-  task: TaskC | null = null;
+  task!: TaskC; // TODO use resolve
   parentsPath: string[] = [];
   isLoading = true;
 
@@ -62,7 +70,7 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isLoading = true;
-    this.task = null;
+    // this.task = null;
   }
 
   onDoneAllClick() {
@@ -88,5 +96,9 @@ export class TaskComponent implements OnInit, OnDestroy {
       return;
     }
     this.tasksService.updateTask(this.task).subscribe((task: TaskC) => this.task = task);
+  }
+
+  isTask(task: TaskC | null): task is TaskC {
+    return task !== null;
   }
 }
