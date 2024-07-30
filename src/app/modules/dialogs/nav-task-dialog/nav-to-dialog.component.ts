@@ -1,8 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from "@angular/material/dialog";
 import {TaskC} from "../../../models/task-class";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatButton } from "@angular/material/button";
+import { DashboardMaterialModule } from "../../../shared/material/dashboard-material.module";
 
 @Component({
   selector: 'app-nav-to-task-dialog',
@@ -11,7 +13,10 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
   imports: [
     MatLabel,
     MatFormField,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogActions,
+    MatButton,
+    DashboardMaterialModule,
   ],
   styleUrls: ['./nav-to-dialog.component.sass']
 })

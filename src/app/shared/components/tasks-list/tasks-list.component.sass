@@ -1,3 +1,5 @@
+$first-columns-width: 3.5rem
+
 #subtasks-task-container-title
   margin-left: 3rem
   cursor: pointer
@@ -11,22 +13,28 @@
 #subtasks-table
   margin-left: 2rem
   margin-bottom: 2rem
-  max-width: 40rem
+  max-width: 30rem
 
 .row-link
   cursor: pointer
 
 .mat-column-select
-  width: 2rem
+  max-width: $first-columns-width
 
 .mat-column-position
-  padding-right: 1rem
+  max-width: $first-columns-width
+
+.mat-column-description
+  min-width: 13rem
 
 .mat-column-actions
-  padding-left: 3rem
+  max-width: 7rem
 
 .mat-column-showSubtasks
-  padding-left: 3rem
+  max-width: 7rem
+
+.mat-mdc-row
+  height: 1rem
 
 #subtasks-title
   padding-right: 1rem
@@ -58,5 +66,5 @@
 #table-wrapper
   display: flex
   align-items: flex-start
-  max-width: 40rem
+  max-width: 30rem
 

@@ -67,7 +67,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
   constructor(private questionsService: QuestionsService,
               private taskContainerService: TaskContainerService,
-              private toastr: ToastrService,
               private storiesService: StoriesService,
               private epicsService: EpicsService,
               private problemsService: ProblemsService,
@@ -311,12 +310,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     });
   }
 
-  // @HostListener('document:keydown', ['$event'])
-  // handleKeyboardEvent(event: KeyboardEvent) {
-  //   if ((event.ctrlKey) && event.key === 'o') {
-  //     this.addSubtaskHandler();
-  //   }
-  // }
 
   private addSubtaskHandler() {
     console.log('task-container.component.ts -- addSubtaskHandler');
