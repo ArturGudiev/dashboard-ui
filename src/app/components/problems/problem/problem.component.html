@@ -6,8 +6,8 @@
     (onDoneAllClick)="onDoneAllClick()"
     (updateTaskContainer)="updateProblem()"
     (refreshTaskContainer)="refreshProblem()"
-    (refreshTaskContainerTasksList)="refreshSubtasks()"
     [refreshTasks$]="refreshSubtasks$"
+    [refreshProblems$]="refreshProblemsList$"
     (resolve)="onDoneAllClick()"
   >
   </app-task-container>

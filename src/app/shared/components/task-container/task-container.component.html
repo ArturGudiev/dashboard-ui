@@ -28,7 +28,6 @@
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="addQuestion()">Add a new question</button>
-          <button mat-menu-item (click)="addProblem()">Add a new problem</button>
           <button mat-menu-item (click)="callEditNotesEvent()">Edit notes</button>
           <button mat-menu-item (click)="addRecord()">Add record</button>
           <button mat-menu-item (click)="showRecords()">Show records</button>
@@ -81,6 +80,7 @@
       </app-questions-list>
 
       <app-problems-list
+        [container]="taskContainer"
         (refreshProblems)="refreshProblems()"
         [problems]="problems"
       >

@@ -13,6 +13,7 @@ import { Store } from "@ngxs/store";
 import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { GET_VALUE_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from "../../constants";
+import { CommandsService } from "../../../services/commands.service";
 
 @UntilDestroy()
 @Component({
@@ -21,9 +22,9 @@ import { GET_VALUE_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from "../../constan
   styleUrls: ['./problems-list.component.sass']
 })
 export class ProblemsListComponent implements OnInit {
+  @Input({required: true}) container!: TaskContainer;
   @Input() problems: Problem[] = [];
   @Output() refreshProblems = new EventEmitter();
-  // @Output() onProblemSolvedClick = new EventEmitter();
   displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
 
   tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
@@ -35,9 +36,9 @@ export class ProblemsListComponent implements OnInit {
     return Object.keys(this.tasksByIdMap).map(e => Number(e));
   }
 
-
   constructor(
     private problemsService: ProblemsService,
+    private commandsService: CommandsService,
     private tasksService: TasksService,
     private store: Store,
     private router: Router,
@@ -46,7 +47,51 @@ export class ProblemsListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.commandsService.getDataStateChange()
+      .pipe(untilDestroyed(this))
+      .subscribe(state => {
+        this.handleTaskCommand(state.command);
+      })
+
   }
+
+  /**
+   * Обработка горячих клавиш
+   * @param command
+   * @private
+   */
+  private handleTaskCommand(command: string) {
+    const arr = command.split(' ');
+    if (['problem'].includes(arr[0])) {
+      this.addProblem();
+    }
+  }
+
+  addProblem(): void {
+    // this.problemsService.createProblemFromDialog(this.con)
+    //   .subscribe(() => this.refreshTaskContainer.emit());
+    this.problemsService.createProblemFromDialog(this.container)
+      .subscribe((responseObj: any) => {
+        if (!responseObj) {
+          return;
+        }
+        const description = responseObj.description;
+        if (description) {
+          const obj: any = {
+            description: description,
+            tags: [],
+            solution: '',
+            notes: responseObj.notes,
+            parents: [this.container.getTaskContainerDescription()]
+          }
+          this.tasksService.createNewTask(obj)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => this.refreshProblems.emit())
+        }
+      })
+
+  }
+
 
   onFinishProblemClick() {
     this.problemsService.finishProblem(this.selection.selected[0]).subscribe(

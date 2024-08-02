@@ -37,7 +37,7 @@ export class ProblemComponent implements OnInit {
   parentsPath$: Observable<string[]> = of([]);
 
   refreshSubtasks$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.tasks));
-
+  refreshProblemsList$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.problems));
 
   constructor(
     private route: ActivatedRoute,

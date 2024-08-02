@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Question} from "../../../models/question";
-import {SelectionModel} from "@angular/cdk/collections";
-import {Router} from "@angular/router";
-import {QuestionsService} from "../../../services/questions.service";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Question } from "../../../models/question";
+import { SelectionModel } from "@angular/cdk/collections";
+import { Router } from "@angular/router";
+import { QuestionsService } from "../../../services/questions.service";
 import { Problem } from "../../../models/problem";
 import { TaskC } from "../../../models/task-class";
 import { TaskContainer } from "../../../interfaces/task-container";
@@ -14,7 +14,6 @@ import { Store } from "@ngxs/store";
 import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
 import { GET_VALUE_DIALOG_OPTIONS } from "../../constants";
 import { MatDialog } from "@angular/material/dialog";
-import { ProblemsService } from "../../../services/problems.service";
 
 @UntilDestroy()
 @Component({

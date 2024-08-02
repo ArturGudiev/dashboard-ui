@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from "./api.service";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { Problem } from "../models/problem";
-import { filter, switchMap, tap } from "rxjs/operators";
+import { filter, map, switchMap, tap } from "rxjs/operators";
 import { DashboardService } from "./dashboard.service";
 import { GetValueDialogComponent } from "../modules/dialogs/get-value/get-value-dialog.component";
 import { TaskContainer } from "../interfaces/task-container";
@@ -14,7 +14,6 @@ export interface RefreshProblemsState {
   taskContainer: TaskContainer;
   lastSolvedProblem: Problem;
 }
-
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +27,12 @@ export class ProblemsService {
   ) {
   }
 
-  getProblems(ids: number[]): Observable<Problem[]> {
+  getAllProblems(ids: number[]): Observable<Problem[]> {
     return this.apiService._getProblems(ids);
+  }
+
+  getProblems(ids: number[]): Observable<Problem[]> {
+    return this.apiService._getProblems(ids).pipe(map(arr => arr.filter(e => Boolean(!e.solution))));
   }
 
   finishProblem(problem: Problem): Observable<any> {

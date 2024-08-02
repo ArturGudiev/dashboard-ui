@@ -64,9 +64,20 @@ export class TaskComponent implements OnInit, OnDestroy {
     })
   }
 
+  refreshProblemsList() {
+    this.tasksService.getTask(this.id).subscribe(task => {
+      if (this.task) {
+        this.task.problems = task.problems;
+      }
+    })
+
+  }
+
+
+
   refreshSubtasks$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.tasks));
-
-
+  refreshProblemsList$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.problems));
+  refreshQuestionsList$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.questions));
 
   ngOnDestroy(): void {
     this.isLoading = true;

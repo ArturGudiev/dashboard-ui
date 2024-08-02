@@ -52,9 +52,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   @Output() onDoneAllClick = new EventEmitter();
   @Output() updateTaskContainer = new EventEmitter();
   @Output() refreshTaskContainer = new EventEmitter();
-  @Output() refreshTaskContainerTasksList = new EventEmitter();
   @Output() resolve = new EventEmitter();
-
 
   tasks: TaskC[] = [];
   epics: Epic[] = [];
@@ -63,7 +61,8 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   questions: Question[] = [];
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
-  @Input() refreshTasks$!: () => Observable<number[]>;
+  @Input({required: true}) refreshTasks$!: () => Observable<number[]>;
+  @Input({required: true}) refreshProblems$!: () => Observable<number[]>;
 
   constructor(private questionsService: QuestionsService,
               private taskContainerService: TaskContainerService,
@@ -141,9 +140,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     if (['fp', 'finish-problem'].includes(arr[0])) {
       this.finishProblemHandler(args);
     }
-    if (['problem'].includes(arr[0])) {
-      this.addProblem();
-    }
     if (['question'].includes(arr[0])) {
       this.addQuestion();
     }
@@ -212,11 +208,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
       .subscribe(() => this.refreshTaskContainer.emit());
   }
 
-  addProblem(): void {
-    this.problemsService.createProblemFromDialog(this.taskContainer)
-      .subscribe(() => this.refreshTaskContainer.emit());
-  }
-
   goToParentHandler(description: string): void {
     const urls = getUrlByDescription(description);
     if (urls) {
@@ -249,11 +240,18 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   refreshTasks() {
-    // this.refreshTaskContainerTasksList.emit();
     this.refreshTasks$().subscribe(tasks => {
       this.taskContainer.tasks = tasks;
       this.tasksService.getTasks(tasks).subscribe(res => this.tasks = res);
     })
+  }
+
+  refreshProblems() {
+    this.refreshProblems$().subscribe(problems => {
+      this.taskContainer.problems = problems;
+      this.problemsService.getProblems(problems).subscribe(res => this.problems = res);
+    })
+
   }
 
   refreshSubstories():Observable<Story[]> {
@@ -279,18 +277,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     questions$
       .subscribe(questions => this.questions = questions.filter((p: Question) => !p.answer));
     return questions$;
-  }
-
-  refreshProblems(): Observable<Problem[]> {
-    const problems$ = this.problemsService.getProblems(this.taskContainer.problems);
-    problems$
-      .pipe(
-        map((problems: Problem[]) => problems.filter(p => !p.solution)),
-      )
-      .subscribe((problems: Problem[]) => {
-        this.problems = problems;
-      });
-    return problems$;
   }
 
   solveTheProblem(problem: Problem): void {

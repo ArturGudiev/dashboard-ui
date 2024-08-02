@@ -29,6 +29,7 @@ export class StoryComponent implements OnInit {
   isLoading = true;
 
   refreshSubtasks$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.tasks));
+  refreshProblemsList$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.problems));
 
   constructor(
     private route: ActivatedRoute,
