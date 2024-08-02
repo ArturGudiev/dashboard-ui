@@ -1,13 +1,14 @@
-import {Injectable} from '@angular/core';
-import {ApiService} from "./api.service";
-import {BehaviorSubject, Observable, of} from "rxjs";
-import {Problem} from "../models/problem";
-import {filter, switchMap, tap} from "rxjs/operators";
-import {DashboardService} from "./dashboard.service";
-import {GetValueDialogComponent} from "../modules/dialogs/get-value/get-value-dialog.component";
-import {TaskContainer} from "../interfaces/task-container";
-import {MatDialog} from "@angular/material/dialog";
-import {TaskContainerDescription} from "../interfaces/types";
+import { Injectable } from '@angular/core';
+import { ApiService } from "./api.service";
+import { BehaviorSubject, Observable, of } from "rxjs";
+import { Problem } from "../models/problem";
+import { filter, switchMap, tap } from "rxjs/operators";
+import { DashboardService } from "./dashboard.service";
+import { GetValueDialogComponent } from "../modules/dialogs/get-value/get-value-dialog.component";
+import { TaskContainer } from "../interfaces/task-container";
+import { MatDialog } from "@angular/material/dialog";
+import { TaskContainerDescription } from "../interfaces/types";
+import { NEW_TASK_DIALOG_OPTIONS } from "../shared/constants";
 
 export interface RefreshProblemsState {
   taskContainer: TaskContainer;
@@ -51,7 +52,11 @@ export class ProblemsService {
   }
 
   createProblemFromDialog(taskContainer: TaskContainer): Observable<Problem> {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Description'}});
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {
+        data: {title: 'Description', inputWidth: '40rem'},
+        ...NEW_TASK_DIALOG_OPTIONS
+      });
     return dialogRef.afterClosed()
       .pipe(
         filter((description: string) => !!description),
@@ -70,16 +75,10 @@ export class ProblemsService {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
-    //     const state = this.getRefreshProblemsDataCurrentState();
-    //     this.solveTheProblem(problem, solution)
-    //       .subscribe(() => this.setRefreshProblemsDataState({
-    //         ...state,
-    //         taskContainer: taskContainer,
-    //         lastSolvedProblem: problem}));
+        this.solveTheProblem(problem, solution).subscribe();
       }
-    });
-
-    }
+    })
+  }
 
   getParentsPath(problem: Problem): Observable<string[]> {
     return this.apiService._getProblemParentsPath(problem);

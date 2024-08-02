@@ -1,0 +1,12 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<ng-container *ngIf="!isLoading">
+  <app-task-container
+    [taskContainer]="question"
+    [parentsPath]="parentsPath"
+    (onDoneAllClick)="onDoneAllClick()"
+    (updateTaskContainer)="updateQuestion()"
+    (refreshTaskContainer)="refreshQuestion()"
+    (resolve)="onDoneAllClick()"
+  >
+</app-task-container>
+</ng-container>

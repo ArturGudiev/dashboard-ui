@@ -1,0 +1,13 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<ng-container *ngIf="!isLoading">
+  <app-task-container
+    [taskContainer]="story"
+    [parentsPath]="parentsPath"
+    (refreshTaskContainer)="refreshStory()"
+    (refreshTaskContainerTasksList)="refreshSubtasks()"
+    [refreshTasks$]="refreshSubtasks$"
+  >
+  </app-task-container>
+<!--  (updateTaskContainer)="updateStory()"-->
+
+</ng-container>

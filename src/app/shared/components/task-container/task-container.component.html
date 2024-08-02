@@ -74,21 +74,17 @@
       >
       </app-tasks-list>
 
-      <!--      <app-subquestions-->
-      <!--        (refreshQuestions)="refreshQuestions()"-->
-      <!--        (addQuestion)="addQuestion()"-->
-      <!--        (answerTheQuestion)="answerTheQuestion($event)"-->
-      <!--        [questions]="questions"-->
-      <!--      >-->
-      <!--      </app-subquestions>-->
+      <app-questions-list
+        (refreshQuestions)="refreshQuestions()"
+        [questions]="questions"
+      >
+      </app-questions-list>
 
-      <!--      <app-subproblems-->
-      <!--        (refreshProblems)="refreshProblems()"-->
-      <!--        (addProblem)="addProblem()"-->
-      <!--        (onProblemSolvedClick)="solveTheProblem($event)"-->
-      <!--        [problems]="problems"-->
-      <!--      >-->
-      <!--      </app-subproblems>-->
+      <app-problems-list
+        (refreshProblems)="refreshProblems()"
+        [problems]="problems"
+      >
+      </app-problems-list>
     </div>
   </div>
 </div>

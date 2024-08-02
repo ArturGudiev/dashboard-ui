@@ -3,8 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NotesComponent } from './components/notes/notes.component';
 import { ParentsPathComponent } from './components/parents-path/parents-path.component';
-import { SubproblemsComponent } from './components/subproblems/subproblems.component';
-import { SubquestionsComponent } from './components/subquestions/subquestions.component';
+import { ProblemsListComponent } from './components/problems-list/problems-list.component';
 import { SubStoriesComponent } from './components/substories/sub-stories.component';
 import { TasksListComponent } from './components/tasks-list/tasks-list.component';
 import { TaskContainerDescriptionComponent } from './components/task-container-description/task-container-description.component';
@@ -15,6 +14,7 @@ import { EpicsListComponent } from './components/epics-list/epics-list.component
 import { MultitaskingComponent } from './components/multitasking/multitasking.component';
 import { MultitaskingItemComponent } from './components/multitasking-item/multitasking-item.component';
 import { HotkeyModule } from "angular2-hotkeys";
+import { QuestionsListComponent } from "./components/questions-list/questions-list.component";
 
 
 
@@ -24,8 +24,8 @@ import { HotkeyModule } from "angular2-hotkeys";
     ParentsPathComponent,
     TaskContainerDescriptionComponent,
     SubStoriesComponent,
-    SubproblemsComponent,
-    SubquestionsComponent,
+    ProblemsListComponent,
+    QuestionsListComponent,
     NotesComponent,
     HoverClassDirective,
     TaskContainerComponent,
@@ -38,8 +38,8 @@ import { HotkeyModule } from "angular2-hotkeys";
         ParentsPathComponent,
         TaskContainerDescriptionComponent,
         SubStoriesComponent,
-        SubproblemsComponent,
-        SubquestionsComponent,
+        ProblemsListComponent,
+        QuestionsListComponent,
         NotesComponent,
         TaskContainerComponent,
         MultitaskingComponent

@@ -9,10 +9,6 @@ import { NEW_TASK_DIALOG_OPTIONS } from "../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
 import { NewTaskDialogComponent } from "../components/tasks/new-task-dialog/new-task-dialog.component";
 
-export interface RefreshTasksState {
-  taskContainer: TaskContainer;
-}
-
 @Injectable({
   providedIn: 'root'
 })

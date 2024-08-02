@@ -1,0 +1,106 @@
+<!--Иконки "Добавления вопросы" -->
+<ng-container *ngIf="questions.length > 0">
+
+  <div id="questions-actions">
+    <h2 id="questions-title" class="red-color">Questions</h2>
+
+    <!-- Иконка плюса для добавления вопросы -->
+    <button mat-mini-fab color="primary" id="add-question-button" (click)="addQuestion.emit()">
+      <mat-icon class="questions-icon">add</mat-icon>
+    </button>
+
+    <!-- Иконка завершения вопросы -->
+<!--    <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()"-->
+<!--            (click)="onFinishQuestionClick()">-->
+<!--      <mat-icon class="questions-icon">done</mat-icon>-->
+<!--    </button>-->
+  </div>
+
+  <div id="table-wrapper">
+    <table
+      id="questions-table"
+      *ngIf="questions.length > 0"
+      mat-table
+      [dataSource]="questions"
+      class="mat-elevation-z8"
+    >
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            class="red-color"
+            [disabled]="true"
+            (change)="$event ? onMainCheckboxClick() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          >
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef> No.</th>
+        <td mat-cell class="row-link red-color" (click)="onQuestionClick(question)" *matCellDef="let question; let i = index">
+          <span>{{i + 1}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description</th>
+        <td mat-cell *matCellDef="let question;" (click)="onQuestionClick(question)">
+          <span class="row-link red-color"  (click)="onQuestionClick(question)">{{question.description}}</span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions</th>
+        <td mat-cell *matCellDef="let question; let i=index" id="row-{{i}}">
+          <mat-icon (click)="onAnswerQuestionClick(question)">done</mat-icon>
+        </td>
+      </ng-container>
+
+      <!-- Чекбокс для отображенмя подзадач -->
+      <ng-container matColumnDef="showSubtasks">
+        <th mat-header-cell *matHeaderCellDef>Subtasks</th>
+        <td
+          mat-cell
+          *matCellDef="let question; let i=index"
+          id="row-{{i}}"
+          class="row-link"
+          [ngClass]="{'highlight': selection.selected.includes(question._id)}"
+        >
+          <mat-checkbox
+            [checked]="checkedElement(question)"
+            (change)="setShowSubtasksField($event, question)"
+          >
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Список списков подзадач соотетствующий выбранным (для отображения подзадач) задачам -->
+    <div id="subtasks-of-selected-tasks">
+      <ng-container *ngFor="let item of tasksByIdMapKeys">
+        <app-tasks-list
+          [container]="tasksByIdMap[item].container"
+          [tasks]="tasksByIdMap[item].tasks"
+          (refreshTasks)="refreshTasksOfSelectedQuestion(item)"
+          [showTitle]="true"
+          [level]="1"
+        >
+        </app-tasks-list>
+      </ng-container>
+    </div>
+  </div>
+
+</ng-container>
