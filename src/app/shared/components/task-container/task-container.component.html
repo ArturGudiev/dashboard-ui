@@ -74,6 +74,7 @@
       </app-tasks-list>
 
       <app-questions-list
+        [container]="taskContainer"
         (refreshQuestions)="refreshQuestions()"
         [questions]="questions"
       >

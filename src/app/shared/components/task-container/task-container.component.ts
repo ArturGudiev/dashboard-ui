@@ -48,6 +48,9 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   @Input({required: true}) parentsPath!: string[];
   @Input() showEpics = false;
   @Input() showStories = false;
+  @Input({required: true}) refreshTasks$!: () => Observable<number[]>;
+  @Input({required: true}) refreshProblems$!: () => Observable<number[]>;
+  @Input({required: true}) refreshQuestions$!: () => Observable<number[]>;
 
   @Output() onDoneAllClick = new EventEmitter();
   @Output() updateTaskContainer = new EventEmitter();
@@ -61,8 +64,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   questions: Question[] = [];
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
-  @Input({required: true}) refreshTasks$!: () => Observable<number[]>;
-  @Input({required: true}) refreshProblems$!: () => Observable<number[]>;
 
   constructor(private questionsService: QuestionsService,
               private taskContainerService: TaskContainerService,
@@ -76,7 +77,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
               public router: Router,
               private _hotkeysService: HotkeysService,
               private store: Store,
-              public knowledgeService: KnowledgeService) {
+  ) {
   }
 
   ngOnInit(): void {
@@ -140,9 +141,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     if (['fp', 'finish-problem'].includes(arr[0])) {
       this.finishProblemHandler(args);
     }
-    if (['question'].includes(arr[0])) {
-      this.addQuestion();
-    }
     if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
       this.finishAllTasks();
     }
@@ -204,7 +202,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   addQuestion(): void {
-    this.questionsService.createNewQuestionFromDialog(this.taskContainer)
+    this.questionsService.createQuestionFromDialog(this.taskContainer)
       .subscribe(() => this.refreshTaskContainer.emit());
   }
 
@@ -254,6 +252,14 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
   }
 
+  refreshQuestions() {
+    this.refreshQuestions$().subscribe(questions => {
+      this.taskContainer.questions = questions;
+      this.questionsService.getQuestions(questions).subscribe(res => this.questions = res);
+    })
+
+  }
+
   refreshSubstories():Observable<Story[]> {
     if (this.taskContainer.stories) {
       const stories$ = this.storiesService.getStories(this.taskContainer.stories);
@@ -270,13 +276,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     const epics$ = this.epicsService.getEpics(this.taskContainer.epics);
     epics$.subscribe((epics: Epic[]) => this.epics = epics);
     return epics$;
-  }
-
-  refreshQuestions(): Observable<Question[]> {
-    const questions$ = this.questionsService.getQuestions(this.taskContainer.questions);
-    questions$
-      .subscribe(questions => this.questions = questions.filter((p: Question) => !p.answer));
-    return questions$;
   }
 
   solveTheProblem(problem: Problem): void {

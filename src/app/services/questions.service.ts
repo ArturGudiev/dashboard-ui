@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 import { Question } from "../models/question";
 import { ApiService } from "./api.service";
-import { filter, switchMap, tap } from "rxjs/operators";
+import { filter, map, switchMap, tap } from "rxjs/operators";
 import { DashboardService } from "./dashboard.service";
 import { GetValueDialogComponent } from "../modules/dialogs/get-value/get-value-dialog.component";
 import { NEW_QUESTION_DIALOG_OPTIONS } from "../shared/constants";
@@ -22,9 +22,12 @@ export class QuestionsService {
   }
 
 
-  getQuestions(ids: number[]): Observable<Question[]> {
+  getAllQuestions(ids: number[]): Observable<Question[]> {
     return this.apiService._getQuestions(ids);
+  }
 
+  getQuestions(ids: number[]): Observable<Question[]> {
+    return this.apiService._getQuestions(ids).pipe(map(arr => arr.filter(e => !e.answer)));
   }
 
   createNewQuestion(obj: { description: string; tags: string[],
@@ -53,7 +56,7 @@ export class QuestionsService {
     return this.apiService._getQuestionParentsPath(question);
   }
 
-  createNewQuestionFromDialog(taskContainer: TaskContainer): Observable<Question> {
+  createQuestionFromDialog(taskContainer: TaskContainer): Observable<Question> {
     const dialogRef = this.dialog.open(GetValueDialogComponent,
       {data: {title: 'Description', inputWidth: '40rem'},
         ...NEW_QUESTION_DIALOG_OPTIONS

@@ -63,7 +63,7 @@ export class ProblemsListComponent implements OnInit {
   private handleTaskCommand(command: string) {
     const arr = command.split(' ');
     if (['problem'].includes(arr[0])) {
-      this.addProblem();
+      // this.addProblem();
     }
   }
 

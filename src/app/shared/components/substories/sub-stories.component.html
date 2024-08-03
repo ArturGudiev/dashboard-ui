@@ -6,15 +6,16 @@
       <mat-icon class="stories-icon">add</mat-icon>
     </button>
 
-<!--    [disabled]="!this.selection.hasValue()"-->
-    <button mat-mini-fab color="primary" [disabled]="true"
-            (click)="onFinishStoriesClick()" >
-      <mat-icon class="stories-icon">done</mat-icon>
-    </button>
   </div>
 
-  <table id="substories-table" *ngIf="stories && stories.length > 0" mat-table [dataSource]="stories"
-         class="mat-elevation-z8">
+  <div id="table-wrapper">
+    <table
+      id="substories-table"
+      *ngIf="stories && stories.length > 0"
+      mat-table
+      [dataSource]="stories"
+       class="mat-elevation-z8"
+    >
 
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
@@ -47,15 +48,15 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions</th>
-      <td mat-cell *matCellDef="let story; let i=index" id="row-{{i}}">
-      </td>
-    </ng-container>
+<!--    <ng-container matColumnDef="actions">-->
+<!--      <th mat-header-cell *matHeaderCellDef> Actions</th>-->
+<!--      <td mat-cell *matCellDef="let story; let i=index" id="row-{{i}}">-->
+<!--      </td>-->
+<!--    </ng-container>-->
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-
+  </div>
 </ng-container>
 

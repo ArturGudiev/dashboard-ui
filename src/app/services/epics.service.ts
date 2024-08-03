@@ -18,4 +18,7 @@ export class EpicsService {
     return this.apiService._getEpics(ids);
   }
 
+  getParentsPath(problem: any): Observable<string[]> { // TODO simplify
+    return this.apiService._getEpicParentsPath(problem);
+  }
 }

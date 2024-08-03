@@ -15,7 +15,7 @@ export class SubStoriesComponent implements OnInit {
   @Output() onStoryClick = new EventEmitter<Story>();
   @Output() addSubstory = new EventEmitter<Story>();
   selection = new SelectionModel<Story>(true, []);
-  displayedColumns: string[] = ['select', 'position', 'description', 'actions'];
+  displayedColumns: string[] = ['select', 'position', 'description'];
   constructor(private router: Router) { }
 
   ngOnInit(): void {

@@ -14,6 +14,7 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { TasksService } from "../../../services/tasks.service";
 import { map } from "rxjs/operators";
+import { QuestionsService } from "../../../services/questions.service";
 
 @UntilDestroy()
 @Component({
@@ -38,14 +39,15 @@ export class ProblemComponent implements OnInit {
 
   refreshSubtasks$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.problems));
+  refreshQuestionsList$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.questions));
 
   constructor(
     private route: ActivatedRoute,
+    private questionsService: QuestionsService,
     private router: Router,
     private titleService: Title,
     public dialog: MatDialog,
     private problemsService: ProblemsService,
-    private tasksService: TasksService,
     private taskContainerService: TaskContainerService,
   ) {
   }
@@ -114,14 +116,6 @@ export class ProblemComponent implements OnInit {
     this.problemsService.updateProblem(this.problem)
       .pipe(untilDestroyed(this))
       .subscribe((problem: Problem) => this.problem = problem);
-  }
-
-  refreshSubtasks() {
-    this.problemsService.getProblem(this.id).subscribe(problem => {
-      if (this.problem) {
-        this.problem.tasks = problem.tasks;
-      }
-    })
   }
 
 }

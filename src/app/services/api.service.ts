@@ -105,6 +105,10 @@ export class ApiService {
       );
   }
 
+  _getEpicParentsPath(epic: any): Observable<string[]> {
+    return this.http.post<string[]>(`${this.baseUrl}/epic/parents-path/`, epic);
+  }
+
 
 //------------------------------------stories-------------------------------------------------
   _getStory(id: number) {

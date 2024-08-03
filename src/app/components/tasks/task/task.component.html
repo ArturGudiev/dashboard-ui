@@ -3,11 +3,12 @@
   <app-task-container
     [taskContainer]="task"
     [parentsPath]="parentsPath"
+    [refreshTasks$]="refreshSubtasks$"
+    [refreshProblems$]="refreshProblemsList$"
+    [refreshQuestions$]="refreshQuestionsList$"
     (onDoneAllClick)="onDoneAllClick()"
     (updateTaskContainer)="updateTask()"
     (refreshTaskContainer)="refreshTask()"
-    [refreshTasks$]="refreshSubtasks$"
-    [refreshProblems$]="refreshProblemsList$"
     (resolve)="onDoneAllClick()"
   >
   </app-task-container>

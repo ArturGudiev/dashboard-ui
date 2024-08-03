@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Story } from "../../../models/story";
+import { Story } from "../../models/story";
 import { ActivatedRoute, Router } from "@angular/router";
-import { TasksService } from "../../../services/tasks.service";
-import { StoriesService } from "../../../services/stories.service";
+import { TasksService } from "../../services/tasks.service";
+import { StoriesService } from "../../services/stories.service";
 import { Title } from "@angular/platform-browser";
 import { map } from "rxjs/operators";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { SharedModule } from "../../../shared/shared.module";
+import { SharedModule } from "../../shared/shared.module";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { NgIf } from "@angular/common";
 
@@ -30,6 +30,7 @@ export class StoryComponent implements OnInit {
 
   refreshSubtasks$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.problems));
+  refreshQuestionsList$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.questions));
 
   constructor(
     private route: ActivatedRoute,

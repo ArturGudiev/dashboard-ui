@@ -14,6 +14,7 @@ import { Store } from "@ngxs/store";
 import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
 import { GET_VALUE_DIALOG_OPTIONS } from "../../constants";
 import { MatDialog } from "@angular/material/dialog";
+import { CommandsService } from "../../../services/commands.service";
 
 @UntilDestroy()
 @Component({
@@ -22,8 +23,8 @@ import { MatDialog } from "@angular/material/dialog";
   styleUrls: ['./questions-list.component.sass']
 })
 export class QuestionsListComponent implements OnInit {
+  @Input({required: true}) container!: TaskContainer;
   @Input() questions: Question[] = [];
-  @Output() addQuestion = new EventEmitter();
   @Output() refreshQuestions = new EventEmitter();
   @Output() answerTheQuestion = new EventEmitter();
   displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
@@ -42,9 +43,28 @@ export class QuestionsListComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private store: Store,
-  ) { }
+    private commandsService: CommandsService,
+  ) {
+  }
 
   ngOnInit(): void {
+    this.commandsService.getDataStateChange().pipe(untilDestroyed(this)).subscribe(state => {
+      this.handleTaskCommand(state.command);
+    })
+  }
+
+  private handleTaskCommand(command: string): void {
+    const arr = command.split(' ');
+    const args = arr.slice(1);
+    if (['question'].includes(arr[0])) {
+      this.addQuestion();
+    }
+  }
+
+  addQuestion(): void {
+    this.questionsService.createQuestionFromDialog(this.container)
+      .subscribe(() => this.refreshQuestions.emit());
+
   }
 
   onAnswerSelectedQuestionClick() {
@@ -60,14 +80,17 @@ export class QuestionsListComponent implements OnInit {
 
   onAnswerQuestionClick(question: Question) {
     const dialogRef = this.dialog.open(GetValueDialogComponent,
-      {data: {title: 'Solution', inputWidth: '40rem'},
-        ...GET_VALUE_DIALOG_OPTIONS});
+      {
+        data: {title: 'Solution', inputWidth: '40rem'},
+        ...GET_VALUE_DIALOG_OPTIONS
+      });
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.questionsService.answerTheQuestion(question, solution)
           .subscribe(() => this.refreshQuestions.emit());
       }
-    });;
+    });
+    ;
   }
 
 
@@ -134,7 +157,6 @@ export class QuestionsListComponent implements OnInit {
       delete this.tasksByIdMap[problem._id];
     }
   }
-
 
 
 }

@@ -1,15 +1,13 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <ng-container *ngIf="!isLoading">
   <app-task-container
-    [taskContainer]="problem"
+    [taskContainer]="epic"
     [parentsPath]="parentsPath"
-    (onDoneAllClick)="onDoneAllClick()"
-    (updateTaskContainer)="updateProblem()"
-    (refreshTaskContainer)="refreshProblem()"
     [refreshTasks$]="refreshSubtasks$"
     [refreshProblems$]="refreshProblemsList$"
     [refreshQuestions$]="refreshQuestionsList$"
-    (resolve)="onDoneAllClick()"
-  >
-  </app-task-container>
+    [showEpics]="true"
+    [showStories]="true"
+    (refreshTaskContainer)="refreshEpic()"
+  ></app-task-container>
 </ng-container>

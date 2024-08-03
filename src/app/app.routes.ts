@@ -2,7 +2,8 @@ import { Routes } from '@angular/router';
 import { MainPageComponent } from "./components/main-page/main-page.component";
 import { TaskComponent } from "./components/tasks/task/task.component";
 import { ProblemComponent } from "./components/problems/problem/problem.component";
-import { StoryComponent } from "./components/stories/story/story.component";
+import { StoryComponent } from "./components/story/story.component";
+import { EpicComponent } from "./components/epics/epic/epic.component";
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},
@@ -12,6 +13,7 @@ export const routes: Routes = [
   // {path: 'questions', loadChildren: () => import('./modules/questions/questions.module').then(m => m.QuestionsModule)},
   {path: 'problem/:id', component: ProblemComponent},
   {path: 'story/:id', component: StoryComponent},
+  {path: 'epic/:id', component: EpicComponent},
 
   // {path: 'memory-node/:id', component: MemoryNodeComponent, resolve: {memoryNode: memoryNodeResolverResolver}, canActivate: [authGuard]},
   // {path: 'card-inspector/:id', component: CardInspectorComponent, resolve: {card: cardResolver}, canActivate: [authGuard]},
