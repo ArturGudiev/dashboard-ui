@@ -6,30 +6,23 @@
 
     <mat-form-field class="example-full-width">
         <mat-label>Task Container</mat-label>
-        <input type="text" matInput [formControl]="inputFormControl" 
+        <input type="text" matInput [formControl]="inputFormControl"
                 (keyup.enter)="addTaskContainer()"
                placeholder="question 111">
     </mat-form-field>
 
-    
+
         <div *ngFor="let container of taskContainers, let i = index">
             <div class="display: flex" >
-                <app-multitasking-item 
+                <app-multitasking-item
                     [taskContainer]="container"
                     (remoteItem)="removeItem(i)"
-                    (refreshTaskContainer)="refreshTaskContainer(container, i)">
+                    (refreshTaskContainer)="refreshTaskContainer(container, i)"
+                    [refreshTasks$]="getTaskContainerRefreshTasks(container)"
+                >
                 </app-multitasking-item>
             </div>
-            
+
         </div>
-
-
-    <!-- <mat-grid-list cols="2" rowHeight="2:1">
-        <mat-grid-tile>1</mat-grid-tile>
-        <mat-grid-tile>2</mat-grid-tile>
-        <mat-grid-tile>3</mat-grid-tile>
-        <mat-grid-tile>4</mat-grid-tile>
-      </mat-grid-list> -->
-      
 
 </div>

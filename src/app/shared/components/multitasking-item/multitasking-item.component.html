@@ -9,4 +9,11 @@
         <mat-icon>clear</mat-icon>
     </button>
 </div>
-<ng-container *ngIf="this.subtasks.length > 0"></ng-container>
+<app-tasks-list
+  [container]="taskContainer"
+  [showTitle]="true"
+  [tasks]="tasks"
+  [level]="0"
+  (refreshTasks)="refreshTasks()"
+>
+</app-tasks-list>

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import {Router} from "@angular/router";
-import {AliasesService} from "./aliases.service";
-import {AliasesRecord} from "../models/alias-record";
-import {AlertService} from "./alert.service";
+import { Router } from "@angular/router";
+import { AliasesService } from "./aliases.service";
+import { AliasesRecord } from "../models/alias-record";
+import { AlertService } from "./alert.service";
+import { TasksService } from "./tasks.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,24 +13,31 @@ export class NavigationService {
 
   constructor(private router: Router,
               private alertService: AlertService,
-              private aliasService: AliasesService) { }
+              private tasksService: TasksService,
+              private aliasService: AliasesService) {
+  }
 
   navigateByInput(navItem: string) {
-    if ( !navItem ) {
+    if (!navItem) {
       return;
     }
     if (Number.isInteger(+navItem)) {
-      this.router.navigate(['task', navItem]).then();
+      this.navigateToTask(+navItem);
+      return;
+      // this.router.navigate(['task', navItem]).then();
     }
     const arr = navItem.split(' ');
     if (['e', 'epic'].includes(arr[0]) && Number.isInteger(+arr[1])) {
       this.router.navigate(['epic', arr[1]]).then();
+      return;
     }
     if (['t', 'task'].includes(arr[0]) && Number.isInteger(+arr[1])) {
       this.router.navigate(['epic', arr[1]]).then();
+      return;
     }
     if (['s', 'story'].includes(arr[0]) && Number.isInteger(+arr[1])) {
       this.router.navigate(['story', arr[1]]).then();
+      return;
     }
 
     this.aliasService.getAliasRecord(navItem).subscribe(
@@ -49,35 +57,35 @@ export class NavigationService {
 
   private navigateByAlias(val: AliasesRecord) {
     const arr = val.destination.split(' ');
-    if( arr[0] === 'epic') {
+    if (arr[0] === 'epic') {
       this.navigateToEpic(+arr[1]);
     }
-    if( arr[0] === 'task') {
+    if (arr[0] === 'task') {
       this.navigateToTask(+arr[1]);
     }
-    if( arr[0] === 'story') {
+    if (arr[0] === 'story') {
       this.navigateToStory(+arr[1]);
     }
-    if( arr[0] === 'problem') {
+    if (arr[0] === 'problem') {
       this.navigateToProblem(+arr[1]);
     }
-    if( arr[0] === 'question') {
+    if (arr[0] === 'question') {
       this.navigateToQuestion(+arr[1]);
     }
-    if( arr[0] === 'definition') {
+    if (arr[0] === 'definition') {
       this.navigateToDefinition(+arr[1]);
     }
-    if( arr[0] === 'action') {
+    if (arr[0] === 'action') {
       this.navigateToAction(+arr[1]);
     }
-    if( arr[0] === 'knowledge') {
+    if (arr[0] === 'knowledge') {
       this.navigateToKnowledge(+arr[1]);
     }
-    if( arr[0] === 'knowledge-node') {
+    if (arr[0] === 'knowledge-node') {
       this.navigateToKnowledgeNode(+arr[1]);
     }
 
-    if( arr[0] === 'scheduled-task') {
+    if (arr[0] === 'scheduled-task') {
       this.navigateToScheduledTask(+arr[1]);
     }
   }
@@ -87,7 +95,18 @@ export class NavigationService {
   }
 
   navigateToTask(id: number) {
-    this.router.navigate(['task', id]).then();
+    this.tasksService.getTask(id).subscribe({
+      next: res => {
+          if (res) {
+            this.router.navigate(['task', id], {state: res}).then()
+          }
+        },
+      error: res => {
+        console.log('No such task');
+        this.alertService.showAlert(`No such task with id ${id}`, 2000, 'info');
+      }
+    })
+    ;
   }
 
   navigateToStory(id: number) {

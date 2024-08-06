@@ -56,14 +56,19 @@ export class ToolbarComponent implements OnInit {
     for (let i = 1; i <= 9; i++) {
       this.hotkeys.addShortcut({keys: `Control.${i}`}).subscribe(() => this.commandService.setCommand(i.toString()));
     }
+    this.hotkeys.addShortcut({keys: 'Control.u'}).subscribe(() => this.commandService.setCommand('parent'));
     this.hotkeys.addShortcut({ keys: 'Control.g' }).subscribe(() => this.onNavToClick());
     this.hotkeys.addShortcut({keys: 'Control.Shift.r'}).subscribe(() => this.commandService.setCommand('resolve'));
     this.hotkeys.addShortcut({keys: 'Control.p'}).subscribe(() => this.commandService.setCommand('problem'));
 
     this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('new-task'));
-    this.hotkeys.addShortcut({keys: 'Meta.o'}).subscribe(() => this.commandService.setCommand('new-task'));
-    this.hotkeys.addShortcut({keys: 'Alt.o'}).subscribe(() => this.commandService.setCommand('new-task'));
+    // this.hotkeys.addShortcut({keys: 'Alt.o'}).subscribe(() => this.commandService.setCommand('new-task'));
+    this.hotkeys.addShortcut({keys: 'Control.y'}).subscribe(() => this.commandService.setCommand('new-task-go'));
+    this.hotkeys.addShortcut({keys: 'Control.Alt.y'}).subscribe(() => this.commandService.setCommand('new-task-for-focused-task-and-go'));
+    this.hotkeys.addShortcut({keys: 'Control.Meta.y'}).subscribe(() => this.commandService.setCommand('new-task-for-focused-task-and-go'));
     this.hotkeys.addShortcut({keys: '='}).subscribe(() => this.commandService.setCommand('task'));
+    this.hotkeys.addShortcut({keys: 'Meta.o'}).subscribe(() => this.commandService.setCommand('selected-task'));
+    this.hotkeys.addShortcut({keys: 'Alt.o'}).subscribe(() => this.commandService.setCommand('selected-task'));
 
     this.hotkeys.addShortcut({keys: '®'}).subscribe(() => this.commandService.setCommand('records'));
     this.hotkeys.addShortcut({keys: 'option.r'}).subscribe(() => this.commandService.setCommand('records'));

@@ -22,17 +22,18 @@ export class AppComponent {
   title = 'dashboard-ui';
   alertState: IAlertsDataState | null = null;
 
-  constructor(private dashboardService: DashboardService,
-              private alertService: AlertService,
-              private apiService: ApiService,
-              private store: Store,
-              private _snackBar: MatSnackBar) {
+  constructor(
+    private dashboardService: DashboardService,
+    private alertService: AlertService,
+    private _snackBar: MatSnackBar
+  ) {
   }
 
   ngOnInit(): void {
     this.dashboardService.updateDoneTasksNumber();
     setInterval(() => this.dashboardService.updateDoneTasksNumber(), 30000);
-    this.alertService.getDataStateChange()
+
+    this.alertService.data$
       .pipe(untilDestroyed(this))
       .subscribe((alertState: IAlertsDataState) => {
         this.alertState = alertState;

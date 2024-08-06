@@ -31,7 +31,9 @@ import { QuestionsListComponent } from "./components/questions-list/questions-li
     TaskContainerComponent,
     EpicsListComponent,
     MultitaskingComponent,
-    MultitaskingItemComponent
+    MultitaskingItemComponent,
+    TasksListComponent,
+    TasksListComponent
   ],
     exports: [
         TasksListComponent,

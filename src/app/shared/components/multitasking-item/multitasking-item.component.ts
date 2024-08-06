@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { TaskContainer } from "../../../interfaces/task-container";
 import { TaskC } from "../../../models/task-class";
 import { TasksService } from "../../../services/tasks.service";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'app-multitasking-item',
@@ -10,9 +11,11 @@ import { TasksService } from "../../../services/tasks.service";
 })
 export class MultitaskingItemComponent implements OnInit, OnChanges {
   @Input() taskContainer!: TaskContainer;
+  @Input() refreshTasks$!: () => Observable<number[]>;
   @Output() refreshTaskContainer = new EventEmitter();
   @Output() remoteItem = new EventEmitter();
-  subtasks: TaskC[] = [];
+
+  tasks: TaskC[] = [];
   constructor(
     private tasksService: TasksService
   ) { }
@@ -26,12 +29,19 @@ export class MultitaskingItemComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.refreshSubtasks();
+    this.tasksService.getTasks(this.taskContainer.tasks).subscribe(res => this.tasks = res)
   }
 
   refreshSubtasks() {
     this.tasksService.getTasks(this.taskContainer.tasks).subscribe((newSubtasks ) => {
-      this.subtasks = newSubtasks;
+      this.tasks = newSubtasks;
     });
   }
 
+  refreshTasks() {
+    this.refreshTasks$().subscribe(tasks => {
+      this.taskContainer.tasks = tasks;
+      this.tasksService.getTasks(tasks).subscribe(res => this.tasks = res);
+    })
+  }
 }

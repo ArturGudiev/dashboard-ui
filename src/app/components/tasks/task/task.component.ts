@@ -24,56 +24,56 @@ import { CommonModule } from "@angular/common";
   styleUrls: ['./task.component.sass']
 })
 export class TaskComponent implements OnInit, OnDestroy {
+  get task() {
+    return this._task;
+  }
+
   id!: number;
-  task!: TaskC; // TODO use resolve
+  private _task!: TaskC; // TODO use resolve
   parentsPath: string[] = [];
   isLoading = true;
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private titleService: Title,
-              public tasksService: TasksService) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private titleService: Title,
+    public tasksService: TasksService
+  ) {
   }
 
   ngOnInit(): void {
     this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
       this.id = params['id'];
-      this.refreshTask();
+      this.refreshTaskForTheFirstTime();
     });
+  }
+
+  private setTask(val: TaskC, updatePath = true) {
+    this._task = val;
+    this.titleService.setTitle(this.task.getFullDescription());
+    if (this.task !== null && updatePath) {
+      this.tasksService.getParentsPath(this.task).subscribe((res: string[]) => {
+        this.parentsPath = res;
+      });
+    }
+  }
+
+  private refreshTaskForTheFirstTime() {
+    if (this.router.getCurrentNavigation()?.extras.state) {
+      // TODO duplication
+      this.setTask(this.router.getCurrentNavigation()?.extras.state as TaskC);
+      return;
+    }
+    this.refreshTask();
   }
 
   refreshTask(): void {
     this.isLoading = true;
     this.tasksService.getTask(this.id).subscribe(task => {
-      this.task = task;
-      this.titleService.setTitle(this.task.getFullDescription());
-      if (this.task !== null) {
-        this.tasksService.getParentsPath(this.task).subscribe((res: string[]) => {
-          this.parentsPath = res;
-        });
-      }
+      this.setTask(task);
       this.isLoading = false;
     })
   }
-
-  refreshSubtasks() {
-    this.tasksService.getTask(this.id).subscribe(task => {
-      if (this.task) {
-        this.task.tasks = task.tasks;
-      }
-    })
-  }
-
-  refreshProblemsList() {
-    this.tasksService.getTask(this.id).subscribe(task => {
-      if (this.task) {
-        this.task.problems = task.problems;
-      }
-    })
-
-  }
-
-
 
   refreshSubtasks$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.problems));
@@ -81,7 +81,6 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isLoading = true;
-    // this.task = null;
   }
 
   onDoneAllClick() {
@@ -106,10 +105,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (!this.task) {
       return;
     }
-    this.tasksService.updateTask(this.task).subscribe((task: TaskC) => this.task = task);
+    this.tasksService.updateTask(this.task).subscribe((task: TaskC) => this.setTask(task, false));
   }
 
-  isTask(task: TaskC | null): task is TaskC {
-    return task !== null;
-  }
 }

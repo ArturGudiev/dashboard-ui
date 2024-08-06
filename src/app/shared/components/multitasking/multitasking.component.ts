@@ -4,6 +4,9 @@ import { isNumber } from 'lodash';
 import { TaskContainer } from "../../../interfaces/task-container";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { isTaskContainerType } from "../../../interfaces/types";
+import { map } from "rxjs/operators";
+import { TasksService } from "../../../services/tasks.service";
+import { Observable, of } from "rxjs";
 
 @Component({
   selector: 'app-multitasking',
@@ -15,13 +18,18 @@ export class MultitaskingComponent implements OnInit {
   taskContainerInput = '';
   inputFormControl = new FormControl('');
   constructor(
-    private taskContainerService: TaskContainerService
+    private taskContainerService: TaskContainerService,
+    private tasksService: TasksService,
   ) { }
 
   ngOnInit(): void {
-    // this.addTaskContainer();
-    // this.taskContainerService.getTaskContainer('task', 53838)
-    //   .subscribe(val => this.taskContainers.push(val));
+  }
+
+  getTaskContainerRefreshTasks(container: TaskContainer): () => Observable<number[]> {
+    if (container.getTaskContainerDescription()[0] === "task") {
+      return () => this.tasksService.getTask(container._id).pipe(map(e => e.tasks));
+    }
+    return () => of([]);
   }
 
   addTaskContainer() {

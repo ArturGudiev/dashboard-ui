@@ -54,7 +54,7 @@ export class ApiService {
   }
 
   _createNewTask(obj: any): Observable<TaskC> {
-    return this.http.post<TaskC>(`${this.baseUrl}/new-task/`, obj);
+    return this.http.post<TaskC>(`${this.baseUrl}/new-task/`, obj).pipe(map(TaskC.createFromObj));
   }
 
   _finishTask(task: TaskC): Observable<any> {

@@ -102,12 +102,12 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
   }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (event.key === '1') {
-      console.log('1');
-    }
-  }
+  // @HostListener('window:keyup', ['$event'])
+  // keyEvent(event: KeyboardEvent) {
+  //   if (event.key === '1') {
+  //     console.log('1');
+  //   }
+  // }
 
   private refreshTaskContainerParts() {
     this.refreshTasks();
@@ -132,9 +132,9 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     if (['anonymous'].includes(arr[0])) {
       this.addAnonymousTaskHandler();
     }
-    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.tasks.length) {
-      this.router.navigate(['task', this.tasks[+arr[0] - 1]]).then();
-    }
+    // if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.tasks.length) {
+    //   this.router.navigate(['task', this.tasks[+arr[0] - 1]]).then();
+    // }
     if (['f', 'ft', 'finish-task'].includes(arr[0])) {
       this.finishTaskHandler(args);
     }
@@ -155,6 +155,10 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     }
     if (['new-record'].includes(arr[0])) {
       this.addRecord();
+    }
+    if (['parent'].includes(arr[0])) {
+      console.log('PARENT');
+      this.goToNearestParent();
     }
   }
 
@@ -295,17 +299,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     });
   }
 
-
-  private addSubtaskHandler() {
-    console.log('task-container.component.ts -- addSubtaskHandler');
-    const taskToAddSubtaskTo = this.store.selectSnapshot(AppState.getFocusedTaskForSubtasks);
-    if (taskToAddSubtaskTo && !this.tasksService.addTaskDialogOpened) {
-      this.tasksService.openAddTaskDialog2(taskToAddSubtaskTo).subscribe(() => {
-        this.tasksService.addTaskDialogOpened = false;
-        this.taskContainerService.refreshSubtasks$.next(taskToAddSubtaskTo);
-      });
-    }
-  }
 
   addRecord() {
     this.recordsService.callAddRecordDialog(this.taskContainer.getFullDescription());

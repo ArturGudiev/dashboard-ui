@@ -20,21 +20,16 @@ export class AlertService {
     closed: true,
     duration: 5000
   };
-  private data = new BehaviorSubject(this.initialState);
-
+  data$ = new BehaviorSubject(this.initialState);
 
   constructor() { }
 
-  getDataStateChange(): Observable<IAlertsDataState> {
-    return this.data.asObservable();
-  }
-
   getDataCurrentState(): IAlertsDataState {
-    return this.data.getValue();
+    return this.data$.getValue();
   }
 
   setDataState(state: IAlertsDataState): void {
-    this.data.next(state);
+    this.data$.next(state);
   }
 
   showAlert(message: string, duration = 3000, type = 'info'): void {
