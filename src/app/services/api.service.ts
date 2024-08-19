@@ -98,6 +98,13 @@ export class ApiService {
       );
   }
 
+  _getAllEpics() {
+    return this.http.get<Epic[]>(`${this.baseUrl}/epics/`)
+      .pipe(
+        map((arr) => arr.map(obj => Epic.createFromObj(obj)))
+        );
+  }
+
   _getEpics(ids: number[]): Observable<Epic[]> {
     return this.http.post<Epic[]>(`${this.baseUrl}/get-epics`, {ids})
       .pipe(
@@ -297,5 +304,6 @@ export class ApiService {
     return this.http.post<RecordItem>(`${this.baseUrl}/new-record/`, bodyObj);
   }
   //------------------------------------knowledge bits end----------------------------------------
+
 
 }

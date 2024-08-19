@@ -1,23 +1,34 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Epic } from "../../../models/epic";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
   selector: 'app-epics-list',
   templateUrl: './epics-list.component.html',
   styleUrls: ['./epics-list.component.sass']
 })
-export class EpicsListComponent implements OnInit {
+export class EpicsListComponent implements OnInit, AfterViewInit {
 
 
   @Input() epics: Epic[] = [];
   @Output() addSubepic = new EventEmitter<Epic>();
   selection = new SelectionModel<Epic>(true, []);
   displayedColumns: string[] = ['select', 'position', 'description', 'actions'];
+
   constructor(private router: Router) { }
 
+  dataSource = new MatTableDataSource<Epic>([]);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   ngOnInit(): void {
+    this.dataSource = new MatTableDataSource<Epic>(this.epics);
   }
 
   epicsSelectAllToggle() {

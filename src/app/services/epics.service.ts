@@ -21,4 +21,8 @@ export class EpicsService {
   getParentsPath(problem: any): Observable<string[]> { // TODO simplify
     return this.apiService._getEpicParentsPath(problem);
   }
+
+  getAllEpics() {
+    return this.apiService._getAllEpics();
+  }
 }

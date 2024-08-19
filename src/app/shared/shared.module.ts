@@ -35,17 +35,18 @@ import { QuestionsListComponent } from "./components/questions-list/questions-li
     TasksListComponent,
     TasksListComponent
   ],
-    exports: [
-        TasksListComponent,
-        ParentsPathComponent,
-        TaskContainerDescriptionComponent,
-        SubStoriesComponent,
-        ProblemsListComponent,
-        QuestionsListComponent,
-        NotesComponent,
-        TaskContainerComponent,
-        MultitaskingComponent
-    ],
+  exports: [
+    TasksListComponent,
+    ParentsPathComponent,
+    TaskContainerDescriptionComponent,
+    SubStoriesComponent,
+    ProblemsListComponent,
+    QuestionsListComponent,
+    NotesComponent,
+    TaskContainerComponent,
+    MultitaskingComponent,
+    EpicsListComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,

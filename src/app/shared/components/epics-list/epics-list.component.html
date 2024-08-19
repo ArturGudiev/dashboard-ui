@@ -5,7 +5,8 @@
 
     </div>
 
-    <table id="subepics-table" *ngIf="epics && epics.length > 0" mat-table [dataSource]="epics"
+  <div id="table-wrapper">
+    <table id="subepics-table" *ngIf="epics && epics.length > 0" mat-table [dataSource]="dataSource"
            class="mat-elevation-z8">
 
       <ng-container matColumnDef="select">
@@ -49,5 +50,13 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
+    <mat-paginator
+
+      [pageSizeOptions]="[10, 15, 20]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements">
+    </mat-paginator>
+
+  </div>
   </ng-container>
 

@@ -4,6 +4,7 @@ import { TaskComponent } from "./components/tasks/task/task.component";
 import { ProblemComponent } from "./components/problems/problem/problem.component";
 import { StoryComponent } from "./components/story/story.component";
 import { EpicComponent } from "./components/epics/epic/epic.component";
+import { EpicsComponent } from "./components/epics/epics.component";
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},
@@ -14,6 +15,7 @@ export const routes: Routes = [
   {path: 'problem/:id', component: ProblemComponent},
   {path: 'story/:id', component: StoryComponent},
   {path: 'epic/:id', component: EpicComponent},
+  {path: 'epics', component: EpicsComponent},
 
   // {path: 'memory-node/:id', component: MemoryNodeComponent, resolve: {memoryNode: memoryNodeResolverResolver}, canActivate: [authGuard]},
   // {path: 'card-inspector/:id', component: CardInspectorComponent, resolve: {card: cardResolver}, canActivate: [authGuard]},

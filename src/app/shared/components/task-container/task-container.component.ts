@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   HostListener,
@@ -7,7 +8,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges, ViewChild
 } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
@@ -36,6 +37,7 @@ import { Epic } from "../../../models/epic";
 import { EpicsService } from "../../../services/epics.service";
 import { ToastrService } from "ngx-toastr";
 import { RecordsListDialogComponent } from "../../../modules/dialogs/records-list-dialog/records-list-dialog.component";
+import { MatPaginator } from '@angular/material/paginator';
 
 @UntilDestroy()
 @Component({
@@ -65,18 +67,19 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
 
-  constructor(private questionsService: QuestionsService,
-              private taskContainerService: TaskContainerService,
-              private storiesService: StoriesService,
-              private epicsService: EpicsService,
-              private problemsService: ProblemsService,
-              public dialog: MatDialog,
-              private recordsService: RecordsService,
-              public tasksService: TasksService,
-              public commandsService: CommandsService,
-              public router: Router,
-              private _hotkeysService: HotkeysService,
-              private store: Store,
+  constructor(
+    private questionsService: QuestionsService,
+    private taskContainerService: TaskContainerService,
+    private storiesService: StoriesService,
+    private epicsService: EpicsService,
+    private problemsService: ProblemsService,
+    public dialog: MatDialog,
+    private recordsService: RecordsService,
+    public tasksService: TasksService,
+    public commandsService: CommandsService,
+    public router: Router,
+    private _hotkeysService: HotkeysService,
+    private store: Store,
   ) {
   }
 
@@ -218,6 +221,9 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   goToNearestParent(): void {
+    if (this.taskContainer.type === "epic" && this.taskContainer.parents.length === 0) {
+      this.router.navigate(['epics']).then();
+    }
     if (!this.taskContainer.parents || this.taskContainer.parents.length === 0) {
       return;
     }

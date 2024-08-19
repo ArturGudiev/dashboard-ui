@@ -29,7 +29,6 @@ export class ProblemsListComponent implements OnInit {
 
   tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
 
-
   selection = new SelectionModel<Problem>(true, []);
 
   get tasksByIdMapKeys(): number[] {
@@ -67,29 +66,11 @@ export class ProblemsListComponent implements OnInit {
     }
   }
 
+  /**
+   * Метод создаёт новую проблему
+   */
   addProblem(): void {
-    // this.problemsService.createProblemFromDialog(this.con)
-    //   .subscribe(() => this.refreshTaskContainer.emit());
-    this.problemsService.createProblemFromDialog(this.container)
-      .subscribe((responseObj: any) => {
-        if (!responseObj) {
-          return;
-        }
-        const description = responseObj.description;
-        if (description) {
-          const obj: any = {
-            description: description,
-            tags: [],
-            solution: '',
-            notes: responseObj.notes,
-            parents: [this.container.getTaskContainerDescription()]
-          }
-          this.tasksService.createNewTask(obj)
-            .pipe(untilDestroyed(this))
-            .subscribe(() => this.refreshProblems.emit())
-        }
-      })
-
+    this.problemsService.createProblemFromDialog(this.container).subscribe(() => this.refreshProblems.emit());
   }
 
 
