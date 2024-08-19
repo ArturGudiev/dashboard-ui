@@ -39,11 +39,10 @@ export class ProblemComponent implements OnInit {
 
   refreshSubtasks$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.problems));
-  refreshQuestionsList$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.questions));
+  refreshQuestionsList$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.questions));
 
   constructor(
     private route: ActivatedRoute,
-    private questionsService: QuestionsService,
     private router: Router,
     private titleService: Title,
     public dialog: MatDialog,
@@ -103,7 +102,8 @@ export class ProblemComponent implements OnInit {
 
 
   onDoneAllClick() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {data: {title: 'Solution', inputWidth: '40rem'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.problemsService.solveTheProblem(this.problem, solution).subscribe();

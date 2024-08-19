@@ -12,11 +12,10 @@ import { MatTableDataSource } from "@angular/material/table";
 })
 export class EpicsListComponent implements OnInit, AfterViewInit {
 
-
   @Input() epics: Epic[] = [];
   @Output() addSubepic = new EventEmitter<Epic>();
   selection = new SelectionModel<Epic>(true, []);
-  displayedColumns: string[] = ['select', 'position', 'description', 'actions'];
+  displayedColumns: string[] = ['select', 'description'];
 
   constructor(private router: Router) { }
 

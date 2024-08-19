@@ -27,6 +27,9 @@ export class NavigationService {
       // this.router.navigate(['task', navItem]).then();
     }
     const arr = navItem.split(' ');
+    if (['epics'].includes(arr[0])) {
+      this.router.navigate(['epics']).then();;
+    }
     if (['e', 'epic'].includes(arr[0]) && Number.isInteger(+arr[1])) {
       this.router.navigate(['epic', arr[1]]).then();
       return;
