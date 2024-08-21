@@ -11,6 +11,7 @@ import { SharedModule } from "../../../shared/shared.module";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
+import { map } from "rxjs/operators";
 
 @UntilDestroy()
 @Component({
@@ -31,6 +32,10 @@ export class QuestionComponent implements OnInit {
   parentsPath: string[] = [];
   parentsPath$: Observable<string[]> = of([]);
   isLoading = true;
+
+  refreshSubtasks$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.tasks));
+  refreshProblemsList$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.problems));
+  refreshQuestionsList$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.questions));
 
   constructor(
     private route: ActivatedRoute,
@@ -62,7 +67,7 @@ export class QuestionComponent implements OnInit {
 
   answerTheQuestion(question: Question = this.question) {
     const dialogRef = this.dialog.open(GetValueDialogComponent,
-      {data: {title: 'Answer'}});
+      {data: {title: 'Answer', inputWidth: '40rem'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.questionsService.answerTheQuestion(question, solution).subscribe();
@@ -109,7 +114,8 @@ export class QuestionComponent implements OnInit {
   }
 
   onDoneAllClick() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
+    const dialogRef = this.dialog.open(GetValueDialogComponent,
+      {data: {title: 'Solution', inputWidth: '40rem'}});
     dialogRef.afterClosed().subscribe((answer: string) => {
       console.log('after closed dialog', answer);
       if (answer) {

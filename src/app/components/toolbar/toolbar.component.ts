@@ -58,11 +58,11 @@ export class ToolbarComponent implements OnInit {
     }
     this.hotkeys.addShortcut({keys: 'Control.u'}).subscribe(() => this.commandService.setCommand('parent'));
     this.hotkeys.addShortcut({ keys: 'Control.g' }).subscribe(() => this.onNavToClick());
-    this.hotkeys.addShortcut({keys: 'Control.Shift.r'}).subscribe(() => this.commandService.setCommand('resolve'));
+    this.hotkeys.addShortcut({keys: 'Control.r'}).subscribe(() => this.commandService.setCommand('resolve'));
     this.hotkeys.addShortcut({keys: 'Control.p'}).subscribe(() => this.commandService.setCommand('problem'));
+    this.hotkeys.addShortcut({keys: 'Control.h'}).subscribe(() => this.commandService.setCommand('help'));
 
     this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('new-task'));
-    // this.hotkeys.addShortcut({keys: 'Alt.o'}).subscribe(() => this.commandService.setCommand('new-task'));
     this.hotkeys.addShortcut({keys: 'Control.y'}).subscribe(() => this.commandService.setCommand('new-task-go'));
     this.hotkeys.addShortcut({keys: 'Control.Alt.y'}).subscribe(() => this.commandService.setCommand('new-task-for-focused-task-and-go'));
     this.hotkeys.addShortcut({keys: 'Control.Meta.y'}).subscribe(() => this.commandService.setCommand('new-task-for-focused-task-and-go'));
@@ -75,17 +75,17 @@ export class ToolbarComponent implements OnInit {
     this.hotkeys.addShortcut({keys: 'Â'}).subscribe(() => this.commandService.setCommand('new-record'));
     this.hotkeys.addShortcut({keys: 'Control.q'}).subscribe(() => this.commandService.setCommand('question'));
     this.hotkeys.addShortcut({keys: 'Control.t'}).subscribe(() => this.commandService.setCommand('fta'));
-    this.hotkeys.addShortcut({keys: 'Control.d'}).subscribe(() => this.commandService.setCommand('definition'));
-    this.hotkeys.addShortcut({keys: 'Control.k'}).subscribe(() => this.commandService.setCommand('knowledge'));
+    // this.hotkeys.addShortcut({keys: 'Control.d'}).subscribe(() => this.commandService.setCommand('definition'));
+    // this.hotkeys.addShortcut({keys: 'Control.k'}).subscribe(() => this.commandService.setCommand('knowledge'));
     this.hotkeys.addShortcut({keys: 'Control.m'}).subscribe(() => this.commandService.setCommand('notes'));
-    this.hotkeys.addShortcut({keys: 'Control.='}).subscribe(() => this.commandService.setCommand('task'));
+    // this.hotkeys.addShortcut({keys: 'Control.='}).subscribe(() => this.commandService.setCommand('task'));
     this.hotkeys.addShortcut({keys: '\\'}).subscribe(() => this.commandService.setCommand('anonymous'));
     this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('subtask'));
-    this.hotkeys.addShortcut({keys: 'Control.Shift.o'}).subscribe(() => this.commandService.setCommand('subsubtask'));
+    // this.hotkeys.addShortcut({keys: 'Control.Shift.o'}).subscribe(() => this.commandService.setCommand('subsubtask'));
     this.hotkeys.addShortcut({keys: 'Control.s'}).subscribe(() => this.commandService.setCommand('select-subtask'));
     this.hotkeys.addShortcut({keys: 'Control.Shift.s'}).subscribe(() => this.commandService.setCommand('select-subsubtask'));
-    this.hotkeys.addShortcut({keys: 'Control.y'}).subscribe(() => this.commandService.setCommand('deselect-subtask'));
-    this.hotkeys.addShortcut({keys: 'Control.Shift.y'}).subscribe(() => this.commandService.setCommand('deselect-subsubtask'));
+    // this.hotkeys.addShortcut({keys: 'Control.y'}).subscribe(() => this.commandService.setCommand('deselect-subtask'));
+    // this.hotkeys.addShortcut({keys: 'Control.Shift.y'}).subscribe(() => this.commandService.setCommand('deselect-subsubtask'));
     this.hotkeys.addShortcut({ keys: 'Control.f' }).subscribe(() => {
         const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Finish' }});
         dialogRef.afterClosed().subscribe((finishCommand: string) => {

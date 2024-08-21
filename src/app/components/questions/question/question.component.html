@@ -6,6 +6,9 @@
     (onDoneAllClick)="onDoneAllClick()"
     (updateTaskContainer)="updateQuestion()"
     (refreshTaskContainer)="refreshQuestion()"
+    [refreshTasks$]="refreshSubtasks$"
+    [refreshProblems$]="refreshProblemsList$"
+    [refreshQuestions$]="refreshQuestionsList$"
     (resolve)="onDoneAllClick()"
   >
 </app-task-container>

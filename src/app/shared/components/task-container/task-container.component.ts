@@ -1,28 +1,15 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges, ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Hotkey, HotkeysService } from "angular2-hotkeys";
 import * as _ from "lodash";
 import { Observable, of, Subject } from "rxjs";
-import { map } from "rxjs/operators";
 import { TaskContainer } from "../../../interfaces/task-container";
 import { Problem } from "../../../models/problem";
 import { Question } from "../../../models/question";
 import { Story } from "../../../models/story";
 import { TaskC } from "../../../models/task-class";
 import { CommandsService } from "../../../services/commands.service";
-import { KnowledgeService } from "../../../services/knowledge.service";
 import { ProblemsService } from "../../../services/problems.service";
 import { QuestionsService } from "../../../services/questions.service";
 import { RecordsService } from "../../../services/records.service";
@@ -30,14 +17,12 @@ import { StoriesService } from "../../../services/stories.service";
 import { TasksService } from "../../../services/tasks.service";
 import { getUrlByDescription } from "../../libs/dashboard.lib";
 import { Store } from "@ngxs/store";
-import { AppState } from "../../../state/app.state";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Epic } from "../../../models/epic";
 import { EpicsService } from "../../../services/epics.service";
-import { ToastrService } from "ngx-toastr";
 import { RecordsListDialogComponent } from "../../../modules/dialogs/records-list-dialog/records-list-dialog.component";
-import { MatPaginator } from '@angular/material/paginator';
+import { HelpComponent } from "../../../components/help/help.component";
 
 @UntilDestroy()
 @Component({
@@ -129,8 +114,10 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['back', 'b'].includes(arr[0])) {
-      // this.goToNearestParent.emit();
       this.goToNearestParent();
+    }
+    if (['help'].includes(arr[0])) {
+      this.showHelp();
     }
     if (['anonymous'].includes(arr[0])) {
       this.addAnonymousTaskHandler();
@@ -318,4 +305,15 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     this.router.navigate(['story', story._id]).then();
   }
 
+  private showHelp() {
+    const dialogRef = this.dialog.open(HelpComponent,
+      {
+        height: '600px',
+        width: '1000px'
+      });
+    // dialogRef.afterClosed().subscribe(() => {
+    //   console.log('Dialog was closed RecordsListDialogComponent');
+    // });
+
+  }
 }
