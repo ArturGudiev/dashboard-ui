@@ -240,7 +240,7 @@ export class TasksListComponent implements OnInit, OnChanges {
     if (['selected-task'].includes(arr[0]) && this.level === 0) {
       this.addTask(true);
     }
-    if (['new-task'].includes(arr[0]) && this.isContainerFocused) {
+    if (['subtask'].includes(arr[0]) && this.isContainerFocused) {
       this.addTask();
     }
   }

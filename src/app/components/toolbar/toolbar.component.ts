@@ -52,17 +52,25 @@ export class ToolbarComponent implements OnInit {
       up: '&#8593;', // ↑
       down: '&#8595;' // ↓
     };
+    this.addHotkeys();
+  }
 
+  /**
+   * Добавления сочетания клавиш
+   * @private
+   */
+  private addHotkeys() {
     for (let i = 1; i <= 9; i++) {
       this.hotkeys.addShortcut({keys: `Control.${i}`}).subscribe(() => this.commandService.setCommand(i.toString()));
     }
     this.hotkeys.addShortcut({keys: 'Control.u'}).subscribe(() => this.commandService.setCommand('parent'));
-    this.hotkeys.addShortcut({ keys: 'Control.g' }).subscribe(() => this.onNavToClick());
+    this.hotkeys.addShortcut({keys: 'Control.g'}).subscribe(() => this.onNavToClick());
     this.hotkeys.addShortcut({keys: 'Control.r'}).subscribe(() => this.commandService.setCommand('resolve'));
     this.hotkeys.addShortcut({keys: 'Control.p'}).subscribe(() => this.commandService.setCommand('problem'));
     this.hotkeys.addShortcut({keys: 'Control.h'}).subscribe(() => this.commandService.setCommand('help'));
 
-    this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('new-task'));
+    // this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('new-task'));
+    this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('subtask'));
     this.hotkeys.addShortcut({keys: 'Control.y'}).subscribe(() => this.commandService.setCommand('new-task-go'));
     this.hotkeys.addShortcut({keys: 'Control.Alt.y'}).subscribe(() => this.commandService.setCommand('new-task-for-focused-task-and-go'));
     this.hotkeys.addShortcut({keys: 'Control.Meta.y'}).subscribe(() => this.commandService.setCommand('new-task-for-focused-task-and-go'));
@@ -75,19 +83,17 @@ export class ToolbarComponent implements OnInit {
     this.hotkeys.addShortcut({keys: 'Â'}).subscribe(() => this.commandService.setCommand('new-record'));
     this.hotkeys.addShortcut({keys: 'Control.q'}).subscribe(() => this.commandService.setCommand('question'));
     this.hotkeys.addShortcut({keys: 'Control.t'}).subscribe(() => this.commandService.setCommand('fta'));
-    // this.hotkeys.addShortcut({keys: 'Control.d'}).subscribe(() => this.commandService.setCommand('definition'));
-    // this.hotkeys.addShortcut({keys: 'Control.k'}).subscribe(() => this.commandService.setCommand('knowledge'));
     this.hotkeys.addShortcut({keys: 'Control.m'}).subscribe(() => this.commandService.setCommand('notes'));
     // this.hotkeys.addShortcut({keys: 'Control.='}).subscribe(() => this.commandService.setCommand('task'));
     this.hotkeys.addShortcut({keys: '\\'}).subscribe(() => this.commandService.setCommand('anonymous'));
-    this.hotkeys.addShortcut({keys: 'Control.o'}).subscribe(() => this.commandService.setCommand('subtask'));
+
     // this.hotkeys.addShortcut({keys: 'Control.Shift.o'}).subscribe(() => this.commandService.setCommand('subsubtask'));
     this.hotkeys.addShortcut({keys: 'Control.s'}).subscribe(() => this.commandService.setCommand('select-subtask'));
     this.hotkeys.addShortcut({keys: 'Control.Shift.s'}).subscribe(() => this.commandService.setCommand('select-subsubtask'));
     // this.hotkeys.addShortcut({keys: 'Control.y'}).subscribe(() => this.commandService.setCommand('deselect-subtask'));
     // this.hotkeys.addShortcut({keys: 'Control.Shift.y'}).subscribe(() => this.commandService.setCommand('deselect-subsubtask'));
-    this.hotkeys.addShortcut({ keys: 'Control.f' }).subscribe(() => {
-        const dialogRef = this.dialog.open(GetValueDialogComponent, {data: { title: 'Finish' }});
+    this.hotkeys.addShortcut({keys: 'Control.f'}).subscribe(() => {
+        const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Finish'}});
         dialogRef.afterClosed().subscribe((finishCommand: string) => {
           if (finishCommand.startsWith('p')) {
             const newCommand = finishCommand.slice(1).trim();
@@ -101,14 +107,10 @@ export class ToolbarComponent implements OnInit {
         });
       }
     );
-    this.hotkeys.addShortcut({keys: 'meta.b'}).subscribe(() => this.commandService.setCommand('back'));
-    this.hotkeys.addShortcut({keys: 'alt.b'}).subscribe(() => this.commandService.setCommand('back'));
     this.hotkeys.addShortcut({keys: '§'}).subscribe(() => this.commandService.setCommand('command'));
     this.hotkeys.addShortcut({keys: '`'}).subscribe(() => this.commandService.setCommand('command'));
     this.hotkeys.addShortcut({keys: 'meta.c'}).subscribe(() => this.openCommandDialog());
     this.hotkeys.addShortcut({keys: 'alt.c'}).subscribe(() => this.openCommandDialog());
-
-    // Unsubscribe if you need to
   }
 
   @HostListener('window:keyup', ['$event'])

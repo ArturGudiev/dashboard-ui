@@ -72,20 +72,6 @@ export class ProblemComponent implements OnInit {
     });
   }
 
-  solveTheProblem(problem: Problem = this.problem): void {
-    this.problemsService.callSolveTheProblemDialog(problem, this.problem);
-  }
-
-  private handleTaskCommand(command: string) {
-    const arr = command.split(' ');
-    const args = arr.slice(1);
-
-    if (['r', 'resolve'].includes(arr[0])) {
-      this.solveTheProblem();
-      return;
-    }
-  }
-
   onGoToNearestParent() {
     if (this.parentsPath && this.parentsPath.length <= 1) {
       return;

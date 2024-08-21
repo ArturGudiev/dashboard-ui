@@ -65,40 +65,6 @@ export class QuestionComponent implements OnInit {
     });
   }
 
-  answerTheQuestion(question: Question = this.question) {
-    const dialogRef = this.dialog.open(GetValueDialogComponent,
-      {data: {title: 'Answer', inputWidth: '40rem'}});
-    dialogRef.afterClosed().subscribe((solution: string) => {
-      if (solution) {
-        this.questionsService.answerTheQuestion(question, solution).subscribe();
-        if (question === this.question) {
-          this.onGoToNearestParent();
-        }
-      }
-    });
-  }
-
-  private handleTaskCommand(command: string) {
-    const arr = command.split(' ');
-    const args = arr.slice(1);
-    if (['back', 'b'].includes(arr[0])) {
-      this.onGoToNearestParent();
-      return;
-    }
-    if (['r', 'resolve'].includes(arr[0])) {
-      this.answerTheQuestion();
-      return;
-    }
-    // if (['a', 'fta', 'fa', 'finish-all-tasks'].includes(arr[0])) {
-    //   this.finishAllTasks();
-    //   return;
-    // }
-    // if (['r', 'res', 'resolve'].includes(arr[0])) {
-    //   this.onDoneAllClick();
-    //   return;
-    // }
-  }
-
   onGoToNearestParent() {
     if (this.parentsPath && this.parentsPath.length <= 1) {
       return;

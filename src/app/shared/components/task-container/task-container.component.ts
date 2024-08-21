@@ -113,9 +113,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   private handleTaskCommand(command: string): void {
     const arr = command.split(' ');
     const args = arr.slice(1);
-    if (['back', 'b'].includes(arr[0])) {
-      this.goToNearestParent();
-    }
     if (['help'].includes(arr[0])) {
       this.showHelp();
     }
@@ -147,7 +144,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
       this.addRecord();
     }
     if (['parent'].includes(arr[0])) {
-      console.log('PARENT');
       this.goToNearestParent();
     }
   }
