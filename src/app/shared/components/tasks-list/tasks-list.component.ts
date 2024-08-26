@@ -26,6 +26,7 @@ import { distinctUntilChanged, map } from "rxjs/operators";
 import { taskContainerDescriptionsAreEqual } from "../../libs/utils.lib";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { NavigationService } from "../../../services/navigation.service";
+import * as _ from "lodash";
 
 @UntilDestroy()
 @Component({
@@ -75,6 +76,13 @@ export class TasksListComponent implements OnInit, OnChanges {
     if (event.key === '1') {
       console.log('1');
     }
+  }
+
+  @HostListener('window:keydown.control.b', ['$event'])
+  handleHotkey(event: KeyboardEvent) {
+    event.preventDefault();
+    // Your logic here
+    alert('777');
   }
 
   /**
@@ -202,6 +210,7 @@ export class TasksListComponent implements OnInit, OnChanges {
    */
   private handleTaskCommand(command: string) {
     const arr = command.split(' ');
+    const args = arr.slice(1);
     if (['select-subtask'].includes(arr[0])) {
       if (this.level === 0) {
         this.handleSelectSubtaskAction()
@@ -224,10 +233,16 @@ export class TasksListComponent implements OnInit, OnChanges {
         this.handleSelectSubtaskAction()
       }
     }
-    if (['deselect-subtask'].includes(arr[0])) {
-      if (this.level === 0) {
-      }
+
+    if (['ff'].includes(arr[0]) && this.isContainerFocused) {
+      this.finishTaskHandler(args);
     }
+
+    if (['focus fta'].includes(arr[0]) && this.isContainerFocused) {
+      this.onFinishAllTasksHandler();
+    }
+
+
     if (['task'].includes(arr[0]) && this.level === 0) {
       this.addTask();
     }
@@ -244,6 +259,30 @@ export class TasksListComponent implements OnInit, OnChanges {
       this.addTask();
     }
   }
+
+  private finishTaskHandler(args: string[]) {
+    if (!args || args.length === 0) {
+      return;
+    }
+    if (args.length > 0 && args[0] && /^\d+-\d+$/.test(args[0])) {
+      const numbers = args[0].split('-');
+      const num1 = +numbers[0] - 1;
+      const num2 = +numbers[1] - 1;
+      const rangeNumbers = _.range(num1, num2 + 1);
+      const tasksToFinish = rangeNumbers.map((index: number) => this.tasks[index]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks.emit());
+    } else if (args.length > 0 && args[0] && args[0].includes(',')) {
+      const numbers = args[0].split(',').map(str => +str);
+      const tasksToFinish = numbers.map((number: number) => this.tasks[number - 1]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks.emit());
+    } else {
+      const index = +args[0];
+      if (Number.isInteger(index) && index >= 1 && index <= this.tasks.length) {
+        this.tasksService.finishTask(this.tasks[index - 1]).subscribe(() => this.refreshTasks.emit());
+      }
+    }
+  }
+
 
   /**
    * Очистить выделение
@@ -289,7 +328,7 @@ export class TasksListComponent implements OnInit, OnChanges {
   /**
    * Обработчик щакрытия всех задач
    */
-  onFinishAllTasksClick() {
+  onFinishAllTasksHandler() {
     this.clearSelection();
     const subtasks = this.tasks;
     this.tasksService.finishTasks(subtasks).pipe(untilDestroyed(this)).subscribe(

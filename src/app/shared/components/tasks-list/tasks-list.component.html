@@ -41,7 +41,7 @@
         *ngIf="showFinishAllTasksIcon"
         color="primary"
         [disabled]="this.tasks.length === 0"
-        (click)="onFinishAllTasksClick()"
+        (click)="onFinishAllTasksHandler()"
       >
         <mat-icon class="tasks-icon">done_outline</mat-icon>
       </button>
