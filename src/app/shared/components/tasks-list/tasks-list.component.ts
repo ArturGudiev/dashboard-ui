@@ -27,6 +27,8 @@ import { taskContainerDescriptionsAreEqual } from "../../libs/utils.lib";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { NavigationService } from "../../../services/navigation.service";
 import * as _ from "lodash";
+import { isTaskContainerType } from "../../../interfaces/types";
+import { isTask } from "../../constants";
 
 @UntilDestroy()
 @Component({
@@ -41,6 +43,7 @@ export class TasksListComponent implements OnInit, OnChanges {
   @Input() level = 0;
 
   @Output() refreshTasks = new EventEmitter();
+  @Output() resolveParent = new EventEmitter();
 
   selection = new SelectionModel<number>(true, []);
   displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
@@ -76,13 +79,6 @@ export class TasksListComponent implements OnInit, OnChanges {
     if (event.key === '1') {
       console.log('1');
     }
-  }
-
-  @HostListener('window:keydown.control.b', ['$event'])
-  handleHotkey(event: KeyboardEvent) {
-    event.preventDefault();
-    // Your logic here
-    alert('777');
   }
 
   /**
@@ -209,6 +205,7 @@ export class TasksListComponent implements OnInit, OnChanges {
    * @private
    */
   private handleTaskCommand(command: string) {
+    console.log('tasks-list.component.ts -- handleTaskCommand', command);
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['select-subtask'].includes(arr[0])) {
@@ -238,10 +235,12 @@ export class TasksListComponent implements OnInit, OnChanges {
       this.finishTaskHandler(args);
     }
 
-    if (['focus fta'].includes(arr[0]) && this.isContainerFocused) {
+    if (['focus-fta'].includes(arr[0]) && this.isContainerFocused) {
       this.onFinishAllTasksHandler();
     }
-
+    if (['fresolve'].includes(arr[0]) && this.isContainerFocused) {
+      this.resolveParent.emit();
+    }
 
     if (['task'].includes(arr[0]) && this.level === 0) {
       this.addTask();
@@ -462,5 +461,11 @@ export class TasksListComponent implements OnInit, OnChanges {
               })
           }
         })
+  }
+
+  resolveContainer(container: TaskContainer) {
+    if (isTask(container)) {
+      this.tasksService.finishTask(container).pipe(untilDestroyed(this)).subscribe(() => this.refreshTasks.emit())
+    }
   }
 }

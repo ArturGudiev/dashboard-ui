@@ -167,10 +167,10 @@
             [container]="tasksByIdMap[item].container"
             [tasks]="tasksByIdMap[item].tasks"
             (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
+            (resolveParent)="resolveContainer(tasksByIdMap[item].container)"
             [showTitle]="true"
             [level]="level + 1"
-          >
-          </app-tasks-list>
+          ></app-tasks-list>
         </ng-container>
   </div>
 

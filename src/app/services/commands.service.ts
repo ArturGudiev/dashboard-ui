@@ -18,6 +18,7 @@ export class CommandsService {
   }
 
   setCommand(command: string): void {
+    console.log('commands.service.ts -- setCommand', command);
     this.setDataState({command});
   }
 

@@ -82,13 +82,15 @@ export class ToolbarComponent implements OnInit {
     this.hotkeys.addShortcut({keys: 'Â'}).subscribe(() => this.commandService.setCommand('new-record'));
     this.hotkeys.addShortcut({keys: 'Control.q'}).subscribe(() => this.commandService.setCommand('question'));
     this.hotkeys.addShortcut({keys: 'Control.t'}).subscribe(() => this.commandService.setCommand('fta'));
+    this.hotkeys.addShortcut({keys: 'Control.Shift.r'}).subscribe(() => this.commandService.setCommand('fresolve'));
     this.hotkeys.addShortcut({keys: 'Control.Shift.t'}).subscribe(() => {
       console.log('Control.Shift.t');
-      this.commandService.setCommand('focus fta');
+      this.commandService.setCommand('focus-fta');
     });
+
     this.hotkeys.addShortcut({keys: 'Control.Alt.t'}).subscribe(() => {
       console.log('Control.Alt.t');
-      this.commandService.setCommand('focus fta');
+      this.commandService.setCommand('focus-fta');
     });
     this.hotkeys.addShortcut({keys: 'Control.m'}).subscribe(() => this.commandService.setCommand('notes'));
     this.hotkeys.addShortcut({keys: '\\'}).subscribe(() => this.commandService.setCommand('anonymous'));
@@ -156,6 +158,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   private openCommandDialog() {
+    console.log('toolbar.component.ts -- openCommandDialog');
     const dialogRef = this.dialog.open(CommandDialogComponent,
       {
         height: '300px',

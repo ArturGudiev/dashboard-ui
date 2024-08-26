@@ -1,3 +1,5 @@
+import { TaskContainer } from "../interfaces/task-container";
+import { TaskC } from "../models/task-class";
 
 export const historyFile = 'C:\\Programming\\NodeJS\\Dashboard\\data\\history.json';
 export const tasksFile = 'C:\\Programming\\NodeJS\\Dashboard\\data\\tasks.json';
@@ -31,3 +33,7 @@ export const COLORS = [colorBlue, colorPink, colorYellow, colorLightBrown, color
 export const  NEW_QUESTION_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  NEW_TASK_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  GET_VALUE_DIALOG_OPTIONS = { height: '300px', width: '700px'};
+
+export const isTask = (container: TaskContainer): container is TaskC => {
+  return container.type === "task";
+}
