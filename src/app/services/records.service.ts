@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {RecordItem} from "../models/record-item";
 import {ApiService, IArrayResponse} from "./api.service";
 import {Observable} from "rxjs";
-import {GetValueDialogComponent} from "../modules/dialogs/get-value/get-value-dialog.component";
+import {GetValueDialogComponent} from "../components/dialogs/get-value/get-value-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {IArrayParams} from "../interfaces/array-params";
 

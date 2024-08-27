@@ -22,7 +22,7 @@ export class EpicsService {
     return this.apiService._getEpicParentsPath(problem);
   }
 
-  getAllEpics() {
+  getAllEpics(): Observable<Epic[]> {
     return this.apiService._getAllEpics();
   }
 }

@@ -1,0 +1,5 @@
+@if (epics$ | async; as epics;) {
+  @if (epics.length > 0) {
+    <app-epics-list [epics]="epics"></app-epics-list>
+  }
+}

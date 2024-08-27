@@ -10,7 +10,7 @@ import { UntilDestroy } from "@ngneat/until-destroy";
 import { SharedModule } from "../../../shared/shared.module";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AsyncPipe, NgIf } from "@angular/common";
-import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
+import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { map } from "rxjs/operators";
 
 @UntilDestroy()

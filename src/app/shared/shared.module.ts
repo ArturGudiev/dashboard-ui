@@ -10,11 +10,11 @@ import { TaskContainerDescriptionComponent } from './components/task-container-d
 import { TaskContainerComponent } from './components/task-container/task-container.component';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DashboardMaterialModule } from "./material/dashboard-material.module";
-import { EpicsListComponent } from './components/epics-list/epics-list.component';
 import { MultitaskingComponent } from './components/multitasking/multitasking.component';
 import { MultitaskingItemComponent } from './components/multitasking-item/multitasking-item.component';
 import { HotkeyModule } from "angular2-hotkeys";
 import { QuestionsListComponent } from "./components/questions-list/questions-list.component";
+import { EpicsListComponent } from "../components/lists/epics-list/epics-list.component";
 
 
 
@@ -29,7 +29,6 @@ import { QuestionsListComponent } from "./components/questions-list/questions-li
     NotesComponent,
     HoverClassDirective,
     TaskContainerComponent,
-    EpicsListComponent,
     MultitaskingComponent,
     MultitaskingItemComponent,
     TasksListComponent,
@@ -45,7 +44,6 @@ import { QuestionsListComponent } from "./components/questions-list/questions-li
     NotesComponent,
     TaskContainerComponent,
     MultitaskingComponent,
-    EpicsListComponent
   ],
   imports: [
     CommonModule,
@@ -53,6 +51,7 @@ import { QuestionsListComponent } from "./components/questions-list/questions-li
     HotkeyModule,
     DashboardMaterialModule,
     ReactiveFormsModule,
+    EpicsListComponent,
   ]
 })
 export class SharedModule { } // TODO make all components standalone

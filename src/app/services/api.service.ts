@@ -98,7 +98,7 @@ export class ApiService {
       );
   }
 
-  _getAllEpics() {
+  _getAllEpics(): Observable<Epic[]> {
     return this.http.get<Epic[]>(`${this.baseUrl}/epics/`)
       .pipe(
         map((arr) => arr.map(obj => Epic.createFromObj(obj)))

@@ -10,7 +10,7 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { TasksService } from "../../../services/tasks.service";
 import { Store } from "@ngxs/store";
-import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
+import { GetValueDialogComponent } from "../../../components/dialogs/get-value/get-value-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { GET_VALUE_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from "../../constants";
 import { CommandsService } from "../../../services/commands.service";

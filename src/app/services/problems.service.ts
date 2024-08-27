@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, of } from "rxjs";
 import { Problem } from "../models/problem";
 import { filter, map, switchMap, tap } from "rxjs/operators";
 import { DashboardService } from "./dashboard.service";
-import { GetValueDialogComponent } from "../modules/dialogs/get-value/get-value-dialog.component";
+import { GetValueDialogComponent } from "../components/dialogs/get-value/get-value-dialog.component";
 import { TaskContainer } from "../interfaces/task-container";
 import { MatDialog } from "@angular/material/dialog";
 import { TaskContainerDescription } from "../interfaces/types";

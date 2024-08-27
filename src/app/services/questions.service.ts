@@ -4,7 +4,7 @@ import { Question } from "../models/question";
 import { ApiService } from "./api.service";
 import { filter, map, switchMap, tap } from "rxjs/operators";
 import { DashboardService } from "./dashboard.service";
-import { GetValueDialogComponent } from "../modules/dialogs/get-value/get-value-dialog.component";
+import { GetValueDialogComponent } from "../components/dialogs/get-value/get-value-dialog.component";
 import { NEW_QUESTION_DIALOG_OPTIONS } from "../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
 import { TaskContainer } from "../interfaces/task-container";

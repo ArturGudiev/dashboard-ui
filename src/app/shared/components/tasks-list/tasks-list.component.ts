@@ -16,7 +16,7 @@ import { every, isNaN } from "lodash";
 import { TaskContainer } from "../../../interfaces/task-container";
 import { CommandsService } from "../../../services/commands.service";
 import { MatDialog } from "@angular/material/dialog";
-import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
+import { GetValueDialogComponent } from "../../../components/dialogs/get-value/get-value-dialog.component";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { Store } from "@ngxs/store";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";

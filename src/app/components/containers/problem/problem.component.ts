@@ -8,7 +8,7 @@ import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { Observable, of } from "rxjs";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { GetValueDialogComponent } from "../../../modules/dialogs/get-value/get-value-dialog.component";
+import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { SharedModule } from "../../../shared/shared.module";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AsyncPipe, NgIf } from "@angular/common";

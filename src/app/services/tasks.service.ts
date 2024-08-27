@@ -7,7 +7,7 @@ import { DashboardService } from "./dashboard.service";
 import { TaskContainer } from "../interfaces/task-container";
 import { NEW_TASK_DIALOG_OPTIONS } from "../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
-import { NewTaskDialogComponent } from "../components/tasks/new-task-dialog/new-task-dialog.component";
+import { NewTaskDialogComponent } from "../components/dialogs/new-task-dialog/new-task-dialog.component";
 
 @Injectable({
   providedIn: 'root'

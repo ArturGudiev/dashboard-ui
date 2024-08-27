@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { MainPageComponent } from "./components/main-page/main-page.component";
-import { TaskComponent } from "./components/tasks/task/task.component";
-import { ProblemComponent } from "./components/problems/problem/problem.component";
-import { StoryComponent } from "./components/story/story.component";
-import { EpicComponent } from "./components/epics/epic/epic.component";
-import { EpicsComponent } from "./components/epics/epics.component";
+import { TaskComponent } from "./components/containers/task/task.component";
+import { ProblemComponent } from "./components/containers/problem/problem.component";
+import { StoryComponent } from "./components/containers/story/story.component";
+import { EpicComponent } from "./components/containers/epic/epic.component";
+import { EpicsComponent } from "./components/lists/epics/epics.component";
 import { HelpComponent } from "./components/help/help.component";
-import { QuestionComponent } from "./components/questions/question/question.component";
+import { QuestionComponent } from "./components/containers/question/question.component";
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},

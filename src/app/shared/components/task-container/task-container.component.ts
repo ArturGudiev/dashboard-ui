@@ -21,7 +21,7 @@ import { TaskContainerService } from "../../../services/task-container.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Epic } from "../../../models/epic";
 import { EpicsService } from "../../../services/epics.service";
-import { RecordsListDialogComponent } from "../../../modules/dialogs/records-list-dialog/records-list-dialog.component";
+import { RecordsListDialogComponent } from "../../../components/dialogs/records-list-dialog/records-list-dialog.component";
 import { HelpComponent } from "../../../components/help/help.component";
 
 @UntilDestroy()

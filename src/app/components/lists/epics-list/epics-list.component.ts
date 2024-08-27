@@ -4,20 +4,28 @@ import { Router } from '@angular/router';
 import { Epic } from "../../../models/epic";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
+import { NgIf } from "@angular/common";
+import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
   selector: 'app-epics-list',
   templateUrl: './epics-list.component.html',
+  standalone: true,
+  imports: [
+    MaterialModule,
+    NgIf,
+  ],
   styleUrls: ['./epics-list.component.sass']
 })
 export class EpicsListComponent implements OnInit, AfterViewInit {
 
-  @Input() epics: Epic[] = [];
+  @Input({transform: (value: Epic[] | null): Epic[] => value ?? []}) epics: Epic[] = [];
   @Output() addSubepic = new EventEmitter<Epic>();
   selection = new SelectionModel<Epic>(true, []);
   displayedColumns: string[] = ['select', 'description'];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+  }
 
   dataSource = new MatTableDataSource<Epic>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
