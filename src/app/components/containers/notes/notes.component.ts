@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import { Observable } from "rxjs";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { MaterialModule } from "../../modules/material/material.module";
 import { FormsModule } from "@angular/forms";
 import { NgIf } from "@angular/common";
+import { MaterialModule } from "../../../modules/material/material.module";
 
 @UntilDestroy()
 @Component({

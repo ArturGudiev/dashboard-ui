@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { MaterialModule } from "../../modules/material/material.module";
 import { NgForOf, NgStyle } from "@angular/common";
+import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
   selector: 'app-parents-path',

@@ -22,16 +22,16 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Epic } from "../../../models/epic";
 import { EpicsService } from "../../../services/epics.service";
 import { RecordsListDialogComponent } from "../../dialogs/records-list-dialog/records-list-dialog.component";
-import { HelpComponent } from "../../help/help.component";
+import { HelpComponent } from "../../pages/help/help.component";
 import { MaterialModule } from "../../../modules/material/material.module";
-import { ParentsPathComponent } from "../../parents-path/parents-path.component";
 import { EpicsListComponent } from "../../lists/epics-list/epics-list.component";
 import { SubStoriesComponent } from "../../lists/substories/sub-stories.component";
 import { QuestionsListComponent } from "../../lists/questions-list/questions-list.component";
-import { ProblemsListComponent } from "../../problems-list/problems-list.component";
-import { NotesComponent } from "../../notes/notes.component";
+import { ProblemsListComponent } from "../../lists/problems-list/problems-list.component";
 import { NgIf } from "@angular/common";
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
+import { ParentsPathComponent } from "../parents-path/parents-path.component";
+import { NotesComponent } from "../notes/notes.component";
 
 @UntilDestroy()
 @Component({

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { EpicsService } from "../../services/epics.service";
+import { EpicsService } from "../../../services/epics.service";
 import { AsyncPipe, NgIf } from "@angular/common";
-import { EpicsListComponent } from "../lists/epics-list/epics-list.component";
+import { EpicsListComponent } from "../../lists/epics-list/epics-list.component";
 
 @Component({
   selector: 'app-epics',

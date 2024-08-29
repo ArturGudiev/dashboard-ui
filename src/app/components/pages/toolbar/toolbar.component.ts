@@ -2,17 +2,17 @@ import {Component, EventEmitter, HostListener, OnDestroy, OnInit, Output} from '
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {NavToDialogComponent} from "../dialogs/nav-task-dialog/nav-to-dialog.component";
-import {DashboardService, DashboardStateInterface} from "../../services/dashboard.service";
-import {Hotkeys} from "../../classes/hotkeys";
-import {CommandDialogComponent} from "../dialogs/command-dialog/command-dialog.component";
-import {CommandsService} from "../../services/commands.service";
-import {GetValueDialogComponent} from "../dialogs/get-value/get-value-dialog.component";
-import {NavigationService} from "../../services/navigation.service";
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
 import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
 import { MatButton } from "@angular/material/button";
+import { DashboardService, DashboardStateInterface } from "../../../services/dashboard.service";
+import { Hotkeys } from "../../../classes/hotkeys";
+import { CommandsService } from "../../../services/commands.service";
+import { NavigationService } from "../../../services/navigation.service";
+import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
+import { NavToDialogComponent } from "../../dialogs/nav-task-dialog/nav-to-dialog.component";
+import { CommandDialogComponent } from "../../dialogs/command-dialog/command-dialog.component";
 
 @Component({
   selector: 'app-toolbar',

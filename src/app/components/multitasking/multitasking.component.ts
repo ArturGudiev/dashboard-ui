@@ -9,7 +9,7 @@ import { TasksService } from "../../services/tasks.service";
 import { Observable, of } from "rxjs";
 import { MaterialModule } from "../../modules/material/material.module";
 import { NgForOf } from "@angular/common";
-import { MultitaskingItemComponent } from "../multitasking-item/multitasking-item.component";
+import { MultitaskingItemComponent } from "./multitasking-item/multitasking-item.component";
 
 @Component({
   selector: 'app-multitasking',

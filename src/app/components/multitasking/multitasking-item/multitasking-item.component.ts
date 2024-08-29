@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { TaskContainer } from "../../interfaces/task-container";
-import { TaskC } from "../../models/task-class";
-import { TasksService } from "../../services/tasks.service";
+import { TaskContainer } from "../../../interfaces/task-container";
+import { TaskC } from "../../../models/task-class";
+import { TasksService } from "../../../services/tasks.service";
 import { Observable } from "rxjs";
-import { MaterialModule } from "../../modules/material/material.module";
-import { TasksListComponent } from "../lists/tasks-list/tasks-list.component";
+import { MaterialModule } from "../../../modules/material/material.module";
+import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
 
 @Component({
   selector: 'app-multitasking-item',

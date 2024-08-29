@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { MainPageComponent } from "./components/main-page/main-page.component";
+import { MainPageComponent } from "./components/pages/main-page/main-page.component";
 import { TaskComponent } from "./components/containers/task/task.component";
 import { ProblemComponent } from "./components/containers/problem/problem.component";
 import { StoryComponent } from "./components/containers/story/story.component";
 import { EpicComponent } from "./components/containers/epic/epic.component";
-import { EpicsComponent } from "./components/epics/epics.component";
-import { HelpComponent } from "./components/help/help.component";
+import { EpicsComponent } from "./components/pages/epics/epics.component";
+import { HelpComponent } from "./components/pages/help/help.component";
 import { QuestionComponent } from "./components/containers/question/question.component";
 
 export const routes: Routes = [

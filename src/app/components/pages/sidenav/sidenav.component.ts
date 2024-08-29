@@ -1,15 +1,14 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Direction} from '@angular/cdk/bidi';
-import {BreakpointObserver} from '@angular/cdk/layout';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Direction } from '@angular/cdk/bidi';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {CommandsService} from "../../services/commands.service";
-import {Subscription} from "rxjs";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatListItem, MatNavList } from "@angular/material/list";
 import { ToolbarComponent } from "../toolbar/toolbar.component";
+import { CommandsService } from "../../../services/commands.service";
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 
@@ -35,10 +34,11 @@ export class SidenavComponent implements OnInit {
   dir = 'ltr' as Direction;
   showCard = false;
 
-  constructor(private breakpointObserver: BreakpointObserver,
-              private router: Router,
-              private commandService: CommandsService
-              ) { }
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private router: Router,
+    private commandService: CommandsService
+  ) { }
 
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
   myForm = new FormGroup({
