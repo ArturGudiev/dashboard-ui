@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import { EpicsService } from "../../services/epics.service";
-import { SharedModule } from "../../shared/shared.module";
+import { MultitaskingComponent } from "../multitasking/multitasking.component";
 
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
   standalone: true,
   imports: [
-    SharedModule
+    MultitaskingComponent
   ],
   styleUrls: ['./main-page.component.sass']
 })

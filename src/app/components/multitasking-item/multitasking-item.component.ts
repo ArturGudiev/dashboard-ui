@@ -1,12 +1,19 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { TaskContainer } from "../../../interfaces/task-container";
-import { TaskC } from "../../../models/task-class";
-import { TasksService } from "../../../services/tasks.service";
+import { TaskContainer } from "../../interfaces/task-container";
+import { TaskC } from "../../models/task-class";
+import { TasksService } from "../../services/tasks.service";
 import { Observable } from "rxjs";
+import { MaterialModule } from "../../modules/material/material.module";
+import { TasksListComponent } from "../lists/tasks-list/tasks-list.component";
 
 @Component({
   selector: 'app-multitasking-item',
   templateUrl: './multitasking-item.component.html',
+  standalone: true,
+  imports: [
+    MaterialModule,
+    TasksListComponent
+  ],
   styleUrls: ['./multitasking-item.component.sass']
 })
 export class MultitaskingItemComponent implements OnInit, OnChanges {

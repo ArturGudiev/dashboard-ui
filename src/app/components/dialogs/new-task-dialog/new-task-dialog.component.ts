@@ -6,7 +6,7 @@ import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { MatFormField } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatButton } from "@angular/material/button";
-import { DashboardMaterialModule } from "../../../shared/material/dashboard-material.module";
+import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
   selector: 'app-new-task-dialog',
@@ -18,7 +18,7 @@ import { DashboardMaterialModule } from "../../../shared/material/dashboard-mate
     MatFormField,
     MatInput,
     MatDialogActions,
-    DashboardMaterialModule,
+    MaterialModule,
     MatButton
   ],
   styleUrls: ['./new-task-dialog.component.sass']

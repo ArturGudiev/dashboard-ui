@@ -1,15 +1,14 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {TasksService} from '../../../services/tasks.service';
-import {TaskC} from '../../../models/task-class';
-import {getUrlByDescription} from '../../../shared/libs/dashboard.lib';
-import {Title} from "@angular/platform-browser";
-import { Observable, Subscription, takeUntil } from "rxjs";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TasksService } from '../../../services/tasks.service';
+import { TaskC } from '../../../models/task-class';
+import { getUrlByDescription } from '../../../shared/libs/dashboard.lib';
+import { Title } from "@angular/platform-browser";
 import { map } from "rxjs/operators";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { SharedModule } from "../../../shared/shared.module";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { CommonModule } from "@angular/common";
+import { TaskContainerComponent } from "../task-container/task-container.component";
 
 @UntilDestroy()
 @Component({
@@ -17,9 +16,9 @@ import { CommonModule } from "@angular/common";
   templateUrl: './task.component.html',
   standalone: true,
   imports: [
-    SharedModule,
     MatProgressSpinner,
     CommonModule,
+    TaskContainerComponent,
   ],
   styleUrls: ['./task.component.sass']
 })

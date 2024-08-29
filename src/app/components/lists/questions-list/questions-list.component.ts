@@ -11,14 +11,25 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { TasksService } from "../../../services/tasks.service";
 import { Store } from "@ngxs/store";
-import { GetValueDialogComponent } from "../../../components/dialogs/get-value/get-value-dialog.component";
-import { GET_VALUE_DIALOG_OPTIONS } from "../../constants";
+import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
+import { GET_VALUE_DIALOG_OPTIONS } from "../../../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
 import { CommandsService } from "../../../services/commands.service";
+import { MaterialModule } from "../../../modules/material/material.module";
+import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { TasksListComponent } from "../tasks-list/tasks-list.component";
 
 @UntilDestroy()
 @Component({
   selector: 'app-questions-list',
+  standalone: true,
+  imports: [
+    MaterialModule,
+    NgClass,
+    NgForOf,
+    NgIf,
+    TasksListComponent
+  ],
   templateUrl: './questions-list.component.html',
   styleUrls: ['./questions-list.component.sass']
 })

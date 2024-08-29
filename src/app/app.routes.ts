@@ -4,7 +4,7 @@ import { TaskComponent } from "./components/containers/task/task.component";
 import { ProblemComponent } from "./components/containers/problem/problem.component";
 import { StoryComponent } from "./components/containers/story/story.component";
 import { EpicComponent } from "./components/containers/epic/epic.component";
-import { EpicsComponent } from "./components/lists/epics/epics.component";
+import { EpicsComponent } from "./components/epics/epics.component";
 import { HelpComponent } from "./components/help/help.component";
 import { QuestionComponent } from "./components/containers/question/question.component";
 

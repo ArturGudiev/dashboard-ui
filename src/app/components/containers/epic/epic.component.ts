@@ -3,16 +3,14 @@ import { MatDialog } from "@angular/material/dialog";
 import { Title } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Epic } from "../../../models/epic";
-import { CommandsService } from "../../../services/commands.service";
 import { EpicsService } from "../../../services/epics.service";
 import { TasksService } from "../../../services/tasks.service";
-import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { SharedModule } from "../../../shared/shared.module";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { NgIf } from "@angular/common";
 import { map } from "rxjs/operators";
 import { Observable, of } from "rxjs";
+import { TaskContainerComponent } from "../task-container/task-container.component";
 
 @UntilDestroy()
 @Component({
@@ -20,9 +18,9 @@ import { Observable, of } from "rxjs";
   templateUrl: './epic.component.html',
   standalone: true,
   imports: [
-    SharedModule,
     MatProgressSpinner,
-    NgIf
+    NgIf,
+    TaskContainerComponent
   ],
   styleUrls: ['./epic.component.sass']
 })

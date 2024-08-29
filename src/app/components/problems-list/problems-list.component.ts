@@ -1,24 +1,35 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Problem } from "../../../models/problem";
+import { Problem } from "../../models/problem";
 import { SelectionModel } from "@angular/cdk/collections";
-import { ProblemsService } from "../../../services/problems.service";
+import { ProblemsService } from "../../services/problems.service";
 import { Router } from "@angular/router";
-import { TaskC } from "../../../models/task-class";
-import { TaskContainer } from "../../../interfaces/task-container";
+import { TaskC } from "../../models/task-class";
+import { TaskContainer } from "../../interfaces/task-container";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
-import { TasksService } from "../../../services/tasks.service";
+import { SetFocusedTaskForSubtasks } from "../../state/app.actions";
+import { TasksService } from "../../services/tasks.service";
 import { Store } from "@ngxs/store";
-import { GetValueDialogComponent } from "../../../components/dialogs/get-value/get-value-dialog.component";
+import { GetValueDialogComponent } from "../dialogs/get-value/get-value-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-import { GET_VALUE_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from "../../constants";
-import { CommandsService } from "../../../services/commands.service";
+import { GET_VALUE_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from "../../shared/constants";
+import { CommandsService } from "../../services/commands.service";
+import { MaterialModule } from "../../modules/material/material.module";
+import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { TasksListComponent } from "../lists/tasks-list/tasks-list.component";
 
 @UntilDestroy()
 @Component({
   selector: 'app-problems-list',
   templateUrl: './problems-list.component.html',
+  standalone: true,
+  imports: [
+    MaterialModule,
+    NgClass,
+    NgForOf,
+    NgIf,
+    TasksListComponent
+  ],
   styleUrls: ['./problems-list.component.sass']
 })
 export class ProblemsListComponent implements OnInit {

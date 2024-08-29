@@ -4,7 +4,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import { MatFormField } from "@angular/material/form-field";
 import { NgIf, NgStyle } from "@angular/common";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
-import { DashboardMaterialModule } from "../../../shared/material/dashboard-material.module";
+import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
   selector: 'app-get-value',
@@ -14,8 +14,8 @@ import { DashboardMaterialModule } from "../../../shared/material/dashboard-mate
     ReactiveFormsModule,
     MatFormField,
     NgStyle,
-    DashboardMaterialModule,
     CdkTextareaAutosize,
+    MaterialModule,
     NgIf
   ],
   styleUrls: ['./get-value-dialog.component.sass']

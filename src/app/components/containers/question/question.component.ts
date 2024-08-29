@@ -7,11 +7,11 @@ import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { Question } from "../../../models/question";
 import { QuestionsService } from "../../../services/questions.service";
 import { UntilDestroy } from "@ngneat/until-destroy";
-import { SharedModule } from "../../../shared/shared.module";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { map } from "rxjs/operators";
+import { TaskContainerComponent } from "../task-container/task-container.component";
 
 @UntilDestroy()
 @Component({
@@ -19,10 +19,10 @@ import { map } from "rxjs/operators";
   templateUrl: './question.component.html',
   standalone: true,
   imports: [
-    SharedModule,
     MatProgressSpinner,
     NgIf,
-    AsyncPipe
+    AsyncPipe,
+    TaskContainerComponent
   ],
   styleUrls: ['./question.component.sass']
 })

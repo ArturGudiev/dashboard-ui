@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from "@angular/materi
 import {TaskC} from "../../../models/task-class";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatButton } from "@angular/material/button";
-import { DashboardMaterialModule } from "../../../shared/material/dashboard-material.module";
+import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
   selector: 'app-nav-to-task-dialog',
@@ -16,7 +16,7 @@ import { DashboardMaterialModule } from "../../../shared/material/dashboard-mate
     ReactiveFormsModule,
     MatDialogActions,
     MatButton,
-    DashboardMaterialModule,
+    MaterialModule,
   ],
   styleUrls: ['./nav-to-dialog.component.sass']
 })

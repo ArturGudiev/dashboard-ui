@@ -16,24 +16,33 @@ import { every, isNaN } from "lodash";
 import { TaskContainer } from "../../../interfaces/task-container";
 import { CommandsService } from "../../../services/commands.service";
 import { MatDialog } from "@angular/material/dialog";
-import { GetValueDialogComponent } from "../../../components/dialogs/get-value/get-value-dialog.component";
+import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { Store } from "@ngxs/store";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { AppState } from "../../../state/app.state";
 import { distinctUntilChanged, map } from "rxjs/operators";
-import { taskContainerDescriptionsAreEqual } from "../../libs/utils.lib";
+import { taskContainerDescriptionsAreEqual } from "../../../shared/libs/utils.lib";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { NavigationService } from "../../../services/navigation.service";
 import * as _ from "lodash";
 import { isTaskContainerType } from "../../../interfaces/types";
-import { isTask } from "../../constants";
+import { isTask } from "../../../shared/constants";
+import { MaterialModule } from "../../../modules/material/material.module";
+import { NgClass, NgForOf, NgIf } from "@angular/common";
 
 @UntilDestroy()
 @Component({
   selector: 'app-tasks-list',
   templateUrl: './tasks-list.component.html',
+  standalone: true,
+  imports: [
+    MaterialModule,
+    NgClass,
+    NgForOf,
+    NgIf
+  ],
   styleUrls: ['./tasks-list.component.sass']
 })
 export class TasksListComponent implements OnInit, OnChanges {

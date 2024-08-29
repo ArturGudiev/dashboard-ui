@@ -6,9 +6,9 @@ import { StoriesService } from "../../../services/stories.service";
 import { Title } from "@angular/platform-browser";
 import { map } from "rxjs/operators";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { SharedModule } from "../../../shared/shared.module";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { NgIf } from "@angular/common";
+import { TaskContainerComponent } from "../task-container/task-container.component";
 
 @UntilDestroy()
 @Component({
@@ -16,9 +16,9 @@ import { NgIf } from "@angular/common";
   templateUrl: './story.component.html',
   standalone: true,
   imports: [
-    SharedModule,
     MatProgressSpinner,
-    NgIf
+    NgIf,
+    TaskContainerComponent
   ],
   styleUrls: ['./story.component.sass']
 })

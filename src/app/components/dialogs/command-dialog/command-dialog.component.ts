@@ -5,7 +5,7 @@ import {TaskC} from "../../../models/task-class";
 import { MatFormField } from "@angular/material/form-field";
 import { MatButton } from "@angular/material/button";
 import { MatInput } from "@angular/material/input";
-import { DashboardMaterialModule } from "../../../shared/material/dashboard-material.module";
+import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
   selector: 'app-command-dialog',
@@ -17,7 +17,7 @@ import { DashboardMaterialModule } from "../../../shared/material/dashboard-mate
     MatDialogActions,
     MatButton,
     MatInput,
-    DashboardMaterialModule, // because of label
+    MaterialModule, // because of label
   ],
   styleUrls: ['./command-dialog.component.sass']
 })

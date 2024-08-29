@@ -9,12 +9,10 @@ import { Observable, of } from "rxjs";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
-import { SharedModule } from "../../../shared/shared.module";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AsyncPipe, NgIf } from "@angular/common";
-import { TasksService } from "../../../services/tasks.service";
 import { map } from "rxjs/operators";
-import { QuestionsService } from "../../../services/questions.service";
+import { TaskContainerComponent } from "../task-container/task-container.component";
 
 @UntilDestroy()
 @Component({
@@ -22,10 +20,10 @@ import { QuestionsService } from "../../../services/questions.service";
   templateUrl: './problem.component.html',
   standalone: true,
   imports: [
-    SharedModule,
     MatProgressSpinner,
     AsyncPipe,
-    NgIf
+    NgIf,
+    TaskContainerComponent
   ],
   styleUrls: ['./problem.component.sass']
 })

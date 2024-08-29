@@ -1,0 +1,22 @@
+<div style="margin-left: 5rem">
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Task Container</mat-label>
+    <input type="text" matInput [formControl]="inputFormControl"
+           (keyup.enter)="addTaskContainer()"
+           placeholder="question 111">
+  </mat-form-field>
+
+
+  <div *ngFor="let container of taskContainers, let i = index">
+    <div class="display: flex">
+      <app-multitasking-item
+        [taskContainer]="container"
+        (remoteItem)="removeItem(i)"
+        (refreshTaskContainer)="refreshTaskContainer(container, i)"
+        [refreshTasks$]="getTaskContainerRefreshTasks(container)"
+      ></app-multitasking-item>
+    </div>
+  </div>
+
+</div>

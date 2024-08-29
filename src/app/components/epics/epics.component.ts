@@ -1,17 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { EpicsService } from "../../../services/epics.service";
-import { Epic } from "../../../models/epic";
+import { Component } from '@angular/core';
+import { EpicsService } from "../../services/epics.service";
 import { AsyncPipe, NgIf } from "@angular/common";
-import { SharedModule } from "../../../shared/shared.module";
-import { Observable } from "rxjs";
-import { EpicsListComponent } from "../epics-list/epics-list.component";
+import { EpicsListComponent } from "../lists/epics-list/epics-list.component";
 
 @Component({
   selector: 'app-epics',
   standalone: true,
   imports: [
     NgIf,
-    SharedModule,
     AsyncPipe,
     EpicsListComponent
   ],

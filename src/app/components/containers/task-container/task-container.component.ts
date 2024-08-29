@@ -15,19 +15,40 @@ import { QuestionsService } from "../../../services/questions.service";
 import { RecordsService } from "../../../services/records.service";
 import { StoriesService } from "../../../services/stories.service";
 import { TasksService } from "../../../services/tasks.service";
-import { getUrlByDescription } from "../../libs/dashboard.lib";
+import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { Store } from "@ngxs/store";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Epic } from "../../../models/epic";
 import { EpicsService } from "../../../services/epics.service";
-import { RecordsListDialogComponent } from "../../../components/dialogs/records-list-dialog/records-list-dialog.component";
-import { HelpComponent } from "../../../components/help/help.component";
+import { RecordsListDialogComponent } from "../../dialogs/records-list-dialog/records-list-dialog.component";
+import { HelpComponent } from "../../help/help.component";
+import { MaterialModule } from "../../../modules/material/material.module";
+import { ParentsPathComponent } from "../../parents-path/parents-path.component";
+import { EpicsListComponent } from "../../lists/epics-list/epics-list.component";
+import { SubStoriesComponent } from "../../lists/substories/sub-stories.component";
+import { QuestionsListComponent } from "../../lists/questions-list/questions-list.component";
+import { ProblemsListComponent } from "../../problems-list/problems-list.component";
+import { NotesComponent } from "../../notes/notes.component";
+import { NgIf } from "@angular/common";
+import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
 
 @UntilDestroy()
 @Component({
   selector: 'app-task-container',
   templateUrl: './task-container.component.html',
+  standalone: true,
+  imports: [
+    MaterialModule,
+    ParentsPathComponent,
+    EpicsListComponent,
+    SubStoriesComponent,
+    QuestionsListComponent,
+    ProblemsListComponent,
+    NotesComponent,
+    NgIf,
+    TasksListComponent
+  ],
   styleUrls: ['./task-container.component.sass']
 })
 export class TaskContainerComponent implements OnInit, OnChanges {
@@ -89,13 +110,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
       .subscribe(() => this.refreshTaskContainer.emit());
 
   }
-
-  // @HostListener('window:keyup', ['$event'])
-  // keyEvent(event: KeyboardEvent) {
-  //   if (event.key === '1') {
-  //     console.log('1');
-  //   }
-  // }
 
   private refreshTaskContainerParts() {
     this.refreshTasks();
