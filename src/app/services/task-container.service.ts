@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import {TaskContainer} from "../interfaces/task-container";
 import { Observable, of, Subject } from "rxjs";
-import {ApiService} from "./api.service";
-import { Question } from '../models/question';
-import { TaskContainerType } from '../interfaces/types';
+import { ApiService } from "./api.service";
 import { TasksService } from './tasks.service';
 import { ProblemsService } from './problems.service';
 import { QuestionsService } from './questions.service';
+import { TaskContainer } from "../models/interfaces/task-container";
+import { TaskContainerType } from "../models/interfaces/types";
 
 @Injectable({
   providedIn: 'root'

@@ -4,7 +4,6 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { ProblemsService } from "../../../services/problems.service";
 import { Router } from "@angular/router";
 import { TaskC } from "../../../models/task-class";
-import { TaskContainer } from "../../../interfaces/task-container";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
@@ -12,11 +11,12 @@ import { TasksService } from "../../../services/tasks.service";
 import { Store } from "@ngxs/store";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-import { GET_VALUE_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from "../../../shared/constants";
+import { GET_VALUE_DIALOG_OPTIONS } from "../../../shared/constants";
 import { CommandsService } from "../../../services/commands.service";
 import { MaterialModule } from "../../../modules/material/material.module";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { TasksListComponent } from "../tasks-list/tasks-list.component";
+import { TaskContainer } from "../../../models/interfaces/task-container";
 
 @UntilDestroy()
 @Component({

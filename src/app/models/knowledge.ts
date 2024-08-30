@@ -1,8 +1,8 @@
-import {TaskContainer} from "../interfaces/task-container";
-import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
 import { pick } from "lodash";
+import { TaskContainer } from "./interfaces/task-container";
+import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
-export class Knowledge implements TaskContainer{
+export class Knowledge implements TaskContainer {
   static readonly prefix = 'Knowledge-';
   type: TaskContainerType = 'knowledge-bit';
   _id: number;
@@ -35,7 +35,7 @@ export class Knowledge implements TaskContainer{
     this.name = name;
     this.value = value;
     this.tags = tags;
-    if(extension) {
+    if (extension) {
       this.extension = extension;
     }
     this.tasks = otherFields?.tasks ?? [];

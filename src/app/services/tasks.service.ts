@@ -4,10 +4,10 @@ import { ApiService } from './api.service';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap, tap } from "rxjs/operators";
 import { DashboardService } from "./dashboard.service";
-import { TaskContainer } from "../interfaces/task-container";
 import { NEW_TASK_DIALOG_OPTIONS } from "../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
 import { NewTaskDialogComponent } from "../components/dialogs/new-task-dialog/new-task-dialog.component";
+import { TaskContainer } from "../models/interfaces/task-container";
 
 @Injectable({
   providedIn: 'root'

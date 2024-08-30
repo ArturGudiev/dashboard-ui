@@ -1,6 +1,7 @@
 // var fs = require('file-system');
 
-import { TaskContainerDescription } from "../../interfaces/types";
+
+import { TaskContainerDescription } from "../../models/interfaces/types";
 
 export function getJSONFileContent(path: string): any {
   // const content = readFileSync(path);

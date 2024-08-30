@@ -1,5 +1,4 @@
-import { TaskC } from "../models/task-class";
-import { TaskContainer } from "../interfaces/task-container";
+import { TaskContainer } from "../models/interfaces/task-container";
 
 export class MyAction {
   static readonly type = 'MyAction'

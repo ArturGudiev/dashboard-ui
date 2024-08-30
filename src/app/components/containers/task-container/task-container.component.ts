@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { Hotkey, HotkeysService } from "angular2-hotkeys";
 import * as _ from "lodash";
 import { Observable, of, Subject } from "rxjs";
-import { TaskContainer } from "../../../interfaces/task-container";
 import { Problem } from "../../../models/problem";
 import { Question } from "../../../models/question";
 import { Story } from "../../../models/story";
@@ -32,6 +31,7 @@ import { NgIf } from "@angular/common";
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
+import { TaskContainer } from "../../../models/interfaces/task-container";
 
 @UntilDestroy()
 @Component({

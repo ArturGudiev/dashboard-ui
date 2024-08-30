@@ -1,6 +1,6 @@
-import {TaskContainer} from "../interfaces/task-container";
-import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
-import {pick} from 'lodash';
+import { pick } from 'lodash';
+import { TaskContainer } from "./interfaces/task-container";
+import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
 export class Question implements TaskContainer {
   static readonly QUESTION = 'Question-';

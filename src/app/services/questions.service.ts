@@ -7,8 +7,8 @@ import { DashboardService } from "./dashboard.service";
 import { GetValueDialogComponent } from "../components/dialogs/get-value/get-value-dialog.component";
 import { NEW_QUESTION_DIALOG_OPTIONS } from "../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
-import { TaskContainer } from "../interfaces/task-container";
-import { TaskContainerDescription } from "../interfaces/types";
+import { TaskContainerDescription } from "../models/interfaces/types";
+import { TaskContainer } from "../models/interfaces/task-container";
 
 
 @Injectable({

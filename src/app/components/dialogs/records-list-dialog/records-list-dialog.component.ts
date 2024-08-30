@@ -1,14 +1,14 @@
-import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {RecordsService} from "../../../services/records.service";
-import {Observable} from "rxjs";
-import {RecordItem} from "../../../models/record-item";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {IArrayParams} from "../../../interfaces/array-params";
-import {IArrayResponse} from "../../../services/api.service";
+import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { RecordsService } from "../../../services/records.service";
+import { Observable } from "rxjs";
+import { RecordItem } from "../../../models/record-item";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { IArrayResponse } from "../../../services/api.service";
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from "@angular/material/button-toggle";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AsyncPipe, NgForOf, NgIf } from "@angular/common";
+import { IArrayParams } from "../../../models/interfaces/array-params";
 
 type SelectedOptionType = 'node' | 'all' | 'node_plus_children';
 

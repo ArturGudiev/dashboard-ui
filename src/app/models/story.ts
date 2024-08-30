@@ -1,8 +1,8 @@
-import { TaskContainer } from "../interfaces/task-container";
-import {TaskContainerDescription, TaskContainerType} from "../interfaces/types";
-import {pick} from 'lodash';
+import { pick } from 'lodash';
+import { TaskContainer } from "./interfaces/task-container";
+import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
-export class Story implements TaskContainer{
+export class Story implements TaskContainer {
   static readonly PREFIX = 'STORY-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Story.PREFIX + '(\\d+)\\s');
   type: TaskContainerType = 'story';

@@ -1,7 +1,8 @@
 import {
   ChangeDetectorRef,
   Component,
-  EventEmitter, HostListener,
+  EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -12,8 +13,8 @@ import { TaskC } from "../../../models/task-class";
 import { SelectionModel } from "@angular/cdk/collections";
 import { TasksService } from "../../../services/tasks.service";
 import { Router } from "@angular/router";
+import * as _ from "lodash";
 import { every, isNaN } from "lodash";
-import { TaskContainer } from "../../../interfaces/task-container";
 import { CommandsService } from "../../../services/commands.service";
 import { MatDialog } from "@angular/material/dialog";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
@@ -26,11 +27,10 @@ import { distinctUntilChanged, map } from "rxjs/operators";
 import { taskContainerDescriptionsAreEqual } from "../../../shared/libs/utils.lib";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { NavigationService } from "../../../services/navigation.service";
-import * as _ from "lodash";
-import { isTaskContainerType } from "../../../interfaces/types";
 import { isTask } from "../../../shared/constants";
 import { MaterialModule } from "../../../modules/material/material.module";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { TaskContainer } from "../../../models/interfaces/task-container";
 
 @UntilDestroy()
 @Component({

@@ -5,7 +5,6 @@ import { Router } from "@angular/router";
 import { QuestionsService } from "../../../services/questions.service";
 import { Problem } from "../../../models/problem";
 import { TaskC } from "../../../models/task-class";
-import { TaskContainer } from "../../../interfaces/task-container";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
@@ -18,6 +17,7 @@ import { CommandsService } from "../../../services/commands.service";
 import { MaterialModule } from "../../../modules/material/material.module";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { TasksListComponent } from "../tasks-list/tasks-list.component";
+import { TaskContainer } from "../../../models/interfaces/task-container";
 
 @UntilDestroy()
 @Component({

@@ -1,8 +1,7 @@
 // app.state.ts
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { TaskC } from "../models/task-class";
-import { MyAction, SetFocusedTaskForSubtasks } from "./app.actions";
-import { TaskContainer } from "../interfaces/task-container";
+import { SetFocusedTaskForSubtasks } from "./app.actions";
+import { TaskContainer } from "../models/interfaces/task-container";
 
 export class ToDoProfessorStateModel {
   // Define your state properties here
