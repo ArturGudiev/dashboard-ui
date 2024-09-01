@@ -1,5 +1,6 @@
-<mat-spinner *ngIf="isLoading"></mat-spinner>
-<ng-container *ngIf="!isLoading">
+@if ( isLoading ){
+  <mat-spinner></mat-spinner>
+} @else {
   <app-task-container
     [taskContainer]="problem"
     [parentsPath]="parentsPath"
@@ -12,4 +13,4 @@
     (resolve)="onDoneAllClick()"
   >
   </app-task-container>
-</ng-container>
+}

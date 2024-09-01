@@ -42,7 +42,7 @@ export class ApiService {
   }
 
   _getParentsPath(obj: TaskContainer): Observable<string[]> {
-    return this.http.post<string[]>(`${this.baseUrl}/task/parents-path/`, obj);
+    return this.http.post<string[]>(`${this.baseUrl}/parents-path/`, obj);
   }
 
   _getTasks(ids: number[]): Observable<TaskC[]> {
@@ -116,6 +116,12 @@ export class ApiService {
     return this.http.post<string[]>(`${this.baseUrl}/epic/parents-path/`, epic);
   }
 
+  _updateEpic(epic: Epic): Observable<Epic> {
+    return this.http.put<Epic>(`${this.baseUrl}/update-epic/`, epic)
+      .pipe(
+        map((obj) => Epic.createFromObj(obj))
+      );
+  }
 
 //------------------------------------stories-------------------------------------------------
   _getStory(id: number) {
@@ -132,7 +138,13 @@ export class ApiService {
       map((stories: any) => stories.map(
         (s: Story) => Story.createFromObj(s))
       ));
+  }
 
+  _updateStory(story: Story): Observable<Story> {
+    return this.http.put<Story>(`${this.baseUrl}/update-story/`, story)
+      .pipe(
+        map((obj) => Story.createFromObj(obj))
+      );
   }
   //------------------------------------stories-------------------------------------------------
   //------------------------------------problems-------------------------------------------------
@@ -238,7 +250,7 @@ export class ApiService {
   _updateAction(action: Action): Observable<Action> {
     return this.http.post<Action>(`${this.baseUrl}/update-action/`, action)
       .pipe(
-        map((obj: Action) => Action.createFromObj(action))
+        map((obj: Action) => Action.createFromObj(obj))
       );
   }
 
@@ -304,6 +316,5 @@ export class ApiService {
     return this.http.post<RecordItem>(`${this.baseUrl}/new-record/`, bodyObj);
   }
   //------------------------------------knowledge bits end----------------------------------------
-
 
 }

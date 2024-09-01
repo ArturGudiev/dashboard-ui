@@ -24,5 +24,4 @@ export interface TaskContainer extends ITaskContainerChildElements{
   getTaskContainerDescription(): TaskContainerDescription;
   type: TaskContainerType;
   notes: string;
-
 }

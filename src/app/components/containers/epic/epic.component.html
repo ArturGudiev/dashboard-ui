@@ -1,13 +1,19 @@
-<mat-spinner *ngIf="isLoading"></mat-spinner>
-<ng-container *ngIf="!isLoading">
-  <app-task-container
-    [taskContainer]="epic"
-    [parentsPath]="parentsPath"
-    [refreshTasks$]="refreshSubtasks$"
-    [refreshProblems$]="refreshProblemsList$"
-    [refreshQuestions$]="refreshQuestionsList$"
-    [showEpics]="true"
-    [showStories]="true"
-    (refreshTaskContainer)="refreshEpic()"
-  ></app-task-container>
-</ng-container>
+@if(isLoading) {
+  <mat-spinner></mat-spinner>
+} @else {
+  <ng-container *ngIf="!isLoading">
+    <app-task-container
+      [taskContainer]="epic"
+      [parentsPath]="parentsPath"
+      [refreshTasks$]="refreshSubtasks$"
+      [refreshProblems$]="refreshProblemsList$"
+      [refreshQuestions$]="refreshQuestionsList$"
+      (updateTaskContainer)="updateEpic()"
+      [showEpics]="true"
+      [showStories]="true"
+      (refreshTaskContainer)="refreshEpic()"
+    ></app-task-container>
+  </ng-container>
+}
+
+

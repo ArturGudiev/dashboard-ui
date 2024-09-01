@@ -1,5 +1,6 @@
-<mat-spinner *ngIf="isLoading"></mat-spinner>
-<ng-container *ngIf="!isLoading">
+@if( isLoading) {
+  <mat-spinner></mat-spinner>
+} @else {
   <app-task-container
     [taskContainer]="story"
     [parentsPath]="parentsPath"
@@ -7,8 +8,6 @@
     [refreshTasks$]="refreshSubtasks$"
     [refreshProblems$]="refreshProblemsList$"
     [refreshQuestions$]="refreshQuestionsList$"
-  >
-  </app-task-container>
-<!--  (updateTaskContainer)="updateStory()"-->
-
-</ng-container>
+    (updateTaskContainer)="updateStory()"
+  ></app-task-container>
+}

@@ -12,6 +12,7 @@ import { AsyncPipe, NgIf } from "@angular/common";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { map } from "rxjs/operators";
 import { TaskContainerComponent } from "../task-container/task-container.component";
+import { TaskContainerService } from "../../../services/task-container.service";
 
 @UntilDestroy()
 @Component({
@@ -43,6 +44,7 @@ export class QuestionComponent implements OnInit {
     private titleService: Title,
     public dialog: MatDialog,
     private questionsService: QuestionsService,
+    private taskContainerService: TaskContainerService
   ) {
   }
 
@@ -60,7 +62,7 @@ export class QuestionComponent implements OnInit {
       this.question = question;
       this.isLoading = false;
       this.titleService.setTitle(this.question.getFullDescription());
-      this.parentsPath$ = this.questionsService.getQuestionParentsPath(this.question);
+      this.parentsPath$ = this.taskContainerService.getParentsPath(this.question);
       this.parentsPath$.subscribe((res: string[]) => this.parentsPath = res);
     });
   }

@@ -1,6 +1,5 @@
 <!--Иконки "Добавления проблемы" -->
-<ng-container *ngIf="problems.length > 0">
-
+@if (problems.length > 0) {
   <div id="problems-actions">
     <h2 id="problems-title" class="red-color">Problems</h2>
 
@@ -22,49 +21,50 @@
 
   <div id="table-wrapper">
     <table
-    id="problems-table"
-    *ngIf="problems.length > 0"
-    mat-table
-    [dataSource]="problems"
-    class="mat-elevation-z8"
-  >
-    <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox class="red-color" [disabled]="true" (change)="$event ? onMainCheckboxClick() : null"
-                      [checked]="selection.hasValue() && isAllSelected()"
-                      [indeterminate]="selection.hasValue() && !isAllSelected()">
-        </mat-checkbox>
-      </th>
-      <td mat-cell *matCellDef="let row">
-        <mat-checkbox (click)="$event.stopPropagation()"
-                      (change)="$event ? selection.toggle(row) : null"
-                      [checked]="selection.isSelected(row)">
-        </mat-checkbox>
-      </td>
-    </ng-container>
+      id="problems-table"
+      *ngIf="problems.length > 0"
+      mat-table
+      [dataSource]="problems"
+      class="mat-elevation-z8"
+    >
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox class="red-color" [disabled]="true" (change)="$event ? onMainCheckboxClick() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
 
-    <!-- Position Column -->
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef> No.</th>
-      <td mat-cell class="row-link red-color" (click)="onProblemClick(problem)" *matCellDef="let problem; let i = index">
-        <span>{{i + 1}}</span>
-      </td>
-    </ng-container>
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef> No.</th>
+        <td mat-cell class="row-link red-color" (click)="onProblemClick(problem)"
+            *matCellDef="let problem; let i = index">
+          <span>{{ i + 1 }}</span>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef> Description</th>
-      <td mat-cell *matCellDef="let problem;" (click)="onProblemClick(problem)">
-        <span class="row-link red-color"  (click)="onProblemClick(problem)">{{problem.description}}</span>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description</th>
+        <td mat-cell *matCellDef="let problem;" (click)="onProblemClick(problem)">
+          <span class="row-link red-color" (click)="onProblemClick(problem)">{{ problem.description }}</span>
+        </td>
+      </ng-container>
 
-    <!--Иконка решения проблемы -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions</th>
-      <td mat-cell *matCellDef="let problem; let i=index" id="row-{{i}}">
-        <mat-icon (click)="onProblemSolvedClick(problem)">done</mat-icon>
-      </td>
-    </ng-container>
+      <!--Иконка решения проблемы -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions</th>
+        <td mat-cell *matCellDef="let problem; let i=index" id="row-{{i}}">
+          <mat-icon (click)="onProblemSolvedClick(problem)">done</mat-icon>
+        </td>
+      </ng-container>
 
       <!-- Чекбокс для отображенмя подзадач -->
       <ng-container matColumnDef="showSubtasks">
@@ -84,9 +84,9 @@
         </td>
       </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 
     <!-- Список списков подзадач соотетствующий выбранным (для отображения подзадач) задачам -->
     <div id="subtasks-of-selected-tasks">
@@ -101,5 +101,4 @@
       </ng-container>
     </div>
   </div>
-
-</ng-container>
+}

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { Title } from "@angular/platform-browser";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Epic } from "../../../models/epic";
 import { EpicsService } from "../../../services/epics.service";
-import { TasksService } from "../../../services/tasks.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { NgIf } from "@angular/common";
 import { map } from "rxjs/operators";
 import { Observable, of } from "rxjs";
 import { TaskContainerComponent } from "../task-container/task-container.component";
+import { TaskContainerService } from "../../../services/task-container.service";
 
 @UntilDestroy()
 @Component({
@@ -37,12 +37,12 @@ export class EpicComponent implements OnInit {
   refreshProblemsList$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.problems));
   refreshQuestionsList$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.questions));
 
-  constructor(private route: ActivatedRoute,
-              private epicsService: EpicsService,
-              private tasksService: TasksService,
-              private router: Router,
-              private titleService: Title,
-              public dialog: MatDialog,
+  constructor(
+    public dialog: MatDialog,
+    private route: ActivatedRoute,
+    private epicsService: EpicsService,
+    private titleService: Title,
+    private taskContainerService: TaskContainerService,
   ) {
   }
 
@@ -61,7 +61,7 @@ export class EpicComponent implements OnInit {
       this.parentsPath$ = this.epicsService.getParentsPath(this.epic);
       this.titleService.setTitle(this.epic.getFullDescription());
       if (this.epic !== null) {
-        this.tasksService.getParentsPath(this.epic)
+        this.taskContainerService.getParentsPath(this.epic)
           .pipe(untilDestroyed(this))
           .subscribe((res: string[]) => {
             this.parentsPath = res;
@@ -71,6 +71,13 @@ export class EpicComponent implements OnInit {
     });
   }
 
-
-
+  /**
+   * Сохранение эпика (например, для обновления в базе заметок)
+   */
+  updateEpic() {
+    if (!this.epic) {
+      return;
+    }
+    this.epicsService.updateEpic(this.epic).subscribe((epic: Epic) => this.epic = epic);
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Observable} from "rxjs";
-import {ApiService} from "./api.service";
-import {Epic} from "../models/epic";
+import { Observable } from "rxjs";
+import { ApiService } from "./api.service";
+import { Epic } from "../models/epic";
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +24,9 @@ export class EpicsService {
 
   getAllEpics(): Observable<Epic[]> {
     return this.apiService._getAllEpics();
+  }
+
+  updateEpic(epic: Epic): Observable<Epic> {
+    return this.apiService._updateEpic(epic)
   }
 }

@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgForOf, NgStyle } from "@angular/common";
 import { MaterialModule } from "../../../modules/material/material.module";
+import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
 
 @Component({
   selector: 'app-parents-path',
@@ -8,7 +9,8 @@ import { MaterialModule } from "../../../modules/material/material.module";
   imports: [
     MaterialModule,
     NgStyle,
-    NgForOf
+    NgForOf,
+    LongClickDirectiveDirective
   ],
   templateUrl: './parents-path.component.html',
   styleUrls: ['./parents-path.component.sass']
@@ -22,4 +24,7 @@ export class ParentsPathComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  longClick() {
+    console.log('longClick');
+  }
 }

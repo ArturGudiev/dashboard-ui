@@ -9,6 +9,7 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { CommonModule } from "@angular/common";
 import { TaskContainerComponent } from "../task-container/task-container.component";
+import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
 
 @UntilDestroy()
 @Component({
@@ -19,6 +20,7 @@ import { TaskContainerComponent } from "../task-container/task-container.compone
     MatProgressSpinner,
     CommonModule,
     TaskContainerComponent,
+    LongClickDirectiveDirective,
   ],
   styleUrls: ['./task.component.sass']
 })
@@ -100,11 +102,18 @@ export class TaskComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Сохранение задачи (например, для обновления в базе заметок)
+   */
   updateTask() {
     if (!this.task) {
       return;
     }
     this.tasksService.updateTask(this.task).subscribe((task: TaskC) => this.setTask(task, false));
+  }
+
+  onLongClickMe() {
+    console.log('task.component.ts -- onLongClickMe');
   }
 
 }

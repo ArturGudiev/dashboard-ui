@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Story } from "../../../models/story";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { TasksService } from "../../../services/tasks.service";
 import { StoriesService } from "../../../services/stories.service";
 import { Title } from "@angular/platform-browser";
@@ -53,7 +53,7 @@ export class StoryComponent implements OnInit {
       this.story = story;
       this.titleService.setTitle(this.story.getFullDescription());
       if (this.story !== null) {
-        this.tasksService.getParentsPath(this.story).subscribe((res: string[]) => {
+        this.storiesService.getParentsPath(this.story).subscribe((res: string[]) => {
           this.parentsPath = res;
         });
       }
@@ -65,6 +65,16 @@ export class StoryComponent implements OnInit {
     this.storiesService
       .getStory(this.id)
       .subscribe(story => this.story.tasks = story.tasks)
+  }
+
+  /**
+   * Сохранение истории (например, для обновления в базе заметок)
+   */
+  updateStory() {
+    if (!this.story) {
+      return;
+    }
+    this.storiesService.updateStory(this.story).subscribe((story: Story) => this.story = story);
   }
 
 }
