@@ -8,7 +8,6 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { NgIf } from "@angular/common";
 import { map } from "rxjs/operators";
-import { Observable, of } from "rxjs";
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { TaskContainerService } from "../../../services/task-container.service";
 
@@ -29,9 +28,6 @@ export class EpicComponent implements OnInit {
   epic!: Epic; // resolve
   parentsPath: string[] = [];
   isLoading = true;
-
-  parentsPath$: Observable<string[]> = of([]);
-
 
   refreshSubtasks$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.problems));
@@ -58,7 +54,6 @@ export class EpicComponent implements OnInit {
     this.isLoading = true;
     this.epicsService.getEpic(this.id).pipe(untilDestroyed(this)).subscribe((epic: Epic) => {
       this.epic = epic;
-      this.parentsPath$ = this.epicsService.getParentsPath(this.epic);
       this.titleService.setTitle(this.epic.getFullDescription());
       if (this.epic !== null) {
         this.taskContainerService.getParentsPath(this.epic)

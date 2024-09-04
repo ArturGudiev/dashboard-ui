@@ -52,10 +52,6 @@ export class QuestionsService {
     return this.apiService._getQuestion(id);
   }
 
-  getQuestionParentsPath(question: Question): Observable<string[]> {
-    return this.apiService._getQuestionParentsPath(question);
-  }
-
   createQuestionFromDialog(taskContainer: TaskContainer): Observable<Question> {
     const dialogRef = this.dialog.open(GetValueDialogComponent,
       {data: {title: 'Description', inputWidth: '40rem'},

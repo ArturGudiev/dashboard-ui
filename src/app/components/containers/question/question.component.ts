@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
@@ -31,7 +30,6 @@ export class QuestionComponent implements OnInit {
   id!: number;
   question!: Question; // TODO resolvers
   parentsPath: string[] = [];
-  parentsPath$: Observable<string[]> = of([]);
   isLoading = true;
 
   refreshSubtasks$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.tasks));
@@ -62,8 +60,7 @@ export class QuestionComponent implements OnInit {
       this.question = question;
       this.isLoading = false;
       this.titleService.setTitle(this.question.getFullDescription());
-      this.parentsPath$ = this.taskContainerService.getParentsPath(this.question);
-      this.parentsPath$.subscribe((res: string[]) => this.parentsPath = res);
+      this.taskContainerService.getParentsPath(this.question).subscribe((res: string[]) => this.parentsPath = res);
     });
   }
 

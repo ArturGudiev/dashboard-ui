@@ -5,7 +5,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { ProblemsService } from "../../../services/problems.service";
 import { Problem } from "../../../models/problem";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
-import { Observable, of } from "rxjs";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
@@ -33,7 +32,6 @@ export class ProblemComponent implements OnInit {
 
   parentsPath: string[] = [];
   isLoading = true;
-  parentsPath$: Observable<string[]> = of([]);
 
   refreshSubtasks$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.problems));
@@ -62,7 +60,6 @@ export class ProblemComponent implements OnInit {
     .subscribe((problem: Problem) => {
       this.problem = problem;
       this.isLoading = false;
-      this.parentsPath$ = this.problemsService.getParentsPath(this.problem);
       this.titleService.setTitle(this.problem.getFullDescription());
       if (this.problem !== null) {
         this.taskContainerService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath = res);

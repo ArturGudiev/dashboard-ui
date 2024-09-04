@@ -15,7 +15,7 @@ import { TasksService } from "../../../services/tasks.service";
 import { Router } from "@angular/router";
 import * as _ from "lodash";
 import { every, isNaN } from "lodash";
-import { CommandsService } from "../../../services/commands.service";
+import { CommandsService, CommandsStateInterface } from "../../../services/commands.service";
 import { MatDialog } from "@angular/material/dialog";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { MatCheckboxChange } from "@angular/material/checkbox";
@@ -23,7 +23,7 @@ import { Store } from "@ngxs/store";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { AppState } from "../../../state/app.state";
-import { distinctUntilChanged, map } from "rxjs/operators";
+import { distinctUntilChanged, map, withLatestFrom } from "rxjs/operators";
 import { taskContainerDescriptionsAreEqual } from "../../../shared/libs/utils.lib";
 import { TaskContainerService } from "../../../services/task-container.service";
 import { NavigationService } from "../../../services/navigation.service";
@@ -58,6 +58,8 @@ export class TasksListComponent implements OnInit, OnChanges {
   displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
   isContainerFocused: boolean = false;
   tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
+
+  hotkeysDisabled$ = this.store.select(AppState.getDisabledHotkeys);
 
   get tasksByIdMapKeys(): number[] {
     return Object.keys(this.tasksByIdMap).map(e => Number(e));
@@ -98,19 +100,22 @@ export class TasksListComponent implements OnInit, OnChanges {
    */
   ngOnInit(): void {
     this.commandsService.getDataStateChange()
-      .pipe(untilDestroyed(this))
-      .subscribe(state => {
+      .pipe(
+        withLatestFrom(this.hotkeysDisabled$),
+        untilDestroyed(this))
+      .subscribe(([state, hotkeysDisabled]: [CommandsStateInterface, boolean]) => {
+        console.log(hotkeysDisabled);
         this.handleTaskCommand(state.command);
       })
 
     this.store.select(AppState.getFocusedTaskForSubtasks).pipe(
       untilDestroyed(this),
       map((el: TaskContainer | null) => this.showTitle && el && this.container.getFullDescription() === el.getFullDescription(),
-      distinctUntilChanged()
+        distinctUntilChanged()
       )).subscribe((el) => {
-        this.isContainerFocused = !!el;
-        this.cdr.detectChanges();
-      });
+      this.isContainerFocused = !!el;
+      this.cdr.detectChanges();
+    });
 
     this.taskContainerService.refreshSubtasks$.pipe(untilDestroyed(this)).subscribe(v => {
       if (taskContainerDescriptionsAreEqual(v.getTaskContainerDescription(), this.container.getTaskContainerDescription())) {
@@ -378,7 +383,7 @@ export class TasksListComponent implements OnInit, OnChanges {
         const index = +value;
         if (index > 0 && index <= this.tasks.length) {
           const task = this.tasks[index - 1];
-          if ( this.tasksByIdMap[task._id] !== undefined ) {
+          if (this.tasksByIdMap[task._id] !== undefined) {
             this.removeTasksByIdMapKey(task._id);
             return;
           }
@@ -441,35 +446,35 @@ export class TasksListComponent implements OnInit, OnChanges {
   }
 
   private checkIfTaskForSubtasksIsLast() {
-    if ( Object.keys(this.tasksByIdMap).length === 1) {
+    if (Object.keys(this.tasksByIdMap).length === 1) {
       const id = +Object.keys(this.tasksByIdMap)[0];
       this.store.dispatch(new SetFocusedTaskForSubtasks(this.tasksByIdMap[id].container));
     }
   }
 
   private addTaskAndGoToIt() {
-      this.tasksService.openAddTaskDialog()
-        .subscribe((responseObj: any) => {
-          this.tasksService.addTaskDialogOpened = false;
-          if (!responseObj) {
-            return;
+    this.tasksService.openAddTaskDialog()
+      .subscribe((responseObj: any) => {
+        this.tasksService.addTaskDialogOpened = false;
+        if (!responseObj) {
+          return;
+        }
+        const description = responseObj.description;
+        if (description) {
+          const obj: any = {
+            description: description,
+            tags: [],
+            done: false,
+            notes: responseObj.notes,
+            parents: [this.container.getTaskContainerDescription()]
           }
-          const description = responseObj.description;
-          if (description) {
-            const obj: any = {
-              description: description,
-              tags: [],
-              done: false,
-              notes: responseObj.notes,
-              parents: [this.container.getTaskContainerDescription()]
-            }
-            this.tasksService.createNewTask(obj)
-              .pipe(untilDestroyed(this))
-              .subscribe((newTask: TaskC) => {
-                this.navigationService.navigateToTask(newTask._id); // TODO send task so it wont upload it
-              })
-          }
-        })
+          this.tasksService.createNewTask(obj)
+            .pipe(untilDestroyed(this))
+            .subscribe((newTask: TaskC) => {
+              this.navigationService.navigateToTask(newTask._id); // TODO send task so it wont upload it
+            })
+        }
+      })
   }
 
   resolveContainer(container: TaskContainer) {

@@ -1,0 +1,12 @@
+.value-item {
+  cursor: pointer;
+
+  &:not(last-child) {
+    margin-bottom: 1rem
+  }
+}
+
+#items-wrapper {
+  margin-top: 2rem;
+  margin-left: 1rem;
+}

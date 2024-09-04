@@ -3,7 +3,7 @@ import { TaskContainer } from "./interfaces/task-container";
 import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
 export class Epic implements TaskContainer{
-  static readonly PREFIX = 'EPIC-';
+  static readonly PREFIX = 'Epic-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Epic.PREFIX + '(\\d+)\\s');
 
   type: TaskContainerType = 'epic';

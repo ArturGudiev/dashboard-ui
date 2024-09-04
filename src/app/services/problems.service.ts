@@ -82,10 +82,6 @@ export class ProblemsService {
     })
   }
 
-  getParentsPath(problem: Problem): Observable<string[]> {
-    return this.apiService._getProblemParentsPath(problem);
-  }
-
   updateProblem(problem: Problem): Observable<Problem> {
     return this.apiService.updateProblem(problem);
   }

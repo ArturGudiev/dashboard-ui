@@ -9,6 +9,7 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { NgIf } from "@angular/common";
 import { TaskContainerComponent } from "../task-container/task-container.component";
+import { TaskContainerService } from "../../../services/task-container.service";
 
 @UntilDestroy()
 @Component({
@@ -37,6 +38,7 @@ export class StoryComponent implements OnInit {
     private storiesService: StoriesService,
     private tasksService: TasksService,
     private titleService: Title,
+    private taskContainerService: TaskContainerService
   ) {
   }
 
@@ -53,7 +55,7 @@ export class StoryComponent implements OnInit {
       this.story = story;
       this.titleService.setTitle(this.story.getFullDescription());
       if (this.story !== null) {
-        this.storiesService.getParentsPath(this.story).subscribe((res: string[]) => {
+        this.taskContainerService.getParentsPath(this.story).subscribe((res: string[]) => {
           this.parentsPath = res;
         });
       }

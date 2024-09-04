@@ -9,7 +9,7 @@
         appLongClickDirective
         class="parent-title-label"
         hover-class="hover-border"
-        (longClick)="longClick()"
+        (longClick)="longClick(parentsPath[i])"
         (simpleClick)="onParentClick.emit(node)"
       >
         {{node}}

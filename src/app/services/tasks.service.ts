@@ -24,10 +24,6 @@ export class TasksService {
     return this.apiService._getTask(id);
   }
 
-  getParentsPath(taskContainer: TaskContainer): Observable<string[]> {
-    return this.apiService._getParentsPath(taskContainer);
-  }
-
   getTasks(ids: number[]): Observable<TaskC[]> {
     return this.apiService._getTasks(ids);
   }
@@ -99,14 +95,17 @@ export class TasksService {
    * @param taskContainer
    * @param callback is called when create new task is finished
    */
-  openAddTaskDialog2(taskContainer: TaskContainer): Observable<any> {
+  openAddTaskDialogToContainer(taskContainer: TaskContainer): Observable<any> {
     if (this.addTaskDialogOpened) {
       return of({});
     }
     this.addTaskDialogOpened = true;
     const dialogRef = this.dialog.open(NewTaskDialogComponent,
       {
-        data: { title: 'Description', inputWidth: '40rem' },
+        data: {
+          title: 'New task to ' + taskContainer.getFullDescription(),
+          inputWidth: '40rem'
+        },
         ...NEW_TASK_DIALOG_OPTIONS
       });
     return dialogRef.afterClosed()

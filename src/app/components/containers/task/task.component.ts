@@ -10,6 +10,7 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { CommonModule } from "@angular/common";
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
+import { TaskContainerService } from "../../../services/task-container.service";
 
 @UntilDestroy()
 @Component({
@@ -38,7 +39,8 @@ export class TaskComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private titleService: Title,
-    public tasksService: TasksService
+    public tasksService: TasksService,
+    private tasksContainerService: TaskContainerService
   ) {
   }
 
@@ -53,7 +55,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     this._task = val;
     this.titleService.setTitle(this.task.getFullDescription());
     if (this.task !== null && updatePath) {
-      this.tasksService.getParentsPath(this.task).subscribe((res: string[]) => {
+      this.tasksContainerService.getParentsPath(this.task).subscribe((res: string[]) => {
         this.parentsPath = res;
       });
     }
@@ -110,10 +112,6 @@ export class TaskComponent implements OnInit, OnDestroy {
       return;
     }
     this.tasksService.updateTask(this.task).subscribe((task: TaskC) => this.setTask(task, false));
-  }
-
-  onLongClickMe() {
-    console.log('task.component.ts -- onLongClickMe');
   }
 
 }

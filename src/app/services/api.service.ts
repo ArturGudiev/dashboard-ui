@@ -112,10 +112,6 @@ export class ApiService {
       );
   }
 
-  _getEpicParentsPath(epic: any): Observable<string[]> {
-    return this.http.post<string[]>(`${this.baseUrl}/epic/parents-path/`, epic);
-  }
-
   _updateEpic(epic: Epic): Observable<Epic> {
     return this.http.put<Epic>(`${this.baseUrl}/update-epic/`, epic)
       .pipe(
@@ -178,10 +174,6 @@ export class ApiService {
     return this.http.post<Problem>(`${this.baseUrl}/new-problem`, obj);
   }
 
-  _getProblemParentsPath(problem: any): Observable<string[]> {
-    return this.http.post<string[]>(`${this.baseUrl}/problem/parents-path/`, problem);
-  }
-
   //----------------------------------------problems-----------------------------------------
   //----------------------------------------aliases----------------------------------------
   _getAlias(alias: string): Observable<AliasesRecord> {
@@ -222,10 +214,6 @@ export class ApiService {
       );
   }
 
-  _getQuestionParentsPath(question: Question): Observable<string[]> {
-    return this.http.post<string[]>(`${this.baseUrl}/question/parents-path/`, question);
-  }
-
   //----------------------------------------questions------------------------------------------
 
   //------------------------------------actions----------------------------------------
@@ -254,9 +242,6 @@ export class ApiService {
       );
   }
 
-  _getActionParentsPath(action: Action): Observable<string[]> {
-    return this.http.post<string[]>(`${this.baseUrl}/action/parents-path/`, action);
-  }
   //------------------------------------actions----------------------------------------
   //------------------------------------knowledge bits start----------------------------------------
   _getKnowledgeBits(ids: number[]) {
@@ -282,10 +267,6 @@ export class ApiService {
       .pipe(
         map((obj: Knowledge) => Knowledge.createFromObj(obj))
       );
-  }
-
-  _getKnowledgeParentsPath(knowledge: Knowledge): Observable<string[]> {
-    return this.http.post<string[]>(`${this.baseUrl}/knowledge/parents-path/`, knowledge);
   }
 
   _getRecordItems(arrayParams: IArrayParams, tag?: string): Observable<IArrayResponse<RecordItem>> {

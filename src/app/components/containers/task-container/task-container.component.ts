@@ -32,6 +32,7 @@ import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component"
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
+import { SelectFromListDialog } from "../../dialogs/select-from-list-dialog/select-from-list-dialog.component";
 
 @UntilDestroy()
 @Component({
@@ -159,6 +160,9 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     }
     if (['parent'].includes(arr[0])) {
       this.goToNearestParent();
+    }
+    if (['add-to-parent', 'tparent', 'tp'].includes(arr[0])) {
+      this.addTaskToParentInteractively();
     }
   }
 
@@ -324,6 +328,21 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     // dialogRef.afterClosed().subscribe(() => {
     //   console.log('Dialog was closed RecordsListDialogComponent');
     // });
+
+  }
+
+  private addTaskToParentInteractively() {
+    const dialogRef = this.dialog.open(SelectFromListDialog,
+      {
+        data: {
+          values: this.parentsPath.slice(0, -1)
+        },
+        height: '600px',
+        width: '1000px'
+      });console.log('task-container.component.ts -- ', parent);
+    dialogRef.afterClosed().subscribe((parent: string) => {
+      this.taskContainerService.addTaskToContainerByShortDescription(parent)
+    })
 
   }
 }
