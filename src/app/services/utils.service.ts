@@ -5,6 +5,7 @@ import { SelectFromListDialog } from "../components/dialogs/select-from-list-dia
 import { Store } from "@ngxs/store";
 import { MatDialog } from "@angular/material/dialog";
 import { TaskContainerService } from "./task-container-services/task-container.service";
+import { tap } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,9 @@ export class UtilsService {
         height: '600px',
         width: '1000px'
       });
-    return dialogRef.afterClosed();
+    return dialogRef.afterClosed().pipe(tap(
+      () => this.store.dispatch(new SetDisabledHotkeys(false))
+    ));
   }
 
 }

@@ -26,14 +26,13 @@ import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component"
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
-import { SelectFromListDialog } from "../../dialogs/select-from-list-dialog/select-from-list-dialog.component";
-import { SetDisabledHotkeys } from "../../../state/app.actions";
 import { QuestionsService } from "../../../services/task-container-services/questions.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 import { StoriesService } from "../../../services/task-container-services/stories.service";
 import { EpicsService } from "../../../services/task-container-services/epics.service";
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
+import { UtilsService } from "../../../services/utils.service";
 
 @UntilDestroy()
 @Component({
@@ -88,6 +87,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     public router: Router,
     private _hotkeysService: HotkeysService,
     private store: Store,
+    private readonly utilsService: UtilsService,
   ) {
   }
 
@@ -162,7 +162,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     if (['parent'].includes(arr[0])) {
       this.goToNearestParent();
     }
-    if (['add-to-parent', 'tparent', 'tp'].includes(arr[0])) {
+    if (['add-to-parent', 'tparent', 'tp', 'pt'].includes(arr[0])) {
       this.addTaskToParentInteractively();
     }
   }
@@ -333,19 +333,10 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   private addTaskToParentInteractively() {
-    this.store.dispatch(new SetDisabledHotkeys(true));
-    const dialogRef = this.dialog.open(SelectFromListDialog,
-      {
-        data: {
-          values: this.parentsPath.slice(0, -1)
-        },
-        height: '600px',
-        width: '1000px'
-      });console.log('task-container.component.ts -- ', parent);
-    dialogRef.afterClosed().subscribe((parent: string) => {
-      this.taskContainerService.addTaskToContainerByShortDescription(parent);
-      this.store.dispatch(new SetDisabledHotkeys(false));
-    })
-
+    this.utilsService.selectFromList(this.parentsPath.slice(0, -1)).subscribe((parent: string | undefined) => {
+      if (parent) {
+        this.taskContainerService.addTaskToContainerByShortDescription(parent);
+      }
+    });
   }
 }
