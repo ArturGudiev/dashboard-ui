@@ -2,12 +2,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgForOf, NgStyle } from "@angular/common";
 import { MaterialModule } from "../../../modules/material/material.module";
 import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
-import { TasksService } from "../../../services/tasks.service";
-import { EpicsService } from "../../../services/epics.service";
-import { StoriesService } from "../../../services/stories.service";
-import { ProblemsService } from "../../../services/problems.service";
-import { QuestionsService } from "../../../services/questions.service";
-import { TaskContainerService } from "../../../services/task-container.service";
+import { TasksService } from "../../../services/task-container-services/tasks.service";
+import { EpicsService } from "../../../services/task-container-services/epics.service";
+import { StoriesService } from "../../../services/task-container-services/stories.service";
+import { ProblemsService } from "../../../services/task-container-services/problems.service";
+import { QuestionsService } from "../../../services/task-container-services/questions.service";
+import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @Component({
   selector: 'app-parents-path',

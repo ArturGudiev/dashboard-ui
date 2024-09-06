@@ -9,17 +9,11 @@ import { Question } from "../../../models/question";
 import { Story } from "../../../models/story";
 import { TaskC } from "../../../models/task-class";
 import { CommandsService } from "../../../services/commands.service";
-import { ProblemsService } from "../../../services/problems.service";
-import { QuestionsService } from "../../../services/questions.service";
 import { RecordsService } from "../../../services/records.service";
-import { StoriesService } from "../../../services/stories.service";
-import { TasksService } from "../../../services/tasks.service";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { Store } from "@ngxs/store";
-import { TaskContainerService } from "../../../services/task-container.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Epic } from "../../../models/epic";
-import { EpicsService } from "../../../services/epics.service";
 import { RecordsListDialogComponent } from "../../dialogs/records-list-dialog/records-list-dialog.component";
 import { HelpComponent } from "../../pages/help/help.component";
 import { MaterialModule } from "../../../modules/material/material.module";
@@ -33,6 +27,13 @@ import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { SelectFromListDialog } from "../../dialogs/select-from-list-dialog/select-from-list-dialog.component";
+import { SetDisabledHotkeys } from "../../../state/app.actions";
+import { QuestionsService } from "../../../services/task-container-services/questions.service";
+import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
+import { StoriesService } from "../../../services/task-container-services/stories.service";
+import { EpicsService } from "../../../services/task-container-services/epics.service";
+import { ProblemsService } from "../../../services/task-container-services/problems.service";
+import { TasksService } from "../../../services/task-container-services/tasks.service";
 
 @UntilDestroy()
 @Component({
@@ -332,6 +333,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   private addTaskToParentInteractively() {
+    this.store.dispatch(new SetDisabledHotkeys(true));
     const dialogRef = this.dialog.open(SelectFromListDialog,
       {
         data: {
@@ -341,7 +343,8 @@ export class TaskContainerComponent implements OnInit, OnChanges {
         width: '1000px'
       });console.log('task-container.component.ts -- ', parent);
     dialogRef.afterClosed().subscribe((parent: string) => {
-      this.taskContainerService.addTaskToContainerByShortDescription(parent)
+      this.taskContainerService.addTaskToContainerByShortDescription(parent);
+      this.store.dispatch(new SetDisabledHotkeys(false));
     })
 
   }

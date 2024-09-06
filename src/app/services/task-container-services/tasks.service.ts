@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { TaskC } from '../models/task-class';
-import { ApiService } from './api.service';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap, tap } from "rxjs/operators";
-import { DashboardService } from "./dashboard.service";
-import { NEW_TASK_DIALOG_OPTIONS } from "../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
-import { NewTaskDialogComponent } from "../components/dialogs/new-task-dialog/new-task-dialog.component";
-import { TaskContainer } from "../models/interfaces/task-container";
+import { ApiService } from "../api.service";
+import { DashboardService } from "../dashboard.service";
+import { TaskC } from "../../models/task-class";
+import { NewTaskDialogComponent } from "../../components/dialogs/new-task-dialog/new-task-dialog.component";
+import { NEW_TASK_DIALOG_OPTIONS } from "../../shared/constants";
+import { TaskContainer } from "../../models/interfaces/task-container";
 
 @Injectable({
   providedIn: 'root'

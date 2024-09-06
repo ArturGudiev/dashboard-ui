@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TasksService } from '../../../services/tasks.service';
 import { TaskC } from '../../../models/task-class';
 import { getUrlByDescription } from '../../../shared/libs/dashboard.lib';
 import { Title } from "@angular/platform-browser";
@@ -10,7 +9,8 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { CommonModule } from "@angular/common";
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
-import { TaskContainerService } from "../../../services/task-container.service";
+import { TasksService } from "../../../services/task-container-services/tasks.service";
+import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @UntilDestroy()
 @Component({

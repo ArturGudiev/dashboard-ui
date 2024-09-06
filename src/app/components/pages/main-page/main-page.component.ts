@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import { EpicsService } from "../../../services/epics.service";
+import { Component, OnInit } from '@angular/core';
 import { MultitaskingComponent } from "../../multitasking/multitasking.component";
+import { EpicsService } from "../../../services/task-container-services/epics.service";
 
 @Component({
   selector: 'app-main-page',

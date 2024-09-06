@@ -2,13 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Question } from "../../../models/question";
 import { SelectionModel } from "@angular/cdk/collections";
 import { Router } from "@angular/router";
-import { QuestionsService } from "../../../services/questions.service";
 import { Problem } from "../../../models/problem";
 import { TaskC } from "../../../models/task-class";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
-import { TasksService } from "../../../services/tasks.service";
 import { Store } from "@ngxs/store";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { GET_VALUE_DIALOG_OPTIONS } from "../../../shared/constants";
@@ -18,6 +16,8 @@ import { MaterialModule } from "../../../modules/material/material.module";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { TasksListComponent } from "../tasks-list/tasks-list.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
+import { QuestionsService } from "../../../services/task-container-services/questions.service";
+import { TasksService } from "../../../services/task-container-services/tasks.service";
 
 @UntilDestroy()
 @Component({
@@ -101,7 +101,6 @@ export class QuestionsListComponent implements OnInit {
           .subscribe(() => this.refreshQuestions.emit());
       }
     });
-    ;
   }
 
 

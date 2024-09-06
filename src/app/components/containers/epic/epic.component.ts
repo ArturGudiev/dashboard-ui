@@ -3,13 +3,13 @@ import { MatDialog } from "@angular/material/dialog";
 import { Title } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { Epic } from "../../../models/epic";
-import { EpicsService } from "../../../services/epics.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { NgIf } from "@angular/common";
 import { map } from "rxjs/operators";
 import { TaskContainerComponent } from "../task-container/task-container.component";
-import { TaskContainerService } from "../../../services/task-container.service";
+import { EpicsService } from "../../../services/task-container-services/epics.service";
+import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @UntilDestroy()
 @Component({
@@ -39,8 +39,7 @@ export class EpicComponent implements OnInit {
     private epicsService: EpicsService,
     private titleService: Title,
     private taskContainerService: TaskContainerService,
-  ) {
-  }
+  ) { }
 
   ngOnInit(): void {
     this.route.params.pipe(untilDestroyed(this))

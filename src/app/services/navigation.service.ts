@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { AliasesService } from "./aliases.service";
 import { AliasesRecord } from "../models/alias-record";
 import { AlertService } from "./alert.service";
-import { TasksService } from "./tasks.service";
+import { TasksService } from "./task-container-services/tasks.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +11,11 @@ import { TasksService } from "./tasks.service";
 export class NavigationService {
 
 
-  constructor(private router: Router,
-              private alertService: AlertService,
-              private tasksService: TasksService,
-              private aliasService: AliasesService) {
+  constructor(
+    private router: Router,
+    private alertService: AlertService,
+    private tasksService: TasksService,
+    private aliasService: AliasesService) {
   }
 
   navigateByInput(navItem: string) {
@@ -24,7 +25,6 @@ export class NavigationService {
     if (Number.isInteger(+navItem)) {
       this.navigateToTask(+navItem);
       return;
-      // this.router.navigate(['task', navItem]).then();
     }
     const arr = navItem.split(' ');
     if (['help','h'].includes(arr[0])) {
@@ -59,8 +59,6 @@ export class NavigationService {
           console.log('Error alias not found: ', error);
         }
       })
-
-
   }
 
   private navigateByAlias(val: AliasesRecord) {

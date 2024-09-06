@@ -4,14 +4,14 @@ import { Title } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { Question } from "../../../models/question";
-import { QuestionsService } from "../../../services/questions.service";
 import { UntilDestroy } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { map } from "rxjs/operators";
 import { TaskContainerComponent } from "../task-container/task-container.component";
-import { TaskContainerService } from "../../../services/task-container.service";
+import { QuestionsService } from "../../../services/task-container-services/questions.service";
+import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @UntilDestroy()
 @Component({

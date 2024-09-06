@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Story } from "../../../models/story";
 import { ActivatedRoute } from "@angular/router";
-import { TasksService } from "../../../services/tasks.service";
-import { StoriesService } from "../../../services/stories.service";
 import { Title } from "@angular/platform-browser";
 import { map } from "rxjs/operators";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { NgIf } from "@angular/common";
 import { TaskContainerComponent } from "../task-container/task-container.component";
-import { TaskContainerService } from "../../../services/task-container.service";
+import { StoriesService } from "../../../services/task-container-services/stories.service";
+import { TasksService } from "../../../services/task-container-services/tasks.service";
+import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @UntilDestroy()
 @Component({

@@ -2,7 +2,7 @@
   @for (content of data.values; track $index) {
     <div
       class="value-item"
-      (click)="clickOnItem(content)"
+      (click)="closeDialogWithSelectedItem(content)"
     >
       {{$index + 1}}. {{ content }}
     </div>

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from "./api.service";
 import { Observable } from "rxjs";
-import { Problem } from "../models/problem";
 import { filter, map, switchMap, tap } from "rxjs/operators";
-import { DashboardService } from "./dashboard.service";
-import { GetValueDialogComponent } from "../components/dialogs/get-value/get-value-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-import { NEW_TASK_DIALOG_OPTIONS } from "../shared/constants";
-import { TaskContainer } from "../models/interfaces/task-container";
+import { ApiService } from "../api.service";
+import { TaskContainer } from "../../models/interfaces/task-container";
+import { Problem } from "../../models/problem";
+import { DashboardService } from "../dashboard.service";
+import { GetValueDialogComponent } from "../../components/dialogs/get-value/get-value-dialog.component";
+import { NEW_TASK_DIALOG_OPTIONS } from "../../shared/constants";
 
 export interface RefreshProblemsState {
   taskContainer: TaskContainer;

@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
-import { ProblemsService } from "../../../services/problems.service";
 import { Problem } from "../../../models/problem";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
-import { TaskContainerService } from "../../../services/task-container.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { map } from "rxjs/operators";
 import { TaskContainerComponent } from "../task-container/task-container.component";
+import { ProblemsService } from "../../../services/task-container-services/problems.service";
+import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @UntilDestroy()
 @Component({

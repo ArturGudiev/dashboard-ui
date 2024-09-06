@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
-import { Question } from "../models/question";
-import { ApiService } from "./api.service";
 import { filter, map, switchMap, tap } from "rxjs/operators";
-import { DashboardService } from "./dashboard.service";
-import { GetValueDialogComponent } from "../components/dialogs/get-value/get-value-dialog.component";
-import { NEW_QUESTION_DIALOG_OPTIONS } from "../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
-import { TaskContainerDescription } from "../models/interfaces/types";
-import { TaskContainer } from "../models/interfaces/task-container";
+import { ApiService } from "../api.service";
+import { DashboardService } from "../dashboard.service";
+import { Question } from "../../models/question";
+import { TaskContainerDescription } from "../../models/interfaces/types";
+import { TaskContainer } from "../../models/interfaces/task-container";
+import { GetValueDialogComponent } from "../../components/dialogs/get-value/get-value-dialog.component";
+import { NEW_QUESTION_DIALOG_OPTIONS } from "../../shared/constants";
 
 
 @Injectable({

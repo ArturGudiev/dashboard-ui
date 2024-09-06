@@ -1,13 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Problem } from "../../../models/problem";
 import { SelectionModel } from "@angular/cdk/collections";
-import { ProblemsService } from "../../../services/problems.service";
 import { Router } from "@angular/router";
 import { TaskC } from "../../../models/task-class";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
-import { TasksService } from "../../../services/tasks.service";
 import { Store } from "@ngxs/store";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -17,6 +15,8 @@ import { MaterialModule } from "../../../modules/material/material.module";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { TasksListComponent } from "../tasks-list/tasks-list.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
+import { ProblemsService } from "../../../services/task-container-services/problems.service";
+import { TasksService } from "../../../services/task-container-services/tasks.service";
 
 @UntilDestroy()
 @Component({
@@ -158,7 +158,6 @@ export class ProblemsListComponent implements OnInit {
       delete this.tasksByIdMap[problem._id];
     }
   }
-
 
   onProblemSolvedClick(problem: Problem) {
     const dialogRef = this.dialog.open(GetValueDialogComponent,

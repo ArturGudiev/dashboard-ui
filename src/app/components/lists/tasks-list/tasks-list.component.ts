@@ -2,7 +2,6 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -11,7 +10,6 @@ import {
 } from '@angular/core';
 import { TaskC } from "../../../models/task-class";
 import { SelectionModel } from "@angular/cdk/collections";
-import { TasksService } from "../../../services/tasks.service";
 import { Router } from "@angular/router";
 import * as _ from "lodash";
 import { every, isNaN } from "lodash";
@@ -25,12 +23,13 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { AppState } from "../../../state/app.state";
 import { distinctUntilChanged, map, withLatestFrom } from "rxjs/operators";
 import { taskContainerDescriptionsAreEqual } from "../../../shared/libs/utils.lib";
-import { TaskContainerService } from "../../../services/task-container.service";
 import { NavigationService } from "../../../services/navigation.service";
 import { isTask } from "../../../shared/constants";
 import { MaterialModule } from "../../../modules/material/material.module";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { TaskContainer } from "../../../models/interfaces/task-container";
+import { TasksService } from "../../../services/task-container-services/tasks.service";
+import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @UntilDestroy()
 @Component({
@@ -85,13 +84,6 @@ export class TasksListComponent implements OnInit, OnChanges {
   ) {
   }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (event.key === '1') {
-      console.log('1');
-    }
-  }
-
   /**
    * Инициализация компонента. Подписка на
    * 1) команды (горячие клавиши)
@@ -104,7 +96,9 @@ export class TasksListComponent implements OnInit, OnChanges {
         withLatestFrom(this.hotkeysDisabled$),
         untilDestroyed(this))
       .subscribe(([state, hotkeysDisabled]: [CommandsStateInterface, boolean]) => {
-        console.log(hotkeysDisabled);
+        if (hotkeysDisabled) {
+          return;
+        }
         this.handleTaskCommand(state.command);
       })
 
