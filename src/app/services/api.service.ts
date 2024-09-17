@@ -298,4 +298,9 @@ export class ApiService {
   }
   //------------------------------------knowledge bits end----------------------------------------
 
+  //------------------------------------ reports ----------------------------------------
+  getReport(obj: TaskContainer): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/report/`, obj);
+  }
+  //------------------------------------ reports ----------------------------------------
 }

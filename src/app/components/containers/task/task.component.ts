@@ -11,6 +11,35 @@ import { TaskContainerComponent } from "../task-container/task-container.compone
 import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
+import { TreeNode } from "../tree/my-tree.component";
+
+const TREE_DATA: TreeNode[] = [
+  {
+    name: 'Parent 1',
+    depth: 0,
+
+    children: [
+      { name: 'Child 1.1', depth: 1, },
+      {
+        name: 'Child 1.2',
+        depth: 1,
+        children: [
+          { name: 'Grandchild 1.2.1', depth: 2, },
+          { name: 'Grandchild 1.2.2', depth: 2, },
+        ]
+      },
+    ]
+  },
+  {
+    name: 'Parent 2',
+    depth: 0,
+    children: [
+      { name: 'Child 2.1', depth: 1, },
+      { name: 'Child 2.2', depth: 1, },
+    ]
+  }
+];
+
 
 @UntilDestroy()
 @Component({
@@ -53,6 +82,7 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   private setTask(val: TaskC, updatePath = true) {
     this._task = val;
+
     this.titleService.setTitle(this.task.getFullDescription());
     if (this.task !== null && updatePath) {
       this.tasksContainerService.getParentsPath(this.task).subscribe((res: string[]) => {
@@ -113,5 +143,4 @@ export class TaskComponent implements OnInit, OnDestroy {
     }
     this.tasksService.updateTask(this.task).subscribe((task: TaskC) => this.setTask(task, false));
   }
-
 }

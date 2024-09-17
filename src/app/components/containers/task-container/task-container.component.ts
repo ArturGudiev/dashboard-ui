@@ -33,6 +33,8 @@ import { EpicsService } from "../../../services/task-container-services/epics.se
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { UtilsService } from "../../../services/utils.service";
+import { MyTreeComponent } from "../tree/my-tree.component";
+import { ContainerReportComponent } from "../container-report/container-report.component";
 
 @UntilDestroy()
 @Component({
@@ -48,7 +50,9 @@ import { UtilsService } from "../../../services/utils.service";
     ProblemsListComponent,
     NotesComponent,
     NgIf,
-    TasksListComponent
+    TasksListComponent,
+    MyTreeComponent,
+    ContainerReportComponent
   ],
   styleUrls: ['./task-container.component.sass']
 })
@@ -66,6 +70,8 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   @Output() refreshTaskContainer = new EventEmitter();
   @Output() resolve = new EventEmitter();
 
+  displayReport = false;
+
   tasks: TaskC[] = [];
   epics: Epic[] = [];
   stories: Story[] = [];
@@ -73,6 +79,10 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   questions: Question[] = [];
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
+
+  get toggleReportTitle(): string {
+    return this.displayReport ? 'Hide report' : 'Show report';
+  }
 
   constructor(
     private questionsService: QuestionsService,
@@ -337,6 +347,13 @@ export class TaskContainerComponent implements OnInit, OnChanges {
       if (parent) {
         this.taskContainerService.addTaskToContainerByShortDescription(parent);
       }
-    });
+    });1
+  }
+
+  /**
+   *
+   */
+  toggleReport() {
+    this.displayReport = !this.displayReport;
   }
 }

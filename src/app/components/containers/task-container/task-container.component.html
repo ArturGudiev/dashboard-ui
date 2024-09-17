@@ -1,5 +1,18 @@
 <div id="content-wrapper">
   <div id="task-content">
+    <div style="width: 100%">
+      <button
+        mat-button
+        type="button"
+        (click)="toggleReport()"
+      >
+        {{ toggleReportTitle }}
+      </button>
+      @if (displayReport) {
+        <app-report [container]="taskContainer"></app-report>
+      }
+
+    </div>
     <div class="flex-container-start mt-1">
       <div>
         <div class="description-wrapper">

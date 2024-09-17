@@ -1,0 +1,11 @@
+@if(treeData) {
+  <app-my-tree [treeData]="treeData"></app-my-tree>
+} @else {
+  @if (loading) {
+    <mat-progress-spinner
+      [diameter]="200"
+      class="custom-spinner"
+      mode="indeterminate"
+    ></mat-progress-spinner>
+  }
+}
