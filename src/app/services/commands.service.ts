@@ -3,6 +3,7 @@ import {Observable, Subject} from "rxjs";
 
 export interface CommandsStateInterface {
   command: string;
+  args: object;
 }
 
 @Injectable({
@@ -17,9 +18,8 @@ export class CommandsService {
     this.data.next(state);
   }
 
-  setCommand(command: string): void {
-    console.log('commands.service.ts -- setCommand', command);
-    this.setDataState({command});
+  setCommand(command: string, args = {}): void {
+    this.setDataState({command, args});
   }
 
   getDataStateChange(): Observable<CommandsStateInterface> {

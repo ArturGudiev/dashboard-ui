@@ -25,12 +25,15 @@ import { CommandDialogComponent } from "../../dialogs/command-dialog/command-dia
     MatMenu,
     MatButton
   ],
-  styleUrls: ['./toolbar.component.sass']
+  styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent implements OnInit {
 
   @Output() toggleSidenav = new EventEmitter<void>();
   doneTasks: number = 0;
+  doneTasksUntilValue = 0;
+  showUntilValue = false;
+
   constructor(private dialog: MatDialog,
               private _snackBar: MatSnackBar,
               private dashboardService: DashboardService,
@@ -42,7 +45,13 @@ export class ToolbarComponent implements OnInit {
   ngOnInit(): void {
     this.dashboardService.getDataStateChange().subscribe((state: DashboardStateInterface) => {
       this.doneTasks = state.doneTasks;
+      this.doneTasksUntilValue = state.doneTasksUntilValue;
+      this.showUntilValue = state.showUntilValue;
     });
+
+    this.commandService.getDataStateChange().subscribe(state => {
+      this.handleCommand(state.command);
+    })
 
     const symbols = {
       meta: '&#8984;', // ⌘
@@ -62,6 +71,14 @@ export class ToolbarComponent implements OnInit {
   private addHotkeys() {
     for (let i = 1; i <= 9; i++) {
       this.hotkeys.addShortcut({keys: `Control.${i}`}).subscribe(() => this.commandService.setCommand(i.toString()));
+      this.hotkeys.addShortcut({keys: `Control.Alt.${i}`}).subscribe(() => {
+        console.log('Select specific subtask original');
+        return this.commandService.setCommand('select-specific-task', { index: i - 1 });
+      });
+      this.hotkeys.addShortcut({keys: `Control.Shift.${i}`}).subscribe(() => {
+        console.log('Select specific subtask original');
+        return this.commandService.setCommand('select-specific-task', { index: i - 1 });
+      });
     }
     this.hotkeys.addShortcut({keys: 'Control.u'}).subscribe(() => this.commandService.setCommand('parent'));
     this.hotkeys.addShortcut({keys: 'Control.g'}).subscribe(() => this.onNavToClick());
@@ -189,4 +206,20 @@ export class ToolbarComponent implements OnInit {
       }
     });
   }
+
+  private handleCommand(command: string) {
+    if (command === '+5') {
+      this.dashboardService.setDoneTasksUntilValue(this.doneTasks + 5);
+    }
+  }
+
+  onUntilValueClick() {
+    this.dashboardService.disableShowUntilValue();
+  }
+  
+  @HostListener('window:keydown', ['$event'])
+  keyupHandler(event: KeyboardEvent) {
+    console.log('keup handler', event);
+  }
+
 }

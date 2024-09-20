@@ -4,6 +4,8 @@ import {ApiService} from "./api.service";
 
 export interface DashboardStateInterface {
   doneTasks: number;
+  doneTasksUntilValue: number;
+  showUntilValue: boolean;
 }
 
 @Injectable({
@@ -11,7 +13,9 @@ export interface DashboardStateInterface {
 })
 export class DashboardService {
   private initialState: DashboardStateInterface = {
-    doneTasks: 0
+    doneTasks: 0,
+    doneTasksUntilValue: 0,
+    showUntilValue: false,
   }
   private data = new BehaviorSubject(this.initialState);
   constructor(private tasksApiService: ApiService) { }
@@ -40,4 +44,15 @@ export class DashboardService {
       }
     })
   }
+
+  setDoneTasksUntilValue(doneTasksUntilValue: number) {
+    const state = this.getDataCurrentState();
+    this.setDataState({...state, doneTasksUntilValue, showUntilValue: true});
+  }
+
+  disableShowUntilValue() {
+    const state = this.getDataCurrentState();
+    this.setDataState({...state, showUntilValue: false});
+  }
+
 }

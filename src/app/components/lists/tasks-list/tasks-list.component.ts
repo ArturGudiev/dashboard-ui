@@ -99,7 +99,7 @@ export class TasksListComponent implements OnInit, OnChanges {
         if (hotkeysDisabled) {
           return;
         }
-        this.handleTaskCommand(state.command);
+        this.handleTaskCommand(state.command, state.args);
       })
 
     this.store.select(AppState.getFocusedTaskForSubtasks).pipe(
@@ -212,13 +212,19 @@ export class TasksListComponent implements OnInit, OnChanges {
    * @param command
    * @private
    */
-  private handleTaskCommand(command: string) {
+  private handleTaskCommand(command: string, commandArgs: object) {
     console.log('tasks-list.component.ts -- handleTaskCommand', command);
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['select-subtask'].includes(arr[0])) {
       if (this.level === 0) {
         this.handleSelectSubtaskAction()
+      }
+    }
+    
+    if (['select-specific-subtask'].includes(arr[0])) {
+      if (this.level === 0) {
+        console.log('Select specific subtask', arr[0]);
       }
     }
 
