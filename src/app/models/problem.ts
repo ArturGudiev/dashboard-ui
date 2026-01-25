@@ -1,20 +1,21 @@
 import { pick } from "lodash";
 import { TaskContainer } from "./interfaces/task-container";
-import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
+import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
 export class Problem implements TaskContainer {
   static readonly PREFIX = 'Problem-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Problem.PREFIX + '(\\d+)\\s');
 
   type: TaskContainerType = 'problem';
-  _id: number;
+  id: number;
   description: string;
   tags: string[];
   notes = '';
   tasks: number[];
   problems: number[];
   questions: number[];
-  parents: TaskContainerDescription[];
+  stories: number[] = [];
+  parentContainers: ContainerDescription[] = [];
   actions: number[] = [];
   definitions: number[] = [];
   knowledgeBits: number[] = [];
@@ -30,10 +31,10 @@ export class Problem implements TaskContainer {
                 definitions?: any,
                 actions?: any,
                 knowledgeBits?: any,
-                parents?: TaskContainerDescription[],
+                parentContainers?: ContainerDescription[],
               } = {}
   ) {
-    this._id = id;
+    this.id = id;
     this.description = description;
     this.tags = tags;
     this.notes = notes ?? '';
@@ -43,7 +44,7 @@ export class Problem implements TaskContainer {
     this.tasks = otherFields?.tasks ?? [];
     this.problems = otherFields?.problems ?? [];
     this.questions = otherFields?.questions ?? [];
-    this.parents = otherFields?.parents ?? [];
+    this.parentContainers = otherFields?.parentContainers ?? [];
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
@@ -52,7 +53,7 @@ export class Problem implements TaskContainer {
 
 
   getFullDescription(): string {
-    return `${Problem.PREFIX}${this._id} ${this.description}`
+    return `${Problem.PREFIX}${this.id} ${this.description}`
   }
 
   static createFromObj(obj: any): Problem {
@@ -62,7 +63,7 @@ export class Problem implements TaskContainer {
   }
 
   getTaskContainerDescription(): TaskContainerDescription {
-    return ['problem', this._id];
+    return ['problem', this.id];
   }
 
 }

@@ -1,8 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Story} from "../../../models/story";
-import {SelectionModel} from "@angular/cdk/collections";
-import {TaskC} from "../../../models/task-class";
-import {Router} from "@angular/router";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Story } from "../../../models/story";
+import { SelectionModel } from "@angular/cdk/collections";
+import { Router } from "@angular/router";
 import { MaterialModule } from "../../../modules/material/material.module";
 import { NgIf } from "@angular/common";
 
@@ -47,6 +46,6 @@ export class SubStoriesComponent implements OnInit {
   }
 
   onSubstoryClick(story: Story) {
-    this.router.navigate(['story', story._id]);
+    this.router.navigate(['story', story.id]);
   }
 }

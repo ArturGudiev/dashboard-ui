@@ -102,6 +102,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    console.log('OnInit ============ ', this.taskContainer); // TODO Remote later
     this._hotkeysService.add(new Hotkey('alt+r', (event: KeyboardEvent): boolean => {
       this.showRecords();
       return false; // Prevent bubbling
@@ -226,21 +227,23 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   goToParentHandler(description: string): void {
+    console.log('task-container.component.ts -- goToParentHandler');
     const urls = getUrlByDescription(description);
+    console.log('urls ===========', urls);
     if (urls) {
       this.router.navigate(urls).then();
     }
   }
 
   goToNearestParent(): void {
-    if (this.taskContainer.type === "epic" && this.taskContainer.parents.length === 0) {
+    if (this.taskContainer.type === "epic" && this.taskContainer.parentContainers.length === 0) {
       this.router.navigate(['epics']).then();
     }
-    if (!this.taskContainer.parents || this.taskContainer.parents.length === 0) {
+    if (!this.taskContainer.parentContainers || this.taskContainer.parentContainers.length === 0) {
       return;
     }
-    const parent = this.taskContainer.parents[0];
-    this.router.navigate([parent[0], parent[1]]).then();
+    const parent = this.taskContainer.parentContainers[0];
+    this.router.navigate([parent.type, parent.id]).then();
 
   }
 
@@ -327,7 +330,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   navigateToStory(story: Story) {
-    this.router.navigate(['story', story._id]).then();
+    this.router.navigate(['story', story.id]).then();
   }
 
   private showHelp() {

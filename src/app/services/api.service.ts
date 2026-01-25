@@ -26,7 +26,13 @@ export interface IArrayResponse<T> {
 })
 export class ApiService {
   // baseUrl = 'http://192.168.1.62:3000'
-  baseUrl = 'http://192.168.1.107:3000'
+  // baseUrl = 'http://192.168.1.107:3000' // HOME
+  // baseUrl = 'http://192.168.1.107:8080' // HOME dash2
+  baseUrl = 'http://localhost:8080' // HOME dash2
+  // baseUrl = 'http://192.168.0.13:3000' // EIRC
+  // baseUrl = `${environment.API_1HOST}:${environment.API_PORT}`;
+  // baseUrl = 'http://192.168.0.20:3000'
+
   // baseUrl = 'http://172.20.10.11:3000'
   // baseUrl = 'http://localhost:3000'
 
@@ -42,11 +48,12 @@ export class ApiService {
   }
 
   _getParentsPath(obj: TaskContainer): Observable<string[]> {
-    return this.http.post<string[]>(`${this.baseUrl}/parents-path/`, obj);
+    const body = { type: obj.type, id: obj.id };
+    return this.http.post<string[]>(`${this.baseUrl}/parents-path`, body).pipe(map(arr => arr.reverse()));
   }
 
   _getTasks(ids: number[]): Observable<TaskC[]> {
-    return this.http.post(`${this.baseUrl}/get-tasks/`,
+    return this.http.post(`${this.baseUrl}/get-tasks`,
       { ids }
     ).pipe(
       map((tasks: any) => tasks.map((t: TaskC) => TaskC.createFromObj(t))
@@ -54,11 +61,11 @@ export class ApiService {
   }
 
   _createNewTask(obj: any): Observable<TaskC> {
-    return this.http.post<TaskC>(`${this.baseUrl}/new-task/`, obj).pipe(map(TaskC.createFromObj));
+    return this.http.post<TaskC>(`${this.baseUrl}/new-task`, obj).pipe(map(TaskC.createFromObj));
   }
 
   _finishTask(task: TaskC): Observable<any> {
-    return this.http.put(`${this.baseUrl}/finish-task/${task._id}`, {});
+    return this.http.put(`${this.baseUrl}/finish-task/${task.id}`, {});
   }
 
   _finishTaskById(id: number): Observable<any> {
@@ -87,7 +94,7 @@ export class ApiService {
 
   _getDoneTasksNumber() {
     // return this.http.get(`${this.baseUrl}/done-tasks-number/`);
-    return this.http.get(`${this.baseUrl}/done-tasks/`);
+    return this.http.get(`${this.baseUrl}/done-tasks`);
   }
 
   //-----------------------------------------epics--------------------------------------------
@@ -99,7 +106,7 @@ export class ApiService {
   }
 
   _getAllEpics(): Observable<Epic[]> {
-    return this.http.get<Epic[]>(`${this.baseUrl}/epics/`)
+    return this.http.get<Epic[]>(`${this.baseUrl}/epics`)
       .pipe(
         map((arr) => arr.map(obj => Epic.createFromObj(obj)))
         );
@@ -128,7 +135,7 @@ export class ApiService {
   }
 
   _getStories(ids: number[]): Observable<Story[]> {
-    return this.http.post(`${this.baseUrl}/get-stories/`,
+    return this.http.post(`${this.baseUrl}/get-stories`,
       { ids }
     ).pipe(
       map((stories: any) => stories.map(
@@ -146,7 +153,7 @@ export class ApiService {
   //------------------------------------problems-------------------------------------------------
 
   _getProblems(ids: number[]): Observable<Problem[]> {
-    return this.http.post(`${this.baseUrl}/get-problems/`, { ids }).pipe(
+    return this.http.post(`${this.baseUrl}/get-problems`, { ids }).pipe(
       map((problems: any) => problems.map(
         (p: Problem) => Problem.createFromObj(p)
       )));
@@ -186,7 +193,7 @@ export class ApiService {
   //----------------------------------------aliases----------------------------------------
   //----------------------------------------questions----------------------------------------
   _getQuestions(ids: number[]): Observable<Question[]> {
-    return this.http.post(`${this.baseUrl}/get-questions/`, { ids }).pipe(
+    return this.http.post(`${this.baseUrl}/get-questions`, { ids }).pipe(
       map((questions: any) => questions.map(
         (p: Question) => Question.createFromObj(p)
       )));

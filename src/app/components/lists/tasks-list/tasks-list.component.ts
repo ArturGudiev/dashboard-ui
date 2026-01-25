@@ -131,18 +131,18 @@ export class TasksListComponent implements OnInit, OnChanges {
         }
         const description = responseObj.description;
         if (description) {
-          const obj: any = {
+          const task: any = {
             description: description,
             tags: [],
             done: false,
             notes: responseObj.notes,
-            parents: [this.container.getTaskContainerDescription()]
           }
-          this.tasksService.createNewTask(obj)
+          const parent = { id: this.container.id, type: this.container.type };
+          this.tasksService.createNewTask({ task, parent })
             .pipe(untilDestroyed(this))
             .subscribe((newTask: TaskC) => {
               if (makeSelected) {
-                this.tasksByIdMap[newTask._id] = {container: newTask, tasks: []};
+                this.tasksByIdMap[newTask.id] = {container: newTask, tasks: []};
                 this.store.dispatch(new SetFocusedTaskForSubtasks(newTask));
               }
               this.refreshTasks.emit();
@@ -168,14 +168,13 @@ export class TasksListComponent implements OnInit, OnChanges {
     if (this.tasks === undefined) {
       return;
     }
-    const newTasksIds = this.tasks.map(e => e._id);
+    const newTasksIds = this.tasks.map(e => e.id);
     const idsFromMap = Object.keys(this.tasksByIdMap);
     idsFromMap.map(e => Number(e)).forEach(idFromMap => {
       if (!newTasksIds.includes(idFromMap)) {
         this.removeTasksByIdMapKey(idFromMap)
       }
     })
-
   }
 
   /**
@@ -186,18 +185,18 @@ export class TasksListComponent implements OnInit, OnChanges {
     if (this.tasks === undefined) {
       return;
     }
-    if (every(this.selection.selected, x => !this.tasks.map(t => t._id).includes(x))) {
+    if (every(this.selection.selected, x => !this.tasks.map(t => t.id).includes(x))) {
       this.clearSelection();
       return;
     }
 
     let newSelectedItems: number[] = [];
     this.selection.selected.forEach(id => {
-      this.tasks.map(t => t._id)
-      if (this.tasks.some(subtask => subtask._id === id)) {
-        const element = this.tasks.find(subtask => subtask._id === id);
+      this.tasks.map(t => t.id)
+      if (this.tasks.some(subtask => subtask.id === id)) {
+        const element = this.tasks.find(subtask => subtask.id === id);
         if (element) {
-          newSelectedItems.push(element._id);
+          newSelectedItems.push(element.id);
         }
       }
     });
@@ -221,7 +220,7 @@ export class TasksListComponent implements OnInit, OnChanges {
         this.handleSelectSubtaskAction()
       }
     }
-    
+
     if (['select-specific-subtask'].includes(arr[0])) {
       if (this.level === 0) {
         console.log('Select specific subtask', arr[0]);
@@ -233,7 +232,7 @@ export class TasksListComponent implements OnInit, OnChanges {
       const task = this.tasks[index];
 
       // this.router.navigate(['task', this.tasks[+arr[0] - 1]._id]).then();
-      this.navigationService.navigateToTask(this.tasks[+arr[0] - 1]._id);
+      this.navigationService.navigateToTask(this.tasks[+arr[0] - 1].id);
     }
 
     if (arr[0].startsWith('select-task')) {
@@ -321,7 +320,7 @@ export class TasksListComponent implements OnInit, OnChanges {
       this.clearSelection();
       return;
     }
-    this.selection.select(...this.tasks.map(e => e._id));
+    this.selection.select(...this.tasks.map(e => e.id));
   }
 
   /**
@@ -354,7 +353,7 @@ export class TasksListComponent implements OnInit, OnChanges {
   onSubtaskClick(task: TaskC) {
     this.clearSelection();
     // this.router.navigate(['task', task._id]).then();
-    this.navigationService.navigateToTask(task._id);
+    this.navigationService.navigateToTask(task.id);
   }
 
   /**
@@ -383,12 +382,12 @@ export class TasksListComponent implements OnInit, OnChanges {
         const index = +value;
         if (index > 0 && index <= this.tasks.length) {
           const task = this.tasks[index - 1];
-          if (this.tasksByIdMap[task._id] !== undefined) {
-            this.removeTasksByIdMapKey(task._id);
+          if (this.tasksByIdMap[task.id] !== undefined) {
+            this.removeTasksByIdMapKey(task.id);
             return;
           }
           this.tasksService.getTasks(task.tasks).subscribe(tasks => {
-            this.tasksByIdMap[task._id] = {tasks, container: task};
+            this.tasksByIdMap[task.id] = {tasks, container: task};
             this.store.dispatch(new SetFocusedTaskForSubtasks(task));
           });
         }
@@ -406,14 +405,14 @@ export class TasksListComponent implements OnInit, OnChanges {
   setShowSubtasksField($event: MatCheckboxChange, subtask: TaskC) {
     if ($event.checked) {
       this.tasksService.getTasks(subtask.tasks).pipe(untilDestroyed(this)).subscribe(res => {
-        this.tasksByIdMap[subtask._id] = {container: subtask, tasks: res};
+        this.tasksByIdMap[subtask.id] = {container: subtask, tasks: res};
         if (this.level === 0 && Object.keys(this.tasksByIdMap).length === 1) {
           this.store.dispatch(new SetFocusedTaskForSubtasks(subtask));
         }
       })
       ;
     } else {
-      this.removeTasksByIdMapKey(subtask._id)
+      this.removeTasksByIdMapKey(subtask.id)
     }
   }
 
@@ -434,7 +433,7 @@ export class TasksListComponent implements OnInit, OnChanges {
    * @param subtask
    */
   checkedElement(subtask: TaskC): boolean {
-    return Object.keys(this.tasksByIdMap).includes(String(subtask._id));
+    return Object.keys(this.tasksByIdMap).includes(String(subtask.id));
   }
 
   /**
@@ -461,17 +460,17 @@ export class TasksListComponent implements OnInit, OnChanges {
         }
         const description = responseObj.description;
         if (description) {
-          const obj: any = {
+          const task: any = {
             description: description,
             tags: [],
             done: false,
             notes: responseObj.notes,
-            parents: [this.container.getTaskContainerDescription()]
           }
-          this.tasksService.createNewTask(obj)
+          const parent = { id: this.container.id, type: this.container.type };
+          this.tasksService.createNewTask({ task, parent })
             .pipe(untilDestroyed(this))
             .subscribe((newTask: TaskC) => {
-              this.navigationService.navigateToTask(newTask._id); // TODO send task so it wont upload it
+              this.navigationService.navigateToTask(newTask.id); // TODO send task so it wont upload it
             })
         }
       })

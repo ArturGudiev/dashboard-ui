@@ -14,3 +14,8 @@ export const taskContainerDescriptionAreEqual = (d1: TaskContainerDescription, d
 }
 
 export type TaskContainerDescription = [TaskContainerType, number]
+
+export interface ContainerDescription {
+  id: number;
+  type: TaskContainerType
+}

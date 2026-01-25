@@ -1,12 +1,12 @@
 import { pick } from 'lodash';
 import { TaskContainer } from "./interfaces/task-container";
-import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
+import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
 export class Question implements TaskContainer {
   static readonly QUESTION = 'Question-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Question.QUESTION + '(\\d+)\\s');
   type: TaskContainerType = 'question';
-  _id: number;
+  id: number;
   description: string;
   tags: string[];
   notes = '';
@@ -14,7 +14,7 @@ export class Question implements TaskContainer {
   tasks: number[];
   problems: number[];
   questions: number[];
-  parents: TaskContainerDescription[];
+  parentContainers: ContainerDescription[] = [];
   actions: number[] = [];
   definitions: number[] = [];
   knowledgeBits: number[] = [];
@@ -28,10 +28,10 @@ export class Question implements TaskContainer {
                 definitions?: any,
                 actions?: any,
                 knowledgeBits?: any,
-                parents?: TaskContainerDescription[],
+                parentContainers?: ContainerDescription[],
               } = {}
   ) {
-    this._id = id;
+    this.id = id;
     this.description = description;
     this.tags = tags;
     if(answer) {
@@ -41,7 +41,7 @@ export class Question implements TaskContainer {
     this.tasks = otherFields?.tasks ?? [];
     this.problems = otherFields?.problems ?? [];
     this.questions = otherFields?.questions ?? [];
-    this.parents = otherFields?.parents ?? [];
+    this.parentContainers = otherFields?.parentContainers ?? [];
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
@@ -49,7 +49,7 @@ export class Question implements TaskContainer {
 
 
   getFullDescription(): string {
-    return `${Question.QUESTION}${this._id} ${this.description}`
+    return `${Question.QUESTION}${this.id} ${this.description}`
   }
 
   static createFromObj(obj: any): Question {
@@ -59,7 +59,7 @@ export class Question implements TaskContainer {
   }
 
   getTaskContainerDescription(): TaskContainerDescription {
-    return ['question', this._id];
+    return ['question', this.id];
   }
 
 }

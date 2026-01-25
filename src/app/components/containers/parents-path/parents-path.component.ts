@@ -31,12 +31,13 @@ export class ParentsPathComponent implements OnInit {
     private readonly epicsService: EpicsService,
     private readonly storiesService: StoriesService,
     private readonly problemsService: ProblemsService,
-    private readonly questionsService: QuestionsService
-    , private readonly taskContainerService: TaskContainerService
+    private readonly questionsService: QuestionsService,
+    private readonly taskContainerService: TaskContainerService
   ) {
   }
 
   ngOnInit(): void {
+    console.log('AAAAAAAAA', this.parentsPath);
   }
 
   /**

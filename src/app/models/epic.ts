@@ -1,6 +1,6 @@
 import { pick } from "lodash";
 import { TaskContainer } from "./interfaces/task-container";
-import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
+import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
 export class Epic implements TaskContainer{
   static readonly PREFIX = 'Epic-';
@@ -8,7 +8,7 @@ export class Epic implements TaskContainer{
 
   type: TaskContainerType = 'epic';
 
-  _id: number;
+  id: number;
   description: string;
   closed = false;
   notes = '';
@@ -20,7 +20,7 @@ export class Epic implements TaskContainer{
   actions: number[] = [];
   definitions: number[] = [];
   knowledgeBits: number[] = [];
-  parents: TaskContainerDescription[];
+  parentContainers: ContainerDescription[] = [];
   tags: string[];
 
   constructor(id: number, description: string, tags: string[], closed = false, notes = '',
@@ -33,10 +33,10 @@ export class Epic implements TaskContainer{
                 definitions?: any,
                 actions?: any,
                 knowledgeBits?: any,
-                parents?: TaskContainerDescription[],
+                parentContainers?: ContainerDescription[],
               } = {}
   ) {
-    this._id = id;
+    this.id = id;
     this.description = description;
     this.closed = closed;
     this.tags = tags;
@@ -49,22 +49,22 @@ export class Epic implements TaskContainer{
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
-    this.parents = otherFields?.parents ?? [];
+    this.parentContainers = otherFields?.parentContainers ?? [];
   }
 
   getFullDescription(): string {
-    return `${Epic.PREFIX}${this._id} ${this.description}`
+    return `${Epic.PREFIX}${this.id} ${this.description}`
   }
 
   static createFromObj(epicObj: any): Epic {
     // check here object has all necessary fields
-    return new Epic(epicObj._id, epicObj.description, epicObj.tags, epicObj.closed, epicObj.notes,
+    return new Epic(epicObj.id, epicObj.description, epicObj.tags, epicObj.closed, epicObj.notes,
       pick(epicObj, ['parents', 'epics', 'tasks', 'stories', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
   }
 
   getTaskContainerDescription(): TaskContainerDescription {
-    return ['epic', this._id];
+    return ['epic', this.id];
   }
 
 }

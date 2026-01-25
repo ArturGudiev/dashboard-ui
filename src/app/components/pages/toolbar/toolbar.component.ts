@@ -1,7 +1,7 @@
-import {Component, EventEmitter, HostListener, OnDestroy, OnInit, Output} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Router} from '@angular/router';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
 import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
@@ -13,6 +13,7 @@ import { NavigationService } from "../../../services/navigation.service";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { NavToDialogComponent } from "../../dialogs/nav-task-dialog/nav-to-dialog.component";
 import { CommandDialogComponent } from "../../dialogs/command-dialog/command-dialog.component";
+import { MessageService } from "../../../services/message.service";
 
 @Component({
   selector: 'app-toolbar',
@@ -34,13 +35,16 @@ export class ToolbarComponent implements OnInit {
   doneTasksUntilValue = 0;
   showUntilValue = false;
 
-  constructor(private dialog: MatDialog,
-              private _snackBar: MatSnackBar,
-              private dashboardService: DashboardService,
-              private hotkeys: Hotkeys,
-              private commandService: CommandsService,
-              private navigateService: NavigationService,
-              private router: Router) { }
+  constructor(
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar,
+    private dashboardService: DashboardService,
+    private hotkeys: Hotkeys,
+    private commandService: CommandsService,
+    private navigateService: NavigationService,
+    private messageService: MessageService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.dashboardService.getDataStateChange().subscribe((state: DashboardStateInterface) => {
@@ -70,6 +74,10 @@ export class ToolbarComponent implements OnInit {
    */
   private addHotkeys() {
     for (let i = 1; i <= 9; i++) {
+      // this.hotkeys.addShortcut({keys: `Alt.${i}`}).subscribe(() => this.console.log(`Alts + ${i}`));
+      this.hotkeys.addShortcut({keys: `Alt.${i}`}).subscribe(() => this.messageService.showMessage(`Alt + ${i}`));
+      this.hotkeys.addShortcut({keys: `Meta.${i}`}).subscribe(() => this.messageService.showMessage(`Meta + ${i}`));
+      this.hotkeys.addShortcut({keys: `Option.${i}`}).subscribe(() => this.messageService.showMessage(`Option + ${i}`));
       this.hotkeys.addShortcut({keys: `Control.${i}`}).subscribe(() => this.commandService.setCommand(i.toString()));
       this.hotkeys.addShortcut({keys: `Control.Alt.${i}`}).subscribe(() => {
         console.log('Select specific subtask original');
@@ -216,7 +224,7 @@ export class ToolbarComponent implements OnInit {
   onUntilValueClick() {
     this.dashboardService.disableShowUntilValue();
   }
-  
+
   @HostListener('window:keydown', ['$event'])
   keyupHandler(event: KeyboardEvent) {
     console.log('keup handler', event);

@@ -127,7 +127,7 @@ export class ProblemsListComponent implements OnInit {
   }
 
   onProblemClick(problem: Problem) {
-    this.router.navigate(['problem', problem._id]).then();
+    this.router.navigate(['problem', problem.id]).then();
   }
 
   /**
@@ -135,7 +135,7 @@ export class ProblemsListComponent implements OnInit {
    * @param subtask
    */
   checkedElement(subproblem: Problem): boolean {
-    return Object.keys(this.tasksByIdMap).includes(String(subproblem._id));
+    return Object.keys(this.tasksByIdMap).includes(String(subproblem.id));
   }
 
   /**
@@ -148,14 +148,14 @@ export class ProblemsListComponent implements OnInit {
   setShowSubtasksField($event: MatCheckboxChange, problem: Problem) {
     if ($event.checked) {
       this.tasksService.getTasks(problem.tasks).pipe(untilDestroyed(this)).subscribe(res => {
-        this.tasksByIdMap[problem._id] = {container: problem, tasks: res};
+        this.tasksByIdMap[problem.id] = {container: problem, tasks: res};
         if (Object.keys(this.tasksByIdMap).length === 1) {
           this.store.dispatch(new SetFocusedTaskForSubtasks(problem));
         }
       })
       ;
     } else {
-      delete this.tasksByIdMap[problem._id];
+      delete this.tasksByIdMap[problem.id];
     }
   }
 

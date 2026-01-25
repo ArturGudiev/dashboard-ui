@@ -42,7 +42,7 @@ export class QuestionsService {
   }
 
   answerTheQuestion(question: Question, answer: string): Observable<any> {
-    return this.apiService._answerTheQuestion(question._id, answer).pipe(
+    return this.apiService._answerTheQuestion(question.id, answer).pipe(
       tap({
         complete: () => this.dashboardService.updateDoneTasksNumber()
       }));

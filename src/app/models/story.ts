@@ -1,12 +1,12 @@
 import { pick } from 'lodash';
 import { TaskContainer } from "./interfaces/task-container";
-import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
+import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
 export class Story implements TaskContainer {
   static readonly PREFIX = 'Story-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Story.PREFIX + '(\\d+)\\s');
   type: TaskContainerType = 'story';
-  _id: number;
+  id: number;
 
   description: string;
   closed = false;
@@ -18,8 +18,9 @@ export class Story implements TaskContainer {
   actions: number[] = [];
   definitions: number[] = [];
   knowledgeBits: number[] = [];
-  stories: number[];
-  parents: TaskContainerDescription[];
+  stories: number[] = [];
+  parentContainers: ContainerDescription[] = [];
+
 
   constructor(id: number, description: string, tags: string[], closed = false,
               notes = '',
@@ -31,9 +32,9 @@ export class Story implements TaskContainer {
                 definitions?: any,
                 actions?: any,
                 knowledgeBits?: any,
-                parents?: TaskContainerDescription[],
+                parentContainers?: ContainerDescription[],
               } = {}) {
-    this._id = id;
+    this.id = id;
     this.description = description;
     this.tags = tags;
     this.notes = notes;
@@ -42,26 +43,26 @@ export class Story implements TaskContainer {
     this.problems = otherFields?.problems ?? [];
     this.questions = otherFields?.questions ?? [];
     this.stories = otherFields?.stories ?? [];
-    this.parents = otherFields?.parents ?? [];
+    this.parentContainers = otherFields?.parentContainers ?? [];
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
   }
 
   getFullDescription(): string {
-    return `${Story.PREFIX}${this._id} ${this.description}`
+    return `${Story.PREFIX}${this.id} ${this.description}`
   }
 
 
   static createFromObj(storyObj: any): Story {
     // check here object has all necessary fields
-    return new Story(storyObj._id, storyObj.description, storyObj.tags, storyObj.closed, storyObj.notes,
+    return new Story(storyObj.id, storyObj.description, storyObj.tags, storyObj.closed, storyObj.notes,
       pick(storyObj, ['parents', 'tasks', 'stories', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
   }
 
   getTaskContainerDescription(): TaskContainerDescription {
-    return ['story', this._id];
+    return ['story', this.id];
   }
 
 

@@ -43,7 +43,7 @@ export class ProblemsService {
   }
 
   solveTheProblem(problem: Problem, solution: string): Observable<any> {
-    return this.apiService._solveTheProblem(problem._id, solution).pipe(
+    return this.apiService._solveTheProblem(problem.id, solution).pipe(
       tap({
         complete: () => this.dashboardService.updateDoneTasksNumber()
       }));

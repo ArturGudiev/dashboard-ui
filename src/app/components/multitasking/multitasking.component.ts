@@ -37,7 +37,7 @@ export class MultitaskingComponent implements OnInit {
 
   getTaskContainerRefreshTasks(container: TaskContainer): () => Observable<number[]> {
     if (container.getTaskContainerDescription()[0] === "task") {
-      return () => this.tasksService.getTask(container._id).pipe(map(e => e.tasks));
+      return () => this.tasksService.getTask(container.id).pipe(map(e => e.tasks));
     }
     return () => of([]);
   }
@@ -81,7 +81,7 @@ export class MultitaskingComponent implements OnInit {
   }
 
   refreshTaskContainer(taskContainer: TaskContainer, index: number) {
-    this.taskContainerService.getTaskContainer(taskContainer.type, taskContainer._id)
+    this.taskContainerService.getTaskContainer(taskContainer.type, taskContainer.id)
       .subscribe(res => {
         if (res) {
           this.taskContainers[index] = res;

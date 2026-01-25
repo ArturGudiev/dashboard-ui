@@ -117,14 +117,15 @@ export class TasksService {
           }
           const description = responseObj.description;
           if (description) {
-            const obj: any = {
+            const task: any = {
               description: description,
               tags: [],
               done: false,
               notes: responseObj.notes,
-              parents: [taskContainer.getTaskContainerDescription()]
             }
-            return this.createNewTask(obj);
+            // parents: [taskContainer.getTaskContainerDescription()]
+            const parent = { id: taskContainer.id, type: taskContainer.type};
+            return this.createNewTask({task, parent});
           }
           return of({});
         })

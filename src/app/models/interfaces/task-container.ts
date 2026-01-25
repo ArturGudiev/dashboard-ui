@@ -1,4 +1,4 @@
-import { TaskContainerDescription, TaskContainerType } from "./types";
+import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "./types";
 
 export interface ITaskContainerChildElements {
   tasks: number[]
@@ -12,13 +12,14 @@ export interface ITaskContainerChildElements {
 
 
 export interface TaskContainer extends ITaskContainerChildElements{
-  _id: number;
+  id: number;
   tags: string[];
   tasks: number[];
   problems: number[];
   epics?: number[];
   stories?: number[];
-  parents: TaskContainerDescription[];
+  // parents: TaskContainerDescription[];
+  parentContainers: ContainerDescription[];
 
   getFullDescription(): string;
   getTaskContainerDescription(): TaskContainerDescription;

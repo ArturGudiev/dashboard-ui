@@ -1,12 +1,12 @@
 import { pick } from 'lodash';
 import { TaskContainer } from "./interfaces/task-container";
-import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
+import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
 export class TaskC implements TaskContainer {
   static readonly PREFIX = 'Task-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + TaskC.PREFIX + '(\\d+)\\s');
   type: TaskContainerType = 'task';
-  _id: number;
+  id: number;
   description: string;
   tags: string[];
   done = false;
@@ -18,7 +18,7 @@ export class TaskC implements TaskContainer {
   actions: number[];
   definitions: number[];
   knowledgeBits: number[];
-  parents: TaskContainerDescription[] = [];
+  parentContainers: ContainerDescription[] = [];
   knowledgeNodes: number[] = [];
 
   constructor(_id: number,
@@ -33,13 +33,13 @@ export class TaskC implements TaskContainer {
                 definitions?: any,
                 actions?: any,
                 knowledgeBits?: any,
-                parents?: TaskContainerDescription[],
+                parentContainers?: ContainerDescription[],
               } = {}
   ) {
     this.description = description;
     this.done = done;
     this.tags = tags;
-    this._id = _id;
+    this.id = _id;
     this.notes = notes;
     this.tasks = otherFields?.tasks ?? [];
     this.problems = otherFields?.problems ?? [];
@@ -47,23 +47,22 @@ export class TaskC implements TaskContainer {
     this.definitions = otherFields?.definitions ?? [];
     this.actions = otherFields?.actions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
-    this.parents = otherFields?.parents ?? [];
-
+    this.parentContainers = otherFields?.parentContainers ?? [];
   }
 
   getFullDescription(): string {
-    return `${(TaskC.PREFIX)}${this._id} ${this.description}`
+    return `${(TaskC.PREFIX)}${this.id} ${this.description}`
   }
 
   static createFromObj(taskObj: any): TaskC {
     // check here object has all necessary fields
-    return new TaskC(taskObj._id, taskObj.description, taskObj.done, taskObj.tags, taskObj.notes,
-      pick(taskObj, ['parents', 'tasks', 'problems', 'questions',
+    return new TaskC(taskObj.id, taskObj.description, taskObj.done, taskObj.tags, taskObj.notes,
+      pick(taskObj, ['parentContainers', 'tasks', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
   }
 
   getTaskContainerDescription(): TaskContainerDescription {
-    return ['task', this._id];
+    return ['task', this.id];
   }
 
 }

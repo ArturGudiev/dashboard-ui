@@ -53,6 +53,6 @@ export class EpicsListComponent implements OnInit, AfterViewInit {
   }
 
   onSubepicClick(epic: Epic) {
-    this.router.navigate(['epic', epic._id]);
+    this.router.navigate(['epic', epic.id]);
   }
 }

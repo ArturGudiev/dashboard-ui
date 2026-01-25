@@ -1,12 +1,12 @@
 import { pick } from "lodash";
 import { TaskContainer } from "../interfaces/task-container";
-import { TaskContainerDescription, TaskContainerType } from "../interfaces/types";
+import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "../interfaces/types";
 
 export class Action implements TaskContainer {
   static readonly prefix = 'Action-';
   static readonly DESCRIPTION_REGEX = new RegExp('^' + Action.prefix + '(\\d+)\\s');
   type: TaskContainerType = 'action';
-  _id: number;
+  id: number;
   name: string;
   value: string;
   tags: string[];
@@ -16,7 +16,7 @@ export class Action implements TaskContainer {
   tasks: number[] = [];
   problems: number[] = [];
   questions: number[] = [];
-  parents: TaskContainerDescription[] = [];
+  parentContainers: ContainerDescription[] = [];
   actions: number[] = [];
   definitions: number[] = [];
   knowledgeBits: number[] = [];
@@ -24,21 +24,21 @@ export class Action implements TaskContainer {
 
   constructor(_id: number, name: string, definition: string, tags: string[],
               otherFields: any = {}) {
-    this._id = _id;
+    this.id = _id;
     this.name = name;
     this.value = definition;
     this.tags = tags;
     this.tasks = otherFields?.tasks ?? [];
     this.problems = otherFields?.problems ?? [];
     this.questions = otherFields?.questions ?? [];
-    this.parents = otherFields?.parents ?? [];
+    this.parentContainers = otherFields?.parentContainers ?? [];
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
   }
 
   public getFullDescription(): string {
-    return Action.prefix + this._id + ' ' + this.name;
+    return Action.prefix + this.id + ' ' + this.name;
   }
 
   static createFromObj(actionObj: any): Action {
@@ -49,7 +49,7 @@ export class Action implements TaskContainer {
   }
 
   getTaskContainerDescription(): TaskContainerDescription {
-    return ['action', this._id];
+    return ['action', this.id];
   }
 
 }

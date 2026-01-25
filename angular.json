@@ -55,6 +55,24 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "home": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.home.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "eirc": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.eirc.ts"
+                }
+              ],
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": "production"

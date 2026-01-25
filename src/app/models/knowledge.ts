@@ -1,11 +1,11 @@
 import { pick } from "lodash";
 import { TaskContainer } from "./interfaces/task-container";
-import { TaskContainerDescription, TaskContainerType } from "./interfaces/types";
+import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "./interfaces/types";
 
 export class Knowledge implements TaskContainer {
   static readonly prefix = 'Knowledge-';
   type: TaskContainerType = 'knowledge-bit';
-  _id: number;
+  id: number;
   name: string;
   value: string;
   tags: string[]
@@ -14,7 +14,7 @@ export class Knowledge implements TaskContainer {
   tasks: number[];
   problems: number[];
   questions: number[];
-  parents: TaskContainerDescription[];
+  parentContainers: ContainerDescription[] = [];
   actions: number[] = [];
   definitions: number[] = [];
   knowledgeBits: number[] = [];
@@ -28,10 +28,10 @@ export class Knowledge implements TaskContainer {
                 definitions?: any,
                 actions?: any,
                 knowledgeBits?: any,
-                parents?: TaskContainerDescription[],
+                parentContainers?: ContainerDescription[],
               } = {}
   ) {
-    this._id = id;
+    this.id = id;
     this.name = name;
     this.value = value;
     this.tags = tags;
@@ -41,7 +41,7 @@ export class Knowledge implements TaskContainer {
     this.tasks = otherFields?.tasks ?? [];
     this.problems = otherFields?.problems ?? [];
     this.questions = otherFields?.questions ?? [];
-    this.parents = otherFields?.parents ?? [];
+    this.parentContainers = otherFields?.parentContainers ?? [];
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
@@ -49,7 +49,7 @@ export class Knowledge implements TaskContainer {
 
 
   public getFullDescription(): string {
-    return Knowledge.prefix + this._id + ' ' + this.name;
+    return Knowledge.prefix + this.id + ' ' + this.name;
   }
 
   static createFromObj(obj: any): Knowledge {
@@ -60,7 +60,7 @@ export class Knowledge implements TaskContainer {
   }
 
   getTaskContainerDescription(): TaskContainerDescription {
-    return ['knowledge-bit', this._id];
+    return ['knowledge-bit', this.id];
   }
 
 }
