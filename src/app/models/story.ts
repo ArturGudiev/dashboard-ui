@@ -57,7 +57,7 @@ export class Story implements TaskContainer {
   static createFromObj(storyObj: any): Story {
     // check here object has all necessary fields
     return new Story(storyObj.id, storyObj.description, storyObj.tags, storyObj.closed, storyObj.notes,
-      pick(storyObj, ['parents', 'tasks', 'stories', 'problems', 'questions',
+      pick(storyObj, ['parentContainers', 'tasks', 'stories', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
   }
 

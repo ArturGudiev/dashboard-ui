@@ -42,8 +42,8 @@ export class Action implements TaskContainer {
   }
 
   static createFromObj(actionObj: any): Action {
-    return new Action(actionObj._id, actionObj.name, actionObj.value, actionObj.tags,
-      pick(actionObj, ['parents', 'tasks', 'problems', 'questions',
+    return new Action(actionObj.id, actionObj.name, actionObj.value, actionObj.tags,
+      pick(actionObj, ['parentContainers', 'tasks', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions'])
     )
   }

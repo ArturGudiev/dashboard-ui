@@ -30,9 +30,7 @@ export class QuestionsService {
     return this.apiService._getQuestions(ids).pipe(map(arr => arr.filter(e => !e.answer)));
   }
 
-  createNewQuestion(obj: { description: string; tags: string[],
-      parents: TaskContainerDescription[]
-    }): Observable<Question> {
+  createNewQuestion(obj: any): Observable<Question> {
     return this.apiService._createNewQuestion(obj);
   }
 
@@ -61,12 +59,13 @@ export class QuestionsService {
     .pipe(
       filter((description: string) => !!description),
       switchMap((description: string) => {
-        const obj: any = {
+        const question: any = {
           description: description,
           tags: [],
-          parents: [taskContainer.getTaskContainerDescription()]
+          notes: "",
         };
-        return this.createNewQuestion(obj);
+        const parent = { id: taskContainer.id, type: taskContainer.type };
+        return this.createNewQuestion({ question, parent });
       })
     )
 

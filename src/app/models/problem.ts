@@ -57,8 +57,8 @@ export class Problem implements TaskContainer {
   }
 
   static createFromObj(obj: any): Problem {
-    return new Problem(obj._id, obj.description, obj.tags, obj.solution, obj.notes,
-      pick(obj, ['parents', 'tasks', 'problems', 'questions',
+    return new Problem(obj.id, obj.description, obj.tags, obj.solution, obj.notes,
+      pick(obj, ['parentContainers', 'tasks', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
   }
 

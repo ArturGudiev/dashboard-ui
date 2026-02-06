@@ -13,6 +13,7 @@ import { RecordItem } from "../models/record-item";
 import { Action } from '../models/classes/action';
 import { TaskContainer } from "../models/interfaces/task-container";
 import { IArrayParams } from "../models/interfaces/array-params";
+import { environment } from '../../environments/environment';
 
 export interface IArrayResponse<T> {
   arrInfo: {
@@ -25,16 +26,7 @@ export interface IArrayResponse<T> {
   providedIn: 'root'
 })
 export class ApiService {
-  // baseUrl = 'http://192.168.1.62:3000'
-  // baseUrl = 'http://192.168.1.107:3000' // HOME
-  // baseUrl = 'http://192.168.1.107:8080' // HOME dash2
-  baseUrl = 'http://localhost:8080' // HOME dash2
-  // baseUrl = 'http://192.168.0.13:3000' // EIRC
-  // baseUrl = `${environment.API_1HOST}:${environment.API_PORT}`;
-  // baseUrl = 'http://192.168.0.20:3000'
-
-  // baseUrl = 'http://172.20.10.11:3000'
-  // baseUrl = 'http://localhost:3000'
+  baseUrl = `${environment.API_HOST}:${environment.API_PORT}`;
 
   constructor(private http: HttpClient) {
   }
@@ -74,7 +66,7 @@ export class ApiService {
 
 
   _finishTasks(tasks: TaskC[]) {
-    return this.http.put(`${this.baseUrl}/finish-tasks/`, tasks).pipe();
+    return this.http.put(`${this.baseUrl}/finish-tasks-by-ids/`, tasks.map(el => el.id)).pipe();
   }
 
   _finishTasksByIds(ids: number[]) {
@@ -82,7 +74,7 @@ export class ApiService {
   }
 
   _addAnonymousTask(): Observable<any> {
-    return this.http.put(`${this.baseUrl}/add-anonymous-task/`, {});
+    return this.http.put(`${this.baseUrl}/add-anonymous-task`, {});
   }
 
   _updateTask(task: TaskC): Observable<TaskC> {
@@ -207,7 +199,7 @@ export class ApiService {
   }
 
   _createNewQuestion(obj: any): Observable<Question> {
-    return this.http.post<Question>(`${this.baseUrl}/new-question/`, obj);
+    return this.http.post<Question>(`${this.baseUrl}/new-question`, obj);
   }
 
   _answerTheQuestion(_id: number, answer: string): Observable<any> {

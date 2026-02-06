@@ -12,41 +12,44 @@
 <!--Иконки "Добавления задачи", "Завершения выделенных/всех задач" -->
 @if (tasks.length > 0) {
   <div id="subtasks-actions">
-    <h2 id="subtasks-title">Tasks</h2>
+    <div style="display: flex; align-items: center;">
+      <h2 id="subtasks-title">Tasks</h2>
 
-    <!-- Иконка плюса для добавления задачи -->
-    <button
-      id="add-task-button"
-      mat-mini-fab
-      color="primary"
-      (click)="addTask()"
-    >
-      <mat-icon class="tasks-icon">add</mat-icon>
-    </button>
+      <!-- Иконка плюса для добавления задачи -->
+      <button
+        id="add-task-button"
+        mat-mini-fab
+        color="primary"
+        (click)="addTask()"
+      >
+        <mat-icon class="tasks-icon">add</mat-icon>
+      </button>
 
-    <!-- Завершить выделенные задачи -->
-    <button
-      *ngIf="showFinishSelectedTasksIcon"
-      mat-mini-fab color="primary"
-      class="finish-tasks-button"
-      [disabled]="!this.selection.hasValue()"
-      (click)="onFinishTasksClick()"
-    >
-      <mat-icon class="tasks-icon">done</mat-icon>
-    </button>
+      <!-- Завершить выделенные задачи -->
+      <button
+        *ngIf="showFinishSelectedTasksIcon"
+        mat-mini-fab color="primary"
+        class="finish-tasks-button"
+        [disabled]="!this.selection.hasValue()"
+        (click)="onFinishTasksClick()"
+      >
+        <mat-icon class="tasks-icon">done</mat-icon>
+      </button>
 
-    <!-- Завершить все задачи -->
-    <button
-      mat-mini-fab
-      class="finish-tasks-button"
-      *ngIf="showFinishAllTasksIcon"
-      color="primary"
-      [disabled]="this.tasks.length === 0"
-      (click)="onFinishAllTasksHandler()"
-    >
-      <mat-icon class="tasks-icon">done_outline</mat-icon>
-    </button>
+      <!-- Завершить все задачи -->
+      <button
+        mat-mini-fab
+        class="finish-tasks-button"
+        *ngIf="showFinishAllTasksIcon"
+        color="primary"
+        [disabled]="this.tasks.length === 0"
+        (click)="onFinishAllTasksHandler()"
+      >
+        <mat-icon class="tasks-icon">done_outline</mat-icon>
+      </button>
+    </div>
   </div>
+
 }
 
 <!-- Таблица задач-->

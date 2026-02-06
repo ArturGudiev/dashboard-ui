@@ -63,12 +63,13 @@ export class ProblemsService {
       .pipe(
         filter((description: string) => !!description),
         switchMap((description: string) => {
-          const obj: any = {
+          const problem = {
             description: description,
             tags: [],
-            parents: [taskContainer.getTaskContainerDescription()]
+            notes: "",
           };
-          return this.createNewProblem(obj);
+          const parent = { id: taskContainer.id, type: taskContainer.type };
+          return this.createNewProblem({ problem, parent });
         })
       )
   }

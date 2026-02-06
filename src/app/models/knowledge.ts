@@ -54,8 +54,8 @@ export class Knowledge implements TaskContainer {
 
   static createFromObj(obj: any): Knowledge {
     // check here object has all necessary fields
-    return new Knowledge(obj._id, obj.name, obj.value, obj.tags, obj.extension,
-      pick(obj, ['parents', 'tasks', 'problems', 'questions',
+    return new Knowledge(obj.id, obj.name, obj.value, obj.tags, obj.extension,
+      pick(obj, ['parentContainers', 'tasks', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
   }
 
