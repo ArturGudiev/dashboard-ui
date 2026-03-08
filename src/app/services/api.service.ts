@@ -13,7 +13,7 @@ import { RecordItem } from "../models/record-item";
 import { Action } from '../models/classes/action';
 import { TaskContainer } from "../models/interfaces/task-container";
 import { IArrayParams } from "../models/interfaces/array-params";
-import { environment } from '../../environments/environment';
+import { AppConfigService } from './app-config.service';
 
 export interface IArrayResponse<T> {
   arrInfo: {
@@ -26,9 +26,14 @@ export interface IArrayResponse<T> {
   providedIn: 'root'
 })
 export class ApiService {
-  baseUrl = `${environment.API_HOST}:${environment.API_PORT}`;
+  get baseUrl(): string {
+    return this.appConfig.baseUrl;
+  }
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private appConfig: AppConfigService
+  ) {
   }
 
 
