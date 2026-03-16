@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from "@angular/router";
 import { AliasesService } from "./aliases.service";
-import { AliasesRecord } from "../models/alias-record";
 import { AlertService } from "./alert.service";
 import { TasksService } from "./task-container-services/tasks.service";
+import { ModelsAliasModel } from "../types/generated";
 
 @Injectable({
   providedIn: 'root'
@@ -61,38 +61,41 @@ export class NavigationService {
       })
   }
 
-  private navigateByAlias(val: AliasesRecord) {
-    const arr = val.destination.split(' ');
-    if (arr[0] === 'epic') {
-      this.navigateToEpic(+arr[1]);
+  private navigateByAlias(val: ModelsAliasModel) {
+    const id = val.itemId;
+    if (!id) {
+      return;
     }
-    if (arr[0] === 'task') {
-      this.navigateToTask(+arr[1]);
+    if (val.type === 'epic') {
+      this.navigateToEpic(id);
     }
-    if (arr[0] === 'story') {
-      this.navigateToStory(+arr[1]);
+    if (val.type === 'task') {
+      this.navigateToTask(id);
     }
-    if (arr[0] === 'problem') {
-      this.navigateToProblem(+arr[1]);
+    if (val.type === 'story') {
+      this.navigateToStory(id);
     }
-    if (arr[0] === 'question') {
-      this.navigateToQuestion(+arr[1]);
+    if (val.type === 'problem') {
+      this.navigateToProblem(id);
     }
-    if (arr[0] === 'definition') {
-      this.navigateToDefinition(+arr[1]);
+    if (val.type === 'question') {
+      this.navigateToQuestion(id);
     }
-    if (arr[0] === 'action') {
-      this.navigateToAction(+arr[1]);
+    if (val.type === 'definition') {
+      this.navigateToDefinition(id);
     }
-    if (arr[0] === 'knowledge') {
-      this.navigateToKnowledge(+arr[1]);
+    if (val.type === 'action') {
+      this.navigateToAction(id);
     }
-    if (arr[0] === 'knowledge-node') {
-      this.navigateToKnowledgeNode(+arr[1]);
+    // if (val.type === 'knowledge') {
+    //   this.navigateToKnowledge(id);
+    // }
+    if (val.type === 'knowledge-node') {
+      this.navigateToKnowledgeNode(id);
     }
 
-    if (arr[0] === 'scheduled-task') {
-      this.navigateToScheduledTask(+arr[1]);
+    if (val.type === 'scheduled-task') {
+      this.navigateToScheduledTask(id);
     }
   }
 

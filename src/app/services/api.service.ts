@@ -8,12 +8,12 @@ import { Story } from "../models/story";
 import { Problem } from "../models/problem";
 import { Question } from "../models/question";
 import { Knowledge } from "../models/knowledge";
-import { AliasesRecord } from "../models/alias-record";
 import { RecordItem } from "../models/record-item";
 import { Action } from '../models/classes/action';
 import { TaskContainer } from "../models/interfaces/task-container";
 import { IArrayParams } from "../models/interfaces/array-params";
 import { AppConfigService } from './app-config.service';
+import { ModelsAliasModel } from "../types/generated";
 
 export interface IArrayResponse<T> {
   arrInfo: {
@@ -180,11 +180,8 @@ export class ApiService {
 
   //----------------------------------------problems-----------------------------------------
   //----------------------------------------aliases----------------------------------------
-  _getAlias(alias: string): Observable<AliasesRecord> {
-    return this.http.get<AliasesRecord>(`${this.baseUrl}/alias-record/${alias}`)
-      .pipe(
-        map((obj) => new AliasesRecord(obj))
-      );
+  _getAlias(alias: string): Observable<ModelsAliasModel> {
+    return this.http.get<ModelsAliasModel>(`${this.baseUrl}/aliases/${alias}`);
   }
 
   //----------------------------------------aliases----------------------------------------
