@@ -6,23 +6,25 @@
   min-height: 100%
   // Ensure the app layout is constrained to the viewport
   max-height: 100vh
+  // Vertical scroll belongs to the whole app shell
+  overflow-y: auto
+  overflow-x: hidden
 
 
 .app-sidenav-content
   display: flex
-  height: 100%
+  // Let content size vertically; container will scroll vertically
   flex-direction: column
-
+  
 
 .app-sidenav
   width: 240px
 
 .wrapper
-  flex: 1 1 auto
-  flex-grow: 1
-  // Critical for flex scroll containers
-  min-height: 0
-  overflow: auto
+  // Only horizontal scroll should live here
+  overflow-x: auto
+  overflow-y: visible
+  max-width: 100%
 
 #card-wrapper
   position: fixed
