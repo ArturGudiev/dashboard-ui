@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TaskC } from '../models/task-class';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Epic } from "../models/epic";
@@ -13,7 +13,13 @@ import { Action } from '../models/classes/action';
 import { TaskContainer } from "../models/interfaces/task-container";
 import { IArrayParams } from "../models/interfaces/array-params";
 import { AppConfigService } from './app-config.service';
-import { ModelsAliasModel } from "../types/generated";
+import {
+  EntLogMessage,
+  HandlersNewLogMessageRequest,
+  HandlersPaginatedResponseEntLogMessage,
+  ModelsAliasModel
+} from "../types/generated";
+import { TaskContainerType } from "../models/interfaces/types";
 
 export interface IArrayResponse<T> {
   arrInfo: {
@@ -244,6 +250,33 @@ export class ApiService {
   }
 
   //------------------------------------actions----------------------------------------
+  //------------------------------------logs----------------------------------------
+  getLogs(containerType?: TaskContainerType, containerId?: number): Observable<EntLogMessage> {
+    const url = containerType && containerId
+      ? `${this.baseUrl}/log-messages/${containerType}/${containerId}`
+      : `${this.baseUrl}/log-messages`;
+    return this.http.get<EntLogMessage>(url);
+  }
+
+  addLogMessage(body: HandlersNewLogMessageRequest) {
+    return this.http.post<EntLogMessage>(`${this.baseUrl}/log-messages`, body);
+  }
+
+  getLogMessages({ taskContainer, perPage, page }: { taskContainer?: TaskContainer, perPage?: number, page?: number }) {
+    let myParams = new HttpParams();
+    if (taskContainer) {
+      myParams = myParams.set('containerType', taskContainer.type).set('containerID', taskContainer.id);
+    }
+    if (perPage) {
+      myParams = myParams.set('perPage', perPage);
+    }
+    if (page) {
+      myParams = myParams.set('page', page);
+    }
+    return this.http.get<HandlersPaginatedResponseEntLogMessage>(`${this.baseUrl}/log-messages`, { params: myParams });
+  }
+
+  //------------------------------------logs----------------------------------------
   //------------------------------------knowledge bits start----------------------------------------
   _getKnowledgeBits(ids: number[]) {
     return this.http.post(`${this.baseUrl}/get-knowledge-bits/`, { ids }).pipe(

@@ -4,6 +4,33 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:8080/' | 'https://localhost:8080/' | (string & {});
 };
 
+export type EntLogMessage = {
+    /**
+     * ContainerID holds the value of the "container_id" field.
+     */
+    container_id?: number;
+    /**
+     * ContainerType holds the value of the "container_type" field.
+     */
+    container_type?: SchemaContainerType;
+    /**
+     * Created holds the value of the "created" field.
+     */
+    created?: string;
+    /**
+     * Description holds the value of the "description" field.
+     */
+    description?: string;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * Notes holds the value of the "notes" field.
+     */
+    notes?: string;
+};
+
 export type EntTask = {
     /**
      * Description holds the value of the "description" field.
@@ -39,6 +66,12 @@ export type HandlersIdsRequest = {
     ids: Array<number>;
 };
 
+export type HandlersNewLogMessageRequest = {
+    containerID?: number;
+    containerType?: SchemaContainerType;
+    description?: string;
+};
+
 /**
  * Request to create a new problem with optional parent container
  */
@@ -58,6 +91,13 @@ export type HandlersNewQuestionRequest = {
 export type HandlersNewTaskRequest = {
     parent?: ModelsContainerDescription;
     task?: ModelsTaskShort;
+};
+
+export type HandlersPaginatedResponseEntLogMessage = {
+    items: Array<EntLogMessage>;
+    page: number;
+    perPage: number;
+    total: number;
 };
 
 export type HandlersParentsPathRequest = {
@@ -836,6 +876,134 @@ export type PostGetTasksResponses = {
 };
 
 export type PostGetTasksResponse = PostGetTasksResponses[keyof PostGetTasksResponses];
+
+export type GetLogMessagesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Container type filter
+         */
+        containerType?: string;
+        /**
+         * Container id filter
+         */
+        containerID?: number;
+    };
+    url: '/log-messages';
+};
+
+export type GetLogMessagesErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetLogMessagesError = GetLogMessagesErrors[keyof GetLogMessagesErrors];
+
+export type GetLogMessagesResponses = {
+    /**
+     * OK
+     */
+    200: HandlersPaginatedResponseEntLogMessage;
+};
+
+export type GetLogMessagesResponse = GetLogMessagesResponses[keyof GetLogMessagesResponses];
+
+export type PostLogMessagesData = {
+    /**
+     * Log message creation request
+     */
+    body: HandlersNewLogMessageRequest;
+    path?: never;
+    query?: never;
+    url: '/log-messages';
+};
+
+export type PostLogMessagesErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostLogMessagesError = PostLogMessagesErrors[keyof PostLogMessagesErrors];
+
+export type PostLogMessagesResponses = {
+    /**
+     * OK
+     */
+    200: EntLogMessage;
+};
+
+export type PostLogMessagesResponse = PostLogMessagesResponses[keyof PostLogMessagesResponses];
+
+export type GetLogMessagesByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Log Message ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/log-messages/{id}';
+};
+
+export type GetLogMessagesByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetLogMessagesByIdError = GetLogMessagesByIdErrors[keyof GetLogMessagesByIdErrors];
+
+export type GetLogMessagesByIdResponses = {
+    /**
+     * OK
+     */
+    200: EntLogMessage;
+};
+
+export type GetLogMessagesByIdResponse = GetLogMessagesByIdResponses[keyof GetLogMessagesByIdResponses];
 
 export type PostNewEpicData = {
     /**

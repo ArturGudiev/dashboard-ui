@@ -176,6 +176,12 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     if (['add-to-parent', 'tparent', 'tp', 'pt'].includes(arr[0])) {
       this.addTaskToParentInteractively();
     }
+    if (['log', 'l+'].includes(arr[0])) {
+      this.taskContainerService.openAddLogDialog(this.taskContainer).subscribe();
+    }
+    if (['ls', 'logs', 'l'].includes(arr[0])) {
+      this.taskContainerService.openLogsDialog(this.taskContainer);
+    }
   }
 
   finishAllTasks() {

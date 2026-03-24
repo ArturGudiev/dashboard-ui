@@ -225,9 +225,4 @@ export class ToolbarComponent implements OnInit {
     this.dashboardService.disableShowUntilValue();
   }
 
-  @HostListener('window:keydown', ['$event'])
-  keyupHandler(event: KeyboardEvent) {
-    console.log('keup handler', event);
-  }
-
 }

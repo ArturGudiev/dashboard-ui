@@ -16,6 +16,12 @@ import type {
   GetEpicsData,
   GetEpicsErrors,
   GetEpicsResponses,
+  GetLogMessagesByIdData,
+  GetLogMessagesByIdErrors,
+  GetLogMessagesByIdResponses,
+  GetLogMessagesData,
+  GetLogMessagesErrors,
+  GetLogMessagesResponses,
   GetProblemByIdData,
   GetProblemByIdErrors,
   GetProblemByIdResponses,
@@ -50,6 +56,9 @@ import type {
   PostGetTasksData,
   PostGetTasksErrors,
   PostGetTasksResponses,
+  PostLogMessagesData,
+  PostLogMessagesErrors,
+  PostLogMessagesResponses,
   PostNewEpicData,
   PostNewEpicErrors,
   PostNewEpicResponses,
@@ -274,6 +283,34 @@ export const postGetTasks = <ThrowOnError extends boolean = false>(options: Opti
         ...options.headers
     }
 });
+
+/**
+ * Get log messages
+ *
+ * Returns multiple log messages
+ */
+export const getLogMessages = <ThrowOnError extends boolean = false>(options?: Options<GetLogMessagesData, ThrowOnError>) => (options?.client ?? client).get<GetLogMessagesResponses, GetLogMessagesErrors, ThrowOnError>({ url: '/log-messages', ...options });
+
+/**
+ * Create new log message
+ *
+ * Creates a new log message with optional container relationship
+ */
+export const postLogMessages = <ThrowOnError extends boolean = false>(options: Options<PostLogMessagesData, ThrowOnError>) => (options.client ?? client).post<PostLogMessagesResponses, PostLogMessagesErrors, ThrowOnError>({
+    url: '/log-messages',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get log message by ID
+ *
+ * Returns a log message by its ID
+ */
+export const getLogMessagesById = <ThrowOnError extends boolean = false>(options: Options<GetLogMessagesByIdData, ThrowOnError>) => (options.client ?? client).get<GetLogMessagesByIdResponses, GetLogMessagesByIdErrors, ThrowOnError>({ url: '/log-messages/{id}', ...options });
 
 /**
  * Create new epic

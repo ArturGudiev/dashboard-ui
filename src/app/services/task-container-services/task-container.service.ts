@@ -13,6 +13,13 @@ import { Story } from "../../models/story";
 import { Problem } from "../../models/problem";
 import { Question } from "../../models/question";
 import { TaskC } from "../../models/task-class";
+import { NEW_QUESTION_DIALOG_OPTIONS } from "../../shared/constants";
+import { switchMap } from "rxjs/operators";
+import { MatDialog } from "@angular/material/dialog";
+import { LogsService } from "../logs.service";
+import { EntLogMessage } from "../../types/generated";
+import { AddLogDialogComponent } from "../../components/dialogs/add-log-dialog/add-log-dialog.component";
+import { LogsDialogComponent } from "../../components/dialogs/logs-dialog/logs-dialog.component";
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +33,10 @@ export class TaskContainerService {
     private tasksService: TasksService,
     private problemsService: ProblemsService,
     private questionsService: QuestionsService,
+    private logsService: LogsService,
     private readonly epicsService: EpicsService,
     private readonly storiesService: StoriesService,
+    private dialog: MatDialog,
   ) { }
 
   getParentsPath(taskContainer: TaskContainer): Observable<string[]> {
@@ -81,6 +90,31 @@ export class TaskContainerService {
       }
     }
   }
+
+  openAddLogDialog(taskContainer: TaskContainer): Observable<EntLogMessage> {
+    const dialogRef = this.dialog.open(AddLogDialogComponent,
+      {data: {title: 'LOG 111', inputWidth: '40rem'},
+        ...NEW_QUESTION_DIALOG_OPTIONS
+      });
+    return dialogRef.afterClosed()
+      .pipe(
+        // filter((description: string) => !!description),
+        switchMap((obj: any) => {
+          console.log(obj, 'After closed subscription');
+          return this.logsService.addLogMessage(obj.logMessage, obj.isContainerLog ? taskContainer : undefined);
+        })
+      )
+  }
+
+  openLogsDialog(taskContainer: TaskContainer) {
+    const dialogRef = this.dialog.open(LogsDialogComponent,
+      {data: { taskContainer },
+         height: '1000px', width: '800px',
+      });
+    return;
+  }
+
+
 
   /**
    *
