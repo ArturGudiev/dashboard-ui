@@ -23,8 +23,8 @@ export class LongClickDirectiveDirective {
     }, true);
   }
 
-  @HostListener('mousedown', ['$event'])
-  @HostListener('touchstart', ['$event'])
+  @HostListener('mousedown')
+  @HostListener('touchstart')
   onMouseDown() {
     this.touchTimeout = setTimeout(() => {
       this.longClick.emit();

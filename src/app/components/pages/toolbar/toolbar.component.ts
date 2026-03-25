@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -153,17 +153,6 @@ export class ToolbarComponent implements OnInit {
     this.hotkeys.addShortcut({keys: 'meta.c'}).subscribe(() => this.openCommandDialog());
     this.hotkeys.addShortcut({keys: 'alt.c'}).subscribe(() => this.openCommandDialog());
   }
-
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-
-  }
-
-  @HostListener('keydown.shift', ['$event'])
-  onKeyDown() {
-    console.log('shift and tab');
-  }
-
 
   onNavToClick(): void {
     const dialogRef = this.dialog.open(NavToDialogComponent,

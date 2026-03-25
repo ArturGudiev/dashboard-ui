@@ -311,7 +311,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     this.problemsService.callSolveTheProblemDialog(problem, this.taskContainer);
   }
 
-  @HostListener('document:keydown.code.Alt.r', ['$event'])
+  @HostListener('document:keydown.code.Alt.r')
   showRecords(): void {
     const dialogRef = this.dialog.open(RecordsListDialogComponent,
       {
