@@ -9,19 +9,18 @@ import { MatButton } from "@angular/material/button";
 import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
-  selector: 'app-new-task-dialog',
-  templateUrl: './new-task-dialog.component.html',
-  standalone: true,
-  imports: [
-    CdkTextareaAutosize,
-    ReactiveFormsModule,
-    MatFormField,
-    MatInput,
-    MatDialogActions,
-    MaterialModule,
-    MatButton
-  ],
-  styleUrls: ['./new-task-dialog.component.sass']
+    selector: 'app-new-task-dialog',
+    templateUrl: './new-task-dialog.component.html',
+    imports: [
+        CdkTextareaAutosize,
+        ReactiveFormsModule,
+        MatFormField,
+        MatInput,
+        MatDialogActions,
+        MaterialModule,
+        MatButton
+    ],
+    styleUrls: ['./new-task-dialog.component.sass']
 })
 export class NewTaskDialogComponent implements OnInit {
   static DIALOG_OPTIONS = {

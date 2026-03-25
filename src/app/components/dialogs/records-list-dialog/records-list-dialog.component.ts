@@ -13,20 +13,18 @@ import { IArrayParams } from "../../../models/interfaces/array-params";
 type SelectedOptionType = 'node' | 'all' | 'node_plus_children';
 
 @Component({
-  selector: 'app-records-list-dialog',
-  templateUrl: './records-list-dialog.component.html',
-  standalone: true,
-  imports: [
-    MatProgressSpinner,
-    MatButtonToggleGroup,
-    MatButtonToggle,
-    MatPaginator,
-    AsyncPipe,
-    NgForOf,
-    NgIf
-
-  ],
-  styleUrls: ['./records-list-dialog.component.sass']
+    selector: 'app-records-list-dialog',
+    templateUrl: './records-list-dialog.component.html',
+    imports: [
+        MatProgressSpinner,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        MatPaginator,
+        AsyncPipe,
+        NgForOf,
+        NgIf
+    ],
+    styleUrls: ['./records-list-dialog.component.sass']
 })
 export class RecordsListDialogComponent implements OnInit {
   records$!: Observable<IArrayResponse<RecordItem>>;

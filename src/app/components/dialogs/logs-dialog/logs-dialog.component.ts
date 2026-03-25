@@ -9,10 +9,9 @@ import { MatButton } from "@angular/material/button";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 
 @Component({
-  selector: 'app-logs-dialog',
-  standalone: true,
-  imports: [MatSlideToggle, MatButton, MatPaginator],
-  template: `
+    selector: 'app-logs-dialog',
+    imports: [MatSlideToggle, MatButton, MatPaginator],
+    template: `
     <mat-slide-toggle
       [checked]="showAllMessages()"
       (change)="showAllMessages.set($event.checked)"
@@ -35,7 +34,7 @@ import { MatPaginator, PageEvent } from "@angular/material/paginator";
       aria-label="Select page">
     </mat-paginator>
   `,
-  styleUrl: './logs-dialog.component.sass'
+    styleUrl: './logs-dialog.component.sass'
 })
 export class LogsDialogComponent {
   perPage = signal(20);

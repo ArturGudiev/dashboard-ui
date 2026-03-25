@@ -8,11 +8,10 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 
 @UntilDestroy()
 @Component({
-  selector: 'app-select-from-list-dialog',
-  standalone: true,
-  imports: [],
-  templateUrl: './select-from-list-dialog.component.html',
-  styleUrl: './select-from-list-dialog.component.scss'
+    selector: 'app-select-from-list-dialog',
+    imports: [],
+    templateUrl: './select-from-list-dialog.component.html',
+    styleUrl: './select-from-list-dialog.component.scss'
 })
 export class SelectFromListDialog implements OnInit {
 

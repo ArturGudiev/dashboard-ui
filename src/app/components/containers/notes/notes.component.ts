@@ -16,15 +16,14 @@ import { MaterialModule } from "../../../modules/material/material.module";
 
 @UntilDestroy()
 @Component({
-  selector: 'app-notes',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    FormsModule,
-    NgIf
-  ],
-  templateUrl: './notes.component.html',
-  styleUrls: ['./notes.component.sass']
+    selector: 'app-notes',
+    imports: [
+        MaterialModule,
+        FormsModule,
+        NgIf
+    ],
+    templateUrl: './notes.component.html',
+    styleUrls: ['./notes.component.sass']
 })
 export class NotesComponent implements OnInit {
   editValue = false;

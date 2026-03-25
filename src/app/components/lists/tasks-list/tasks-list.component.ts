@@ -33,16 +33,15 @@ import { TaskContainerService } from "../../../services/task-container-services/
 
 @UntilDestroy()
 @Component({
-  selector: 'app-tasks-list',
-  templateUrl: './tasks-list.component.html',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    NgClass,
-    NgForOf,
-    NgIf
-  ],
-  styleUrls: ['./tasks-list.component.sass']
+    selector: 'app-tasks-list',
+    templateUrl: './tasks-list.component.html',
+    imports: [
+        MaterialModule,
+        NgClass,
+        NgForOf,
+        NgIf
+    ],
+    styleUrls: ['./tasks-list.component.sass']
 })
 export class TasksListComponent implements OnInit, OnChanges {
   @Input({required: true}) container!: TaskContainer;

@@ -12,16 +12,15 @@ import { TaskContainerService } from "../../services/task-container-services/tas
 import { TasksService } from "../../services/task-container-services/tasks.service";
 
 @Component({
-  selector: 'app-multitasking',
-  templateUrl: './multitasking.component.html',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    ReactiveFormsModule,
-    NgForOf,
-    MultitaskingItemComponent
-  ],
-  styleUrls: ['./multitasking.component.sass']
+    selector: 'app-multitasking',
+    templateUrl: './multitasking.component.html',
+    imports: [
+        MaterialModule,
+        ReactiveFormsModule,
+        NgForOf,
+        MultitaskingItemComponent
+    ],
+    styleUrls: ['./multitasking.component.sass']
 })
 export class MultitaskingComponent implements OnInit {
   taskContainers: TaskContainer[] = [];

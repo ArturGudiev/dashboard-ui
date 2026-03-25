@@ -6,14 +6,13 @@ import { MaterialModule } from "../../../modules/material/material.module";
 import { NgIf } from "@angular/common";
 
 @Component({
-  selector: 'app-substories',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    NgIf
-  ],
-  templateUrl: './sub-stories.component.html',
-  styleUrls: ['./sub-stories.component.sass']
+    selector: 'app-substories',
+    imports: [
+        MaterialModule,
+        NgIf
+    ],
+    templateUrl: './sub-stories.component.html',
+    styleUrls: ['./sub-stories.component.sass']
 })
 export class SubStoriesComponent implements OnInit {
 

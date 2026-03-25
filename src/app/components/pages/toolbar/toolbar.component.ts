@@ -16,17 +16,16 @@ import { CommandDialogComponent } from "../../dialogs/command-dialog/command-dia
 import { MessageService } from "../../../services/message.service";
 
 @Component({
-  selector: 'app-toolbar',
-  templateUrl: './toolbar.component.html',
-  standalone: true,
-  imports: [
-    MatToolbar,
-    MatIcon,
-    MatMenuTrigger,
-    MatMenu,
-    MatButton
-  ],
-  styleUrls: ['./toolbar.component.scss']
+    selector: 'app-toolbar',
+    templateUrl: './toolbar.component.html',
+    imports: [
+        MatToolbar,
+        MatIcon,
+        MatMenuTrigger,
+        MatMenu,
+        MatButton
+    ],
+    styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent implements OnInit {
 

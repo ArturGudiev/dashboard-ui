@@ -36,15 +36,14 @@ export interface TreeNode {
 
 
 @Component({
-  selector: 'app-my-tree',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    JsonPipe,
-    NgStyle
-  ],
-  templateUrl: './my-tree.component.html',
-  styleUrl: './my-tree.component.scss'
+    selector: 'app-my-tree',
+    imports: [
+        MaterialModule,
+        JsonPipe,
+        NgStyle
+    ],
+    templateUrl: './my-tree.component.html',
+    styleUrl: './my-tree.component.scss'
 })
 export class MyTreeComponent implements OnInit, OnChanges {
   @Input() treeData: TreeNode[] = [];

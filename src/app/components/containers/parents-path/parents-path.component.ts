@@ -10,16 +10,15 @@ import { QuestionsService } from "../../../services/task-container-services/ques
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @Component({
-  selector: 'app-parents-path',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    NgStyle,
-    NgForOf,
-    LongClickDirectiveDirective
-  ],
-  templateUrl: './parents-path.component.html',
-  styleUrls: ['./parents-path.component.sass']
+    selector: 'app-parents-path',
+    imports: [
+        MaterialModule,
+        NgStyle,
+        NgForOf,
+        LongClickDirectiveDirective
+    ],
+    templateUrl: './parents-path.component.html',
+    styleUrls: ['./parents-path.component.sass']
 })
 export class ParentsPathComponent implements OnInit {
 

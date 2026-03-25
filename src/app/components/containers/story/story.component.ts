@@ -13,15 +13,14 @@ import { TaskContainerService } from "../../../services/task-container-services/
 
 @UntilDestroy()
 @Component({
-  selector: 'app-story',
-  templateUrl: './story.component.html',
-  standalone: true,
-  imports: [
-    MatProgressSpinner,
-    NgIf,
-    TaskContainerComponent
-  ],
-  styleUrls: ['./story.component.sass']
+    selector: 'app-story',
+    templateUrl: './story.component.html',
+    imports: [
+        MatProgressSpinner,
+        NgIf,
+        TaskContainerComponent
+    ],
+    styleUrls: ['./story.component.sass']
 })
 export class StoryComponent implements OnInit {
   id!: number; // TODO add resolvers

@@ -15,16 +15,15 @@ import { TaskContainerService } from "../../../services/task-container-services/
 
 @UntilDestroy()
 @Component({
-  selector: 'app-problem',
-  templateUrl: './problem.component.html',
-  standalone: true,
-  imports: [
-    MatProgressSpinner,
-    AsyncPipe,
-    NgIf,
-    TaskContainerComponent
-  ],
-  styleUrls: ['./problem.component.sass']
+    selector: 'app-problem',
+    templateUrl: './problem.component.html',
+    imports: [
+        MatProgressSpinner,
+        AsyncPipe,
+        NgIf,
+        TaskContainerComponent
+    ],
+    styleUrls: ['./problem.component.sass']
 })
 export class ProblemComponent implements OnInit {
   id!: number;

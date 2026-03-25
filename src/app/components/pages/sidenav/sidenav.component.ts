@@ -14,19 +14,18 @@ const SMALL_WIDTH_BREAKPOINT = 720;
 
 @UntilDestroy()
 @Component({
-  selector: 'app-sidenav',
-  templateUrl: './sidenav.component.html',
-  standalone: true,
-  imports: [
-    ToolbarComponent,
-    MatSidenavContainer,
-    MatSidenav,
-    MatToolbar,
-    MatNavList,
-    MatListItem,
-    RouterOutlet
-  ],
-  styleUrls: ['./sidenav.component.sass']
+    selector: 'app-sidenav',
+    templateUrl: './sidenav.component.html',
+    imports: [
+        ToolbarComponent,
+        MatSidenavContainer,
+        MatSidenav,
+        MatToolbar,
+        MatNavList,
+        MatListItem,
+        RouterOutlet
+    ],
+    styleUrls: ['./sidenav.component.sass']
 })
 export class SidenavComponent implements OnInit {
   public isScreenSmall = false;

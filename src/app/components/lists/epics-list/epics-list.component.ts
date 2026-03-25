@@ -8,14 +8,13 @@ import { NgIf } from "@angular/common";
 import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
-  selector: 'app-epics-list',
-  templateUrl: './epics-list.component.html',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    NgIf,
-  ],
-  styleUrls: ['./epics-list.component.sass']
+    selector: 'app-epics-list',
+    templateUrl: './epics-list.component.html',
+    imports: [
+        MaterialModule,
+        NgIf,
+    ],
+    styleUrls: ['./epics-list.component.sass']
 })
 export class EpicsListComponent implements OnInit, AfterViewInit {
 

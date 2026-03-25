@@ -5,14 +5,13 @@ import { TaskContainerService } from "../../../services/task-container-services/
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
-  selector: 'app-report',
-  standalone: true,
-  imports: [
-    MyTreeComponent,
-    MatProgressSpinner
-  ],
-  templateUrl: './container-report.component.html',
-  styleUrl: './container-report.component.scss'
+    selector: 'app-report',
+    imports: [
+        MyTreeComponent,
+        MatProgressSpinner
+    ],
+    templateUrl: './container-report.component.html',
+    styleUrl: './container-report.component.scss'
 })
 export class ContainerReportComponent implements OnInit {
   @Input({required: true}) container!: TaskContainer;

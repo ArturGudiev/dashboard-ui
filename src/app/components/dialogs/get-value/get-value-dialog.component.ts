@@ -1,24 +1,23 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatFormField } from "@angular/material/form-field";
 import { NgIf, NgStyle } from "@angular/common";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
-  selector: 'app-get-value',
-  templateUrl: './get-value-dialog.component.html',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatFormField,
-    NgStyle,
-    CdkTextareaAutosize,
-    MaterialModule,
-    NgIf
-  ],
-  styleUrls: ['./get-value-dialog.component.sass']
+    selector: 'app-get-value',
+    templateUrl: './get-value-dialog.component.html',
+    imports: [
+        ReactiveFormsModule,
+        MatFormField,
+        NgStyle,
+        CdkTextareaAutosize,
+        MaterialModule,
+        NgIf
+    ],
+    styleUrls: ['./get-value-dialog.component.sass']
 })
 export class GetValueDialogComponent implements OnInit {
 

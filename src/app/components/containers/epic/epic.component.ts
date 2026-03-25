@@ -13,15 +13,14 @@ import { TaskContainerService } from "../../../services/task-container-services/
 
 @UntilDestroy()
 @Component({
-  selector: 'app-epic',
-  templateUrl: './epic.component.html',
-  standalone: true,
-  imports: [
-    MatProgressSpinner,
-    NgIf,
-    TaskContainerComponent
-  ],
-  styleUrls: ['./epic.component.sass']
+    selector: 'app-epic',
+    templateUrl: './epic.component.html',
+    imports: [
+        MatProgressSpinner,
+        NgIf,
+        TaskContainerComponent
+    ],
+    styleUrls: ['./epic.component.sass']
 })
 export class EpicComponent implements OnInit {
   id!: number;

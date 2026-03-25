@@ -10,22 +10,21 @@ import { TaskContainer } from "../../../models/interfaces/task-container";
 import { MatCheckbox } from "@angular/material/checkbox";
 
 @Component({
-  selector: 'app-add-log-dialog',
-  standalone: true,
-  imports: [
-    CdkTextareaAutosize,
-    FormsModule,
-    MatButton,
-    MatDialogActions,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    ReactiveFormsModule,
-    NgStyle,
-    MatCheckbox
-  ],
-  styleUrl: './add-log-dialog.component.sass',
-  template: `
+    selector: 'app-add-log-dialog',
+    imports: [
+        CdkTextareaAutosize,
+        FormsModule,
+        MatButton,
+        MatDialogActions,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        ReactiveFormsModule,
+        NgStyle,
+        MatCheckbox
+    ],
+    styleUrl: './add-log-dialog.component.sass',
+    template: `
     <form
       autocomplete="on"
       [formGroup]="myForm"
@@ -51,7 +50,7 @@ import { MatCheckbox } from "@angular/material/checkbox";
       </div>
     </form>
 
-  `,
+  `
 })
 export class AddLogDialogComponent {
 

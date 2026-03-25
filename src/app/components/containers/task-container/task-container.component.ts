@@ -38,23 +38,22 @@ import { ContainerReportComponent } from "../container-report/container-report.c
 
 @UntilDestroy()
 @Component({
-  selector: 'app-task-container',
-  templateUrl: './task-container.component.html',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    ParentsPathComponent,
-    EpicsListComponent,
-    SubStoriesComponent,
-    QuestionsListComponent,
-    ProblemsListComponent,
-    NotesComponent,
-    NgIf,
-    TasksListComponent,
-    MyTreeComponent,
-    ContainerReportComponent
-  ],
-  styleUrls: ['./task-container.component.sass']
+    selector: 'app-task-container',
+    templateUrl: './task-container.component.html',
+    imports: [
+        MaterialModule,
+        ParentsPathComponent,
+        EpicsListComponent,
+        SubStoriesComponent,
+        QuestionsListComponent,
+        ProblemsListComponent,
+        NotesComponent,
+        NgIf,
+        TasksListComponent,
+        MyTreeComponent,
+        ContainerReportComponent
+    ],
+    styleUrls: ['./task-container.component.sass']
 })
 export class TaskContainerComponent implements OnInit, OnChanges {
   @Input({required: true}) taskContainer!: TaskContainer;

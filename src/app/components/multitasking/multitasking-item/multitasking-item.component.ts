@@ -7,14 +7,13 @@ import { TaskContainer } from "../../../models/interfaces/task-container";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 
 @Component({
-  selector: 'app-multitasking-item',
-  templateUrl: './multitasking-item.component.html',
-  standalone: true,
-  imports: [
-    MaterialModule,
-    TasksListComponent
-  ],
-  styleUrls: ['./multitasking-item.component.sass']
+    selector: 'app-multitasking-item',
+    templateUrl: './multitasking-item.component.html',
+    imports: [
+        MaterialModule,
+        TasksListComponent
+    ],
+    styleUrls: ['./multitasking-item.component.sass']
 })
 export class MultitaskingItemComponent implements OnInit, OnChanges {
   @Input() taskContainer!: TaskContainer;

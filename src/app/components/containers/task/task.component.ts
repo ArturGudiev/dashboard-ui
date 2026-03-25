@@ -43,16 +43,15 @@ const TREE_DATA: TreeNode[] = [
 
 @UntilDestroy()
 @Component({
-  selector: 'app-task',
-  templateUrl: './task.component.html',
-  standalone: true,
-  imports: [
-    MatProgressSpinner,
-    CommonModule,
-    TaskContainerComponent,
-    LongClickDirectiveDirective,
-  ],
-  styleUrls: ['./task.component.sass']
+    selector: 'app-task',
+    templateUrl: './task.component.html',
+    imports: [
+        MatProgressSpinner,
+        CommonModule,
+        TaskContainerComponent,
+        LongClickDirectiveDirective,
+    ],
+    styleUrls: ['./task.component.sass']
 })
 export class TaskComponent implements OnInit, OnDestroy {
   get task() {
