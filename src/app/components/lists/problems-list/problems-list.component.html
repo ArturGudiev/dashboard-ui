@@ -8,89 +8,85 @@
       mat-mini-fab
       color="primary"
       id="add-problem-button"
-    >
+      >
       <mat-icon class="problems-icon">add</mat-icon>
     </button>
 
     <!-- Иконка завершения проблемы -->
     <button mat-mini-fab color="primary" [disabled]="!this.selection.hasValue()"
-            (click)="onFinishProblemClick()">
+      (click)="onFinishProblemClick()">
       <mat-icon class="problems-icon">done</mat-icon>
     </button>
   </div>
 
   <div id="table-wrapper">
-    <table
-      id="problems-table"
-      *ngIf="problems.length > 0"
-      mat-table
-      [dataSource]="problems"
-      class="mat-elevation-z8"
-    >
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
-          <mat-checkbox class="red-color" [disabled]="true" (change)="$event ? onMainCheckboxClick() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()">
-          </mat-checkbox>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)">
-          </mat-checkbox>
-        </td>
-      </ng-container>
-
-      <!-- Position Column -->
-      <ng-container matColumnDef="position">
-        <th mat-header-cell *matHeaderCellDef> No.</th>
-        <td mat-cell class="row-link red-color" (click)="onProblemClick(problem)"
-            *matCellDef="let problem; let i = index">
-          <span>{{ i + 1 }}</span>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef> Description</th>
-        <td mat-cell *matCellDef="let problem;" (click)="onProblemClick(problem)">
-          <span class="row-link red-color" (click)="onProblemClick(problem)">{{ problem.description }}</span>
-        </td>
-      </ng-container>
-
-      <!--Иконка решения проблемы -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Actions</th>
-        <td mat-cell *matCellDef="let problem; let i=index" id="row-{{i}}">
-          <mat-icon (click)="onProblemSolvedClick(problem)">done</mat-icon>
-        </td>
-      </ng-container>
-
-      <!-- Чекбокс для отображенмя подзадач -->
-      <ng-container matColumnDef="showSubtasks">
-        <th mat-header-cell *matHeaderCellDef>Subtasks</th>
-        <td
-          mat-cell
-          *matCellDef="let problem; let i=index"
-          id="row-{{i}}"
-          class="row-link"
-          [ngClass]="{'highlight': selection.selected.includes(problem._id)}"
+    @if (problems.length > 0) {
+      <table
+        id="problems-table"
+        mat-table
+        [dataSource]="problems"
+        class="mat-elevation-z8"
         >
-          <mat-checkbox
-            [checked]="checkedElement(problem)"
-            (change)="setShowSubtasksField($event, problem)"
-          >
-          </mat-checkbox>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox class="red-color" [disabled]="true" (change)="$event ? onMainCheckboxClick() : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <!-- Position Column -->
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> No.</th>
+          <td mat-cell class="row-link red-color" (click)="onProblemClick(problem)"
+            *matCellDef="let problem; let i = index">
+            <span>{{ i + 1 }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef> Description</th>
+          <td mat-cell *matCellDef="let problem;" (click)="onProblemClick(problem)">
+            <span class="row-link red-color" (click)="onProblemClick(problem)">{{ problem.description }}</span>
+          </td>
+        </ng-container>
+        <!--Иконка решения проблемы -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions</th>
+          <td mat-cell *matCellDef="let problem; let i=index" id="row-{{i}}">
+            <mat-icon (click)="onProblemSolvedClick(problem)">done</mat-icon>
+          </td>
+        </ng-container>
+        <!-- Чекбокс для отображенмя подзадач -->
+        <ng-container matColumnDef="showSubtasks">
+          <th mat-header-cell *matHeaderCellDef>Subtasks</th>
+          <td
+            mat-cell
+            *matCellDef="let problem; let i=index"
+            id="row-{{i}}"
+            class="row-link"
+            [ngClass]="{'highlight': selection.selected.includes(problem._id)}"
+            >
+            <mat-checkbox
+              [checked]="checkedElement(problem)"
+              (change)="setShowSubtasksField($event, problem)"
+              >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    }
 
     <!-- Список списков подзадач соотетствующий выбранным (для отображения подзадач) задачам -->
     <div id="subtasks-of-selected-tasks">
-      <ng-container *ngFor="let item of tasksByIdMapKeys">
+      @for (item of tasksByIdMapKeys; track item) {
         <app-tasks-list
           [container]="tasksByIdMap[item].container"
           [tasks]="tasksByIdMap[item].tasks"
@@ -98,7 +94,7 @@
           [showTitle]="true"
           [level]="1"
         ></app-tasks-list>
-      </ng-container>
+      }
     </div>
   </div>
 }

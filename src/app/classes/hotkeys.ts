@@ -1,7 +1,7 @@
-import {Observable} from "rxjs";
-import {Inject, Injectable} from "@angular/core";
-import {EventManager} from "@angular/platform-browser";
-import {DOCUMENT} from "@angular/common";
+import { Observable } from "rxjs";
+import { DOCUMENT, Inject, Injectable } from "@angular/core";
+import { EventManager } from "@angular/platform-browser";
+
 
 type Options = {
   element: any;

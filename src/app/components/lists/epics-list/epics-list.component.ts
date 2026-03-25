@@ -4,16 +4,15 @@ import { Router } from '@angular/router';
 import { Epic } from "../../../models/epic";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
-import { NgIf } from "@angular/common";
+
 import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
     selector: 'app-epics-list',
     templateUrl: './epics-list.component.html',
     imports: [
-        MaterialModule,
-        NgIf,
-    ],
+    MaterialModule
+],
     styleUrls: ['./epics-list.component.sass']
 })
 export class EpicsListComponent implements OnInit, AfterViewInit {

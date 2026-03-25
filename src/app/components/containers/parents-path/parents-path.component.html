@@ -1,19 +1,20 @@
 <div id="parents-path-container">
-  <div
-    class="parent-node"
-    *ngFor="let node of parentsPath; let i = index"
-    [ngStyle]="{'padding-left': (parentsPath.indexOf(node)) * .5 + 'rem'}"
-  >
-    <h4 class="parent-title">
-      <span
-        appLongClickDirective
-        class="parent-title-label"
-        hover-class="hover-border"
-        (longClick)="longClick(parentsPath[i])"
-        (simpleClick)="onParentClick.emit(node)"
+  @for (node of parentsPath; track node; let i = $index) {
+    <div
+      class="parent-node"
+      [ngStyle]="{'padding-left': (parentsPath.indexOf(node)) * .5 + 'rem'}"
       >
-        {{node}}
-      </span>
-    </h4>
-  </div>
+      <h4 class="parent-title">
+        <span
+          appLongClickDirective
+          class="parent-title-label"
+          hover-class="hover-border"
+          (longClick)="longClick(parentsPath[i])"
+          (simpleClick)="onParentClick.emit(node)"
+          >
+          {{node}}
+        </span>
+      </h4>
+    </div>
+  }
 </div>

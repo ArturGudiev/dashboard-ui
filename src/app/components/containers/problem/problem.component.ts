@@ -7,7 +7,7 @@ import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { map } from "rxjs/operators";
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
@@ -18,11 +18,10 @@ import { TaskContainerService } from "../../../services/task-container-services/
     selector: 'app-problem',
     templateUrl: './problem.component.html',
     imports: [
-        MatProgressSpinner,
-        AsyncPipe,
-        NgIf,
-        TaskContainerComponent
-    ],
+    MatProgressSpinner,
+    AsyncPipe,
+    TaskContainerComponent
+],
     styleUrls: ['./problem.component.sass']
 })
 export class ProblemComponent implements OnInit {

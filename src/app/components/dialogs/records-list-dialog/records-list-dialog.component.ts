@@ -7,7 +7,7 @@ import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { IArrayResponse } from "../../../services/api.service";
 import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from "@angular/material/button-toggle";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { AsyncPipe, NgForOf, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { IArrayParams } from "../../../models/interfaces/array-params";
 
 type SelectedOptionType = 'node' | 'all' | 'node_plus_children';
@@ -16,14 +16,12 @@ type SelectedOptionType = 'node' | 'all' | 'node_plus_children';
     selector: 'app-records-list-dialog',
     templateUrl: './records-list-dialog.component.html',
     imports: [
-        MatProgressSpinner,
-        MatButtonToggleGroup,
-        MatButtonToggle,
-        MatPaginator,
-        AsyncPipe,
-        NgForOf,
-        NgIf
-    ],
+    MatProgressSpinner,
+    MatButtonToggleGroup,
+    MatButtonToggle,
+    MatPaginator,
+    AsyncPipe
+],
     styleUrls: ['./records-list-dialog.component.sass']
 })
 export class RecordsListDialogComponent implements OnInit {

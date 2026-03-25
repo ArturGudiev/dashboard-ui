@@ -21,7 +21,7 @@ import { EpicsListComponent } from "../../lists/epics-list/epics-list.component"
 import { SubStoriesComponent } from "../../lists/substories/sub-stories.component";
 import { QuestionsListComponent } from "../../lists/questions-list/questions-list.component";
 import { ProblemsListComponent } from "../../lists/problems-list/problems-list.component";
-import { NgIf } from "@angular/common";
+
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
@@ -41,18 +41,17 @@ import { ContainerReportComponent } from "../container-report/container-report.c
     selector: 'app-task-container',
     templateUrl: './task-container.component.html',
     imports: [
-        MaterialModule,
-        ParentsPathComponent,
-        EpicsListComponent,
-        SubStoriesComponent,
-        QuestionsListComponent,
-        ProblemsListComponent,
-        NotesComponent,
-        NgIf,
-        TasksListComponent,
-        MyTreeComponent,
-        ContainerReportComponent
-    ],
+    MaterialModule,
+    ParentsPathComponent,
+    EpicsListComponent,
+    SubStoriesComponent,
+    QuestionsListComponent,
+    ProblemsListComponent,
+    NotesComponent,
+    TasksListComponent,
+    MyTreeComponent,
+    ContainerReportComponent
+],
     styleUrls: ['./task-container.component.sass']
 })
 export class TaskContainerComponent implements OnInit, OnChanges {

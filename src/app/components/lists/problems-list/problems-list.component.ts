@@ -12,7 +12,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { GET_VALUE_DIALOG_OPTIONS } from "../../../shared/constants";
 import { CommandsService } from "../../../services/commands.service";
 import { MaterialModule } from "../../../modules/material/material.module";
-import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { TasksListComponent } from "../tasks-list/tasks-list.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
@@ -23,12 +23,10 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
     selector: 'app-problems-list',
     templateUrl: './problems-list.component.html',
     imports: [
-        MaterialModule,
-        NgClass,
-        NgForOf,
-        NgIf,
-        TasksListComponent
-    ],
+    MaterialModule,
+    NgClass,
+    TasksListComponent
+],
     styleUrls: ['./problems-list.component.sass']
 })
 export class ProblemsListComponent implements OnInit {

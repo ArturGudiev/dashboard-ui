@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgForOf, NgStyle } from "@angular/common";
+import { NgStyle } from "@angular/common";
 import { MaterialModule } from "../../../modules/material/material.module";
 import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
@@ -12,11 +12,10 @@ import { TaskContainerService } from "../../../services/task-container-services/
 @Component({
     selector: 'app-parents-path',
     imports: [
-        MaterialModule,
-        NgStyle,
-        NgForOf,
-        LongClickDirectiveDirective
-    ],
+    MaterialModule,
+    NgStyle,
+    LongClickDirectiveDirective
+],
     templateUrl: './parents-path.component.html',
     styleUrls: ['./parents-path.component.sass']
 })

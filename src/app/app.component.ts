@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterOutlet } from '@angular/router';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DashboardService } from "./services/dashboard.service";
@@ -11,7 +11,7 @@ import { SidenavComponent } from "./components/pages/sidenav/sidenav.component";
 @UntilDestroy()
 @Component({
     selector: 'app-root',
-    imports: [CommonModule, RouterOutlet, MaterialModule, SidenavComponent],
+    imports: [RouterOutlet, MaterialModule, SidenavComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.sass'
 })

@@ -3,9 +3,9 @@
 
   <div class="options-paginator-container">
     <mat-button-toggle-group id="record-filter-options"
-                             [value]="'all'"
-                            (change)="selectedOptionChange($event)"
-                             name="favoriteColor" aria-label="Favorite Color">
+      [value]="'all'"
+      (change)="selectedOptionChange($event)"
+      name="favoriteColor" aria-label="Favorite Color">
       <mat-button-toggle value="all">All</mat-button-toggle>
       <mat-button-toggle value="node">Node</mat-button-toggle>
       <mat-button-toggle value="node_plus_children">Node + Children</mat-button-toggle>
@@ -13,27 +13,32 @@
 
 
     <mat-paginator [length]="recordItemsResponse.arrInfo.length" #paginator
-                   [pageSize]="10"
-                   [pageSizeOptions]="[25, 50, 100]"
-                   (page)="paginationParamsChanged($event)"
-                   aria-label="Select page">
+      [pageSize]="10"
+      [pageSizeOptions]="[25, 50, 100]"
+      (page)="paginationParamsChanged($event)"
+      aria-label="Select page">
     </mat-paginator>
   </div>
   <div class="list-part">
-    <div *ngIf="(records$ | async)?.items as records;">
-      <div *ngIf="records !== undefined; else loading" >
-      <!--  TODO if empty array fix it -->
-        <div class="record-item" *ngFor="let item of (records$ | async)?.items">
-          <!--    {{ item | json }}-->
-          <div class="record-message">{{item.message}}</div>
-          <div class="record-date">{{item.date}}</div>
-        </div>
+    @if ((records$ | async)?.items; as records;) {
+      <div>
+        @if (records !== undefined) {
+          <div >
+            <!--  TODO if empty array fix it -->
+            @for (item of (records$ | async)?.items; track item) {
+              <div class="record-item">
+                <!--    {{ item | json }}-->
+                <div class="record-message">{{item.message}}</div>
+                <div class="record-date">{{item.date}}</div>
+              </div>
+            }
+          </div>
+        } @else {
+          <mat-spinner></mat-spinner>
+        }
       </div>
-    </div>
+    }
   </div>
 
 </div>
 
-<ng-template #loading>
-  <mat-spinner></mat-spinner>
-</ng-template>

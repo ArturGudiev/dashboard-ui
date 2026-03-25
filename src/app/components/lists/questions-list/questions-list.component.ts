@@ -13,7 +13,7 @@ import { GET_VALUE_DIALOG_OPTIONS } from "../../../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
 import { CommandsService } from "../../../services/commands.service";
 import { MaterialModule } from "../../../modules/material/material.module";
-import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { TasksListComponent } from "../tasks-list/tasks-list.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { QuestionsService } from "../../../services/task-container-services/questions.service";
@@ -23,12 +23,10 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
 @Component({
     selector: 'app-questions-list',
     imports: [
-        MaterialModule,
-        NgClass,
-        NgForOf,
-        NgIf,
-        TasksListComponent
-    ],
+    MaterialModule,
+    NgClass,
+    TasksListComponent
+],
     templateUrl: './questions-list.component.html',
     styleUrls: ['./questions-list.component.sass']
 })

@@ -6,7 +6,7 @@ import { Title } from "@angular/platform-browser";
 import { map } from "rxjs/operators";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { CommonModule } from "@angular/common";
+
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
@@ -46,11 +46,10 @@ const TREE_DATA: TreeNode[] = [
     selector: 'app-task',
     templateUrl: './task.component.html',
     imports: [
-        MatProgressSpinner,
-        CommonModule,
-        TaskContainerComponent,
-        LongClickDirectiveDirective,
-    ],
+    MatProgressSpinner,
+    TaskContainerComponent,
+    LongClickDirectiveDirective
+],
     styleUrls: ['./task.component.sass']
 })
 export class TaskComponent implements OnInit, OnDestroy {
@@ -91,9 +90,9 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   private refreshTaskForTheFirstTime() {
-    if (this.router.getCurrentNavigation()?.extras.state) {
+    if (this.router.currentNavigation()?.extras.state) {
       // TODO duplication
-      this.setTask(this.router.getCurrentNavigation()?.extras.state as TaskC);
+      this.setTask(this.router.currentNavigation()?.extras.state as TaskC);
       return;
     }
     this.refreshTask();

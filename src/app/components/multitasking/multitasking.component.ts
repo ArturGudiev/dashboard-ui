@@ -4,7 +4,7 @@ import { isNumber } from 'lodash';
 import { map } from "rxjs/operators";
 import { Observable, of } from "rxjs";
 import { MaterialModule } from "../../modules/material/material.module";
-import { NgForOf } from "@angular/common";
+
 import { MultitaskingItemComponent } from "./multitasking-item/multitasking-item.component";
 import { TaskContainer } from "../../models/interfaces/task-container";
 import { isTaskContainerType } from "../../models/interfaces/types";
@@ -15,11 +15,10 @@ import { TasksService } from "../../services/task-container-services/tasks.servi
     selector: 'app-multitasking',
     templateUrl: './multitasking.component.html',
     imports: [
-        MaterialModule,
-        ReactiveFormsModule,
-        NgForOf,
-        MultitaskingItemComponent
-    ],
+    MaterialModule,
+    ReactiveFormsModule,
+    MultitaskingItemComponent
+],
     styleUrls: ['./multitasking.component.sass']
 })
 export class MultitaskingComponent implements OnInit {

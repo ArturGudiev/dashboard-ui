@@ -5,7 +5,7 @@ import { Title } from "@angular/platform-browser";
 import { map } from "rxjs/operators";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { NgIf } from "@angular/common";
+
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { StoriesService } from "../../../services/task-container-services/stories.service";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
@@ -16,10 +16,9 @@ import { TaskContainerService } from "../../../services/task-container-services/
     selector: 'app-story',
     templateUrl: './story.component.html',
     imports: [
-        MatProgressSpinner,
-        NgIf,
-        TaskContainerComponent
-    ],
+    MatProgressSpinner,
+    TaskContainerComponent
+],
     styleUrls: ['./story.component.sass']
 })
 export class StoryComponent implements OnInit {

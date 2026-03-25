@@ -3,14 +3,13 @@ import { Story } from "../../../models/story";
 import { SelectionModel } from "@angular/cdk/collections";
 import { Router } from "@angular/router";
 import { MaterialModule } from "../../../modules/material/material.module";
-import { NgIf } from "@angular/common";
+
 
 @Component({
     selector: 'app-substories',
     imports: [
-        MaterialModule,
-        NgIf
-    ],
+    MaterialModule
+],
     templateUrl: './sub-stories.component.html',
     styleUrls: ['./sub-stories.component.sass']
 })

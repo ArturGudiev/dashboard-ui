@@ -5,7 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Epic } from "../../../models/epic";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { NgIf } from "@angular/common";
+
 import { map } from "rxjs/operators";
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { EpicsService } from "../../../services/task-container-services/epics.service";
@@ -16,10 +16,9 @@ import { TaskContainerService } from "../../../services/task-container-services/
     selector: 'app-epic',
     templateUrl: './epic.component.html',
     imports: [
-        MatProgressSpinner,
-        NgIf,
-        TaskContainerComponent
-    ],
+    MatProgressSpinner,
+    TaskContainerComponent
+],
     styleUrls: ['./epic.component.sass']
 })
 export class EpicComponent implements OnInit {

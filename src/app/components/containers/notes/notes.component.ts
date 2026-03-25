@@ -11,17 +11,16 @@ import {
 import { Observable } from "rxjs";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { FormsModule } from "@angular/forms";
-import { NgIf } from "@angular/common";
+
 import { MaterialModule } from "../../../modules/material/material.module";
 
 @UntilDestroy()
 @Component({
     selector: 'app-notes',
     imports: [
-        MaterialModule,
-        FormsModule,
-        NgIf
-    ],
+    MaterialModule,
+    FormsModule
+],
     templateUrl: './notes.component.html',
     styleUrls: ['./notes.component.sass']
 })

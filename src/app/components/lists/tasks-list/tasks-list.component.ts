@@ -26,7 +26,7 @@ import { taskContainerDescriptionsAreEqual } from "../../../shared/libs/utils.li
 import { NavigationService } from "../../../services/navigation.service";
 import { isTask } from "../../../shared/constants";
 import { MaterialModule } from "../../../modules/material/material.module";
-import { NgClass, NgForOf, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
@@ -36,11 +36,9 @@ import { TaskContainerService } from "../../../services/task-container-services/
     selector: 'app-tasks-list',
     templateUrl: './tasks-list.component.html',
     imports: [
-        MaterialModule,
-        NgClass,
-        NgForOf,
-        NgIf
-    ],
+    MaterialModule,
+    NgClass
+],
     styleUrls: ['./tasks-list.component.sass']
 })
 export class TasksListComponent implements OnInit, OnChanges {

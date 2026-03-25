@@ -5,7 +5,7 @@
         mat-button
         type="button"
         (click)="toggleReport()"
-      >
+        >
         {{ toggleReportTitle }}
       </button>
       @if (displayReport) {
@@ -17,54 +17,50 @@
       <div>
         <div class="description-wrapper">
 
-          <div
-            id="description-line"
-            *ngIf="taskContainer.getFullDescription()"
-          >
-            <!--  Перейти к родительской вершине -->
-            <button
-              id="go-to-parent-button"
-              mat-mini-fab
-              color="accent"
-              (click)="goToNearestParent()"
-            >
-              <mat-icon>north</mat-icon>
-            </button>
-
-            <!-- Описание контейнера-->
-            <div id="full-description-title">
-              {{ taskContainer.getFullDescription() }}
+          @if (taskContainer.getFullDescription()) {
+            <div
+              id="description-line"
+              >
+              <!--  Перейти к родительской вершине -->
+              <button
+                id="go-to-parent-button"
+                mat-mini-fab
+                color="accent"
+                (click)="goToNearestParent()"
+                >
+                <mat-icon>north</mat-icon>
+              </button>
+              <!-- Описание контейнера-->
+              <div id="full-description-title">
+                {{ taskContainer.getFullDescription() }}
+              </div>
+              <!-- Кнопка закончить всё -->
+              <button
+                id="done-all-button"
+                mat-mini-fab
+                color="accent"
+                (click)="onDoneAllClick.emit()"
+                >
+                <mat-icon>done_all</mat-icon>
+              </button>
+              <!-- Три точки -->
+              <button
+                id="more-icon"
+                [matMenuTriggerFor]="menu"
+                mat-mini-fab
+                color="accent"
+                >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <!-- Меню для ручного добавления вопросов, рекордов и т.д. -->
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="addQuestion()">Add a new question</button>
+                <button mat-menu-item (click)="callEditNotesEvent()">Edit notes</button>
+                <button mat-menu-item (click)="addRecord()">Add record</button>
+                <button mat-menu-item (click)="showRecords()">Show records</button>
+              </mat-menu>
             </div>
-
-            <!-- Кнопка закончить всё -->
-            <button
-              id="done-all-button"
-              mat-mini-fab
-              color="accent"
-              (click)="onDoneAllClick.emit()"
-            >
-              <mat-icon>done_all</mat-icon>
-            </button>
-
-            <!-- Три точки -->
-            <button
-              id="more-icon"
-              [matMenuTriggerFor]="menu"
-              mat-mini-fab
-              color="accent"
-            >
-              <mat-icon>more_vert</mat-icon>
-            </button>
-
-            <!-- Меню для ручного добавления вопросов, рекордов и т.д. -->
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="addQuestion()">Add a new question</button>
-              <button mat-menu-item (click)="callEditNotesEvent()">Edit notes</button>
-              <button mat-menu-item (click)="addRecord()">Add record</button>
-              <button mat-menu-item (click)="showRecords()">Show records</button>
-            </mat-menu>
-
-          </div>
+          }
 
         </div>
 
@@ -88,18 +84,20 @@
 
     <div>
       <!-- Эпики -->
-      <app-epics-list
-        *ngIf="this.showEpics && epics.length > 0"
-        [epics]="epics"
-      ></app-epics-list>
+      @if (this.showEpics && epics.length > 0) {
+        <app-epics-list
+          [epics]="epics"
+        ></app-epics-list>
+      }
 
       <!-- Истории -->
-      <app-substories
-        *ngIf="this.showStories && stories.length > 0"
-        [stories]="stories"
-        (onStoryClick)="navigateToStory($event)"
-        (addSubstory)="addSubstory()"
-      ></app-substories>
+      @if (this.showStories && stories.length > 0) {
+        <app-substories
+          [stories]="stories"
+          (onStoryClick)="navigateToStory($event)"
+          (addSubstory)="addSubstory()"
+        ></app-substories>
+      }
 
       <!-- Задачи -->
       <app-tasks-list
