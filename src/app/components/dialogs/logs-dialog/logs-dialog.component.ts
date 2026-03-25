@@ -6,11 +6,12 @@ import { EntLogMessage } from "../../../types/generated";
 import { MatSlideToggle } from "@angular/material/slide-toggle";
 import { Subscription } from "rxjs";
 import { MatButton } from "@angular/material/button";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
 
 @Component({
   selector: 'app-logs-dialog',
   standalone: true,
-  imports: [MatSlideToggle, MatButton],
+  imports: [MatSlideToggle, MatButton, MatPaginator],
   template: `
     <mat-slide-toggle
       [checked]="showAllMessages()"
@@ -25,18 +26,20 @@ import { MatButton } from "@angular/material/button";
     <div>Per page: {{ perPage() }}</div>
     <div>Page: {{ page() }}</div>
     <div>{{ perPage() * (page() - 1) + 1 }} --- {{ Math.min(perPage() * page(), total()) }} from {{ total() }}</div>
-    @if(hasNextPage()) {
-      <button mat-button (click)="page.set(page() + 1)" >Next Page</button>
-    }
-    @if(page() > 1) {
-      <button mat-button (click)="page.set(page() - 1)" >Previous Page</button>
-    }
+    <mat-paginator
+      [pageIndex]="page()"
+      (change)="onPaginatorChange($event)"
+      [length]="total()"
+      [pageSize]="perPage()"
+      (page)="handlePageEvent($event)"
+      aria-label="Select page">
+    </mat-paginator>
   `,
   styleUrl: './logs-dialog.component.sass'
 })
 export class LogsDialogComponent {
   perPage = signal(20);
-  page = signal(1);
+  page = signal(0);
   total = signal(0);
   hasNextPage = computed(() => this.perPage() * this.page() < this.total());
 
@@ -81,4 +84,12 @@ export class LogsDialogComponent {
   }
 
   protected readonly Math = Math;
+
+  onPaginatorChange($event: Event) {
+    console.log('onPaginatorChange', $event);
+  }
+
+  handlePageEvent(val: PageEvent): void {
+    this.page.set(val.pageIndex);
+  }
 }
