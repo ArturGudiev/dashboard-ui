@@ -262,7 +262,7 @@ export class ApiService {
     return this.http.post<EntLogMessage>(`${this.baseUrl}/log-messages`, body);
   }
 
-  getLogMessages({ taskContainer, perPage, page }: { taskContainer?: TaskContainer, perPage?: number, page?: number }) {
+  getLogMessages({ taskContainer, perPage, page, global }: { taskContainer?: TaskContainer, perPage?: number, page?: number, global?: boolean }) {
     let myParams = new HttpParams();
     if (taskContainer) {
       myParams = myParams.set('containerType', taskContainer.type).set('containerID', taskContainer.id);
@@ -272,6 +272,9 @@ export class ApiService {
     }
     if (page) {
       myParams = myParams.set('page', page);
+    }
+    if (global) {
+      myParams = myParams.set('global', true);
     }
     return this.http.get<HandlersPaginatedResponseEntLogMessage>(`${this.baseUrl}/log-messages`, { params: myParams });
   }

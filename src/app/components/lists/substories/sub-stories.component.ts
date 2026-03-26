@@ -6,12 +6,13 @@ import { MaterialModule } from "../../../modules/material/material.module";
 
 
 @Component({
-    selector: 'app-substories',
-    imports: [
+  selector: 'app-substories',
+  imports: [
     MaterialModule
-],
-    templateUrl: './sub-stories.component.html',
-    styleUrls: ['./sub-stories.component.sass']
+  ],
+  templateUrl: './sub-stories.component.html',
+  standalone: true,
+  styleUrls: ['./sub-stories.component.sass']
 })
 export class SubStoriesComponent implements OnInit {
 

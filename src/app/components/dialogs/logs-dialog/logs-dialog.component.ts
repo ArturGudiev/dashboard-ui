@@ -1,30 +1,33 @@
-import { Component, computed, effect, Inject, signal } from '@angular/core';
+import { Component, effect, Inject, model, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { LogsService } from "../../../services/logs.service";
 import { EntLogMessage } from "../../../types/generated";
-import { MatSlideToggle } from "@angular/material/slide-toggle";
 import { Subscription } from "rxjs";
-import { MatButton } from "@angular/material/button";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { MatFormField, MatOption, MatSelect } from "@angular/material/select";
+import { MatFormFieldModule } from "@angular/material/form-field";
 
 @Component({
-    selector: 'app-logs-dialog',
-    imports: [MatSlideToggle, MatButton, MatPaginator],
-    template: `
-    <mat-slide-toggle
-      [checked]="showAllMessages()"
-      (change)="showAllMessages.set($event.checked)"
-    >All log messages</mat-slide-toggle>
+  selector: 'app-logs-dialog',
+  imports: [MatPaginator, MatSelect, MatOption, MatFormField, MatFormFieldModule],
+  template: `
+
+    <mat-form-field style="width: 10rem">
+      <mat-label>Logs group type</mat-label>
+      <mat-select [(value)]="groupType">
+        <mat-option [value]="'container'">Container</mat-option>
+        <mat-option [value]="'global'">Global</mat-option>
+        <mat-option [value]="'all'">All</mat-option>
+      </mat-select>
+    </mat-form-field>
+
     @for (content of logMessages(); track content.id; let idx = $index) {
       <div style="border: 1px solid red">
-        {{ perPage() * (page() - 1) + idx + 1 }}
+        {{ perPage() * page() + idx + 1 }}
         {{ content.description }}
       </div>
     }
-    <div>Per page: {{ perPage() }}</div>
-    <div>Page: {{ page() }}</div>
-    <div>{{ perPage() * (page() - 1) + 1 }} --- {{ Math.min(perPage() * page(), total()) }} from {{ total() }}</div>
     <mat-paginator
       [pageIndex]="page()"
       (change)="onPaginatorChange($event)"
@@ -34,18 +37,15 @@ import { MatPaginator, PageEvent } from "@angular/material/paginator";
       aria-label="Select page">
     </mat-paginator>
   `,
-    styleUrl: './logs-dialog.component.sass'
+  standalone: true,
+  styleUrl: './logs-dialog.component.scss'
 })
 export class LogsDialogComponent {
   perPage = signal(20);
   page = signal(0);
   total = signal(0);
-  hasNextPage = computed(() => this.perPage() * this.page() < this.total());
+  groupType = model<'container' | 'global' | 'all'>('container')
 
-
-  showAllMessages = signal(false);
-
-  /** Loaded asynchronously; `computed` cannot return Promises. */
   logMessages = signal<EntLogMessage[]>([]);
 
   constructor(
@@ -57,7 +57,8 @@ export class LogsDialogComponent {
       (onCleanup) => {
         let sub: Subscription | null = null;
         const params = {
-          ...(!this.showAllMessages() && { taskContainer: this.data.taskContainer }),
+          ...(this.groupType() === 'container'  && { taskContainer: this.data.taskContainer }),
+          ...(this.groupType() === 'global'  && { global: true }),
           perPage: this.perPage(),
           page: this.page(),
         };
@@ -67,7 +68,11 @@ export class LogsDialogComponent {
             this.page.set(messagesResponse.page);
             this.total.set(messagesResponse.total);
           },
-          error: (err) => console.error('err === ', err)
+          error: (err) => {
+            this.logMessages.set([]);
+            this.page.set(1);
+            this.total.set(0);
+          }
         });
         onCleanup(() => {
           sub?.unsubscribe();

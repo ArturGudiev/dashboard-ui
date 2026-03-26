@@ -8,7 +8,6 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 import { TaskContainerComponent } from "../task-container/task-container.component";
-import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 import { TreeNode } from "../tree/my-tree.component";
@@ -43,14 +42,14 @@ const TREE_DATA: TreeNode[] = [
 
 @UntilDestroy()
 @Component({
-    selector: 'app-task',
-    templateUrl: './task.component.html',
-    imports: [
+  selector: 'app-task',
+  templateUrl: './task.component.html',
+  imports: [
     MatProgressSpinner,
     TaskContainerComponent,
-    LongClickDirectiveDirective
-],
-    styleUrls: ['./task.component.sass']
+  ],
+  standalone: true,
+  styleUrls: ['./task.component.sass']
 })
 export class TaskComponent implements OnInit, OnDestroy {
   get task() {

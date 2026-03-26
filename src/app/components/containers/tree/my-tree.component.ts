@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { NestedTreeControl } from "@angular/cdk/tree";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { MaterialModule } from "../../../modules/material/material.module";
-import { JsonPipe, NgStyle } from "@angular/common";
+import { NgStyle } from "@angular/common";
 import { colorPink } from "../../../shared/constants";
 
 export interface TreeNode {
@@ -11,39 +11,13 @@ export interface TreeNode {
   depth: number;
 }
 
-// const TREE_DATA2: TreeNode[] = [
-//   {
-//     name: 'Parent 1',
-//     children: [
-//       { name: 'Child 1.1' },
-//       {
-//         name: 'Child 1.2',
-//         children: [
-//           { name: 'Grandchild 1.2.1' },
-//           { name: 'Grandchild 1.2.2' }
-//         ]
-//       }
-//     ]
-//   },
-//   {
-//     name: 'Parent 2',
-//     children: [
-//       { name: 'Child 2.1' },
-//       { name: 'Child 2.2' }
-//     ]
-//   }
-// ];
-
 
 @Component({
-    selector: 'app-my-tree',
-    imports: [
-        MaterialModule,
-        JsonPipe,
-        NgStyle
-    ],
-    templateUrl: './my-tree.component.html',
-    styleUrl: './my-tree.component.scss'
+  selector: 'app-my-tree',
+  imports: [MaterialModule, NgStyle],
+  templateUrl: './my-tree.component.html',
+  standalone: true,
+  styleUrl: './my-tree.component.scss'
 })
 export class MyTreeComponent implements OnInit, OnChanges {
   @Input() treeData: TreeNode[] = [];

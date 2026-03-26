@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
-import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
 import { MatButton } from "@angular/material/button";
 import { DashboardService, DashboardStateInterface } from "../../../services/dashboard.service";
 import { Hotkeys } from "../../../classes/hotkeys";
@@ -16,16 +15,15 @@ import { CommandDialogComponent } from "../../dialogs/command-dialog/command-dia
 import { MessageService } from "../../../services/message.service";
 
 @Component({
-    selector: 'app-toolbar',
-    templateUrl: './toolbar.component.html',
-    imports: [
-        MatToolbar,
-        MatIcon,
-        MatMenuTrigger,
-        MatMenu,
-        MatButton
-    ],
-    styleUrls: ['./toolbar.component.scss']
+  selector: 'app-toolbar',
+  templateUrl: './toolbar.component.html',
+  imports: [
+    MatToolbar,
+    MatIcon,
+    MatButton
+  ],
+  standalone: true,
+  styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent implements OnInit {
 
@@ -168,6 +166,10 @@ export class ToolbarComponent implements OnInit {
       const navItem = result.navItem;
       this.navigateService.navigateByInput(navItem);
     });
+  }
+
+  onLogsClick() {
+    this.commandService.setCommand('logs');
   }
 
   private openCommandDialog() {

@@ -21,14 +21,15 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
 
 @UntilDestroy()
 @Component({
-    selector: 'app-questions-list',
-    imports: [
+  selector: 'app-questions-list',
+  imports: [
     MaterialModule,
     NgClass,
     TasksListComponent
-],
-    templateUrl: './questions-list.component.html',
-    styleUrls: ['./questions-list.component.sass']
+  ],
+  templateUrl: './questions-list.component.html',
+  standalone: true,
+  styleUrls: ['./questions-list.component.sass']
 })
 export class QuestionsListComponent implements OnInit {
   @Input({required: true}) container!: TaskContainer;

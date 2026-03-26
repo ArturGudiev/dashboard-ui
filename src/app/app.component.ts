@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-
-import { RouterOutlet } from '@angular/router';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DashboardService } from "./services/dashboard.service";
 import { AlertService, IAlertsDataState } from "./services/alert.service";
@@ -10,10 +8,11 @@ import { SidenavComponent } from "./components/pages/sidenav/sidenav.component";
 
 @UntilDestroy()
 @Component({
-    selector: 'app-root',
-    imports: [RouterOutlet, MaterialModule, SidenavComponent],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.sass'
+  selector: 'app-root',
+  imports: [MaterialModule, SidenavComponent],
+  templateUrl: './app.component.html',
+  standalone: true,
+  styleUrl: './app.component.sass'
 })
 export class AppComponent {
   title = 'dashboard-ui';

@@ -10,22 +10,21 @@ import { MatListItem, MatNavList } from "@angular/material/list";
 import { ToolbarComponent } from "../toolbar/toolbar.component";
 import { CommandsService } from "../../../services/commands.service";
 
-const SMALL_WIDTH_BREAKPOINT = 720;
-
 @UntilDestroy()
 @Component({
-    selector: 'app-sidenav',
-    templateUrl: './sidenav.component.html',
-    imports: [
-        ToolbarComponent,
-        MatSidenavContainer,
-        MatSidenav,
-        MatToolbar,
-        MatNavList,
-        MatListItem,
-        RouterOutlet
-    ],
-    styleUrls: ['./sidenav.component.sass']
+  selector: 'app-sidenav',
+  templateUrl: './sidenav.component.html',
+  imports: [
+    ToolbarComponent,
+    MatSidenavContainer,
+    MatSidenav,
+    MatToolbar,
+    MatNavList,
+    MatListItem,
+    RouterOutlet
+  ],
+  standalone: true,
+  styleUrls: ['./sidenav.component.sass']
 })
 export class SidenavComponent implements OnInit {
   public isScreenSmall = false;

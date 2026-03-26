@@ -5,26 +5,25 @@ import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
-import { NgStyle } from "@angular/common";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { MatCheckbox } from "@angular/material/checkbox";
 
 @Component({
-    selector: 'app-add-log-dialog',
-    imports: [
-        CdkTextareaAutosize,
-        FormsModule,
-        MatButton,
-        MatDialogActions,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        ReactiveFormsModule,
-        NgStyle,
-        MatCheckbox
-    ],
-    styleUrl: './add-log-dialog.component.sass',
-    template: `
+  selector: 'app-add-log-dialog',
+  imports: [
+    CdkTextareaAutosize,
+    FormsModule,
+    MatButton,
+    MatDialogActions,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    ReactiveFormsModule,
+    MatCheckbox
+  ],
+  styleUrl: './add-log-dialog.component.sass',
+  standalone: true,
+  template: `
     <form
       autocomplete="on"
       [formGroup]="myForm"

@@ -8,12 +8,13 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
-    selector: 'app-epics-list',
-    templateUrl: './epics-list.component.html',
-    imports: [
+  selector: 'app-epics-list',
+  templateUrl: './epics-list.component.html',
+  imports: [
     MaterialModule
-],
-    styleUrls: ['./epics-list.component.sass']
+  ],
+  standalone: true,
+  styleUrls: ['./epics-list.component.sass']
 })
 export class EpicsListComponent implements OnInit, AfterViewInit {
 

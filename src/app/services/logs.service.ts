@@ -18,7 +18,7 @@ export class LogsService {
     return this.apiService.addLogMessage(args);
   }
 
-  getLogMessages(props: { taskContainer?: TaskContainer, perPage?: number, page?: number } ): Observable<HandlersPaginatedResponseEntLogMessage> {
+  getLogMessages(props: { taskContainer?: TaskContainer, perPage?: number, page?: number, global?: boolean } ): Observable<HandlersPaginatedResponseEntLogMessage> {
     return this.apiService.getLogMessages( props );
   }
 }

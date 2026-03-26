@@ -33,14 +33,13 @@ import { EpicsService } from "../../../services/task-container-services/epics.se
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { UtilsService } from "../../../services/utils.service";
-import { MyTreeComponent } from "../tree/my-tree.component";
 import { ContainerReportComponent } from "../container-report/container-report.component";
 
 @UntilDestroy()
 @Component({
-    selector: 'app-task-container',
-    templateUrl: './task-container.component.html',
-    imports: [
+  selector: 'app-task-container',
+  templateUrl: './task-container.component.html',
+  imports: [
     MaterialModule,
     ParentsPathComponent,
     EpicsListComponent,
@@ -49,10 +48,10 @@ import { ContainerReportComponent } from "../container-report/container-report.c
     ProblemsListComponent,
     NotesComponent,
     TasksListComponent,
-    MyTreeComponent,
     ContainerReportComponent
-],
-    styleUrls: ['./task-container.component.sass']
+  ],
+  standalone: true,
+  styleUrls: ['./task-container.component.sass']
 })
 export class TaskContainerComponent implements OnInit, OnChanges {
   @Input({required: true}) taskContainer!: TaskContainer;
