@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
 import { MatButton } from "@angular/material/button";
+import { MatFormField } from "@angular/material/form-field";
+import { MatInput } from "@angular/material/input";
 import { DashboardService, DashboardStateInterface } from "../../../services/dashboard.service";
 import { Hotkeys } from "../../../classes/hotkeys";
 import { CommandsService } from "../../../services/commands.service";
@@ -13,6 +15,7 @@ import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialo
 import { NavToDialogComponent } from "../../dialogs/nav-task-dialog/nav-to-dialog.component";
 import { CommandDialogComponent } from "../../dialogs/command-dialog/command-dialog.component";
 import { MessageService } from "../../../services/message.service";
+import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 
 @Component({
   selector: 'app-toolbar',
@@ -20,7 +23,10 @@ import { MessageService } from "../../../services/message.service";
   imports: [
     MatToolbar,
     MatIcon,
-    MatButton
+    MatButton,
+    MatFormField,
+    MatInput,
+    NgxMatTimepickerModule
   ],
   standalone: true,
   styleUrls: ['./toolbar.component.scss']
