@@ -20,4 +20,9 @@
     >{{doneTasksUntilValue}}</div>
   }
   <div style="padding-right: 5rem">{{doneTasks}}</div>
+   <button matButton="outlined">Basic</button>
+  <mat-form-field style="width: 11rem;">
+    <input matInput [ngxMatTimepicker]="picker" placeholder="Choose time">
+  </mat-form-field>
+  <ngx-mat-timepicker #picker></ngx-mat-timepicker>
 </mat-toolbar>
