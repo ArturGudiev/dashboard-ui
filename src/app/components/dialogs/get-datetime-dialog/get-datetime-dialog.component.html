@@ -1,0 +1,18 @@
+<mat-form-field class="mt-1 ml-1" appearance="outline" style="width: 20rem">
+  <mat-label>Время и дата</mat-label>
+  <input
+    matInput
+    placeholder="12:30 31-12-2024"
+    mask="00:00 00-00-0000"
+    [showMaskTyped]="true"
+    [dropSpecialCharacters]="false"
+    [(ngModel)]="meetingDateTime"
+  >
+  <mat-icon matSuffix>schedule</mat-icon>
+  <mat-hint>Формат: ЧЧ:ММ ДД-ММ-ГГГГ</mat-hint>
+</mat-form-field>
+
+<div class="mt-3" id="buttons-container">
+  <button class="btn" mat-raised-button color="primary" (click)="updateValue()">Update Done Tasks value</button>
+  <button class="btn" mat-stroked-button (click)="close()">Basic</button>
+</div>

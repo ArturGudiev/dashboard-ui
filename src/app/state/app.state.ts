@@ -1,11 +1,12 @@
 // app.state.ts
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { SetDisabledHotkeys, SetFocusedTaskForSubtasks } from "./app.actions";
+import { SetDisabledHotkeys, SetDoneTaskFromDate, SetFocusedTaskForSubtasks } from "./app.actions";
 import { TaskContainer } from "../models/interfaces/task-container";
 
 export class TaskManagerStateModel {
   focusedTaskForSubtasks: TaskContainer | null = null;
-  disabledHotkeys = false
+  disabledHotkeys = false;
+  doneTaskFromDate: string | null = null
 }
 
 
@@ -14,6 +15,7 @@ export class TaskManagerStateModel {
   defaults: {
     focusedTaskForSubtasks: null,
     disabledHotkeys: false,
+    doneTaskFromDate: null,
   }
 })
 export class AppState {
@@ -28,8 +30,12 @@ export class AppState {
 
   @Action(SetDisabledHotkeys)
   setDisabledHotkeys(ctx: StateContext<TaskManagerStateModel>, action: SetDisabledHotkeys) {
-    const state = ctx.getState();
     ctx.patchState({ disabledHotkeys: action.disabledHotkeys });
+  }
+
+  @Action(SetDoneTaskFromDate)
+  setDoneTaskFromDate(ctx: StateContext<TaskManagerStateModel>, action: SetDoneTaskFromDate) {
+    ctx.patchState({ doneTaskFromDate: action.doneTaskFromDate });
   }
 
   @Selector()
@@ -40,5 +46,10 @@ export class AppState {
   @Selector()
   static getDisabledHotkeys(state: TaskManagerStateModel): boolean {
     return state.disabledHotkeys;
+  }
+
+  @Selector()
+  static getDoneTaskFromDate(state: TaskManagerStateModel): string | null {
+    return state.doneTaskFromDate;
   }
 }

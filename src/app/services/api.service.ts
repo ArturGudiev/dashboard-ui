@@ -95,9 +95,13 @@ export class ApiService {
       );
   }
 
-  _getDoneTasksNumber() {
-    // return this.http.get(`${this.baseUrl}/done-tasks-number/`);
-    return this.http.get(`${this.baseUrl}/done-tasks`);
+  _getDoneTasksNumber(from: string | null) {
+    console.log('===== _getDoneTasksNumber', from);
+    let params = new HttpParams();
+    if (from) {
+      params = params.set('from', String(from));
+    }
+    return this.http.get(`${this.baseUrl}/done-tasks`, { params });
   }
 
   //-----------------------------------------epics--------------------------------------------

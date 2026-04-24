@@ -18,6 +18,10 @@ import { MessageService } from "../../../services/message.service";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 import { FormsModule } from "@angular/forms";
 import { NgxMaskDirective } from "ngx-mask";
+import { OverlayModule } from "@angular/cdk/overlay";
+import { GetDatetimeDialogComponent } from "../../dialogs/get-datetime-dialog/get-datetime-dialog.component";
+import { Store } from "@ngxs/store";
+import { SetDoneTaskFromDate, SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 
 @Component({
   selector: 'app-toolbar',
@@ -33,6 +37,7 @@ import { NgxMaskDirective } from "ngx-mask";
     MatLabel,
     NgxMaskDirective,
     MatHint,
+    OverlayModule,
 
   ],
   standalone: true,
@@ -55,7 +60,9 @@ export class ToolbarComponent implements OnInit {
     private commandService: CommandsService,
     private navigateService: NavigationService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private store: Store,
+
   ) { }
 
   ngOnInit(): void {
@@ -67,7 +74,7 @@ export class ToolbarComponent implements OnInit {
 
     this.commandService.getDataStateChange().subscribe(state => {
       this.handleCommand(state.command);
-    })
+    });
 
     const symbols = {
       meta: '&#8984;', // ⌘
@@ -78,6 +85,24 @@ export class ToolbarComponent implements OnInit {
       down: '&#8595;' // ↓
     };
     this.addHotkeys();
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(GetDatetimeDialogComponent, {
+      width: '500px',
+      height: '700px',
+      enterAnimationDuration: '0ms',
+      exitAnimationDuration: '0ms',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.store.dispatch(new SetDoneTaskFromDate(result.dateTimeValue)).subscribe(() => {
+          this.dashboardService.updateDoneTasksNumber();
+        });
+        return;
+      }
+    });
   }
 
   /**

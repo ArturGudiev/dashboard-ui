@@ -17,3 +17,11 @@ export class SetDisabledHotkeys {
   static readonly type = 'Set Disabled Hotkeys'
   constructor(public disabledHotkeys: boolean) { }
 }
+
+
+export class SetDoneTaskFromDate {
+  static readonly type = 'Set doneTaskFromDate'
+  constructor(public doneTaskFromDate: string | null) {
+
+  }
+}

@@ -17,11 +17,16 @@
       (click)="onUntilValueClick()"
       [class.shining-text]="doneTasks >= doneTasksUntilValue"
       [style.color]="doneTasks >= doneTasksUntilValue ? 'red' : undefined"
-    >{{doneTasksUntilValue}}</div>
+    >
+      {{doneTasksUntilValue}}
+    </div>
   }
-  <div style="padding-right: 5rem">{{doneTasks}}</div>
+  <div
+    id="doneTasksButton"
+    style="padding-right: 5rem"
+    (click)="openDialog()"
+  >{{doneTasks}}</div>
 
-<!--  <ngx-mat-timepicker #picker></ngx-mat-timepicker>-->
   <mat-form-field appearance="outline">
     <mat-label>Время и дата</mat-label>
     <input
@@ -35,6 +40,6 @@
     <mat-icon matSuffix>schedule</mat-icon>
     <mat-hint>Формат: ЧЧ:ММ ДД-ММ-ГГГГ</mat-hint>
   </mat-form-field>
-  {{meetingDateTime}}
 
+  <button matButton="elevated" (click)="openDialog()">Open dialog without animation</button>
 </mat-toolbar>

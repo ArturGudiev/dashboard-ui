@@ -17,8 +17,6 @@ $iconWidth: 56px;
   }
 }
 
-
-
 .example-spacer {
   flex: 1 1 auto;
 }
@@ -26,24 +24,6 @@ $iconWidth: 56px;
 #task-button {
   margin-left: 2rem;
 }
-
-//.shining-text {
-//  font-size: 2em
-//  font-weight: bold
-//  background: linear-gradient(90deg, #fff, #f0f0f0, #fff)
-//  background-size: 200% 100%
-//  -webkit-background-clip: text
-//  -webkit-text-fill-color: transparent
-//  animation: shine 3s linear infinite
-//
-//
-//@keyframes shine
-//  from
-//    background-position: 200% 0
-//
-//  to
-//    background-position: -200% 0
-//}
 
 .shining-text {
   font-size: 2em;
@@ -65,4 +45,10 @@ $iconWidth: 56px;
     scale: 2;
   }
 }
+
+#doneTasksButton {
+  cursor: pointer;
+}
+
+
 
