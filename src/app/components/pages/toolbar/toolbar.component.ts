@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
 import { MatButton } from "@angular/material/button";
-import { MatFormField } from "@angular/material/form-field";
+import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { DashboardService, DashboardStateInterface } from "../../../services/dashboard.service";
 import { Hotkeys } from "../../../classes/hotkeys";
@@ -16,6 +16,8 @@ import { NavToDialogComponent } from "../../dialogs/nav-task-dialog/nav-to-dialo
 import { CommandDialogComponent } from "../../dialogs/command-dialog/command-dialog.component";
 import { MessageService } from "../../../services/message.service";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
+import { FormsModule } from "@angular/forms";
+import { NgxMaskDirective } from "ngx-mask";
 
 @Component({
   selector: 'app-toolbar',
@@ -26,7 +28,12 @@ import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
     MatButton,
     MatFormField,
     MatInput,
-    NgxMatTimepickerModule
+    NgxMatTimepickerModule,
+    FormsModule,
+    MatLabel,
+    NgxMaskDirective,
+    MatHint,
+
   ],
   standalone: true,
   styleUrls: ['./toolbar.component.scss']
@@ -37,6 +44,8 @@ export class ToolbarComponent implements OnInit {
   doneTasks: number = 0;
   doneTasksUntilValue = 0;
   showUntilValue = false;
+  value: string = '';
+  meetingDateTime: string = '';
 
   constructor(
     private dialog: MatDialog,

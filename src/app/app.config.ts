@@ -8,6 +8,7 @@ import { AppState } from "./state/app.state";
 import { ToastrModule } from "ngx-toastr";
 import { provideHttpClient } from "@angular/common/http";
 import { HotkeyModule } from "angular2-hotkeys";
+import { provideNgxMask } from "ngx-mask";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimationsAsync(),
     provideHttpClient(),
+    provideNgxMask(),
     importProvidersFrom(
       NgxsModule.forRoot([AppState]),
       ToastrModule.forRoot(),
