@@ -50,7 +50,6 @@ export class ToolbarComponent implements OnInit {
   doneTasksUntilValue = 0;
   showUntilValue = false;
   value: string = '';
-  meetingDateTime: string = '';
 
   constructor(
     private dialog: MatDialog,

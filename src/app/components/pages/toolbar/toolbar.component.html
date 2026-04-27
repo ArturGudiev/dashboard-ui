@@ -27,19 +27,4 @@
     (click)="openGetDatetimeDialog()"
   >{{doneTasks}}</div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Время и дата</mat-label>
-    <input
-      matInput
-      placeholder="12:30 31-12-2024"
-      mask="00:00 00-00-0000"
-      [showMaskTyped]="true"
-      [dropSpecialCharacters]="false"
-      [(ngModel)]="meetingDateTime"
-    >
-    <mat-icon matSuffix>schedule</mat-icon>
-    <mat-hint>Формат: ЧЧ:ММ ДД-ММ-ГГГГ</mat-hint>
-  </mat-form-field>
-
-  <button matButton="elevated" (click)="openGetDatetimeDialog()">Open dialog without animation</button>
 </mat-toolbar>
