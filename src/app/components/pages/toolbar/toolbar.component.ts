@@ -21,7 +21,7 @@ import { NgxMaskDirective } from "ngx-mask";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { GetDatetimeDialogComponent } from "../../dialogs/get-datetime-dialog/get-datetime-dialog.component";
 import { Store } from "@ngxs/store";
-import { SetDoneTaskFromDate, SetFocusedTaskForSubtasks } from "../../../state/app.actions";
+import { SetDoneTaskFromDate } from "../../../state/app.actions";
 
 @Component({
   selector: 'app-toolbar',
@@ -87,7 +87,7 @@ export class ToolbarComponent implements OnInit {
     this.addHotkeys();
   }
 
-  openDialog() {
+  openGetDatetimeDialog() {
     const dialogRef = this.dialog.open(GetDatetimeDialogComponent, {
       width: '500px',
       height: '700px',

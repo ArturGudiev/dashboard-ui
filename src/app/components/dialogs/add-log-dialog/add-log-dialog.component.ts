@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, model } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from "@angular/material/dialog";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
@@ -6,7 +6,13 @@ import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { TaskContainer } from "../../../models/interfaces/task-container";
-import { MatCheckbox } from "@angular/material/checkbox";
+import { MatOption, MatSelect } from "@angular/material/select";
+
+export interface AddLogDialogResult {
+  logMessage: string
+  isContainerLog: boolean
+  logType: string
+}
 
 @Component({
   selector: 'app-add-log-dialog',
@@ -19,7 +25,8 @@ import { MatCheckbox } from "@angular/material/checkbox";
     MatInput,
     MatLabel,
     ReactiveFormsModule,
-    MatCheckbox
+    MatSelect,
+    MatOption
   ],
   styleUrl: './add-log-dialog.component.sass',
   standalone: true,
@@ -41,7 +48,23 @@ import { MatCheckbox } from "@angular/material/checkbox";
         ></textarea>
       </mat-form-field>
 
-      <mat-checkbox formControlName="isContainerLog">Is Container Log</mat-checkbox>
+<!--      <mat-checkbox formControlName="isContainerLog">Is Container Log</mat-checkbox>-->
+<!--      <mat-select [(value)]="logType" style="width: 10rem">-->
+<!--        <mat-option [value]="'What I did'">What I did</mat-option>-->
+<!--        <mat-option [value]="'What I did'">What I want</mat-option>-->
+<!--        <mat-option [value]="'What I did'">Current situation</mat-option>-->
+<!--      </mat-select>-->
+
+
+      <mat-form-field style="width: 10rem">
+        <mat-label>Is Container Log</mat-label>
+        <mat-select [(value)]="logType" style="width: 10rem">
+          <mat-option [value]="'Info'">Info</mat-option>
+          <mat-option [value]="'What I did'">What I did</mat-option>
+          <mat-option [value]="'What I want'">What I want</mat-option>
+          <mat-option [value]="'Current situation'">Current situation</mat-option>
+        </mat-select>
+      </mat-form-field>
 
       <div mat-dialog-actions>
         <button mat-button type="button" (click)="onNoClick()">Cancel</button>
@@ -57,7 +80,7 @@ export class AddLogDialogComponent {
     valueField: new FormControl(null, [Validators.required]),
     isContainerLog: new FormControl(true),
   });
-
+  logType = model<'What I did' | 'What I want' | 'Current situation' | 'Info' >('Info')
   constructor(
     public dialogRef: MatDialogRef<AddLogDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { title: string, taskContainer: TaskContainer }
@@ -68,7 +91,11 @@ export class AddLogDialogComponent {
   }
 
   onSubmit() {
-    let dialogResult = { logMessage: this.myForm.value.valueField, isContainerLog: this.myForm.value.isContainerLog };
+    let dialogResult: AddLogDialogResult = {
+      logMessage: this.myForm.value.valueField ?? '',
+      isContainerLog: this.myForm.value.isContainerLog ?? false,
+      logType: this.logType()
+    };
     this.dialogRef.close(dialogResult);
   }
 }

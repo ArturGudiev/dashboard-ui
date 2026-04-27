@@ -70,6 +70,7 @@ export type HandlersNewLogMessageRequest = {
     containerID?: number;
     containerType?: SchemaContainerType;
     description?: string;
+    logType?: string;
 };
 
 /**
@@ -889,6 +890,18 @@ export type GetLogMessagesData = {
          * Container id filter
          */
         containerID?: number;
+        /**
+         * Items per page
+         */
+        perPage?: number;
+        /**
+         * Page number
+         */
+        page?: number;
+        /**
+         * Global log messages
+         */
+        global?: boolean;
     };
     url: '/log-messages';
 };

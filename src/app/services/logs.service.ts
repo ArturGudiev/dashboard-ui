@@ -11,10 +11,13 @@ export class LogsService {
 
   constructor(private apiService: ApiService) { }
 
-  addLogMessage(logMessage: string, taskContainer?: TaskContainer) {
+  addLogMessage(logMessage: string, taskContainer: TaskContainer | undefined, logType: string) {
     const args: HandlersNewLogMessageRequest = taskContainer
       ? { description: logMessage, containerID: taskContainer.id, containerType: taskContainer.type }
       : { description: logMessage };
+    if (logType) {
+      args['logType'] = logType;
+    }
     return this.apiService.addLogMessage(args);
   }
 

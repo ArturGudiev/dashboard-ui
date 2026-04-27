@@ -24,11 +24,12 @@ import { MatDialogRef } from "@angular/material/dialog";
   styleUrl: './get-datetime-dialog.component.sass',
 })
 export class GetDatetimeDialogComponent {
-  readonly meetingDateTime = signal(moment().format('HH:mm DD:MM:YYYY'));
+  static FORMAT = 'HH:mm DD:MM:YYYY';
+  readonly meetingDateTime = signal(moment().format(GetDatetimeDialogComponent.FORMAT));
   private dialogRef = inject(MatDialogRef<GetDatetimeDialogComponent>);
 
   updateValue(): void {
-    this.dialogRef.close({ dateTimeValue: this.meetingDateTime() });
+    this.dialogRef.close({ dateTimeValue: moment(this.meetingDateTime(), GetDatetimeDialogComponent.FORMAT).toISOString() });
   }
 
   close(): void {

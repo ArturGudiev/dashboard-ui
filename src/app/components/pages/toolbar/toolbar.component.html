@@ -24,7 +24,7 @@
   <div
     id="doneTasksButton"
     style="padding-right: 5rem"
-    (click)="openDialog()"
+    (click)="openGetDatetimeDialog()"
   >{{doneTasks}}</div>
 
   <mat-form-field appearance="outline">
@@ -41,5 +41,5 @@
     <mat-hint>Формат: ЧЧ:ММ ДД-ММ-ГГГГ</mat-hint>
   </mat-form-field>
 
-  <button matButton="elevated" (click)="openDialog()">Open dialog without animation</button>
+  <button matButton="elevated" (click)="openGetDatetimeDialog()">Open dialog without animation</button>
 </mat-toolbar>

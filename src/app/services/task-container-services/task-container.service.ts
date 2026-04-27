@@ -18,7 +18,10 @@ import { switchMap } from "rxjs/operators";
 import { MatDialog } from "@angular/material/dialog";
 import { LogsService } from "../logs.service";
 import { EntLogMessage } from "../../types/generated";
-import { AddLogDialogComponent } from "../../components/dialogs/add-log-dialog/add-log-dialog.component";
+import {
+  AddLogDialogComponent,
+  AddLogDialogResult
+} from "../../components/dialogs/add-log-dialog/add-log-dialog.component";
 import { LogsDialogComponent } from "../../components/dialogs/logs-dialog/logs-dialog.component";
 
 @Injectable({
@@ -99,9 +102,13 @@ export class TaskContainerService {
     return dialogRef.afterClosed()
       .pipe(
         // filter((description: string) => !!description),
-        switchMap((obj: any) => {
+        switchMap((obj: AddLogDialogResult) => {
           console.log(obj, 'After closed subscription');
-          return this.logsService.addLogMessage(obj.logMessage, obj.isContainerLog ? taskContainer : undefined);
+          return this.logsService.addLogMessage(
+            obj.logMessage,
+            obj.isContainerLog ? taskContainer : undefined,
+            obj.logType
+          );
         })
       )
   }
