@@ -5,8 +5,6 @@ import { Router } from '@angular/router';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
 import { MatButton } from "@angular/material/button";
-import { MatFormField, MatHint, MatLabel } from "@angular/material/form-field";
-import { MatInput } from "@angular/material/input";
 import { DashboardService, DashboardStateInterface } from "../../../services/dashboard.service";
 import { Hotkeys } from "../../../classes/hotkeys";
 import { CommandsService } from "../../../services/commands.service";
@@ -17,7 +15,6 @@ import { CommandDialogComponent } from "../../dialogs/command-dialog/command-dia
 import { MessageService } from "../../../services/message.service";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 import { FormsModule } from "@angular/forms";
-import { NgxMaskDirective } from "ngx-mask";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { GetDatetimeDialogComponent } from "../../dialogs/get-datetime-dialog/get-datetime-dialog.component";
 import { Store } from "@ngxs/store";
@@ -30,13 +27,8 @@ import { SetDoneTaskFromDate } from "../../../state/app.actions";
     MatToolbar,
     MatIcon,
     MatButton,
-    MatFormField,
-    MatInput,
     NgxMatTimepickerModule,
     FormsModule,
-    MatLabel,
-    NgxMaskDirective,
-    MatHint,
     OverlayModule,
 
   ],

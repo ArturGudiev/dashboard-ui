@@ -35,6 +35,10 @@ export class NavigationService {
       this.router.navigate(['epics']).then();;
       return;
     }
+    if (['rep', 'repetitive-tasks'].includes(arr[0])) {
+      this.router.navigate(['repetitive-tasks']).then();;
+      return;
+    }
     if (['e', 'epic'].includes(arr[0]) && Number.isInteger(+arr[1])) {
       this.router.navigate(['epic', arr[1]]).then();
       return;

@@ -15,9 +15,11 @@ import { IArrayParams } from "../models/interfaces/array-params";
 import { AppConfigService } from './app-config.service';
 import {
   EntLogMessage,
+  EntRepetitiveTaskExecution,
   HandlersNewLogMessageRequest,
   HandlersPaginatedResponseEntLogMessage,
-  ModelsAliasModel
+  ModelsAliasModel,
+  ModelsRepetitiveTaskResponse
 } from "../types/generated";
 import { TaskContainerType } from "../models/interfaces/types";
 
@@ -344,4 +346,20 @@ export class ApiService {
     return this.http.post<any>(`${this.baseUrl}/report/`, obj);
   }
   //------------------------------------ reports ----------------------------------------
+
+  //------------------------------------ repetitive tasks  ----------------------------------------
+  _getAllRepetitiveTasks(actual = true): Observable<ModelsRepetitiveTaskResponse[]> {
+    return this.http.get<ModelsRepetitiveTaskResponse[]>(`${this.baseUrl}/repetitive-tasks`, {
+      params: new HttpParams({ fromObject: { actual }} )
+    });
+  }
+
+  _markRepetitiveTaskAsDone(id: number): Observable<EntRepetitiveTaskExecution> {
+    return this.http.post<EntRepetitiveTaskExecution>(
+      `${this.baseUrl}/repetitive-tasks/${id}/executions`,
+      { }
+    );
+  }
+  //------------------------------------ repetitive tasks  ----------------------------------------
+
 }

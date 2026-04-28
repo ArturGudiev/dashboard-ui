@@ -28,6 +28,15 @@ import type {
   GetQuestionByIdData,
   GetQuestionByIdErrors,
   GetQuestionByIdResponses,
+  GetRepetitiveTasksByIdData,
+  GetRepetitiveTasksByIdErrors,
+  GetRepetitiveTasksByIdExecutionsData,
+  GetRepetitiveTasksByIdExecutionsErrors,
+  GetRepetitiveTasksByIdExecutionsResponses,
+  GetRepetitiveTasksByIdResponses,
+  GetRepetitiveTasksData,
+  GetRepetitiveTasksErrors,
+  GetRepetitiveTasksResponses,
   GetResponses,
   GetStoryByIdData,
   GetStoryByIdErrors,
@@ -68,6 +77,9 @@ import type {
   PostNewQuestionData,
   PostNewQuestionErrors,
   PostNewQuestionResponses,
+  PostNewRepetitiveTaskData,
+  PostNewRepetitiveTaskErrors,
+  PostNewRepetitiveTaskResponses,
   PostNewStoryData,
   PostNewStoryErrors,
   PostNewStoryResponses,
@@ -77,6 +89,9 @@ import type {
   PostParentsPathData,
   PostParentsPathErrors,
   PostParentsPathResponses,
+  PostRepetitiveTasksByIdExecutionsData,
+  PostRepetitiveTasksByIdExecutionsErrors,
+  PostRepetitiveTasksByIdExecutionsResponses,
   PutAddAnonymousTaskData,
   PutAddAnonymousTaskErrors,
   PutAddAnonymousTaskResponses,
@@ -109,7 +124,7 @@ import type {
   PutUpdateTaskResponses
 } from './types.gen';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
+export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -355,6 +370,20 @@ export const postNewQuestion = <ThrowOnError extends boolean = false>(options: O
 });
 
 /**
+ * Create new repetitive task
+ *
+ * Creates a new repetitive task with optional parent relationship
+ */
+export const postNewRepetitiveTask = <ThrowOnError extends boolean = false>(options: Options<PostNewRepetitiveTaskData, ThrowOnError>) => (options.client ?? client).post<PostNewRepetitiveTaskResponses, PostNewRepetitiveTaskErrors, ThrowOnError>({
+    url: '/new-repetitive-task',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
  * Create new story
  *
  * Creates a new story with optional parent relationship
@@ -409,6 +438,34 @@ export const getProblemById = <ThrowOnError extends boolean = false>(options: Op
  * Returns a question by its ID
  */
 export const getQuestionById = <ThrowOnError extends boolean = false>(options: Options<GetQuestionByIdData, ThrowOnError>) => (options.client ?? client).get<GetQuestionByIdResponses, GetQuestionByIdErrors, ThrowOnError>({ url: '/question/{id}', ...options });
+
+/**
+ * Get repetitive tasks
+ *
+ * Returns all repetitive tasks
+ */
+export const getRepetitiveTasks = <ThrowOnError extends boolean = false>(options?: Options<GetRepetitiveTasksData, ThrowOnError>) => (options?.client ?? client).get<GetRepetitiveTasksResponses, GetRepetitiveTasksErrors, ThrowOnError>({ url: '/repetitive-tasks/', ...options });
+
+/**
+ * Get repetitive task by ID
+ *
+ * Returns repetitive task by ID
+ */
+export const getRepetitiveTasksById = <ThrowOnError extends boolean = false>(options: Options<GetRepetitiveTasksByIdData, ThrowOnError>) => (options.client ?? client).get<GetRepetitiveTasksByIdResponses, GetRepetitiveTasksByIdErrors, ThrowOnError>({ url: '/repetitive-tasks/{id}', ...options });
+
+/**
+ * List repetitive task executions
+ *
+ * Returns execution records for the given repetitive task (newest first)
+ */
+export const getRepetitiveTasksByIdExecutions = <ThrowOnError extends boolean = false>(options: Options<GetRepetitiveTasksByIdExecutionsData, ThrowOnError>) => (options.client ?? client).get<GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdExecutionsErrors, ThrowOnError>({ url: '/repetitive-tasks/{id}/executions', ...options });
+
+/**
+ * Record repetitive task execution
+ *
+ * Creates an execution record for the given repetitive task (timestamp is server time)
+ */
+export const postRepetitiveTasksByIdExecutions = <ThrowOnError extends boolean = false>(options: Options<PostRepetitiveTasksByIdExecutionsData, ThrowOnError>) => (options.client ?? client).post<PostRepetitiveTasksByIdExecutionsResponses, PostRepetitiveTasksByIdExecutionsErrors, ThrowOnError>({ url: '/repetitive-tasks/{id}/executions', ...options });
 
 /**
  * Solve problem

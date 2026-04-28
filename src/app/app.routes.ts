@@ -7,6 +7,7 @@ import { EpicComponent } from "./components/containers/epic/epic.component";
 import { EpicsComponent } from "./components/pages/epics/epics.component";
 import { HelpComponent } from "./components/pages/help/help.component";
 import { QuestionComponent } from "./components/containers/question/question.component";
+import { RepetitiveTasksComponent } from "./components/pages/repetitive-tasks/repetitive-tasks.component";
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},
@@ -19,6 +20,7 @@ export const routes: Routes = [
   {path: 'story/:id', component: StoryComponent},
   {path: 'epic/:id', component: EpicComponent},
   {path: 'epics', component: EpicsComponent},
+  {path: 'repetitive-tasks', component: RepetitiveTasksComponent},
   {path: 'help', component: HelpComponent},
 
   // {path: 'memory-node/:id', component: MemoryNodeComponent, resolve: {memoryNode: memoryNodeResolverResolver}, canActivate: [authGuard]},

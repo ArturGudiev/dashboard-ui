@@ -31,6 +31,84 @@ export type EntLogMessage = {
     notes?: string;
 };
 
+export type EntRepetitiveTask = {
+    /**
+     * Closed holds the value of the "closed" field.
+     */
+    closed?: boolean;
+    /**
+     * Description holds the value of the "description" field.
+     */
+    description?: string;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the RepetitiveTaskQuery when eager-loading is set.
+     */
+    edges?: EntRepetitiveTaskEdges;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * Notes holds the value of the "notes" field.
+     */
+    notes?: string;
+    /**
+     * OnceInDays holds the value of the "once_in_days" field.
+     */
+    once_in_days?: number;
+    /**
+     * OnceInMonths holds the value of the "once_in_months" field.
+     */
+    once_in_months?: number;
+    /**
+     * OnceInWeeks holds the value of the "once_in_weeks" field.
+     */
+    once_in_weeks?: number;
+    /**
+     * Tags holds the value of the "tags" field.
+     */
+    tags?: Array<string>;
+};
+
+export type EntRepetitiveTaskEdges = {
+    /**
+     * Executions holds the value of the executions edge.
+     */
+    executions?: Array<EntRepetitiveTaskExecution>;
+};
+
+export type EntRepetitiveTaskExecution = {
+    /**
+     * Comments holds the value of the "comments" field.
+     */
+    comments?: string;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the RepetitiveTaskExecutionQuery when eager-loading is set.
+     */
+    edges?: EntRepetitiveTaskExecutionEdges;
+    /**
+     * ExecutionDate holds the value of the "execution_date" field.
+     */
+    execution_date?: string;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * RepetitiveTaskID holds the value of the "repetitive_task_id" field.
+     */
+    repetitive_task_id?: number;
+};
+
+export type EntRepetitiveTaskExecutionEdges = {
+    /**
+     * RepetitiveTask holds the value of the repetitive_task edge.
+     */
+    repetitive_task?: EntRepetitiveTask;
+};
+
 export type EntTask = {
     /**
      * Description holds the value of the "description" field.
@@ -87,6 +165,11 @@ export type HandlersNewProblemRequest = {
 export type HandlersNewQuestionRequest = {
     parent?: ModelsContainerDescription;
     question?: ModelsQuestionShort;
+};
+
+export type HandlersNewRepetitiveTaskRequest = {
+    parent?: ModelsContainerDescription;
+    repetitiveTask?: ModelsRepetitiveTaskShort;
 };
 
 export type HandlersNewTaskRequest = {
@@ -271,6 +354,26 @@ export type ModelsQuestionShort = {
     tags?: Array<string>;
 };
 
+export type ModelsRepetitiveTaskResponse = {
+    closed?: boolean;
+    description?: string;
+    id: number;
+    notes?: string;
+    once_in_days?: number;
+    once_in_months?: number;
+    once_in_weeks?: number;
+    tags?: Array<string>;
+};
+
+export type ModelsRepetitiveTaskShort = {
+    description?: string;
+    notes?: string;
+    onceInDays?: number;
+    onceInMonths?: number;
+    onceInWeeks?: number;
+    tags?: Array<string>;
+};
+
 export type ModelsStoryFull = {
     actions?: Array<number>;
     closed?: boolean;
@@ -336,7 +439,7 @@ export type ModelsTaskShort = {
 
 export type SchemaAliasType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'scheduled-task' | 'state' | 'file';
 
-export type SchemaContainerType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'scheduled-task' | 'state';
+export type SchemaContainerType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'state';
 
 export type GetData = {
     body?: never;
@@ -477,7 +580,12 @@ export type PostAnswerQuestionByIdResponse = PostAnswerQuestionByIdResponses[key
 export type GetDoneTasksData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * From date-time filter (RFC3339)
+         */
+        from?: string;
+    };
     url: '/done-tasks';
 };
 
@@ -1144,6 +1252,42 @@ export type PostNewQuestionResponses = {
 
 export type PostNewQuestionResponse = PostNewQuestionResponses[keyof PostNewQuestionResponses];
 
+export type PostNewRepetitiveTaskData = {
+    /**
+     * Repetitive task creation request
+     */
+    body: HandlersNewRepetitiveTaskRequest;
+    path?: never;
+    query?: never;
+    url: '/new-repetitive-task';
+};
+
+export type PostNewRepetitiveTaskErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostNewRepetitiveTaskError = PostNewRepetitiveTaskErrors[keyof PostNewRepetitiveTaskErrors];
+
+export type PostNewRepetitiveTaskResponses = {
+    /**
+     * OK
+     */
+    200: ModelsRepetitiveTaskResponse;
+};
+
+export type PostNewRepetitiveTaskResponse = PostNewRepetitiveTaskResponses[keyof PostNewRepetitiveTaskResponses];
+
 export type PostNewStoryData = {
     /**
      * Story creation request
@@ -1351,6 +1495,146 @@ export type GetQuestionByIdResponses = {
 };
 
 export type GetQuestionByIdResponse = GetQuestionByIdResponses[keyof GetQuestionByIdResponses];
+
+export type GetRepetitiveTasksData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * filter repetitive tasks by actual property
+         */
+        actual?: boolean;
+    };
+    url: '/repetitive-tasks/';
+};
+
+export type GetRepetitiveTasksErrors = {
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetRepetitiveTasksError = GetRepetitiveTasksErrors[keyof GetRepetitiveTasksErrors];
+
+export type GetRepetitiveTasksResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsRepetitiveTaskResponse>;
+};
+
+export type GetRepetitiveTasksResponse = GetRepetitiveTasksResponses[keyof GetRepetitiveTasksResponses];
+
+export type GetRepetitiveTasksByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Repetitive task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/repetitive-tasks/{id}';
+};
+
+export type GetRepetitiveTasksByIdErrors = {
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetRepetitiveTasksByIdError = GetRepetitiveTasksByIdErrors[keyof GetRepetitiveTasksByIdErrors];
+
+export type GetRepetitiveTasksByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsRepetitiveTaskResponse;
+};
+
+export type GetRepetitiveTasksByIdResponse = GetRepetitiveTasksByIdResponses[keyof GetRepetitiveTasksByIdResponses];
+
+export type GetRepetitiveTasksByIdExecutionsData = {
+    body?: never;
+    path: {
+        /**
+         * Repetitive task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/repetitive-tasks/{id}/executions';
+};
+
+export type GetRepetitiveTasksByIdExecutionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetRepetitiveTasksByIdExecutionsError = GetRepetitiveTasksByIdExecutionsErrors[keyof GetRepetitiveTasksByIdExecutionsErrors];
+
+export type GetRepetitiveTasksByIdExecutionsResponses = {
+    /**
+     * OK
+     */
+    200: Array<EntRepetitiveTaskExecution>;
+};
+
+export type GetRepetitiveTasksByIdExecutionsResponse = GetRepetitiveTasksByIdExecutionsResponses[keyof GetRepetitiveTasksByIdExecutionsResponses];
+
+export type PostRepetitiveTasksByIdExecutionsData = {
+    body?: never;
+    path: {
+        /**
+         * Repetitive task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/repetitive-tasks/{id}/executions';
+};
+
+export type PostRepetitiveTasksByIdExecutionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostRepetitiveTasksByIdExecutionsError = PostRepetitiveTasksByIdExecutionsErrors[keyof PostRepetitiveTasksByIdExecutionsErrors];
+
+export type PostRepetitiveTasksByIdExecutionsResponses = {
+    /**
+     * OK
+     */
+    200: EntRepetitiveTaskExecution;
+};
+
+export type PostRepetitiveTasksByIdExecutionsResponse = PostRepetitiveTasksByIdExecutionsResponses[keyof PostRepetitiveTasksByIdExecutionsResponses];
 
 export type PutSolveProblemByIdData = {
     /**

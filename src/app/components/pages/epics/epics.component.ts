@@ -5,10 +5,11 @@ import { EpicsService } from "../../../services/task-container-services/epics.se
 
 @Component({
     selector: 'app-epics',
+    standalone: true,
     imports: [
-    AsyncPipe,
-    EpicsListComponent
-],
+      AsyncPipe,
+      EpicsListComponent
+    ],
     templateUrl: './epics.component.html',
     styleUrl: './epics.component.sass'
 })
