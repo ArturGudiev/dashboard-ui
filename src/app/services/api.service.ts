@@ -17,6 +17,7 @@ import {
   EntLogMessage,
   EntRepetitiveTaskExecution,
   HandlersNewLogMessageRequest,
+  HandlersNewRepetitiveTaskRequest,
   HandlersPaginatedResponseEntLogMessage,
   ModelsAliasModel,
   ModelsRepetitiveTaskResponse
@@ -358,6 +359,13 @@ export class ApiService {
     return this.http.post<EntRepetitiveTaskExecution>(
       `${this.baseUrl}/repetitive-tasks/${id}/executions`,
       { }
+    );
+  }
+
+  _createRepetitiveTask(obj: HandlersNewRepetitiveTaskRequest): Observable<ModelsRepetitiveTaskResponse> {
+    return this.http.post<ModelsRepetitiveTaskResponse>(
+      `${this.baseUrl}/new-repetitive-task`,
+      { ...obj }
     );
   }
   //------------------------------------ repetitive tasks  ----------------------------------------

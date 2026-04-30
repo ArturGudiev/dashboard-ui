@@ -48,14 +48,6 @@ export interface AddLogDialogResult {
         ></textarea>
       </mat-form-field>
 
-<!--      <mat-checkbox formControlName="isContainerLog">Is Container Log</mat-checkbox>-->
-<!--      <mat-select [(value)]="logType" style="width: 10rem">-->
-<!--        <mat-option [value]="'What I did'">What I did</mat-option>-->
-<!--        <mat-option [value]="'What I did'">What I want</mat-option>-->
-<!--        <mat-option [value]="'What I did'">Current situation</mat-option>-->
-<!--      </mat-select>-->
-
-
       <mat-form-field style="width: 10rem">
         <mat-label>Is Container Log</mat-label>
         <mat-select [(value)]="logType" style="width: 10rem">
@@ -71,7 +63,6 @@ export interface AddLogDialogResult {
         <button mat-button type="submit" [disabled]="!myForm.valid">Add log</button>
       </div>
     </form>
-
   `
 })
 export class AddLogDialogComponent {

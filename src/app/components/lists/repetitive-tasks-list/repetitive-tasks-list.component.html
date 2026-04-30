@@ -1,6 +1,17 @@
 @if(repetitiveTasks().length > 0) {
-<div id="repetitive-tasks-actions">
-  <h2 id="repetitive-tasks-title">Repetitive tasks</h2>
+<div id="repetitive-tasks-actions" class="flex items-center mt-3">
+  <div id="repetitive-tasks-title" class="text-xl">Repetitive tasks</div>
+
+  <!-- Иконка плюса для добавления задачи -->
+  <button
+    id="add-task-button"
+    class="ms-4"
+    mat-mini-fab
+    color="primary"
+    (click)="addRepetitiveTask()"
+  >
+    <mat-icon class="tasks-icon">add</mat-icon>
+  </button>
 </div>
 
   <div id="table-wrapper">

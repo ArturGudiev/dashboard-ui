@@ -24,4 +24,8 @@ export class RepetitiveTasksComponent {
       this.data$ = this.repetitiveTasksService.getAllRepetitiveTasks();
     });
   }
+
+  updateList() {
+    this.data$ = this.repetitiveTasksService.getAllRepetitiveTasks();
+  }
 }

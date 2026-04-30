@@ -1,6 +1,7 @@
 @if (data$ | async; as data;) {
   <dash-repetitive-tasks-list
     [repetitiveTasks]="data"
+    (updateList)="updateList()"
     (onItemExecutedMark)="onItemExecutedMark($event)"
   />
 }

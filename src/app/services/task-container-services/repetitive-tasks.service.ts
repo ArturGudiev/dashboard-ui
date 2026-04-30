@@ -1,13 +1,24 @@
-import { Injectable } from '@angular/core';
-import { Observable } from "rxjs";
+import { inject, Injectable } from '@angular/core';
+import { EMPTY, Observable } from "rxjs";
 import { ApiService } from "../api.service";
-import { EntRepetitiveTaskExecution, ModelsRepetitiveTaskResponse } from "../../types/generated";
+import {
+  EntRepetitiveTaskExecution,
+  HandlersNewRepetitiveTaskRequest,
+  ModelsRepetitiveTaskResponse,
+  ModelsRepetitiveTaskShort
+} from "../../types/generated";
+import {
+  AddRepetitiveTaskDialogComponent
+} from "../../components/dialogs/add-repetitive-task-dialog/add-repetitive-task-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RepetitiveTasksService {
+  private dialog =  inject(MatDialog);
 
+  private addRepetitiveTaskDialogOpened = false;
   constructor(private apiService: ApiService) { }
 
   getAllRepetitiveTasks(): Observable<ModelsRepetitiveTaskResponse[]> {
@@ -16,5 +27,28 @@ export class RepetitiveTasksService {
 
   markTaskAsDone(id: number): Observable<EntRepetitiveTaskExecution> {
     return this.apiService._markRepetitiveTaskAsDone(id);
+  }
+
+  addNewRepetitiveTask(repetitiveTask: ModelsRepetitiveTaskShort): Observable<EntRepetitiveTaskExecution> {
+    const obj: HandlersNewRepetitiveTaskRequest = { repetitiveTask };
+    return this.apiService._createRepetitiveTask(obj);
+  }
+
+  /**
+   *  Open dialog to add a new repetitive task
+   */
+  openAddRepetitiveTaskDialog(): Observable<any> {
+    if (this.addRepetitiveTaskDialogOpened) {
+      return EMPTY;
+    }
+    this.addRepetitiveTaskDialogOpened = true;
+    const dialogRef = this.dialog.open(
+      AddRepetitiveTaskDialogComponent,
+      {
+        height: '600px',
+        width: '1000px',
+      }
+    );
+    return dialogRef.afterClosed();
   }
 }

@@ -1,11 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, effect, input, output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, input, output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 
 import { MaterialModule } from "../../../modules/material/material.module";
 import { ModelsRepetitiveTaskResponse } from "../../../types/generated";
+import { RepetitiveTasksService } from "../../../services/task-container-services/repetitive-tasks.service";
 
 @Component({
   selector: 'dash-repetitive-tasks-list',
@@ -19,10 +20,12 @@ import { ModelsRepetitiveTaskResponse } from "../../../types/generated";
 export class RepetitiveTasksListComponent implements AfterViewInit {
 
   repetitiveTasks = input.required<ModelsRepetitiveTaskResponse[]>();
+  updateList = output();
   onItemExecutedMark = output<ModelsRepetitiveTaskResponse>();
-
+  repetitiveTasksService = inject(RepetitiveTasksService);
   selection = new SelectionModel<ModelsRepetitiveTaskResponse>(true, []);
   displayedColumns: string[] = ['select', 'description', 'actions'];
+
 
   constructor(private router: Router) {
     effect(() => {
@@ -48,4 +51,12 @@ export class RepetitiveTasksListComponent implements AfterViewInit {
       this.onItemExecutedMark.emit(task);
     }
   }
+
+  addRepetitiveTask() {
+    this.repetitiveTasksService.openAddRepetitiveTaskDialog().subscribe(() => {
+
+      this.updateList.emit();
+    });
+  }
+
 }
