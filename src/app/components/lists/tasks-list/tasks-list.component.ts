@@ -404,7 +404,7 @@ export class TasksListComponent implements OnInit, OnChanges {
     if ($event.checked) {
       this.tasksService.getTasks(subtask.tasks).pipe(untilDestroyed(this)).subscribe(res => {
         this.tasksByIdMap[subtask.id] = {container: subtask, tasks: res};
-        if (this.level === 0 && Object.keys(this.tasksByIdMap).length === 1) {
+        if (this.level === 0) {
           this.store.dispatch(new SetFocusedTaskForSubtasks(subtask));
         }
       })
@@ -413,6 +413,24 @@ export class TasksListComponent implements OnInit, OnChanges {
       this.removeTasksByIdMapKey(subtask.id)
     }
   }
+
+  /**
+   * Когда кликает пользователь на чекбокс, то задача фокусируется для подзадач. Но только если клик был совершен
+   * без зажатия Alt
+   */
+  setShowSubtasksFieldClickHandler($event: MouseEvent, subtask: TaskC) {
+    if (this.checkedElement(subtask)) {
+      this.removeTasksByIdMapKey(subtask.id);
+    } else {
+      this.tasksService.getTasks(subtask.tasks).pipe(untilDestroyed(this)).subscribe(res => {
+        this.tasksByIdMap[subtask.id] = {container: subtask, tasks: res};
+        if (this.level === 0 && !($event.altKey)) {
+          this.store.dispatch(new SetFocusedTaskForSubtasks(subtask));
+        }
+      })
+    }
+  }
+
 
   private removeTasksByIdMapKey(key: number) {
     delete this.tasksByIdMap[key];
