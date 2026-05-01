@@ -100,11 +100,11 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     console.log('OnInit ============ ', this.taskContainer); // TODO Remote later
-    this._hotkeysService.add(new Hotkey('alt+r', (event: KeyboardEvent): boolean => {
+    this._hotkeysService.add(new Hotkey('alt+r', (): boolean => {
       this.showRecords();
       return false; // Prevent bubbling
     }));
-    this._hotkeysService.add(new Hotkey('alt+shift+r', (event: KeyboardEvent): boolean => {
+    this._hotkeysService.add(new Hotkey('alt+shift+r', (): boolean => {
       this.addRecord();
       return false; // Prevent bubbling
     }));
@@ -143,9 +143,6 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     if (['anonymous'].includes(arr[0])) {
       this.addAnonymousTaskHandler();
     }
-    // if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.tasks.length) {
-    //   this.router.navigate(['task', this.tasks[+arr[0] - 1]]).then();
-    // }
     if (['f', 'ft', 'finish-task'].includes(arr[0])) {
       this.finishTaskHandler(args);
     }
@@ -170,8 +167,11 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     if (['parent'].includes(arr[0])) {
       this.goToNearestParent();
     }
-    if (['add-to-parent', 'tparent', 'tp', 'pt'].includes(arr[0])) {
+    if (['add-to-parent', 'tparent', 'tp', 'pt', 'par+'].includes(arr[0])) {
       this.addTaskToParentInteractively();
+    }
+    if (['go-to-parent', 'go-parent', 'gop'].includes(arr[0])) {
+      this.goToParentInteractively();
     }
     if (['log', 'l+'].includes(arr[0])) {
       this.taskContainerService.openAddLogDialog(this.taskContainer).subscribe();
@@ -337,15 +337,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   private showHelp() {
-    const dialogRef = this.dialog.open(HelpComponent,
-      {
-        height: '600px',
-        width: '1000px'
-      });
-    // dialogRef.afterClosed().subscribe(() => {
-    //   console.log('Dialog was closed RecordsListDialogComponent');
-    // });
-
+    this.dialog.open(HelpComponent, { height: '600px', width: '1000px' });
   }
 
   private addTaskToParentInteractively() {
@@ -353,8 +345,19 @@ export class TaskContainerComponent implements OnInit, OnChanges {
       if (parent) {
         this.taskContainerService.addTaskToContainerByShortDescription(parent);
       }
-    });1
+    });
   }
+
+  private goToParentInteractively() {
+    this.utilsService
+      .selectIndexFromList(this.parentsPath.slice(0, -1))
+      .subscribe((val: number | undefined) => {
+        if (val !== undefined) {
+          this.goToParentHandler(this.parentsPath[val]);
+        }
+    });
+  }
+
 
   /**
    *
