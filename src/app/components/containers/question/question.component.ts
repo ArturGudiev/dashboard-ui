@@ -81,8 +81,9 @@ export class QuestionComponent implements OnInit {
     dialogRef.afterClosed().subscribe((answer: string) => {
       console.log('after closed dialog', answer);
       if (answer) {
-        this.questionsService.answerTheQuestion(this.question, answer).subscribe();
-        this.onGoToNearestParent();
+        this.questionsService.answerTheQuestion(this.question, answer).subscribe(() => {
+          this.onGoToNearestParent();
+        });
       }
     });
   }

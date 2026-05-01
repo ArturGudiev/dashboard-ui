@@ -230,9 +230,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   goToParentHandler(description: string): void {
-    console.log('task-container.component.ts -- goToParentHandler');
     const urls = getUrlByDescription(description);
-    console.log('urls ===========', urls);
     if (urls) {
       this.router.navigate(urls).then();
     }

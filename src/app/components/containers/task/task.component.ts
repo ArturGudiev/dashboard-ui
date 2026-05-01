@@ -10,35 +10,6 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
-import { TreeNode } from "../tree/my-tree.component";
-
-const TREE_DATA: TreeNode[] = [
-  {
-    name: 'Parent 1',
-    depth: 0,
-
-    children: [
-      { name: 'Child 1.1', depth: 1, },
-      {
-        name: 'Child 1.2',
-        depth: 1,
-        children: [
-          { name: 'Grandchild 1.2.1', depth: 2, },
-          { name: 'Grandchild 1.2.2', depth: 2, },
-        ]
-      },
-    ]
-  },
-  {
-    name: 'Parent 2',
-    depth: 0,
-    children: [
-      { name: 'Child 2.1', depth: 1, },
-      { name: 'Child 2.2', depth: 1, },
-    ]
-  }
-];
-
 
 @UntilDestroy()
 @Component({
@@ -89,9 +60,10 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   private refreshTaskForTheFirstTime() {
-    if (this.router.currentNavigation()?.extras.state) {
-      // TODO duplication
-      this.setTask(this.router.currentNavigation()?.extras.state as TaskC);
+    const state = this.router.currentNavigation()?.extras.state;
+    if (state) {
+      // History restores state as a plain object — rehydrate so TaskContainer methods exist.
+      this.setTask(TaskC.createFromObj(state));
       return;
     }
     this.refreshTask();
@@ -117,11 +89,12 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (!this.task) {
       return;
     }
-    this.tasksService.finishTask(this.task).subscribe();
-    if (this.parentsPath && this.parentsPath.length > 1) {
-      const description = this.parentsPath.slice(-2, -1)[0];
-      this.goToParentHandler(description);
-    }
+    this.tasksService.finishTask(this.task).subscribe(() => {
+      if (this.parentsPath && this.parentsPath.length > 1) {
+        const description = this.parentsPath.slice(-2, -1)[0];
+        this.goToParentHandler(description);
+      }
+    });
   }
 
   goToParentHandler(description: string) {

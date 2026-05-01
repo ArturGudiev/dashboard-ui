@@ -84,8 +84,9 @@ export class ProblemComponent implements OnInit {
       {data: {title: 'Solution', inputWidth: '40rem'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
-        this.problemsService.solveTheProblem(this.problem, solution).subscribe();
-        this.onGoToNearestParent();
+        this.problemsService.solveTheProblem(this.problem, solution).subscribe(() => {
+          this.onGoToNearestParent();
+        });
       }
     });
   }
