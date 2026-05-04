@@ -5,14 +5,13 @@ import { RepetitiveTasksListComponent } from "../../lists/repetitive-tasks-list/
 import { ModelsRepetitiveTaskResponse } from "../../../types/generated";
 
 @Component({
-    selector: 'dash-repetitive-tasks',
-    standalone: true,
+  selector: 'dash-repetitive-tasks',
+  standalone: true,
   imports: [
     AsyncPipe,
     RepetitiveTasksListComponent,
   ],
-    templateUrl: './repetitive-tasks.component.html',
-    styleUrl: './repetitive-tasks.component.sass'
+  templateUrl: './repetitive-tasks.component.html'
 })
 export class RepetitiveTasksComponent {
   private repetitiveTasksService = inject(RepetitiveTasksService);

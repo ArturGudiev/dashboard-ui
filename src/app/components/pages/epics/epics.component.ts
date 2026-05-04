@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AsyncPipe } from "@angular/common";
 import { EpicsListComponent } from "../../lists/epics-list/epics-list.component";
 import { EpicsService } from "../../../services/task-container-services/epics.service";
@@ -11,11 +11,10 @@ import { EpicsService } from "../../../services/task-container-services/epics.se
       EpicsListComponent
     ],
     templateUrl: './epics.component.html',
-    styleUrl: './epics.component.sass'
 })
 export class EpicsComponent {
+  private epicsService = inject(EpicsService);
+  
   epics$ = this.epicsService.getAllEpics();
-
-  constructor(private epicsService: EpicsService) {}
-
+  
 }
