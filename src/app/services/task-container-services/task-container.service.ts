@@ -128,6 +128,6 @@ export class TaskContainerService {
    * @param task
    */
   getReport(container: TaskContainer): Observable<any> {
-    return this.apiService.getReport(container)
+    return this.apiService.getTaskReport(container.id)
   }
 }

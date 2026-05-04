@@ -346,6 +346,10 @@ export class ApiService {
   getReport(obj: TaskContainer): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/report/`, obj);
   }
+
+  getTaskReport(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/task-report/${id}`);
+  }
   //------------------------------------ reports ----------------------------------------
 
   //------------------------------------ repetitive tasks  ----------------------------------------
