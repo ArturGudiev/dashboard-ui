@@ -33,15 +33,20 @@ $first-columns-width: 3.5rem
 .mat-column-showSubtasks
   max-width: 7rem
 
+// Table row height (legacy + MDC mat-table)
+.mat-row, .table-row
+  height: .5rem !important
+  min-height: .5rem !important
+
+.mat-row, .table-row
+  height: 2rem !important
+  max-height: 2rem !important
+
 .mat-mdc-row
   height: 1rem
 
 #subtasks-title
   padding-right: 1rem
-
-.mat-row,  .table-row
-  height: 2rem !important
-  max-height: 2rem !important
 
 .finish-tasks-button
   margin-left: 2rem

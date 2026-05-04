@@ -10,13 +10,11 @@ import {
 } from '@angular/core';
 import { TaskC } from "../../../models/task-class";
 import { SelectionModel } from "@angular/cdk/collections";
-import { Router } from "@angular/router";
 import * as _ from "lodash";
 import { every, isNaN } from "lodash";
 import { CommandsService, CommandsStateInterface } from "../../../services/commands.service";
 import { MatDialog } from "@angular/material/dialog";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
-import { MatCheckboxChange } from "@angular/material/checkbox";
 import { Store } from "@ngxs/store";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
@@ -77,7 +75,6 @@ export class TasksListComponent implements OnInit, OnChanges {
     private navigationService: NavigationService,
     public dialog: MatDialog,
     public cdr: ChangeDetectorRef,
-    private router: Router,
     private store: Store,
   ) {
   }
@@ -190,7 +187,6 @@ export class TasksListComponent implements OnInit, OnChanges {
 
     let newSelectedItems: number[] = [];
     this.selection.selected.forEach(id => {
-      this.tasks.map(t => t.id)
       if (this.tasks.some(subtask => subtask.id === id)) {
         const element = this.tasks.find(subtask => subtask.id === id);
         if (element) {
@@ -210,18 +206,11 @@ export class TasksListComponent implements OnInit, OnChanges {
    * @private
    */
   private handleTaskCommand(command: string, commandArgs: object) {
-    console.log('tasks-list.component.ts -- handleTaskCommand', command);
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['select-subtask'].includes(arr[0])) {
       if (this.level === 0) {
         this.handleSelectSubtaskAction()
-      }
-    }
-
-    if (['select-specific-subtask'].includes(arr[0])) {
-      if (this.level === 0) {
-        console.log('Select specific subtask', arr[0]);
       }
     }
 
@@ -233,9 +222,6 @@ export class TasksListComponent implements OnInit, OnChanges {
       this.navigationService.navigateToTask(this.tasks[+arr[0] - 1].id);
     }
 
-    if (arr[0].startsWith('select-task')) {
-      console.log('select-task', arr[0]);
-    }
     if (['select-subsubtask'].includes(arr[0])) {
       if (this.level === 1) {
         this.handleSelectSubtaskAction()
@@ -391,27 +377,6 @@ export class TasksListComponent implements OnInit, OnChanges {
         }
       }
     });
-  }
-
-  /**
-   * Обработка события нажатия на show subtasks checkbox. Если события добавляет галочку, то
-   * берутся подзадачи выбранной задачи, добавляются запись по id {container, tasks} в tasksByIdMap.
-   * Если мы сейчас находимся на нулевом уровне, и это первая выделеннвя подзадача, то она сразу фокусируется.
-   *
-   * Если же событие снимает галку, то запись соответствующая удаляется из tasksByIdMap.
-   */
-  setShowSubtasksField($event: MatCheckboxChange, subtask: TaskC) {
-    if ($event.checked) {
-      this.tasksService.getTasks(subtask.tasks).pipe(untilDestroyed(this)).subscribe(res => {
-        this.tasksByIdMap[subtask.id] = {container: subtask, tasks: res};
-        if (this.level === 0) {
-          this.store.dispatch(new SetFocusedTaskForSubtasks(subtask));
-        }
-      })
-      ;
-    } else {
-      this.removeTasksByIdMapKey(subtask.id)
-    }
   }
 
   /**
