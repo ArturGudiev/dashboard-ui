@@ -1,5 +1,5 @@
 <!--Иконки "Добавления вопросы" -->
-@if (questions.length > 0) {
+@if (questions().length > 0) {
   <div id="questions-actions">
     <h2 id="questions-title" class="red-color">Questions</h2>
     <!-- Иконка плюса для добавления вопросы -->
@@ -13,11 +13,11 @@
   <!--    </button>-->
 </div>
 <div id="table-wrapper">
-  @if (questions.length > 0) {
+  @if (questions().length > 0) {
     <table
       id="questions-table"
       mat-table
-      [dataSource]="questions"
+      [dataSource]="questions()"
       class="mat-elevation-z8"
       >
       <ng-container matColumnDef="select">

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, input, Input, OnInit, output, Output } from '@angular/core';
 import { Problem } from "../../../models/problem";
 import { SelectionModel } from "@angular/cdk/collections";
 import { Router } from "@angular/router";
@@ -31,27 +31,23 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
   styleUrls: ['./problems-list.component.sass']
 })
 export class ProblemsListComponent implements OnInit {
-  @Input({required: true}) container!: TaskContainer;
-  @Input() problems: Problem[] = [];
-  @Output() refreshProblems = new EventEmitter();
-  displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
+  container = input.required<TaskContainer>();
+  problems = input.required<Problem[]>();
+  refreshProblems = output<void>();
+  
+  readonly displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
+  readonly tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
+  readonly selection = new SelectionModel<Problem>(true, []);
 
-  tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
-
-  selection = new SelectionModel<Problem>(true, []);
-
+  private problemsService = inject(ProblemsService);
+  private commandsService = inject(CommandsService);
+  private tasksService = inject(TasksService);
+  private store = inject(Store);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
+  
   get tasksByIdMapKeys(): number[] {
     return Object.keys(this.tasksByIdMap).map(e => Number(e));
-  }
-
-  constructor(
-    private problemsService: ProblemsService,
-    private commandsService: CommandsService,
-    private tasksService: TasksService,
-    private store: Store,
-    private router: Router,
-    private dialog: MatDialog,
-  ) {
   }
 
   ngOnInit(): void {
@@ -60,7 +56,6 @@ export class ProblemsListComponent implements OnInit {
       .subscribe(state => {
         this.handleTaskCommand(state.command);
       })
-
   }
 
   /**
@@ -79,7 +74,9 @@ export class ProblemsListComponent implements OnInit {
    * Метод создаёт новую проблему
    */
   addProblem(): void {
-    this.problemsService.createProblemFromDialog(this.container).subscribe(() => this.refreshProblems.emit());
+    this.problemsService.createProblemFromDialog(
+      this.container()
+    ).subscribe(() => this.refreshProblems.emit());
   }
 
 
@@ -121,7 +118,7 @@ export class ProblemsListComponent implements OnInit {
       this.selection.clear();
       return;
     }
-    this.selection.select(...this.problems);
+    this.selection.select(...this.problems());
   }
 
   onProblemClick(problem: Problem) {
@@ -167,7 +164,5 @@ export class ProblemsListComponent implements OnInit {
           .subscribe(() => this.refreshProblems.emit());
       }
     });
-
-
   }
 }

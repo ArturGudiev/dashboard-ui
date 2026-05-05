@@ -18,14 +18,13 @@ import { RepetitiveTasksService } from "../../../services/task-container-service
   styleUrls: ['./repetitive-tasks-list.component.sass']
 })
 export class RepetitiveTasksListComponent implements AfterViewInit {
-
   repetitiveTasks = input.required<ModelsRepetitiveTaskResponse[]>();
-  updateList = output();
+  updateList = output<void>();
   onItemExecutedMark = output<ModelsRepetitiveTaskResponse>();
   repetitiveTasksService = inject(RepetitiveTasksService);
-  selection = new SelectionModel<ModelsRepetitiveTaskResponse>(true, []);
-  displayedColumns: string[] = ['select', 'description', 'actions'];
-
+  readonly selection = new SelectionModel<ModelsRepetitiveTaskResponse>(true, []);
+  readonly displayedColumns: string[] = ['select', 'description', 'actions'];
+  readonly dataSource = new MatTableDataSource<ModelsRepetitiveTaskResponse>([]);
 
   constructor(private router: Router) {
     effect(() => {
@@ -33,7 +32,6 @@ export class RepetitiveTasksListComponent implements AfterViewInit {
     });
   }
 
-  dataSource = new MatTableDataSource<ModelsRepetitiveTaskResponse>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {
@@ -54,7 +52,6 @@ export class RepetitiveTasksListComponent implements AfterViewInit {
 
   addRepetitiveTask() {
     this.repetitiveTasksService.openAddRepetitiveTaskDialog().subscribe(() => {
-
       this.updateList.emit();
     });
   }

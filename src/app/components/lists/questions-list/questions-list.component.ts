@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, input, Input, OnInit, output, Output } from '@angular/core';
 import { Question } from "../../../models/question";
 import { SelectionModel } from "@angular/cdk/collections";
 import { Router } from "@angular/router";
@@ -31,27 +31,22 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
   styleUrls: ['./questions-list.component.sass']
 })
 export class QuestionsListComponent implements OnInit {
-  @Input({required: true}) container!: TaskContainer;
-  @Input() questions: Question[] = [];
-  @Output() refreshQuestions = new EventEmitter();
-  displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
-  selection = new SelectionModel<Question>(true, []);
+  container = input.required<TaskContainer>();
+  questions = input.required<Question[]>();
+  refreshQuestions = output<void>();
+  readonly displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
+  readonly selection = new SelectionModel<Question>(true, []);
 
-  tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
+  readonly tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
+  private questionsService = inject(QuestionsService);
+  private tasksService = inject(TasksService);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private store = inject(Store);
+  private commandsService = inject(CommandsService);
 
   get tasksByIdMapKeys(): number[] {
     return Object.keys(this.tasksByIdMap).map(e => Number(e));
-  }
-
-
-  constructor(
-    private questionsService: QuestionsService,
-    private tasksService: TasksService,
-    private router: Router,
-    private dialog: MatDialog,
-    private store: Store,
-    private commandsService: CommandsService,
-  ) {
   }
 
   ngOnInit(): void {
@@ -68,7 +63,7 @@ export class QuestionsListComponent implements OnInit {
   }
 
   addQuestion(): void {
-    this.questionsService.createQuestionFromDialog(this.container)
+    this.questionsService.createQuestionFromDialog(this.container())
       .subscribe(() => this.refreshQuestions.emit());
 
   }
@@ -116,7 +111,7 @@ export class QuestionsListComponent implements OnInit {
       this.selection.clear();
       return;
     }
-    this.selection.select(...this.questions);
+    this.selection.select(...this.questions());
   }
 
   onQuestionClick(question: Question) {
