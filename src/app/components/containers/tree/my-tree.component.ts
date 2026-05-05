@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, input, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NestedTreeControl } from "@angular/cdk/tree";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { MaterialModule } from "../../../modules/material/material.module";
@@ -20,7 +20,7 @@ export interface TreeNode {
   styleUrl: './my-tree.component.scss'
 })
 export class MyTreeComponent implements OnInit, OnChanges {
-  @Input() treeData: TreeNode[] = [];
+  treeData = input<TreeNode[]>([]);
 
   treeControl = new NestedTreeControl<TreeNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<TreeNode>();
@@ -30,12 +30,12 @@ export class MyTreeComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit(): void {
-    this.dataSource.data = this.treeData;
+    this.dataSource.data = this.treeData();
   }
 
   ngOnChanges(changes:SimpleChanges) {
     if (changes['treeData']) {
-      this.dataSource.data = this.treeData;
+      this.dataSource.data = this.treeData();
       console.log(this.treeData);
     }
   }
