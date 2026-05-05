@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Question } from "../../../models/question";
 import { SelectionModel } from "@angular/cdk/collections";
 import { Router } from "@angular/router";
-import { Problem } from "../../../models/problem";
 import { TaskC } from "../../../models/task-class";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
@@ -35,7 +34,6 @@ export class QuestionsListComponent implements OnInit {
   @Input({required: true}) container!: TaskContainer;
   @Input() questions: Question[] = [];
   @Output() refreshQuestions = new EventEmitter();
-  @Output() answerTheQuestion = new EventEmitter();
   displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
   selection = new SelectionModel<Question>(true, []);
 
@@ -64,7 +62,6 @@ export class QuestionsListComponent implements OnInit {
 
   private handleTaskCommand(command: string): void {
     const arr = command.split(' ');
-    const args = arr.slice(1);
     if (['question'].includes(arr[0])) {
       this.addQuestion();
     }
@@ -74,17 +71,6 @@ export class QuestionsListComponent implements OnInit {
     this.questionsService.createQuestionFromDialog(this.container)
       .subscribe(() => this.refreshQuestions.emit());
 
-  }
-
-  onAnswerSelectedQuestionClick() {
-    this.questionsService.finishQuestion(this.selection.selected[0]).subscribe(
-      {
-        next: () => {
-          this.selection.clear();
-          this.refreshQuestions.emit();
-        }
-      }
-    );
   }
 
   onAnswerQuestionClick(question: Question) {
@@ -152,17 +138,17 @@ export class QuestionsListComponent implements OnInit {
    *
    * Если же событие снимает галку, то запись соответствующая удаляется из tasksByIdMap.
    */
-  setShowSubtasksField($event: MatCheckboxChange, problem: Problem) {
+  setShowSubtasksField($event: MatCheckboxChange, question: Question) {
     if ($event.checked) {
-      this.tasksService.getTasks(problem.tasks).pipe(untilDestroyed(this)).subscribe(res => {
-        this.tasksByIdMap[problem.id] = {container: problem, tasks: res};
+      this.tasksService.getTasks(question.tasks).pipe(untilDestroyed(this)).subscribe(res => {
+        this.tasksByIdMap[question.id] = {container: question, tasks: res};
         if (Object.keys(this.tasksByIdMap).length === 1) {
-          this.store.dispatch(new SetFocusedTaskForSubtasks(problem));
+          this.store.dispatch(new SetFocusedTaskForSubtasks(question));
         }
       })
       ;
     } else {
-      delete this.tasksByIdMap[problem.id];
+      delete this.tasksByIdMap[question.id];
     }
   }
 

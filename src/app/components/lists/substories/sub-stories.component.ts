@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Story } from "../../../models/story";
 import { SelectionModel } from "@angular/cdk/collections";
-import { Router } from "@angular/router";
 import { MaterialModule } from "../../../modules/material/material.module";
 
 
@@ -14,21 +13,13 @@ import { MaterialModule } from "../../../modules/material/material.module";
   standalone: true,
   styleUrls: ['./sub-stories.component.sass']
 })
-export class SubStoriesComponent implements OnInit {
+export class SubStoriesComponent {
 
   @Input() stories: Story[] = [];
   @Output() onStoryClick = new EventEmitter<Story>();
-  @Output() addSubstory = new EventEmitter<Story>();
+  @Output() addSubstory = new EventEmitter<void>();
   selection = new SelectionModel<Story>(true, []);
   displayedColumns: string[] = ['select', 'position', 'description'];
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-  }
-
-  onFinishStoriesClick() {
-
-  }
 
   storiesSelectAllToggle() {
     if (this.isAllSelected()) {
@@ -45,6 +36,6 @@ export class SubStoriesComponent implements OnInit {
   }
 
   onSubstoryClick(story: Story) {
-    this.router.navigate(['story', story.id]);
+    this.onStoryClick.emit(story);
   }
 }
