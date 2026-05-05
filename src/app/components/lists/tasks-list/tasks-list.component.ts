@@ -2,11 +2,14 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  input,
   Input,
   OnChanges,
+  output,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
+  inject
 } from '@angular/core';
 import { TaskC } from "../../../models/task-class";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -41,43 +44,38 @@ import { TaskContainerService } from "../../../services/task-container-services/
   styleUrls: ['./tasks-list.component.sass']
 })
 export class TasksListComponent implements OnInit, OnChanges {
-  @Input({required: true}) container!: TaskContainer;
-  @Input() showTitle = false;
-  @Input() tasks: TaskC[] = [];
-  @Input() level = 0;
-
-  @Output() refreshTasks = new EventEmitter();
-  @Output() resolveParent = new EventEmitter();
-
+  
+  container = input.required<TaskContainer>();
+  showTitle = input(false);
+  tasks = input.required<TaskC[]>();
+  level = input(0);
+  refreshTasks = output<void>();
+  resolveParent = output<void>();
+  
   selection = new SelectionModel<number>(true, []);
-  displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
+  readonly displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
+  readonly tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
   isContainerFocused: boolean = false;
-  tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
-
-  hotkeysDisabled$ = this.store.select(AppState.getDisabledHotkeys);
-
+  
   get tasksByIdMapKeys(): number[] {
     return Object.keys(this.tasksByIdMap).map(e => Number(e));
   }
 
   get showFinishAllTasksIcon(): boolean {
-    return !this.selection.hasValue() || this.selection.selected.length === this.tasks.length
+    return !this.selection.hasValue() || this.selection.selected.length === this.tasks().length;
   }
 
   get showFinishSelectedTasksIcon(): boolean {
-    return this.selection.hasValue() && this.selection.selected.length < this.tasks.length
+    return this.selection.hasValue() && this.selection.selected.length < this.tasks().length;
   }
 
-  constructor(
-    public tasksService: TasksService,
-    private taskContainerService: TaskContainerService,
-    private commandsService: CommandsService,
-    private navigationService: NavigationService,
-    public dialog: MatDialog,
-    public cdr: ChangeDetectorRef,
-    private store: Store,
-  ) {
-  }
+  private tasksService = inject(TasksService);
+  private taskContainerService = inject(TaskContainerService);
+  private commandsService = inject(CommandsService);
+  private navigationService = inject(NavigationService);
+  private dialog = inject(MatDialog);
+  private cdr = inject(ChangeDetectorRef);
+  private store = inject(Store);
 
   /**
    * Инициализация компонента. Подписка на
@@ -88,7 +86,7 @@ export class TasksListComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.commandsService.getDataStateChange()
       .pipe(
-        withLatestFrom(this.hotkeysDisabled$),
+        withLatestFrom(this.store.select(AppState.getDisabledHotkeys)),
         untilDestroyed(this))
       .subscribe(([state, hotkeysDisabled]: [CommandsStateInterface, boolean]) => {
         if (hotkeysDisabled) {
@@ -99,7 +97,7 @@ export class TasksListComponent implements OnInit, OnChanges {
 
     this.store.select(AppState.getFocusedTaskForSubtasks).pipe(
       untilDestroyed(this),
-      map((el: TaskContainer | null) => this.showTitle && el && this.container.getFullDescription() === el.getFullDescription(),
+      map((el: TaskContainer | null) => this.showTitle() && el && this.container().getFullDescription() === el.getFullDescription(),
         distinctUntilChanged()
       )).subscribe((el) => {
       this.isContainerFocused = !!el;
@@ -107,7 +105,7 @@ export class TasksListComponent implements OnInit, OnChanges {
     });
 
     this.taskContainerService.refreshSubtasks$.pipe(untilDestroyed(this)).subscribe(v => {
-      if (taskContainerDescriptionsAreEqual(v.getTaskContainerDescription(), this.container.getTaskContainerDescription())) {
+      if (taskContainerDescriptionsAreEqual(v.getTaskContainerDescription(), this.container().getTaskContainerDescription())) {
         this.refreshTasks.emit();
       }
     })
@@ -132,7 +130,7 @@ export class TasksListComponent implements OnInit, OnChanges {
             done: false,
             notes: responseObj.notes,
           }
-          const parent = { id: this.container.id, type: this.container.type };
+          const parent = { id: this.container().id, type: this.container().type };
           this.tasksService.createNewTask({ task, parent })
             .pipe(untilDestroyed(this))
             .subscribe((newTask: TaskC) => {
@@ -163,7 +161,7 @@ export class TasksListComponent implements OnInit, OnChanges {
     if (this.tasks === undefined) {
       return;
     }
-    const newTasksIds = this.tasks.map(e => e.id);
+    const newTasksIds = this.tasks().map(e => e.id);
     const idsFromMap = Object.keys(this.tasksByIdMap);
     idsFromMap.map(e => Number(e)).forEach(idFromMap => {
       if (!newTasksIds.includes(idFromMap)) {
@@ -180,15 +178,15 @@ export class TasksListComponent implements OnInit, OnChanges {
     if (this.tasks === undefined) {
       return;
     }
-    if (every(this.selection.selected, x => !this.tasks.map(t => t.id).includes(x))) {
+    if (every(this.selection.selected, x => !this.tasks().map(t => t.id).includes(x))) {
       this.clearSelection();
       return;
     }
 
     let newSelectedItems: number[] = [];
     this.selection.selected.forEach(id => {
-      if (this.tasks.some(subtask => subtask.id === id)) {
-        const element = this.tasks.find(subtask => subtask.id === id);
+      if (this.tasks().some(subtask => subtask.id === id)) {
+        const element = this.tasks().find(subtask => subtask.id === id);
         if (element) {
           newSelectedItems.push(element.id);
         }
@@ -209,21 +207,21 @@ export class TasksListComponent implements OnInit, OnChanges {
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['select-subtask'].includes(arr[0])) {
-      if (this.level === 0) {
+      if (this.level() === 0) {
         this.handleSelectSubtaskAction()
       }
     }
 
     if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.tasks.length) {
       const index = +arr[0] - 1;
-      const task = this.tasks[index];
+      const task = this.tasks()[index];
 
       // this.router.navigate(['task', this.tasks[+arr[0] - 1]._id]).then();
-      this.navigationService.navigateToTask(this.tasks[+arr[0] - 1].id);
+      this.navigationService.navigateToTask(this.tasks()[+arr[0] - 1].id);
     }
 
     if (['select-subsubtask'].includes(arr[0])) {
-      if (this.level === 1) {
+      if (this.level() === 1) {
         this.handleSelectSubtaskAction()
       }
     }
@@ -239,16 +237,16 @@ export class TasksListComponent implements OnInit, OnChanges {
       this.resolveParent.emit();
     }
 
-    if (['task'].includes(arr[0]) && this.level === 0) {
+    if (['task'].includes(arr[0]) && this.level() === 0) {
       this.addTask();
     }
-    if (['new-task-go'].includes(arr[0]) && this.level === 0) {
+    if (['new-task-go'].includes(arr[0]) && this.level() === 0) {
       this.addTaskAndGoToIt();
     }
     if (['new-task-for-focused-task-and-go'].includes(arr[0]) && this.isContainerFocused) {
       this.addTaskAndGoToIt();
     }
-    if (['selected-task'].includes(arr[0]) && this.level === 0) {
+    if (['selected-task'].includes(arr[0]) && this.level() === 0) {
       this.addTask(true);
     }
     if (['subtask'].includes(arr[0]) && this.isContainerFocused) {
@@ -265,16 +263,16 @@ export class TasksListComponent implements OnInit, OnChanges {
       const num1 = +numbers[0] - 1;
       const num2 = +numbers[1] - 1;
       const rangeNumbers = _.range(num1, num2 + 1);
-      const tasksToFinish = rangeNumbers.map((index: number) => this.tasks[index]);
+      const tasksToFinish = rangeNumbers.map((index: number) => this.tasks()[index]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks.emit());
     } else if (args.length > 0 && args[0] && args[0].includes(',')) {
       const numbers = args[0].split(',').map(str => +str);
-      const tasksToFinish = numbers.map((number: number) => this.tasks[number - 1]);
+      const tasksToFinish = numbers.map((number: number) => this.tasks()[number - 1]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks.emit());
     } else {
       const index = +args[0];
       if (Number.isInteger(index) && index >= 1 && index <= this.tasks.length) {
-        this.tasksService.finishTask(this.tasks[index - 1]).subscribe(() => this.refreshTasks.emit());
+        this.tasksService.finishTask(this.tasks()[index - 1]).subscribe(() => this.refreshTasks.emit());
       }
     }
   }
@@ -304,7 +302,7 @@ export class TasksListComponent implements OnInit, OnChanges {
       this.clearSelection();
       return;
     }
-    this.selection.select(...this.tasks.map(e => e.id));
+    this.selection.select(...this.tasks().map(e => e.id));
   }
 
   /**
@@ -326,7 +324,7 @@ export class TasksListComponent implements OnInit, OnChanges {
    */
   onFinishAllTasksHandler() {
     this.clearSelection();
-    const subtasks = this.tasks;
+    const subtasks = this.tasks();
     this.tasksService.finishTasks(subtasks).pipe(untilDestroyed(this)).subscribe(
       () => this.refreshTasks.emit());
   }
@@ -365,7 +363,7 @@ export class TasksListComponent implements OnInit, OnChanges {
       if (value && !isNaN(+value)) {
         const index = +value;
         if (index > 0 && index <= this.tasks.length) {
-          const task = this.tasks[index - 1];
+          const task = this.tasks()[index - 1];
           if (this.tasksByIdMap[task.id] !== undefined) {
             this.removeTasksByIdMapKey(task.id);
             return;
@@ -389,7 +387,7 @@ export class TasksListComponent implements OnInit, OnChanges {
     } else {
       this.tasksService.getTasks(subtask.tasks).pipe(untilDestroyed(this)).subscribe(res => {
         this.tasksByIdMap[subtask.id] = {container: subtask, tasks: res};
-        if (this.level === 0 && !($event.altKey)) {
+        if (this.level() === 0 && !($event.altKey)) {
           this.store.dispatch(new SetFocusedTaskForSubtasks(subtask));
         }
       })
@@ -406,7 +404,7 @@ export class TasksListComponent implements OnInit, OnChanges {
    * Фокусирование задачи
    */
   focusSubtask() {
-    this.store.dispatch(new SetFocusedTaskForSubtasks(this.container));
+    this.store.dispatch(new SetFocusedTaskForSubtasks(this.container()));
   }
 
   /**
@@ -447,7 +445,7 @@ export class TasksListComponent implements OnInit, OnChanges {
             done: false,
             notes: responseObj.notes,
           }
-          const parent = { id: this.container.id, type: this.container.type };
+          const parent = { id: this.container().id, type: this.container().type };
           this.tasksService.createNewTask({ task, parent })
             .pipe(untilDestroyed(this))
             .subscribe((newTask: TaskC) => {

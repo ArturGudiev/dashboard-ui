@@ -1,16 +1,16 @@
 <!-- Описание контейнера, выделенное желтой линией при фокусировке -->
-@if (showTitle) {
+@if (showTitle()) {
   <h3
     id="subtasks-task-container-title"
     (click)="focusSubtask()"
     [ngClass]="{ 'selected-for-subtasks': isContainerFocused }"
     >
-    {{ container.getFullDescription() }}
+    {{ container().getFullDescription() }}
   </h3>
 }
 
 <!--Иконки "Добавления задачи", "Завершения выделенных/всех задач" -->
-@if (tasks.length > 0) {
+@if (tasks().length > 0) {
   <div id="subtasks-actions">
     <div style="display: flex; align-items: center;">
       <h2 id="subtasks-title">Tasks</h2>
@@ -43,7 +43,7 @@
           mat-mini-fab
           class="finish-tasks-button"
           color="primary"
-          [disabled]="this.tasks.length === 0"
+          [disabled]="this.tasks().length === 0"
           (click)="onFinishAllTasksHandler()"
           >
           <mat-icon class="tasks-icon">done_outline</mat-icon>
@@ -55,14 +55,14 @@
 }
 
 <!-- Таблица задач-->
-@if(tasks.length > 0){
+@if(tasks().length > 0){
   <div
     id="table-wrapper"
     >
     <table
       id="subtasks-table"
       mat-table
-      [dataSource]="tasks"
+      [dataSource]="tasks()"
       class="mat-elevation-z8"
       >
 
@@ -175,7 +175,7 @@
           (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
           (resolveParent)="resolveContainer(tasksByIdMap[item].container)"
           [showTitle]="true"
-          [level]="level + 1"
+          [level]="level() + 1"
         ></app-tasks-list>
       }
     </div>
