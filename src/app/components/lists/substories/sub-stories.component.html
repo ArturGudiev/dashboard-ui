@@ -1,4 +1,4 @@
-@if (stories) {
+@if (stories().length > 0) {
   <div id="substories-actions">
     <h2 id="substories-title">Stories</h2>
     <button mat-mini-fab color="primary" id="add-story-button" (click)="addSubstory.emit()">
@@ -8,11 +8,11 @@
   </div>
 
   <div id="table-wrapper">
-    @if (stories && stories.length > 0) {
+    @if (stories().length > 0) {
       <table
         id="substories-table"
         mat-table
-        [dataSource]="stories"
+        [dataSource]="stories()"
         class="mat-elevation-z8"
         >
         <ng-container matColumnDef="select">
