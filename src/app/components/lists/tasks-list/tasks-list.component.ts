@@ -387,7 +387,7 @@ export class TasksListComponent implements OnInit, OnChanges {
     } else {
       this.tasksService.getTasks(subtask.tasks).pipe(untilDestroyed(this)).subscribe(res => {
         this.tasksByIdMap[subtask.id] = {container: subtask, tasks: res};
-        if (this.level() === 0 && !($event.altKey)) {
+        if (!$event.altKey) {
           this.store.dispatch(new SetFocusedTaskForSubtasks(subtask));
         }
       })
