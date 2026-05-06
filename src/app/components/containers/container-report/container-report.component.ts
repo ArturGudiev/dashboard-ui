@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input, OnInit, signal } from '@angular/core';
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { MyTreeComponent, TreeNode } from "../tree/my-tree.component";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
@@ -12,18 +12,18 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
   ],
   templateUrl: './container-report.component.html',
   standalone: true,
-  styleUrl: './container-report.component.scss'
+  styleUrls: ['./container-report.component.scss']
 })
 export class ContainerReportComponent implements OnInit {
-  @Input({required: true}) container!: TaskContainer;
-  treeData: TreeNode[] | null = null;
-  loading = true;
+  container = input.required<TaskContainer>();
+  treeData = signal<TreeNode[] | null>(null);
+  loading = signal<boolean>(true);
   constructor(private readonly taskContainerService: TaskContainerService) { }
 
   ngOnInit(): void {
-    this.taskContainerService.getReport(this.container).subscribe(res => {
-      this.loading = false;1
-      this.treeData = [res];
+    this.taskContainerService.getReport(this.container()).subscribe(res => {
+      this.loading.set(false);
+      this.treeData.set([res]);
     });
   }
 

@@ -1,13 +1,10 @@
 import {
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   input,
-  Input,
   OnChanges,
   output,
   OnInit,
-  Output,
   SimpleChanges,
   inject
 } from '@angular/core';
@@ -109,7 +106,6 @@ export class TasksListComponent implements OnInit, OnChanges {
         this.refreshTasks.emit();
       }
     })
-
   }
 
   /**

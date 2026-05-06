@@ -1,4 +1,4 @@
-@if ( notes || editValue ) {
+@if ( notes() || editValue ) {
   <div id="knowledge-value">
     <mat-form-field  appearance="fill" style="width: 40rem" [style.fontSize]="'16px'">
       <mat-label>Notes</mat-label>
@@ -6,7 +6,7 @@
                 cdkTextareaAutosize
                 (focusout)="updateNotesValue()"
                 (focusin)="onFocusIn()"
-                [ngModel]="notes"
+                [ngModel]="notes()"
                 #valueText
                 #autosize="cdkTextareaAutosize"
                 cdkAutosizeMinRows="5"

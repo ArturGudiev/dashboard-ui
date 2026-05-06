@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Input, output, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Story } from "../../../models/story";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MaterialModule } from "../../../modules/material/material.module";

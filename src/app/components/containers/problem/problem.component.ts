@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
@@ -27,26 +27,23 @@ export class ProblemComponent implements OnInit {
   id!: number;
   problem!: Problem;
 
-  parentsPath: string[] = [];
-  isLoading = true;
+  parentsPath = signal<string[]>([]);
+  isLoading = signal<boolean>(true);
 
   refreshSubtasks$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.problems));
   refreshQuestionsList$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.questions));
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private titleService: Title,
-    public dialog: MatDialog,
-    private problemsService: ProblemsService,
-    private taskContainerService: TaskContainerService,
-  ) {
-  }
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private titleService = inject(Title);
+  private dialog = inject(MatDialog);
+  private problemsService = inject(ProblemsService);
+  private taskContainerService = inject(TaskContainerService);
 
   ngOnInit(): void {
     this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
-      this.isLoading = true;
+      this.isLoading.set(true);
       this.id = params['id'];
       this.refreshProblem();
     })
@@ -54,21 +51,19 @@ export class ProblemComponent implements OnInit {
 
   refreshProblem(): void {
     this.problemsService.getProblem(this.id)
-    .subscribe((problem: Problem) => {
-      this.problem = problem;
-      this.isLoading = false;
-      this.titleService.setTitle(this.problem.getFullDescription());
-      if (this.problem !== null) {
-        this.taskContainerService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath = res);
-      }
-    });
+      .subscribe((problem: Problem) => {
+        this.problem = problem;
+        this.isLoading.set(false);
+        this.titleService.setTitle(this.problem.getFullDescription());
+        if (this.problem !== null) {
+          this.taskContainerService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath.set(res));
+        }
+      });
   }
 
   onGoToNearestParent() {
-    if (this.parentsPath && this.parentsPath.length <= 1) {
-      return;
-    }
-    this.goToParentHandler(this.parentsPath.slice(-2, -1)[0]);
+    if (this.parentsPath() && this.parentsPath().length <= 1) { return; }
+    this.goToParentHandler(this.parentsPath().slice(-2, -1)[0]);
   }
 
   goToParentHandler(description: string) {
@@ -81,7 +76,7 @@ export class ProblemComponent implements OnInit {
 
   onDoneAllClick() {
     const dialogRef = this.dialog.open(GetValueDialogComponent,
-      {data: {title: 'Solution', inputWidth: '40rem'}});
+      { data: {title: 'Solution', inputWidth: '40rem'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {
         this.problemsService.solveTheProblem(this.problem, solution).subscribe(() => {

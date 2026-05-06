@@ -3,9 +3,11 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input,
+  input,
   OnInit,
+  output,
   Output,
+  viewChild,
   ViewChild
 } from '@angular/core';
 import { Observable } from "rxjs";
@@ -27,21 +29,22 @@ import { MaterialModule } from "../../../modules/material/material.module";
 })
 export class NotesComponent implements OnInit {
   editValue = false;
-  @Input() notes: string = '';
-  @Input({required: true}) toggleEditEvent!: Observable<void>;
-  @Output() updateNotes = new EventEmitter();
-  @ViewChild('valueText') valueText!: ElementRef;
+  notes = input<string>('');
+  toggleEditEvent = input.required<Observable<void>>();
+  updateNotes = output<string>();
+  valueText = viewChild<ElementRef>('valueText');
 
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.toggleEditEvent.pipe(untilDestroyed(this)).subscribe(() => this.editNotesValue());
+    this.toggleEditEvent().pipe(untilDestroyed(this)).subscribe(() => this.editNotesValue());
   }
 
 
   updateNotesValue() {
-    if (this.valueText && this.valueText.nativeElement && this.valueText.nativeElement.value !== this.notes) {
-      this.updateNotes.emit(this.valueText.nativeElement.value)
+    const valueText = this.valueText();
+    if (valueText && valueText.nativeElement && valueText.nativeElement.value !== this.notes()) {
+      this.updateNotes.emit(valueText.nativeElement.value)
     }
     this.editValue = false;
   }
@@ -51,7 +54,7 @@ export class NotesComponent implements OnInit {
     this.cdr.detectChanges(); // without it it won't focus automatically todo find out why
 
     if (this.editValue) {
-      this.valueText.nativeElement.focus();
+      this.valueText()?.nativeElement.focus();
     }
   }
 
@@ -61,7 +64,10 @@ export class NotesComponent implements OnInit {
   }
 
   onFocusIn() {
-    this.valueText.nativeElement.selectionStart = this.notes ? this.notes.length : 0;
-    this.valueText.nativeElement.selectionEnd = this.notes ? this.notes.length : 0;
+    const valueText = this.valueText();
+    if (valueText && valueText.nativeElement) {
+      valueText.nativeElement.selectionStart = this.notes() ? this.notes().length : 0;
+      valueText.nativeElement.selectionEnd = this.notes() ? this.notes().length : 0;
+    }
   }
 }

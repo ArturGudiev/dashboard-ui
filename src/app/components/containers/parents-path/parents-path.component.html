@@ -1,15 +1,15 @@
 <div id="parents-path-container">
-  @for (node of parentsPath; track node; let i = $index) {
+  @for (node of parentsPath(); track node; let i = $index) {
     <div
       class="parent-node"
-      [ngStyle]="{'padding-left': (parentsPath.indexOf(node)) * .5 + 'rem'}"
+      [ngStyle]="{'padding-left': (parentsPath().indexOf(node)) * .5 + 'rem'}"
       >
       <h4 class="parent-title">
         <span
           appLongClickDirective
           class="parent-title-label"
           hover-class="hover-border"
-          (longClick)="longClick(parentsPath[i])"
+          (longClick)="longClick(node)"
           (simpleClick)="onParentClick.emit(node)"
           >
           {{node}}
