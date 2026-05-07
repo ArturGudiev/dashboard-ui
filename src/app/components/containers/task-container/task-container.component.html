@@ -84,14 +84,14 @@
 
     <div>
       <!-- Эпики -->
-      @if (this.showEpics && epics.length > 0) {
+      @if (this.showEpics() && epics().length > 0) {
         <app-epics-list
-          [epics]="epics"
+          [epics]="epics()"
         ></app-epics-list>
       }
 
       <!-- Истории -->
-      @if (this.showStories && stories.length > 0) {
+      @if (this.showStories() && stories.length > 0) {
         <app-substories
           [stories]="stories"
           (onStoryClick)="navigateToStory($event)"
@@ -102,7 +102,7 @@
       <!-- Задачи -->
       <app-tasks-list
         (refreshTasks)="refreshTasks()"
-        [tasks]="tasks"
+        [tasks]="tasks()"
         [level]="0"
         [container]="taskContainer()"
       ></app-tasks-list>

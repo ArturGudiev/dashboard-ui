@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, input, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, HostListener, inject, input, Input, OnChanges, OnInit, output, Output, signal, SimpleChanges } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Hotkey, HotkeysService } from "angular2-hotkeys";
@@ -11,7 +11,6 @@ import { TaskC } from "../../../models/task-class";
 import { CommandsService } from "../../../services/commands.service";
 import { RecordsService } from "../../../services/records.service";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
-import { Store } from "@ngxs/store";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Epic } from "../../../models/epic";
 import { RecordsListDialogComponent } from "../../dialogs/records-list-dialog/records-list-dialog.component";
@@ -57,22 +56,22 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   taskContainer = input.required<TaskContainer>();
   
   parentsPath = input.required<string[]>();
+  showEpics = input<boolean>(false);
+  showStories = input<boolean>(false);
 
-  @Input() showEpics = false;
-  @Input() showStories = false;
   @Input({required: true}) refreshTasks$!: () => Observable<number[]>;
   @Input({required: true}) refreshProblems$!: () => Observable<number[]>;
   @Input({required: true}) refreshQuestions$!: () => Observable<number[]>;
 
-  @Output() onDoneAllClick = new EventEmitter();
-  @Output() updateTaskContainer = new EventEmitter();
-  @Output() refreshTaskContainer = new EventEmitter();
-  @Output() resolve = new EventEmitter();
+  onDoneAllClick = output<void>();
+  updateTaskContainer = output<void>();
+  refreshTaskContainer = output<void>();
+  resolve = output<void>();
 
   displayReport = false;
 
-  tasks: TaskC[] = [];
-  epics: Epic[] = [];
+  tasks = signal<TaskC[]>([]);
+  epics = signal<Epic[]>([]);
   stories: Story[] = [];
   problems: Problem[] = [];
   questions: Question[] = [];
@@ -83,21 +82,18 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     return this.displayReport ? 'Hide report' : 'Show report';
   }
 
-  constructor(
-    private questionsService: QuestionsService,
-    private taskContainerService: TaskContainerService,
-    private storiesService: StoriesService,
-    private epicsService: EpicsService,
-    private problemsService: ProblemsService,
-    public dialog: MatDialog,
-    private recordsService: RecordsService,
-    public tasksService: TasksService,
-    public commandsService: CommandsService,
-    public router: Router,
-    private _hotkeysService: HotkeysService,
-    private readonly utilsService: UtilsService,
-  ) {
-  }
+  private questionsService = inject(QuestionsService);
+  private taskContainerService = inject(TaskContainerService);
+  private storiesService = inject(StoriesService);
+  private epicsService = inject(EpicsService);
+  private problemsService = inject(ProblemsService);
+  private dialog = inject(MatDialog);
+  private recordsService = inject(RecordsService);
+  private tasksService = inject(TasksService);
+  private commandsService = inject(CommandsService);
+  private router = inject(Router);
+  private _hotkeysService = inject(HotkeysService);
+  private utilsService = inject(UtilsService);
 
   ngOnInit(): void {
     this._hotkeysService.add(new Hotkey('alt+r', (): boolean => {
@@ -125,13 +121,12 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     this.refreshTasks();
     this.refreshProblems();
     this.refreshQuestions();
-    if (this.showStories) {
+    if (this.showStories()) {
       this.refreshSubstories();
     }
-    if (this.showEpics) {
+    if (this.showEpics()) {
       this.refreshSubepics();
     }
-
   }
 
   private handleTaskCommand(command: string): void {
@@ -182,9 +177,8 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   finishAllTasks() {
-    this.tasksService.finishTasks(this.tasks).subscribe(() => this.refreshTasks());
+    this.tasksService.finishTasks(this.tasks()).subscribe(() => this.refreshTasks());
   }
-
 
   private finishProblemHandler(args: string[]) {
     if (!args || args.length === 0) {
@@ -206,16 +200,16 @@ export class TaskContainerComponent implements OnInit, OnChanges {
       const num1 = +numbers[0] - 1;
       const num2 = +numbers[1] - 1;
       const rangeNumbers = _.range(num1, num2 + 1);
-      const tasksToFinish = rangeNumbers.map((index: number) => this.tasks[index]);
+      const tasksToFinish = rangeNumbers.map((index: number) => this.tasks()[index]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks());
     } else if (args.length > 0 && args[0] && args[0].includes(',')) {
       const numbers = args[0].split(',').map(str => +str);
-      const tasksToFinish = numbers.map((number: number) => this.tasks[number - 1]);
+      const tasksToFinish = numbers.map((number: number) => this.tasks()[number - 1]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks());
     } else {
       const index = +args[0];
-      if (Number.isInteger(index) && index >= 1 && index <= this.tasks.length) {
-        this.tasksService.finishTask(this.tasks[index - 1]).subscribe(() => this.refreshTasks());
+      if (Number.isInteger(index) && index >= 1 && index <= this.tasks().length) {
+        this.tasksService.finishTask(this.tasks()[index - 1]).subscribe(() => this.refreshTasks());
       }
     }
   }
@@ -267,7 +261,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   refreshTasks() {
     this.refreshTasks$().subscribe(tasks => {
       this.taskContainer().tasks = tasks;
-      this.tasksService.getTasks(tasks).subscribe(res => this.tasks = res);
+      this.tasksService.getTasks(tasks).subscribe(res => this.tasks.set(res));
     })
   }
 
@@ -303,7 +297,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
       return of([]);
     }
     const epics$ = this.epicsService.getEpics(taskContainerVal.epics);
-    epics$.subscribe((epics: Epic[]) => this.epics = epics);
+    epics$.subscribe((epics: Epic[]) => this.epics.set(epics));
     return epics$;
   }
 
