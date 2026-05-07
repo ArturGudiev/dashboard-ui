@@ -52,6 +52,9 @@ import { ModelsRepetitiveTaskShort } from "../../../types/generated";
 })
 export class AddRepetitiveTaskDialogComponent {
   private repetitiveTasksService = inject(RepetitiveTasksService);
+  dialogRef = inject(MatDialogRef<AddRepetitiveTaskDialogComponent>);
+  data = inject<{ title: string, taskContainer: TaskContainer }>(MAT_DIALOG_DATA);
+  
   taskModel = signal({
     description: '',
     notes: '',
@@ -68,12 +71,6 @@ export class AddRepetitiveTaskDialogComponent {
     min(path.once_in_weeks, 1);
     min(path.once_in_months, 1);
   });
-
-  constructor(
-    public dialogRef: MatDialogRef<AddRepetitiveTaskDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string, taskContainer: TaskContainer }
-  ) {
-  }
 
   onNoClick(): void {
     this.dialogRef.close(null);

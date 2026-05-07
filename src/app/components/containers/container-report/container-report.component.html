@@ -1,4 +1,4 @@
-@if(treeData) {
+@if(treeData()) {
   <app-my-tree [treeData]="treeData()"></app-my-tree>
 } @else {
   @if (loading()) {

@@ -27,8 +27,6 @@ export class MyTreeComponent implements OnInit, OnChanges {
 
   protected readonly colorPink = colorPink;
 
-  constructor() { }
-
   ngOnInit(): void {
     this.dataSource.data = this.treeData();
   }
@@ -36,7 +34,6 @@ export class MyTreeComponent implements OnInit, OnChanges {
   ngOnChanges(changes:SimpleChanges) {
     if (changes['treeData']) {
       this.dataSource.data = this.treeData();
-      console.log(this.treeData);
     }
   }
 

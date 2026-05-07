@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from "@angular/material/dialog";
 import { TaskC } from "../../../models/task-class";
@@ -20,20 +20,16 @@ import { MaterialModule } from "../../../modules/material/material.module";
     ],
     styleUrls: ['./command-dialog.component.sass']
 })
-export class CommandDialogComponent implements OnInit {
+export class CommandDialogComponent {
   myForm = new FormGroup({
     command: new FormControl(null, [
       Validators.required
     ]),
   });
 
-  constructor(
-    public dialogRef: MatDialogRef<CommandDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {parentTask: TaskC}
-  ) { }
+  dialogRef = inject(MatDialogRef<CommandDialogComponent>);
+  data = inject<{ parentTask: TaskC }>(MAT_DIALOG_DATA); 
 
-  ngOnInit(): void {
-  }
 
   onNoClick(): void {
     this.dialogRef.close(null);

@@ -59,9 +59,9 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   showEpics = input<boolean>(false);
   showStories = input<boolean>(false);
 
-  @Input({required: true}) refreshTasks$!: () => Observable<number[]>;
-  @Input({required: true}) refreshProblems$!: () => Observable<number[]>;
-  @Input({required: true}) refreshQuestions$!: () => Observable<number[]>;
+  refreshTasks$ = input.required<() => Observable<number[]>>();
+  refreshProblems$ = input.required<() => Observable<number[]>>();
+  refreshQuestions$ = input.required<() => Observable<number[]>>();
 
   onDoneAllClick = output<void>();
   updateTaskContainer = output<void>();
@@ -259,14 +259,14 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   refreshTasks() {
-    this.refreshTasks$().subscribe(tasks => {
+    this.refreshTasks$()().pipe(untilDestroyed(this)).subscribe(tasks => {
       this.taskContainer().tasks = tasks;
       this.tasksService.getTasks(tasks).subscribe(res => this.tasks.set(res));
     })
   }
 
   refreshProblems() {
-    this.refreshProblems$().subscribe(problems => {
+    this.refreshProblems$()().pipe(untilDestroyed(this)).subscribe(problems => {
       this.taskContainer().problems = problems;
       this.problemsService.getProblems(problems).subscribe(res => this.problems.set(res));
     })
@@ -274,7 +274,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   refreshQuestions() {
-    this.refreshQuestions$().subscribe(questions => {
+    this.refreshQuestions$()().pipe(untilDestroyed(this)).subscribe(questions => {
       this.taskContainer().questions = questions;
       this.questionsService.getQuestions(questions).subscribe(res => this.questions.set(res));
     })

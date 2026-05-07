@@ -1,4 +1,4 @@
-import { Component, Inject, model } from '@angular/core';
+import { Component, inject, Inject, model } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from "@angular/material/dialog";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
@@ -28,7 +28,6 @@ export interface AddLogDialogResult {
     MatSelect,
     MatOption
   ],
-  styleUrl: './add-log-dialog.component.sass',
   standalone: true,
   template: `
     <form
@@ -71,11 +70,11 @@ export class AddLogDialogComponent {
     valueField: new FormControl(null, [Validators.required]),
     isContainerLog: new FormControl(true),
   });
+  
   logType = model<'What I did' | 'What I want' | 'Current situation' | 'Info' >('Info')
-  constructor(
-    public dialogRef: MatDialogRef<AddLogDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string, taskContainer: TaskContainer }
-  ) { }
+  
+  dialogRef = inject(MatDialogRef<AddLogDialogComponent>);
+  data = inject<{ title: string, taskContainer: TaskContainer }>(MAT_DIALOG_DATA);
 
   onNoClick(): void {
     this.dialogRef.close(null);
