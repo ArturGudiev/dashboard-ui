@@ -1,4 +1,4 @@
-import { Component, effect, Inject, model, signal } from '@angular/core';
+import { Component, effect, inject, Inject, model, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { LogsService } from "../../../services/logs.service";
@@ -48,11 +48,13 @@ export class LogsDialogComponent {
 
   logMessages = signal<EntLogMessage[]>([]);
 
-  constructor(
-    public dialogRef: MatDialogRef<LogsDialogComponent>,
-    private logsService: LogsService,
-    @Inject(MAT_DIALOG_DATA) public data: { taskContainer: TaskContainer }
-  ) {
+
+  dialogRef = inject(MatDialogRef<LogsDialogComponent>);
+  logsService = inject(LogsService);
+  data = inject<{ taskContainer: TaskContainer }>(MAT_DIALOG_DATA);
+
+
+  constructor() {
     effect(
       (onCleanup) => {
         let sub: Subscription | null = null;

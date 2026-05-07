@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from "@angular/material/dialog";
 import { TaskC } from "../../../models/task-class";
@@ -19,23 +19,15 @@ import { MaterialModule } from "../../../modules/material/material.module";
     ],
     styleUrls: ['./nav-to-dialog.component.sass']
 })
-export class NavToDialogComponent implements OnInit {
+export class NavToDialogComponent {
+  
   myForm = new FormGroup({
-    navItem: new FormControl(null, [
-      Validators.required
-    ]),
+    navItem: new FormControl(null, [Validators.required]),
   });
 
+  dialogRef = inject(MatDialogRef<NavToDialogComponent>);
+  data = inject<{ parentTask: TaskC }>(MAT_DIALOG_DATA);
 
-  constructor(public dialogRef: MatDialogRef<NavToDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {parentTask: TaskC}
-  ) { }
-
-  ngOnInit(): void {
-  }
-
-  closeDialog() {
-  }
   onNoClick(): void {
     this.dialogRef.close(null);
   }
