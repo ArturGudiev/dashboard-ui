@@ -72,9 +72,9 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
   tasks = signal<TaskC[]>([]);
   epics = signal<Epic[]>([]);
-  stories: Story[] = [];
-  problems: Problem[] = [];
-  questions: Question[] = [];
+  stories = signal<Story[]>([]);
+  problems = signal<Problem[]>([]);
+  questions = signal<Question[]>([]);
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
 
@@ -185,8 +185,8 @@ export class TaskContainerComponent implements OnInit, OnChanges {
       return;
     }
     const index = +args[0];
-    if (Number.isInteger(index) && index >= 1 && index <= this.problems.length) {
-      const problem = this.problems[index - 1];
+    if (Number.isInteger(index) && index >= 1 && index <= this.problems().length) {
+      const problem = this.problems()[index - 1];
       this.solveTheProblem(problem);
     }
   }
@@ -268,7 +268,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   refreshProblems() {
     this.refreshProblems$().subscribe(problems => {
       this.taskContainer().problems = problems;
-      this.problemsService.getProblems(problems).subscribe(res => this.problems = res);
+      this.problemsService.getProblems(problems).subscribe(res => this.problems.set(res));
     })
 
   }
@@ -276,7 +276,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   refreshQuestions() {
     this.refreshQuestions$().subscribe(questions => {
       this.taskContainer().questions = questions;
-      this.questionsService.getQuestions(questions).subscribe(res => this.questions = res);
+      this.questionsService.getQuestions(questions).subscribe(res => this.questions.set(res));
     })
 
   }
@@ -285,7 +285,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     const taskContainerVal = this.taskContainer();
     if ( taskContainerVal.stories ) {
       const stories$ = this.storiesService.getStories(taskContainerVal.stories);
-      stories$.subscribe(stories => this.stories = stories);
+      stories$.subscribe(stories => this.stories.set(stories));
       return stories$
     }
     return of([]);

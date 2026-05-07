@@ -91,9 +91,9 @@
       }
 
       <!-- Истории -->
-      @if (this.showStories() && stories.length > 0) {
+      @if (this.showStories() && stories().length > 0) {
         <app-substories
-          [stories]="stories"
+          [stories]="stories()"
           (onStoryClick)="navigateToStory($event)"
           (addSubstory)="addSubstory()"
         ></app-substories>
@@ -111,14 +111,14 @@
       <app-questions-list
         [container]="taskContainer()"
         (refreshQuestions)="refreshQuestions()"
-        [questions]="questions"
+        [questions]="questions()"
       ></app-questions-list>
 
       <!-- Проблемы -->
       <app-problems-list
         [container]="taskContainer()"
         (refreshProblems)="refreshProblems()"
-        [problems]="problems"
+        [problems]="problems()"
       ></app-problems-list>
     </div>
   </div>
