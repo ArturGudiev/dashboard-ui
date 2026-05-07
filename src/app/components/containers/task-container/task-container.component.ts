@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, input, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Hotkey, HotkeysService } from "angular2-hotkeys";
@@ -54,8 +54,10 @@ import { ContainerReportComponent } from "../container-report/container-report.c
   styleUrls: ['./task-container.component.sass']
 })
 export class TaskContainerComponent implements OnInit, OnChanges {
-  @Input({required: true}) taskContainer!: TaskContainer;
-  @Input({required: true}) parentsPath!: string[];
+  taskContainer = input.required<TaskContainer>();
+  
+  parentsPath = input.required<string[]>();
+
   @Input() showEpics = false;
   @Input() showStories = false;
   @Input({required: true}) refreshTasks$!: () => Observable<number[]>;
@@ -93,13 +95,11 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     public commandsService: CommandsService,
     public router: Router,
     private _hotkeysService: HotkeysService,
-    private store: Store,
     private readonly utilsService: UtilsService,
   ) {
   }
 
   ngOnInit(): void {
-    console.log('OnInit ============ ', this.taskContainer); // TODO Remote later
     this._hotkeysService.add(new Hotkey('alt+r', (): boolean => {
       this.showRecords();
       return false; // Prevent bubbling
@@ -174,10 +174,10 @@ export class TaskContainerComponent implements OnInit, OnChanges {
       this.goToParentInteractively();
     }
     if (['log', 'l+'].includes(arr[0])) {
-      this.taskContainerService.openAddLogDialog(this.taskContainer).subscribe();
+      this.taskContainerService.openAddLogDialog(this.taskContainer()).subscribe();
     }
     if (['ls', 'logs', 'l'].includes(arr[0])) {
-      this.taskContainerService.openLogsDialog(this.taskContainer);
+      this.taskContainerService.openLogsDialog(this.taskContainer());
     }
   }
 
@@ -225,7 +225,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   addQuestion(): void {
-    this.questionsService.createQuestionFromDialog(this.taskContainer)
+    this.questionsService.createQuestionFromDialog(this.taskContainer())
       .subscribe(() => this.refreshTaskContainer.emit());
   }
 
@@ -237,13 +237,14 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   goToNearestParent(): void {
-    if (this.taskContainer.type === "epic" && this.taskContainer.parentContainers.length === 0) {
+    const taskContainerVal = this.taskContainer();
+    if (taskContainerVal.type === "epic" && taskContainerVal.parentContainers.length === 0) {
       this.router.navigate(['epics']).then();
     }
-    if (!this.taskContainer.parentContainers || this.taskContainer.parentContainers.length === 0) {
+    if (!taskContainerVal.parentContainers || taskContainerVal.parentContainers.length === 0) {
       return;
     }
-    const parent = this.taskContainer.parentContainers[0];
+    const parent = taskContainerVal.parentContainers[0];
     this.router.navigate([parent.type, parent.id]).then();
 
   }
@@ -259,20 +260,20 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   updateNotes(newNotesValue: string) {
-    this.taskContainer.notes = newNotesValue;
+    this.taskContainer().notes = newNotesValue;
     this.updateTaskContainer.emit();
   }
 
   refreshTasks() {
     this.refreshTasks$().subscribe(tasks => {
-      this.taskContainer.tasks = tasks;
+      this.taskContainer().tasks = tasks;
       this.tasksService.getTasks(tasks).subscribe(res => this.tasks = res);
     })
   }
 
   refreshProblems() {
     this.refreshProblems$().subscribe(problems => {
-      this.taskContainer.problems = problems;
+      this.taskContainer().problems = problems;
       this.problemsService.getProblems(problems).subscribe(res => this.problems = res);
     })
 
@@ -280,15 +281,16 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
   refreshQuestions() {
     this.refreshQuestions$().subscribe(questions => {
-      this.taskContainer.questions = questions;
+      this.taskContainer().questions = questions;
       this.questionsService.getQuestions(questions).subscribe(res => this.questions = res);
     })
 
   }
 
   refreshSubstories():Observable<Story[]> {
-    if (this.taskContainer.stories) {
-      const stories$ = this.storiesService.getStories(this.taskContainer.stories);
+    const taskContainerVal = this.taskContainer();
+    if ( taskContainerVal.stories ) {
+      const stories$ = this.storiesService.getStories(taskContainerVal.stories);
       stories$.subscribe(stories => this.stories = stories);
       return stories$
     }
@@ -296,16 +298,17 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   refreshSubepics():Observable<Epic[]> {
-    if (!this.taskContainer.epics) {
+    const taskContainerVal = this.taskContainer();
+    if (!taskContainerVal.epics) {
       return of([]);
     }
-    const epics$ = this.epicsService.getEpics(this.taskContainer.epics);
+    const epics$ = this.epicsService.getEpics(taskContainerVal.epics);
     epics$.subscribe((epics: Epic[]) => this.epics = epics);
     return epics$;
   }
 
   solveTheProblem(problem: Problem): void {
-    this.problemsService.callSolveTheProblemDialog(problem, this.taskContainer);
+    this.problemsService.callSolveTheProblemDialog(problem, this.taskContainer());
   }
 
   @HostListener('document:keydown.code.Alt.r')
@@ -315,7 +318,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
         panelClass: 'custom-dialog-container',
         height: '600px',
         width: '1000px',
-        data: {tag: this.taskContainer.getFullDescription()}});
+        data: {tag: this.taskContainer().getFullDescription()}});
     dialogRef.afterClosed().subscribe(() => {
       console.log('Dialog was closed RecordsListDialogComponent');
     });
@@ -323,7 +326,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
 
   addRecord() {
-    this.recordsService.callAddRecordDialog(this.taskContainer.getFullDescription());
+    this.recordsService.callAddRecordDialog(this.taskContainer().getFullDescription());
   }
 
   addSubstory() {
@@ -339,7 +342,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   private addTaskToParentInteractively() {
-    this.utilsService.selectFromList(this.parentsPath.slice(0, -1)).subscribe((parent: string | undefined) => {
+    this.utilsService.selectFromList(this.parentsPath().slice(0, -1)).subscribe((parent: string | undefined) => {
       if (parent) {
         this.taskContainerService.addTaskToContainerByShortDescription(parent);
       }
@@ -348,10 +351,10 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
   private goToParentInteractively() {
     this.utilsService
-      .selectIndexFromList(this.parentsPath.slice(0, -1))
+      .selectIndexFromList(this.parentsPath().slice(0, -1))
       .subscribe((val: number | undefined) => {
         if (val !== undefined) {
-          this.goToParentHandler(this.parentsPath[val]);
+          this.goToParentHandler(this.parentsPath()[val]);
         }
     });
   }

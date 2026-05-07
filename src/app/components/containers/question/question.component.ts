@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
@@ -26,8 +26,8 @@ import { TaskContainerService } from "../../../services/task-container-services/
 export class QuestionComponent implements OnInit {
   id!: number;
   question!: Question; // TODO resolvers
-  parentsPath: string[] = [];
-  isLoading = true;
+  parentsPath = signal<string[]>([]);
+  isLoading = signal<boolean>(true);
 
   refreshSubtasks$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.problems));
@@ -45,7 +45,7 @@ export class QuestionComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.isLoading = true;
+      this.isLoading.set(true);
       this.id = params['id'];
       this.refreshQuestion();
     })
@@ -55,17 +55,17 @@ export class QuestionComponent implements OnInit {
     this.questionsService.getQuestion(this.id)
     .subscribe((question: Question) => {
       this.question = question;
-      this.isLoading = false;
+      this.isLoading.set(false);
       this.titleService.setTitle(this.question.getFullDescription());
-      this.taskContainerService.getParentsPath(this.question).subscribe((res: string[]) => this.parentsPath = res);
+      this.taskContainerService.getParentsPath(this.question).subscribe((res: string[]) => this.parentsPath.set(res));
     });
   }
 
   onGoToNearestParent() {
-    if (this.parentsPath && this.parentsPath.length <= 1) {
+    if (this.parentsPath() && this.parentsPath().length <= 1) {
       return;
     }
-    this.goToParentHandler(this.parentsPath.slice(-2, -1)[0]);
+    this.goToParentHandler(this.parentsPath().slice(-2, -1)[0]);
   }
 
   goToParentHandler(description: string) {

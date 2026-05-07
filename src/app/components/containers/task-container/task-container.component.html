@@ -9,7 +9,7 @@
         {{ toggleReportTitle }}
       </button>
       @if (displayReport) {
-        <app-report [container]="taskContainer"></app-report>
+        <app-report [container]="taskContainer()"></app-report>
       }
 
     </div>
@@ -17,7 +17,7 @@
       <div>
         <div class="description-wrapper">
 
-          @if (taskContainer.getFullDescription()) {
+          @if (taskContainer().getFullDescription()) {
             <div
               id="description-line"
               >
@@ -32,7 +32,7 @@
               </button>
               <!-- Описание контейнера-->
               <div id="full-description-title">
-                {{ taskContainer.getFullDescription() }}
+                {{ taskContainer().getFullDescription() }}
               </div>
               <!-- Кнопка закончить всё -->
               <button
@@ -67,7 +67,7 @@
         <!-- Заметки -->
         <div id="notes-wrapper">
           <app-notes
-            [notes]="taskContainer.notes"
+            [notes]="taskContainer().notes"
             (updateNotes)="updateNotes($event)"
             [toggleEditEvent]="toggleNotesEditSubject.asObservable()"
           ></app-notes>
@@ -77,7 +77,7 @@
       <!-- Родительский путь -->
       <app-parents-path
         id="parents-path"
-        [parentsPath]="parentsPath"
+        [parentsPath]="parentsPath()"
         (onParentClick)="goToParentHandler($event)"
       ></app-parents-path>
     </div>
@@ -104,19 +104,19 @@
         (refreshTasks)="refreshTasks()"
         [tasks]="tasks"
         [level]="0"
-        [container]="taskContainer"
+        [container]="taskContainer()"
       ></app-tasks-list>
 
       <!-- Вопросы -->
       <app-questions-list
-        [container]="taskContainer"
+        [container]="taskContainer()"
         (refreshQuestions)="refreshQuestions()"
         [questions]="questions"
       ></app-questions-list>
 
       <!-- Проблемы -->
       <app-problems-list
-        [container]="taskContainer"
+        [container]="taskContainer()"
         (refreshProblems)="refreshProblems()"
         [problems]="problems"
       ></app-problems-list>

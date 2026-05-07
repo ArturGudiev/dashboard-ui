@@ -16,7 +16,7 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 })
 export class ContainerReportComponent implements OnInit {
   container = input.required<TaskContainer>();
-  treeData = signal<TreeNode[] | null>(null);
+  treeData = signal<TreeNode[]>([]);
   loading = signal<boolean>(true);
   constructor(private readonly taskContainerService: TaskContainerService) { }
 
@@ -26,6 +26,5 @@ export class ContainerReportComponent implements OnInit {
       this.treeData.set([res]);
     });
   }
-
 
 }

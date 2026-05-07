@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Story } from "../../../models/story";
 import { ActivatedRoute } from "@angular/router";
 import { Title } from "@angular/platform-browser";
@@ -8,7 +8,6 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { StoriesService } from "../../../services/task-container-services/stories.service";
-import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @UntilDestroy()
@@ -24,21 +23,17 @@ import { TaskContainerService } from "../../../services/task-container-services/
 export class StoryComponent implements OnInit {
   id!: number; // TODO add resolvers
   story!: Story; // USE resolvers
-  parentsPath: string[] = [];
-  isLoading = true;
+  parentsPath = signal<string[]>([]);
+  isLoading = signal<boolean>(true);
 
   refreshSubtasks$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.problems));
   refreshQuestionsList$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.questions));
 
-  constructor(
-    private route: ActivatedRoute,
-    private storiesService: StoriesService,
-    private tasksService: TasksService,
-    private titleService: Title,
-    private taskContainerService: TaskContainerService
-  ) {
-  }
+  private route = inject(ActivatedRoute);
+  private storiesService = inject(StoriesService);
+  private titleService = inject(Title);
+  private taskContainerService = inject(TaskContainerService);  
 
   ngOnInit(): void {
     this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
@@ -48,16 +43,16 @@ export class StoryComponent implements OnInit {
   }
 
   refreshStory() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.storiesService.getStory(this.id).subscribe((story: Story) => {
       this.story = story;
       this.titleService.setTitle(this.story.getFullDescription());
       if (this.story !== null) {
         this.taskContainerService.getParentsPath(this.story).subscribe((res: string[]) => {
-          this.parentsPath = res;
+          this.parentsPath.set(res);
         });
       }
-      this.isLoading = false;
+      this.isLoading.set(false);
     })
   }
 

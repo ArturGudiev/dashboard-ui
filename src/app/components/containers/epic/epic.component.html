@@ -1,10 +1,10 @@
-@if(isLoading) {
+@if(isLoading()) {
   <mat-spinner></mat-spinner>
 } @else {
-  @if (!isLoading) {
+  @if (!isLoading()) {
     <app-task-container
       [taskContainer]="epic"
-      [parentsPath]="parentsPath"
+      [parentsPath]="parentsPath()"
       [refreshTasks$]="refreshSubtasks$"
       [refreshProblems$]="refreshProblemsList$"
       [refreshQuestions$]="refreshQuestionsList$"

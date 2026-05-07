@@ -2,13 +2,12 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   input,
   OnInit,
+  signal,
   output,
-  Output,
   viewChild,
-  ViewChild
+  inject,
 } from '@angular/core';
 import { Observable } from "rxjs";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
@@ -28,13 +27,13 @@ import { MaterialModule } from "../../../modules/material/material.module";
   styleUrls: ['./notes.component.sass']
 })
 export class NotesComponent implements OnInit {
-  editValue = false;
+  editValue = signal<boolean>(false);
   notes = input<string>('');
   toggleEditEvent = input.required<Observable<void>>();
   updateNotes = output<string>();
   valueText = viewChild<ElementRef>('valueText');
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.toggleEditEvent().pipe(untilDestroyed(this)).subscribe(() => this.editNotesValue());
@@ -46,14 +45,14 @@ export class NotesComponent implements OnInit {
     if (valueText && valueText.nativeElement && valueText.nativeElement.value !== this.notes()) {
       this.updateNotes.emit(valueText.nativeElement.value)
     }
-    this.editValue = false;
+    this.editValue.set(false);
   }
 
   toggleEditValue() {
-    this.editValue = !this.editValue;
+    this.editValue.set(!this.editValue());
     this.cdr.detectChanges(); // without it it won't focus automatically todo find out why
 
-    if (this.editValue) {
+    if (this.editValue()) {
       this.valueText()?.nativeElement.focus();
     }
   }

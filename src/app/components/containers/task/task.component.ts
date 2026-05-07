@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskC } from '../../../models/task-class';
 import { getUrlByDescription } from '../../../shared/libs/dashboard.lib';
@@ -29,20 +29,18 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   id!: number;
   private _task!: TaskC; // TODO use resolve
-  parentsPath: string[] = [];
-  isLoading = true;
+  parentsPath = signal<string[]>([]);
+  isLoading = signal<boolean>(true);
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private titleService: Title,
-    public tasksService: TasksService,
-    private tasksContainerService: TaskContainerService
-  ) {
-  }
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private titleService = inject(Title);
+  private tasksService = inject(TasksService);
+  private tasksContainerService = inject(TaskContainerService);
 
   ngOnInit(): void {
     this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
+      this.isLoading.set(true);
       this.id = params['id'];
       this.refreshTaskForTheFirstTime();
     });
@@ -54,7 +52,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(this.task.getFullDescription());
     if (this.task !== null && updatePath) {
       this.tasksContainerService.getParentsPath(this.task).subscribe((res: string[]) => {
-        this.parentsPath = res;
+        this.parentsPath.set(res);
       });
     }
   }
@@ -70,10 +68,10 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   refreshTask(): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.tasksService.getTask(this.id).subscribe(task => {
       this.setTask(task);
-      this.isLoading = false;
+      this.isLoading.set(false);
     })
   }
 
@@ -82,7 +80,7 @@ export class TaskComponent implements OnInit, OnDestroy {
   refreshQuestionsList$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.questions));
 
   ngOnDestroy(): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
   }
 
   onDoneAllClick() {
@@ -90,8 +88,8 @@ export class TaskComponent implements OnInit, OnDestroy {
       return;
     }
     this.tasksService.finishTask(this.task).subscribe(() => {
-      if (this.parentsPath && this.parentsPath.length > 1) {
-        const description = this.parentsPath.slice(-2, -1)[0];
+      if (this.parentsPath() && this.parentsPath().length > 1) {
+        const description = this.parentsPath().slice(-2, -1)[0];
         this.goToParentHandler(description);
       }
     });

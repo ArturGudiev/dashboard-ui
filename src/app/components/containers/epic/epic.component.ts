@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from "@angular/material/dialog";
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Title } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { Epic } from "../../../models/epic";
@@ -16,29 +15,26 @@ import { TaskContainerService } from "../../../services/task-container-services/
     selector: 'app-epic',
     templateUrl: './epic.component.html',
     imports: [
-    MatProgressSpinner,
-    TaskContainerComponent
-],
+      MatProgressSpinner,
+      TaskContainerComponent
+    ],
     styleUrls: ['./epic.component.sass']
 })
 export class EpicComponent implements OnInit {
   id!: number;
-  epic!: Epic; // resolve
-  parentsPath: string[] = [];
-  isLoading = true;
+  epic!: Epic; 
+  parentsPath = signal<string[]>([]);
+  isLoading = signal<boolean>(true);
 
   refreshSubtasks$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.tasks));
   refreshProblemsList$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.problems));
   refreshQuestionsList$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.questions));
 
-  constructor(
-    public dialog: MatDialog,
-    private route: ActivatedRoute,
-    private epicsService: EpicsService,
-    private titleService: Title,
-    private taskContainerService: TaskContainerService,
-  ) { }
-
+  private route = inject(ActivatedRoute);
+  private epicsService = inject(EpicsService);
+  private titleService = inject(Title);
+  private taskContainerService = inject(TaskContainerService);
+  
   ngOnInit(): void {
     this.route.params.pipe(untilDestroyed(this))
       .subscribe(params => {
@@ -48,18 +44,18 @@ export class EpicComponent implements OnInit {
   }
 
   refreshEpic() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.epicsService.getEpic(this.id).pipe(untilDestroyed(this)).subscribe((epic: Epic) => {
       this.epic = epic;
-      this.titleService.setTitle(this.epic.getFullDescription());
-      if (this.epic !== null) {
-        this.taskContainerService.getParentsPath(this.epic)
+      this.titleService.setTitle(epic.getFullDescription());
+      if (epic) {
+        this.taskContainerService.getParentsPath(epic)
           .pipe(untilDestroyed(this))
           .subscribe((res: string[]) => {
-            this.parentsPath = res;
+            this.parentsPath.set(res);
           });
       }
-      this.isLoading = false;
+      this.isLoading.set(false);
     });
   }
 
@@ -70,6 +66,9 @@ export class EpicComponent implements OnInit {
     if (!this.epic) {
       return;
     }
-    this.epicsService.updateEpic(this.epic).subscribe((epic: Epic) => this.epic = epic);
+    const epicVal = this.epic;
+    if (epicVal) {
+      this.epicsService.updateEpic(epicVal).subscribe((epic: Epic) => this.epic = epic);
+    }
   }
 }

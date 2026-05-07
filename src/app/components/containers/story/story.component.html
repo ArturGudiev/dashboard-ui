@@ -1,9 +1,9 @@
-@if( isLoading) {
+@if( isLoading() ) {
   <mat-spinner></mat-spinner>
 } @else {
   <app-task-container
     [taskContainer]="story"
-    [parentsPath]="parentsPath"
+    [parentsPath]="parentsPath()"
     (refreshTaskContainer)="refreshStory()"
     [refreshTasks$]="refreshSubtasks$"
     [refreshProblems$]="refreshProblemsList$"
