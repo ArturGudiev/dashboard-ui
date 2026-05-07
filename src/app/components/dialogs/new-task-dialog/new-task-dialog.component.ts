@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TaskC } from '../../../models/task-class';
@@ -22,28 +22,17 @@ import { MaterialModule } from "../../../modules/material/material.module";
     ],
     styleUrls: ['./new-task-dialog.component.sass']
 })
-export class NewTaskDialogComponent implements OnInit {
-  static DIALOG_OPTIONS = {
-    height: '300px',
-    width: '700px',
-  }
+export class NewTaskDialogComponent {
+  static DIALOG_OPTIONS = { height: '300px', width: '700px' };
 
   myForm = new FormGroup({
     description: new FormControl('', [Validators.required]),
     notes: new FormControl('', []),
   });
 
+  dialogRef = inject(MatDialogRef<NewTaskDialogComponent>);
+  data = inject<{ parentTask: TaskC }>(MAT_DIALOG_DATA);
 
-  constructor(public dialogRef: MatDialogRef<NewTaskDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {parentTask: TaskC}
-              ) { }
-
-  ngOnInit(): void {
-  }
-
-  closeDialog() {
-    this.dialogRef.close('Pizza!');
-  }
   onNoClick(): void {
     this.dialogRef.close(null);
   }

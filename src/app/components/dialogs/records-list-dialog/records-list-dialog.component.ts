@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { RecordsService } from "../../../services/records.service";
 import { Observable } from "rxjs";
@@ -24,7 +24,7 @@ type SelectedOptionType = 'node' | 'all' | 'node_plus_children';
 ],
     styleUrls: ['./records-list-dialog.component.sass']
 })
-export class RecordsListDialogComponent implements OnInit {
+export class RecordsListDialogComponent {
   records$!: Observable<IArrayResponse<RecordItem>>;
   selectedOption: SelectedOptionType = 'all';
   @ViewChild('paginator') paginator!: MatPaginator;
@@ -33,17 +33,11 @@ export class RecordsListDialogComponent implements OnInit {
     pageSize: 10
   };
   recordItemsResponse!: IArrayResponse<RecordItem>;
-  constructor(
-    private recordsService: RecordsService,
-    public dialogRef: MatDialogRef<RecordsListDialogComponent>,
-    public cdr: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: { tag: string } ) { }
-
-  ngOnInit(): void {
-    console.log(this.data.tag);
-    // this.records$ = this.recordsService.getRecords(this.data.tag)
-    this.refreshRecords();
-  }
+  
+  dialogRef = inject(MatDialogRef<RecordsListDialogComponent>);
+  data = inject<{ tag: string }>(MAT_DIALOG_DATA);
+  recordsService = inject(RecordsService);
+  cdr = inject(ChangeDetectorRef);
 
   selectedOptionChange($event: MatButtonToggleChange) {
     this.selectedOption = $event.value;
