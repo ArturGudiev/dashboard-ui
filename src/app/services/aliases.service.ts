@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ApiService } from "./api.service";
 import { Observable } from "rxjs";
 import { ModelsAliasModel } from "../types/generated";
@@ -8,7 +8,7 @@ import { ModelsAliasModel } from "../types/generated";
 })
 export class AliasesService {
 
-  constructor(private apiService: ApiService) { }
+  private apiService = inject(ApiService);
 
 
   getAliasRecord(alias: string): Observable<ModelsAliasModel> {

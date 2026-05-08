@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 import { ApiService } from "../api.service";
 import { Epic } from "../../models/epic";
@@ -8,7 +8,7 @@ import { Epic } from "../../models/epic";
 })
 export class EpicsService {
 
-  constructor(private apiService: ApiService) { }
+  private apiService = inject(ApiService);
 
   getEpic(id: number): Observable<Epic> {
     return this.apiService._getEpic(id);

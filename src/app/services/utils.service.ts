@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 import { SetDisabledHotkeys } from "../state/app.actions";
 import { SelectFromListDialog } from "../components/dialogs/select-from-list-dialog/select-from-list-dialog.component";
@@ -11,10 +11,8 @@ import { map, tap } from "rxjs/operators";
 })
 export class UtilsService {
 
-  constructor(
-    private store: Store,
-    private dialog: MatDialog,
-  ) { }
+  private store = inject(Store);
+  private dialog = inject(MatDialog);
 
   selectFromList(values: string[]): Observable<string> {
     this.store.dispatch(new SetDisabledHotkeys(true));

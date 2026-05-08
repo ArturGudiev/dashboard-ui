@@ -57,7 +57,6 @@ export class Epic implements TaskContainer{
   }
 
   static createFromObj(epicObj: any): Epic {
-    // check here object has all necessary fields
     return new Epic(epicObj.id, epicObj.description, epicObj.tags, epicObj.closed, epicObj.notes,
       pick(epicObj, ['parentContainers', 'epics', 'tasks', 'stories', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))

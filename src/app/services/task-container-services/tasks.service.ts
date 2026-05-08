@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap, tap } from "rxjs/operators";
 import { MatDialog } from "@angular/material/dialog";
@@ -15,9 +15,9 @@ import { TaskContainer } from "../../models/interfaces/task-container";
 export class TasksService {
   addTaskDialogOpened = false;
 
-  constructor(private apiService: ApiService,
-    private dialog: MatDialog,
-    private dashboardService: DashboardService) { }
+  private apiService = inject(ApiService);
+  private dialog = inject(MatDialog);
+  private dashboardService = inject(DashboardService);
 
 
   getTask(id: number): Observable<TaskC> {

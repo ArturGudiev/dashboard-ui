@@ -43,7 +43,6 @@ export class RepetitiveTasksListComponent implements AfterViewInit {
   }
 
   finishRepetitiveTask(task: ModelsRepetitiveTaskResponse) {
-    console.log('finishRepetitiveTask', task);
     const toMark = confirm(`Do you really want to mark ths task "${task.description}" as done?`);
     if (toMark) {
       this.onItemExecutedMark.emit(task);

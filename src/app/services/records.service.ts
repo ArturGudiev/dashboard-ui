@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { RecordItem } from "../models/record-item";
 import { ApiService, IArrayResponse } from "./api.service";
 import { Observable } from "rxjs";
@@ -11,8 +11,8 @@ import { IArrayParams } from "../models/interfaces/array-params";
 })
 export class RecordsService {
 
-  constructor(private apiService: ApiService,
-              private dialog: MatDialog) { }
+  private apiService = inject(ApiService);
+  private dialog = inject(MatDialog);
 
   getRecords(arrayParams: IArrayParams, tag?: string): Observable<IArrayResponse<RecordItem>> {
     return this.apiService._getRecordItems(arrayParams, tag);
@@ -31,7 +31,6 @@ export class RecordsService {
         data: {title: 'Record', multiline: true}});
     dialogRef.afterClosed().subscribe((message: string) => {
       if (message) {
-        // console.log('HERE', message);
         this.addRecord(message, tag).subscribe();
       }
     });

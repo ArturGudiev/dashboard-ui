@@ -11,18 +11,18 @@ export interface ITaskContainerChildElements {
 }
 
 
-export interface TaskContainer extends ITaskContainerChildElements{
+export interface TaskContainer extends ITaskContainerChildElements {
   id: number;
   tags: string[];
   tasks: number[];
   problems: number[];
   epics?: number[];
   stories?: number[];
-  // parents: TaskContainerDescription[];
   parentContainers: ContainerDescription[];
 
   getFullDescription(): string;
   getTaskContainerDescription(): TaskContainerDescription;
   type: TaskContainerType;
   notes: string;
+
 }

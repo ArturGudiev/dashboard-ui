@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from "@angular/router";
 import { AliasesService } from "./aliases.service";
 import { AlertService } from "./alert.service";
@@ -11,12 +11,10 @@ import { ModelsAliasModel } from "../types/generated";
 export class NavigationService {
 
 
-  constructor(
-    private router: Router,
-    private alertService: AlertService,
-    private tasksService: TasksService,
-    private aliasService: AliasesService) {
-  }
+  private router = inject(Router);
+  private alertService = inject(AlertService);
+  private tasksService = inject(TasksService);
+  private aliasService = inject(AliasesService);
 
   navigateByInput(navItem: string) {
     if (!navItem) {

@@ -1,7 +1,7 @@
 /**
  * Диалоговое окно для выбора значения из списка
  */
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, signal, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { CommandsService } from "../../../services/commands.service";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
@@ -25,7 +25,7 @@ export interface SelectFromListDialogData<T = string> {
       @for (content of data.values; track $index) {
         <div
           class="value-item"
-          [ngClass]="{'selected-item': selectedIndex === $index}"
+          [ngClass]="{'selected-item': selectedIndex() === $index}"
           (click)="closeDialogWithSelectedItem(content)"
         >
           {{$index + 1}}. {{ data.mapFunction ? data.mapFunction(content) : content }}
@@ -36,14 +36,15 @@ export interface SelectFromListDialogData<T = string> {
   styleUrl: './select-from-list-dialog.component.scss'
 })
 export class SelectFromListDialog<T> implements OnInit {
-  selectedIndex = 0;
+  selectedIndex = signal(0);
 
-  constructor(
-    public dialogRef: MatDialogRef<SelectFromListDialog<T>>,
-    private commandsService: CommandsService,
-    @Inject(MAT_DIALOG_DATA) public data: SelectFromListDialogData<T>
-  ) {
-    this.selectedIndex = this.data.values.length - 1;
+  private dialogRef = inject(MatDialogRef<SelectFromListDialog<T>>);
+  private commandsService = inject(CommandsService);
+  @Inject(MAT_DIALOG_DATA) public data = inject<SelectFromListDialogData<T>>(MAT_DIALOG_DATA);
+
+
+  constructor() {
+    this.selectedIndex.set(this.data.values.length - 1);
   }
 
 
@@ -56,14 +57,14 @@ export class SelectFromListDialog<T> implements OnInit {
       this.moveSelection(-1);
       event.preventDefault();
     } else if (event.key === 'Enter') {
-      this.closeDialogWithSelectedItem(this.data.values[this.selectedIndex]);
+      this.closeDialogWithSelectedItem(this.data.values[this.selectedIndex()]);
     }
   }
 
   private moveSelection(val: number) {
-    const newVal = this.selectedIndex + val;
+    const newVal = this.selectedIndex() + val;
     if (newVal >= 0 && newVal < this.data.values.length) {
-      this.selectedIndex = newVal;
+      this.selectedIndex.set(newVal);
     }
   }
 

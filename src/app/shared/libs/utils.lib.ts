@@ -1,13 +1,6 @@
-// var fs = require('file-system');
-
-
 import { TaskContainerDescription } from "../../models/interfaces/types";
 
-export function getJSONFileContent(path: string): any {
-  // const content = readFileSync(path);
-  // return JSON.parse(content.toString());
-}
-
+export function getJSONFileContent() { }
 
 export function replaceInArrayIfFind<T>(arr: T[], predicate: (e: T) => boolean, valueToPutIfFind: T): void {
   const index = arr.findIndex(predicate);

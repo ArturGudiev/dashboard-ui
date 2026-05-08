@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, of, Subject } from "rxjs";
 import { TasksService } from './tasks.service';
 import { ProblemsService } from './problems.service';
@@ -31,16 +31,14 @@ export class TaskContainerService {
 
   refreshSubtasks$ = new Subject<TaskContainer>();
 
-  constructor(
-    private apiService: ApiService,
-    private tasksService: TasksService,
-    private problemsService: ProblemsService,
-    private questionsService: QuestionsService,
-    private logsService: LogsService,
-    private readonly epicsService: EpicsService,
-    private readonly storiesService: StoriesService,
-    private dialog: MatDialog,
-  ) { }
+  private apiService = inject(ApiService);
+  private tasksService = inject(TasksService);
+  private problemsService = inject(ProblemsService);
+  private questionsService = inject(QuestionsService);
+  private logsService = inject(LogsService);
+  private epicsService = inject(EpicsService);
+  private storiesService = inject(StoriesService);
+  private dialog = inject(MatDialog);
 
   getParentsPath(taskContainer: TaskContainer): Observable<string[]> {
     return this.apiService._getParentsPath(taskContainer);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 import { filter, map, switchMap, tap } from "rxjs/operators";
 import { MatDialog } from "@angular/material/dialog";
@@ -16,11 +16,9 @@ import { NEW_QUESTION_DIALOG_OPTIONS } from "../../shared/constants";
 })
 export class QuestionsService {
 
-  constructor(private apiService: ApiService,
-              private dialog: MatDialog,
-              private dashboardService: DashboardService) {
-  }
-
+  private apiService = inject(ApiService);
+  private dialog = inject(MatDialog);
+  private dashboardService = inject(DashboardService);
 
   getAllQuestions(ids: number[]): Observable<Question[]> {
     return this.apiService._getQuestions(ids);
@@ -68,18 +66,6 @@ export class QuestionsService {
         return this.createNewQuestion({ question, parent });
       })
     )
-
-    // .subscribe((description: string) => {
-    //   if (description) {
-    //     const obj: any = {description: description, tags: [],
-    //         parents: [taskContainer.getTaskContainerDescription()]
-    //       }
-    //     const state = this.getRefreshQuestionsDataCurrentState();
-    //     this.createNewQuestion(obj).subscribe(() =>
-    //       this.setRefreshQuestionsDataState({...state, taskContainer: taskContainer}));
-    //   }
-    // });
-
   }
 
   updateQuestion(question: Question): Observable<Question> {

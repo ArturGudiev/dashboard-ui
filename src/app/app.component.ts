@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DashboardService } from "./services/dashboard.service";
 import { AlertService, IAlertsDataState } from "./services/alert.service";
@@ -18,15 +18,11 @@ export class AppComponent {
   title = 'dashboard-ui';
   alertState: IAlertsDataState | null = null;
 
-  constructor(
-    private dashboardService: DashboardService,
-    private alertService: AlertService,
-    private _snackBar: MatSnackBar
-  ) {
-  }
+  private dashboardService = inject(DashboardService);
+  private alertService = inject(AlertService);
+  private _snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
-    console.log('app.component.ts -- ngOnInit');
     this.dashboardService.updateDoneTasksNumber();
     setInterval(() => this.dashboardService.updateDoneTasksNumber(), 30000);
 

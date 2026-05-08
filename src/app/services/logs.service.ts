@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ApiService } from "./api.service";
 import { TaskContainer } from "../models/interfaces/task-container";
 import { HandlersNewLogMessageRequest, HandlersPaginatedResponseEntLogMessage } from "../types/generated";
@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
 })
 export class LogsService {
 
-  constructor(private apiService: ApiService) { }
+  private apiService = inject(ApiService);
 
   addLogMessage(logMessage: string, taskContainer: TaskContainer | undefined, logType: string) {
     const args: HandlersNewLogMessageRequest = taskContainer

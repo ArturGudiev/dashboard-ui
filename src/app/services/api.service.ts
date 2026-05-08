@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TaskC } from '../models/task-class';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -39,12 +39,8 @@ export class ApiService {
     return this.appConfig.baseUrl;
   }
 
-  constructor(
-    private http: HttpClient,
-    private appConfig: AppConfigService
-  ) {
-  }
-
+  private http = inject(HttpClient);
+  private appConfig = inject(AppConfigService);
 
   _getTask(id: number): Observable<TaskC> {
     return this.http.get<TaskC>(`${this.baseUrl}/task/${id}`)

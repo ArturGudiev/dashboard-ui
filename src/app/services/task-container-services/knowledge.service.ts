@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from "rxjs";
-import { ApiService } from "./api.service";
-import { Knowledge } from "../models/knowledge";
+import { ApiService } from "../api.service";
+import { Knowledge } from "../../models/knowledge";
 
 @Injectable({
   providedIn: 'root'
 })
 export class KnowledgeService {
 
-  constructor(private apiService: ApiService) { }
+  private apiService = inject(ApiService);
 
   //----------Actions start -----------------
 

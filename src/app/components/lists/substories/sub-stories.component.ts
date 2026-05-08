@@ -6,9 +6,7 @@ import { MaterialModule } from "../../../modules/material/material.module";
 
 @Component({
   selector: 'app-substories',
-  imports: [
-    MaterialModule
-  ],
+  imports: [ MaterialModule ],
   templateUrl: './sub-stories.component.html',
   standalone: true,
   styleUrls: ['./sub-stories.component.sass']

@@ -12,7 +12,6 @@ export interface CommandsStateInterface {
 export class CommandsService {
 
   private data = new Subject<CommandsStateInterface>();
-  constructor() { }
 
   setDataState(state: CommandsStateInterface): void {
     this.data.next(state);

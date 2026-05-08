@@ -3,9 +3,7 @@ import { TaskContainer } from "../models/interfaces/task-container";
 export class MyAction {
   static readonly type = 'MyAction'
 
-  constructor() {
-
-  }
+  constructor() {}
 }
 
 export class SetFocusedTaskForSubtasks {

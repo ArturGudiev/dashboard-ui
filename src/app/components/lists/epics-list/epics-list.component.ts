@@ -20,7 +20,7 @@ export class EpicsListComponent implements AfterViewInit {
 
   epics = input.required<Epic[]>();
   selection = new SelectionModel<Epic>(true, []);
-  displayedColumns: string[] = ['select', 'description'];
+  readonly displayedColumns: string[] = ['select', 'description'];
   
   dataSource = new MatTableDataSource<Epic>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;

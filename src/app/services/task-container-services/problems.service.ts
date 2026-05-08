@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 import { filter, map, switchMap, tap } from "rxjs/operators";
 import { MatDialog } from "@angular/material/dialog";
@@ -19,12 +19,9 @@ export interface RefreshProblemsState {
 })
 export class ProblemsService {
 
-  constructor(
-    private apiService: ApiService,
-    private dialog: MatDialog,
-    private dashboardService: DashboardService
-  ) {
-  }
+  private apiService = inject(ApiService);
+  private dialog = inject(MatDialog);
+  private dashboardService = inject(DashboardService);
 
   getAllProblems(ids: number[]): Observable<Problem[]> {
     return this.apiService._getProblems(ids);

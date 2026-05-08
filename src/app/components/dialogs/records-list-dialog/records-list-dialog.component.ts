@@ -48,7 +48,7 @@ export class RecordsListDialogComponent {
     console.log(this.paginator);
     console.log(this.paginator.length);
     console.log(this.paginator.pageSize);
-    console.log(this.paginator.pageIndex  );
+    console.log(this.paginator.pageIndex);
   }
 
   paginationParamsChanged(obj: PageEvent) {

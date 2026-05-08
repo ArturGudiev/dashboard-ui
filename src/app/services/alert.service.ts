@@ -20,8 +20,6 @@ export class AlertService {
   };
   data$ = new BehaviorSubject(this.initialState);
 
-  constructor() { }
-
   getDataCurrentState(): IAlertsDataState {
     return this.data$.getValue();
   }

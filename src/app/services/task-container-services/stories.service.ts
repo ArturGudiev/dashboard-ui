@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 import { ApiService } from "../api.service";
 import { Story } from "../../models/story";
@@ -8,7 +8,7 @@ import { Story } from "../../models/story";
 })
 export class StoriesService {
 
-  constructor(private apiService: ApiService) { }
+  private apiService = inject(ApiService);
 
   getStory(id: number): Observable<Story> {
     return this.apiService._getStory(id);

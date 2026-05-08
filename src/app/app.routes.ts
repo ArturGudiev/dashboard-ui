@@ -11,10 +11,7 @@ import { RepetitiveTasksComponent } from "./components/pages/repetitive-tasks/re
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},
-  // {path: 'epic', loadChildren: () => import('./modules/epics/epics.module').then(m => m.EpicsModule)},
   { path: 'task/:id', component: TaskComponent},
-  // {path: 'question', loadChildren: () => import('./modules/questions/questions.module').then(m => m.QuestionsModule)},
-  // {path: 'questions', loadChildren: () => import('./modules/questions/questions.module').then(m => m.QuestionsModule)},
   {path: 'question/:id', component: QuestionComponent},
   {path: 'problem/:id', component: ProblemComponent},
   {path: 'story/:id', component: StoryComponent},
@@ -22,7 +19,4 @@ export const routes: Routes = [
   {path: 'epics', component: EpicsComponent},
   {path: 'repetitive-tasks', component: RepetitiveTasksComponent},
   {path: 'help', component: HelpComponent},
-
-  // {path: 'memory-node/:id', component: MemoryNodeComponent, resolve: {memoryNode: memoryNodeResolverResolver}, canActivate: [authGuard]},
-  // {path: 'card-inspector/:id', component: CardInspectorComponent, resolve: {card: cardResolver}, canActivate: [authGuard]},
 ];

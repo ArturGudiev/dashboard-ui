@@ -17,9 +17,8 @@ import { MatDialog } from "@angular/material/dialog";
 })
 export class RepetitiveTasksService {
   private dialog =  inject(MatDialog);
-
+  private apiService = inject(ApiService);
   private addRepetitiveTaskDialogOpened = false;
-  constructor(private apiService: ApiService) { }
 
   getAllRepetitiveTasks(): Observable<ModelsRepetitiveTaskResponse[]> {
     return this.apiService._getAllRepetitiveTasks();

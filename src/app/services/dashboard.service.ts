@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from "rxjs";
 import { ApiService } from "./api.service";
 import { AppState } from "../state/app.state";
@@ -10,9 +10,7 @@ export interface DashboardStateInterface {
   showUntilValue: boolean;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DashboardService {
   private initialState: DashboardStateInterface = {
     doneTasks: 0,
@@ -21,11 +19,8 @@ export class DashboardService {
   }
   private data = new BehaviorSubject(this.initialState);
 
-  constructor(
-    private tasksApiService: ApiService,
-    private store: Store,
-  ) {
-  }
+  private tasksApiService = inject(ApiService);
+  private store = inject(Store);
 
   getDataCurrentState(): DashboardStateInterface {
     return this.data.getValue();
