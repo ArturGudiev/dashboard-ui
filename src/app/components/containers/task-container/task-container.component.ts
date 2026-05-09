@@ -54,7 +54,7 @@ import { ContainerReportComponent } from "../container-report/container-report.c
 })
 export class TaskContainerComponent implements OnInit, OnChanges {
   taskContainer = input.required<TaskContainer>();
-  
+
   parentsPath = input.required<string[]>();
   showEpics = input<boolean>(false);
   showStories = input<boolean>(false);
@@ -156,7 +156,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
     if (['records'].includes(arr[0])) {
       this.showRecords();
     }
-    if (['new-record'].includes(arr[0])) {
+    if (['new-recorpd'].includes(arr[0])) {
       this.addRecord();
     }
     if (['parent'].includes(arr[0])) {

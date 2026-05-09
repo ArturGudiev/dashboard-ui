@@ -62,6 +62,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (state) {
       // History restores state as a plain object — rehydrate so TaskContainer methods exist.
       this.setTask(TaskC.createFromObj(state));
+      this.isLoading.set(false);
       return;
     }
     this.refreshTask();
