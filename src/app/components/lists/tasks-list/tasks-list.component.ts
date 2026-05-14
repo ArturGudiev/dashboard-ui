@@ -22,7 +22,10 @@ import { distinctUntilChanged, map } from "rxjs/operators";
 import { taskContainerDescriptionsAreEqual } from "../../../shared/libs/utils.lib";
 import { NavigationService } from "../../../services/navigation.service";
 import { isTask } from "../../../shared/constants";
-import { MaterialModule } from "../../../modules/material/material.module";
+import { MatTableModule } from "@angular/material/table";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
 import { NgClass } from "@angular/common";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
@@ -32,7 +35,10 @@ import { TaskContainerService } from "../../../services/task-container-services/
   selector: 'app-tasks-list',
   templateUrl: './tasks-list.component.html',
   imports: [
-    MaterialModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatIconModule,
     NgClass
   ],
   standalone: true,

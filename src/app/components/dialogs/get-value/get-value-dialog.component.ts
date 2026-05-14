@@ -4,7 +4,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatFormField } from "@angular/material/form-field";
 import { NgStyle } from "@angular/common";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
-import { MaterialModule } from "../../../modules/material/material.module";
+import { MatButton } from "@angular/material/button";
+import { MatDialogActions } from "@angular/material/dialog";
+import { MatInput } from "@angular/material/input";
+import { MatLabel } from "@angular/material/form-field";
 
 @Component({
     selector: 'app-get-value',
@@ -12,9 +15,12 @@ import { MaterialModule } from "../../../modules/material/material.module";
     imports: [
       ReactiveFormsModule,
       MatFormField,
+      MatLabel,
+      MatInput,
+      MatButton,
+      MatDialogActions,
       NgStyle,
       CdkTextareaAutosize,
-      MaterialModule
     ],
     styleUrls: ['./get-value-dialog.component.sass']
 })

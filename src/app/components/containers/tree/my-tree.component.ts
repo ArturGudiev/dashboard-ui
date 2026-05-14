@@ -1,7 +1,8 @@
 import { Component, input, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NestedTreeControl } from "@angular/cdk/tree";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
-import { MaterialModule } from "../../../modules/material/material.module";
+import { MatTreeModule } from "@angular/material/tree";
+import { MatIconModule } from "@angular/material/icon";
 import { NgStyle } from "@angular/common";
 import { colorPink } from "../../../shared/constants";
 
@@ -14,7 +15,7 @@ export interface TreeNode {
 
 @Component({
   selector: 'app-my-tree',
-  imports: [MaterialModule, NgStyle],
+  imports: [MatTreeModule, MatIconModule, NgStyle],
   templateUrl: './my-tree.component.html',
   standalone: true,
   styleUrl: './my-tree.component.scss'

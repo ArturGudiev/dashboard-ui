@@ -15,7 +15,9 @@ import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { Epic } from "../../../models/epic";
 import { RecordsListDialogComponent } from "../../dialogs/records-list-dialog/records-list-dialog.component";
 import { HelpComponent } from "../../pages/help/help.component";
-import { MaterialModule } from "../../../modules/material/material.module";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
 import { EpicsListComponent } from "../../lists/epics-list/epics-list.component";
 import { SubStoriesComponent } from "../../lists/substories/sub-stories.component";
 import { QuestionsListComponent } from "../../lists/questions-list/questions-list.component";
@@ -38,7 +40,9 @@ import { ContainerReportComponent } from "../container-report/container-report.c
   selector: 'app-task-container',
   templateUrl: './task-container.component.html',
   imports: [
-    MaterialModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
     ParentsPathComponent,
     EpicsListComponent,
     SubStoriesComponent,

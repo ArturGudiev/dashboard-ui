@@ -14,12 +14,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from "rxjs";
 import { FormsModule } from "@angular/forms";
 
-import { MaterialModule } from "../../../modules/material/material.module";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 
 @Component({
   selector: 'app-notes',
   imports: [
-    MaterialModule,
+    MatFormFieldModule,
+    MatInputModule,
     FormsModule
   ],
   templateUrl: './notes.component.html',

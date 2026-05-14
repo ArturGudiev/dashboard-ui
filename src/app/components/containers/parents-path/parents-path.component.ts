@@ -1,13 +1,11 @@
 import { Component, inject, input, output } from '@angular/core';
 import { NgStyle } from "@angular/common";
-import { MaterialModule } from "../../../modules/material/material.module";
 import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @Component({
   selector: 'app-parents-path',
   imports: [
-    MaterialModule,
     NgStyle,
     LongClickDirectiveDirective
   ],

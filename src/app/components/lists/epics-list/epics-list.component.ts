@@ -5,13 +5,17 @@ import { Epic } from "../../../models/epic";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 
-import { MaterialModule } from "../../../modules/material/material.module";
+import { MatTableModule } from "@angular/material/table";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatPaginatorModule } from "@angular/material/paginator";
 
 @Component({
   selector: 'app-epics-list',
   templateUrl: './epics-list.component.html',
   imports: [
-    MaterialModule
+    MatTableModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
   ],
   standalone: true,
   styleUrls: ['./epics-list.component.sass']

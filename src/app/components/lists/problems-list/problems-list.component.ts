@@ -10,7 +10,10 @@ import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialo
 import { MatDialog } from "@angular/material/dialog";
 import { GET_VALUE_DIALOG_OPTIONS } from "../../../shared/constants";
 import { CommandsService } from "../../../services/commands.service";
-import { MaterialModule } from "../../../modules/material/material.module";
+import { MatTableModule } from "@angular/material/table";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
 import { NgClass } from "@angular/common";
 import { TasksListComponent } from "../tasks-list/tasks-list.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
@@ -21,7 +24,10 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
   selector: 'app-problems-list',
   templateUrl: './problems-list.component.html',
   imports: [
-    MaterialModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatIconModule,
     NgClass,
     TasksListComponent
   ],

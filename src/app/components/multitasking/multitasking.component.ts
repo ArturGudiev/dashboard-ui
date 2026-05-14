@@ -3,7 +3,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { isNumber } from 'lodash';
 import { map } from "rxjs/operators";
 import { Observable, of } from "rxjs";
-import { MaterialModule } from "../../modules/material/material.module";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 
 import { MultitaskingItemComponent } from "./multitasking-item/multitasking-item.component";
 import { TaskContainer } from "../../models/interfaces/task-container";
@@ -15,7 +16,8 @@ import { TasksService } from "../../services/task-container-services/tasks.servi
     selector: 'app-multitasking',
     templateUrl: './multitasking.component.html',
     imports: [
-    MaterialModule,
+    MatFormFieldModule,
+    MatInputModule,
     ReactiveFormsModule,
     MultitaskingItemComponent
 ],

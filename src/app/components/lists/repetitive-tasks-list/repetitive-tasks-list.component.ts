@@ -4,7 +4,11 @@ import { Router } from '@angular/router';
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 
-import { MaterialModule } from "../../../modules/material/material.module";
+import { MatTableModule } from "@angular/material/table";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
 import { ModelsRepetitiveTaskResponse } from "../../../types/generated";
 import { RepetitiveTasksService } from "../../../services/task-container-services/repetitive-tasks.service";
 
@@ -12,7 +16,11 @@ import { RepetitiveTasksService } from "../../../services/task-container-service
   selector: 'dash-repetitive-tasks-list',
   templateUrl: './repetitive-tasks-list.component.html',
   imports: [
-    MaterialModule
+    MatTableModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   standalone: true,
   styleUrls: ['./repetitive-tasks-list.component.sass']

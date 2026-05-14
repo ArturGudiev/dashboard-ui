@@ -3,12 +3,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DashboardService } from "./services/dashboard.service";
 import { AlertService, IAlertsDataState } from "./services/alert.service";
-import { MaterialModule } from './modules/material/material.module';
 import { SidenavComponent } from "./components/pages/sidenav/sidenav.component";
 
 @Component({
-  selector: 'app-root',
-  imports: [MaterialModule, SidenavComponent],
+    selector: 'app-root',
+    imports: [SidenavComponent],
   templateUrl: './app.component.html',
   standalone: true,
   styleUrl: './app.component.sass'

@@ -1,7 +1,8 @@
 import { Component, effect, inject, input, output } from '@angular/core';
 import { TaskC } from "../../../models/task-class";
 import { Observable } from "rxjs";
-import { MaterialModule } from "../../../modules/material/material.module";
+import { MatIconButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
@@ -10,7 +11,8 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
     selector: 'app-multitasking-item',
     templateUrl: './multitasking-item.component.html',
     imports: [
-        MaterialModule,
+        MatIconButton,
+        MatIcon,
         TasksListComponent
     ],
     styleUrls: ['./multitasking-item.component.sass']
