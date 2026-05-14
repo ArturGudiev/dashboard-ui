@@ -1,8 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { Epic } from "../../../models/epic";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 import { map } from "rxjs/operators";
@@ -10,7 +10,6 @@ import { TaskContainerComponent } from "../task-container/task-container.compone
 import { EpicsService } from "../../../services/task-container-services/epics.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
-@UntilDestroy()
 @Component({
     selector: 'app-epic',
     templateUrl: './epic.component.html',
@@ -34,9 +33,10 @@ export class EpicComponent implements OnInit {
   private epicsService = inject(EpicsService);
   private titleService = inject(Title);
   private taskContainerService = inject(TaskContainerService);
+  private destroyRef = inject(DestroyRef);
   
   ngOnInit(): void {
-    this.route.params.pipe(untilDestroyed(this))
+    this.route.params.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(params => {
         this.id = params['id'];
         this.refreshEpic();
@@ -45,12 +45,12 @@ export class EpicComponent implements OnInit {
 
   refreshEpic() {
     this.isLoading.set(true);
-    this.epicsService.getEpic(this.id).pipe(untilDestroyed(this)).subscribe((epic: Epic) => {
+    this.epicsService.getEpic(this.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((epic: Epic) => {
       this.epic = epic;
       this.titleService.setTitle(epic.getFullDescription());
       if (epic) {
         this.taskContainerService.getParentsPath(epic)
-          .pipe(untilDestroyed(this))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((res: string[]) => {
             this.parentsPath.set(res);
           });

@@ -1,4 +1,5 @@
-import { Component, HostListener, inject, input, Input, OnChanges, OnInit, output, Output, signal, SimpleChanges } from '@angular/core';
+import { Component, DestroyRef, HostListener, inject, input, Input, OnChanges, OnInit, output, Output, signal, SimpleChanges } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Hotkey, HotkeysService } from "angular2-hotkeys";
@@ -11,7 +12,6 @@ import { TaskC } from "../../../models/task-class";
 import { CommandsService } from "../../../services/commands.service";
 import { RecordsService } from "../../../services/records.service";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Epic } from "../../../models/epic";
 import { RecordsListDialogComponent } from "../../dialogs/records-list-dialog/records-list-dialog.component";
 import { HelpComponent } from "../../pages/help/help.component";
@@ -34,7 +34,6 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
 import { UtilsService } from "../../../services/utils.service";
 import { ContainerReportComponent } from "../container-report/container-report.component";
 
-@UntilDestroy()
 @Component({
   selector: 'app-task-container',
   templateUrl: './task-container.component.html',
@@ -94,6 +93,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   private router = inject(Router);
   private _hotkeysService = inject(HotkeysService);
   private utilsService = inject(UtilsService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this._hotkeysService.add(new Hotkey('alt+r', (): boolean => {
@@ -107,12 +107,12 @@ export class TaskContainerComponent implements OnInit, OnChanges {
 
     this.refreshTaskContainerParts();
 
-    this.commandsService.getDataStateChange().pipe(untilDestroyed(this)).subscribe(state => {
+    this.commandsService.getDataStateChange().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(state => {
       this.handleTaskCommand(state.command);
     })
 
     this.taskContainerService.refreshSubtasks$
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.refreshTaskContainer.emit());
 
   }
@@ -259,14 +259,14 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   refreshTasks() {
-    this.refreshTasks$()().pipe(untilDestroyed(this)).subscribe(tasks => {
+    this.refreshTasks$()().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(tasks => {
       this.taskContainer().tasks = tasks;
       this.tasksService.getTasks(tasks).subscribe(res => this.tasks.set(res));
     })
   }
 
   refreshProblems() {
-    this.refreshProblems$()().pipe(untilDestroyed(this)).subscribe(problems => {
+    this.refreshProblems$()().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(problems => {
       this.taskContainer().problems = problems;
       this.problemsService.getProblems(problems).subscribe(res => this.problems.set(res));
     })
@@ -274,7 +274,7 @@ export class TaskContainerComponent implements OnInit, OnChanges {
   }
 
   refreshQuestions() {
-    this.refreshQuestions$()().pipe(untilDestroyed(this)).subscribe(questions => {
+    this.refreshQuestions$()().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(questions => {
       this.taskContainer().questions = questions;
       this.questionsService.getQuestions(questions).subscribe(res => this.questions.set(res));
     })

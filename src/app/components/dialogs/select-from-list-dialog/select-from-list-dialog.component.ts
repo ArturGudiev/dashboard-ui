@@ -1,10 +1,10 @@
 /**
  * Диалоговое окно для выбора значения из списка
  */
-import { Component, HostListener, Inject, OnInit, signal, inject } from '@angular/core';
+import { Component, DestroyRef, HostListener, Inject, OnInit, signal, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { CommandsService } from "../../../services/commands.service";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { NgClass } from "@angular/common";
 
 export interface SelectFromListDialogData<T = string> {
@@ -13,14 +13,13 @@ export interface SelectFromListDialogData<T = string> {
   mapFunction?: (item: T) => string;
 }
 
-@UntilDestroy()
 @Component({
   selector: 'app-select-from-list-dialog',
   imports: [
     NgClass
   ],
   standalone: true,
-  template: `
+  template:`
     <div id="items-wrapper">
       @for (content of data.values; track $index) {
         <div
@@ -40,6 +39,7 @@ export class SelectFromListDialog<T> implements OnInit {
 
   private dialogRef = inject(MatDialogRef<SelectFromListDialog<T>>);
   private commandsService = inject(CommandsService);
+  private destroyRef = inject(DestroyRef);
   @Inject(MAT_DIALOG_DATA) public data = inject<SelectFromListDialogData<T>>(MAT_DIALOG_DATA);
 
 
@@ -72,7 +72,7 @@ export class SelectFromListDialog<T> implements OnInit {
    * Инициализация компонента
    */
   ngOnInit(): void {
-    this.commandsService.getDataStateChange().pipe(untilDestroyed(this)).subscribe(state => {
+    this.commandsService.getDataStateChange().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(state => {
       this.handleCommand(state.command);
     })
   }

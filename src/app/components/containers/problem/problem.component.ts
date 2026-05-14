@@ -1,10 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
 import { Problem } from "../../../models/problem";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { map } from "rxjs/operators";
@@ -12,7 +12,6 @@ import { TaskContainerComponent } from "../task-container/task-container.compone
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
-@UntilDestroy()
 @Component({
   selector: 'app-problem',
   templateUrl: './problem.component.html',
@@ -40,9 +39,10 @@ export class ProblemComponent implements OnInit {
   private dialog = inject(MatDialog);
   private problemsService = inject(ProblemsService);
   private taskContainerService = inject(TaskContainerService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
+    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       this.isLoading.set(true);
       this.id = params['id'];
       this.refreshProblem();
@@ -88,7 +88,7 @@ export class ProblemComponent implements OnInit {
 
   updateProblem() {
     this.problemsService.updateProblem(this.problem)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((problem: Problem) => this.problem = problem);
   }
 

@@ -1,10 +1,10 @@
-import { Component, EventEmitter, inject, input, Input, OnInit, output, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, input, Input, OnInit, output, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Problem } from "../../../models/problem";
 import { SelectionModel } from "@angular/cdk/collections";
 import { Router } from "@angular/router";
 import { TaskC } from "../../../models/task-class";
 import { MatCheckboxChange } from "@angular/material/checkbox";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
 import { Store } from "@ngxs/store";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
@@ -18,7 +18,6 @@ import { TaskContainer } from "../../../models/interfaces/task-container";
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 
-@UntilDestroy()
 @Component({
   selector: 'app-problems-list',
   templateUrl: './problems-list.component.html',
@@ -45,14 +44,15 @@ export class ProblemsListComponent implements OnInit {
   private store = inject(Store);
   private dialog = inject(MatDialog);
   private router = inject(Router);
-  
+  private destroyRef = inject(DestroyRef);
+
   get tasksByIdMapKeys(): number[] {
     return Object.keys(this.tasksByIdMap).map(e => Number(e));
   }
 
   ngOnInit(): void {
     this.commandsService.getDataStateChange()
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(state => {
         this.handleTaskCommand(state.command);
       })
@@ -105,8 +105,8 @@ export class ProblemsListComponent implements OnInit {
    * @param id
    */
   refreshTasksOfSelectedSubtask(id: number) {
-    this.problemsService.getProblem(id).pipe(untilDestroyed(this)).subscribe(problem => {
-      this.tasksService.getTasks(problem.tasks).pipe(untilDestroyed(this)).subscribe(tasks => {
+    this.problemsService.getProblem(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(problem => {
+      this.tasksService.getTasks(problem.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(tasks => {
         this.tasksByIdMap[id] = {tasks, container: problem};
       })
     })
@@ -142,7 +142,7 @@ export class ProblemsListComponent implements OnInit {
    */
   setShowSubtasksField($event: MatCheckboxChange, problem: Problem) {
     if ($event.checked) {
-      this.tasksService.getTasks(problem.tasks).pipe(untilDestroyed(this)).subscribe(res => {
+      this.tasksService.getTasks(problem.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
         this.tasksByIdMap[problem.id] = {container: problem, tasks: res};
         if (Object.keys(this.tasksByIdMap).length === 1) {
           this.store.dispatch(new SetFocusedTaskForSubtasks(problem));

@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   input,
   OnChanges,
   output,
@@ -8,6 +9,7 @@ import {
   SimpleChanges,
   inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TaskC } from "../../../models/task-class";
 import { SelectionModel } from "@angular/cdk/collections";
 import * as _ from "lodash";
@@ -17,7 +19,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { Store } from "@ngxs/store";
 import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { AppState } from "../../../state/app.state";
 import { distinctUntilChanged, map, withLatestFrom } from "rxjs/operators";
 import { taskContainerDescriptionsAreEqual } from "../../../shared/libs/utils.lib";
@@ -29,7 +30,6 @@ import { TaskContainer } from "../../../models/interfaces/task-container";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
-@UntilDestroy()
 @Component({
   selector: 'app-tasks-list',
   templateUrl: './tasks-list.component.html',
@@ -73,6 +73,7 @@ export class TasksListComponent implements OnInit, OnChanges {
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
   private store = inject(Store);
+  private destroyRef = inject(DestroyRef);
 
   /**
    * Инициализация компонента. Подписка на
@@ -84,7 +85,7 @@ export class TasksListComponent implements OnInit, OnChanges {
     this.commandsService.getDataStateChange()
       .pipe(
         withLatestFrom(this.store.select(AppState.getDisabledHotkeys)),
-        untilDestroyed(this))
+        takeUntilDestroyed(this.destroyRef))
       .subscribe(([state, hotkeysDisabled]: [CommandsStateInterface, boolean]) => {
         if (hotkeysDisabled) {
           return;
@@ -93,7 +94,7 @@ export class TasksListComponent implements OnInit, OnChanges {
       })
 
     this.store.select(AppState.getFocusedTaskForSubtasks).pipe(
-      untilDestroyed(this),
+      takeUntilDestroyed(this.destroyRef),
       map((el: TaskContainer | null) => this.showTitle() && el && this.container().getFullDescription() === el.getFullDescription(),
         distinctUntilChanged()
       )).subscribe((el) => {
@@ -101,7 +102,7 @@ export class TasksListComponent implements OnInit, OnChanges {
       this.cdr.detectChanges();
     });
 
-    this.taskContainerService.refreshSubtasks$.pipe(untilDestroyed(this)).subscribe(v => {
+    this.taskContainerService.refreshSubtasks$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(v => {
       if (taskContainerDescriptionsAreEqual(v.getTaskContainerDescription(), this.container().getTaskContainerDescription())) {
         this.refreshTasks.emit();
       }
@@ -128,7 +129,7 @@ export class TasksListComponent implements OnInit, OnChanges {
           }
           const parent = { id: this.container().id, type: this.container().type };
           this.tasksService.createNewTask({ task, parent })
-            .pipe(untilDestroyed(this))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((newTask: TaskC) => {
               if (makeSelected) {
                 this.tasksByIdMap[newTask.id] = {container: newTask, tasks: []};
@@ -305,7 +306,7 @@ export class TasksListComponent implements OnInit, OnChanges {
    * Обработчик клика на завершение задачи
    */
   onFinishTasksClick() {
-    this.tasksService.finishTasksByIds(this.selection.selected).pipe(untilDestroyed(this)).subscribe(
+    this.tasksService.finishTasksByIds(this.selection.selected).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       {
         next: () => {
           this.clearSelection();
@@ -321,7 +322,7 @@ export class TasksListComponent implements OnInit, OnChanges {
   onFinishAllTasksHandler() {
     this.clearSelection();
     const subtasks = this.tasks();
-    this.tasksService.finishTasks(subtasks).pipe(untilDestroyed(this)).subscribe(
+    this.tasksService.finishTasks(subtasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       () => this.refreshTasks.emit());
   }
 
@@ -342,8 +343,8 @@ export class TasksListComponent implements OnInit, OnChanges {
    * @param id
    */
   refreshTasksOfSelectedSubtask(id: number) {
-    this.tasksService.getTask(id).pipe(untilDestroyed(this)).subscribe(task => {
-      this.tasksService.getTasks(task.tasks).pipe(untilDestroyed(this)).subscribe(tasks => {
+    this.tasksService.getTask(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(task => {
+      this.tasksService.getTasks(task.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(tasks => {
         this.tasksByIdMap[id] = {tasks, container: task};
       })
     })
@@ -355,7 +356,7 @@ export class TasksListComponent implements OnInit, OnChanges {
    */
   private handleSelectSubtaskAction() {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Select subtask'}});
-    dialogRef.afterClosed().pipe(untilDestroyed(this)).subscribe((value: string) => {
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value: string) => {
       if (value && !isNaN(+value)) {
         const index = +value;
         if (index > 0 && index <= this.tasks.length) {
@@ -381,7 +382,7 @@ export class TasksListComponent implements OnInit, OnChanges {
     if (this.checkedElement(subtask)) {
       this.removeTasksByIdMapKey(subtask.id);
     } else {
-      this.tasksService.getTasks(subtask.tasks).pipe(untilDestroyed(this)).subscribe(res => {
+      this.tasksService.getTasks(subtask.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
         this.tasksByIdMap[subtask.id] = {container: subtask, tasks: res};
         if (!$event.altKey) {
           this.store.dispatch(new SetFocusedTaskForSubtasks(subtask));
@@ -416,7 +417,7 @@ export class TasksListComponent implements OnInit, OnChanges {
    * @param subtask
    */
   finishSubtask(subtask: TaskC) {
-    this.tasksService.finishTask(subtask).pipe(untilDestroyed(this)).subscribe(() => this.refreshTasks.emit())
+    this.tasksService.finishTask(subtask).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.refreshTasks.emit())
   }
 
   private checkIfTaskForSubtasksIsLast() {
@@ -443,7 +444,7 @@ export class TasksListComponent implements OnInit, OnChanges {
           }
           const parent = { id: this.container().id, type: this.container().type };
           this.tasksService.createNewTask({ task, parent })
-            .pipe(untilDestroyed(this))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((newTask: TaskC) => {
               this.navigationService.navigateToTask(newTask.id); // TODO send task so it wont upload it
             })
@@ -453,7 +454,7 @@ export class TasksListComponent implements OnInit, OnChanges {
 
   resolveContainer(container: TaskContainer) {
     if (isTask(container)) {
-      this.tasksService.finishTask(container).pipe(untilDestroyed(this)).subscribe(() => this.refreshTasks.emit())
+      this.tasksService.finishTask(container).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.refreshTasks.emit())
     }
   }
 }

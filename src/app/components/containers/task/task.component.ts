@@ -1,17 +1,16 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskC } from '../../../models/task-class';
 import { getUrlByDescription } from '../../../shared/libs/dashboard.lib';
 import { Title } from "@angular/platform-browser";
 import { map } from "rxjs/operators";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
-@UntilDestroy()
 @Component({
   selector: 'app-task',
   templateUrl: './task.component.html',
@@ -37,9 +36,10 @@ export class TaskComponent implements OnInit, OnDestroy {
   private titleService = inject(Title);
   private tasksService = inject(TasksService);
   private tasksContainerService = inject(TaskContainerService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
+    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       this.isLoading.set(true);
       this.id = params['id'];
       this.refreshTaskForTheFirstTime();

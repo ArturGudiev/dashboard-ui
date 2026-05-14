@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   input,
   OnInit,
@@ -9,13 +10,12 @@ import {
   viewChild,
   inject,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from "rxjs";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { FormsModule } from "@angular/forms";
 
 import { MaterialModule } from "../../../modules/material/material.module";
 
-@UntilDestroy()
 @Component({
   selector: 'app-notes',
   imports: [
@@ -34,9 +34,10 @@ export class NotesComponent implements OnInit {
   valueText = viewChild<ElementRef>('valueText');
 
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.toggleEditEvent().pipe(untilDestroyed(this)).subscribe(() => this.editNotesValue());
+    this.toggleEditEvent().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.editNotesValue());
   }
 
 

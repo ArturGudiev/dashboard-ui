@@ -1,10 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { Question } from "../../../models/question";
-import { UntilDestroy } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { map } from "rxjs/operators";
@@ -12,7 +12,6 @@ import { TaskContainerComponent } from "../task-container/task-container.compone
 import { QuestionsService } from "../../../services/task-container-services/questions.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
-@UntilDestroy()
 @Component({
   selector: 'app-question',
   templateUrl: './question.component.html',
@@ -33,6 +32,8 @@ export class QuestionComponent implements OnInit {
   refreshProblemsList$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.problems));
   refreshQuestionsList$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.questions));
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -44,7 +45,7 @@ export class QuestionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       this.isLoading.set(true);
       this.id = params['id'];
       this.refreshQuestion();

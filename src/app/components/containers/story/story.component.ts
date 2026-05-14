@@ -1,16 +1,15 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Story } from "../../../models/story";
 import { ActivatedRoute } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 import { map } from "rxjs/operators";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 import { TaskContainerComponent } from "../task-container/task-container.component";
 import { StoriesService } from "../../../services/task-container-services/stories.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
-@UntilDestroy()
 @Component({
     selector: 'app-story',
     templateUrl: './story.component.html',
@@ -33,10 +32,11 @@ export class StoryComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private storiesService = inject(StoriesService);
   private titleService = inject(Title);
-  private taskContainerService = inject(TaskContainerService);  
+  private taskContainerService = inject(TaskContainerService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
+    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       this.id = params['id'];
       this.refreshStory();
     });
