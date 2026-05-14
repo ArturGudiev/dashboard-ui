@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, effect, inject, input, output } from '@angular/core';
 import { TaskC } from "../../../models/task-class";
 import { Observable } from "rxjs";
 import { MaterialModule } from "../../../modules/material/material.module";
@@ -15,38 +15,31 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
     ],
     styleUrls: ['./multitasking-item.component.sass']
 })
-export class MultitaskingItemComponent implements OnInit, OnChanges {
-  @Input() taskContainer!: TaskContainer;
-  @Input() refreshTasks$!: () => Observable<number[]>;
-  @Output() refreshTaskContainer = new EventEmitter();
-  @Output() remoteItem = new EventEmitter();
+export class MultitaskingItemComponent {
+  taskContainer = input.required<TaskContainer>();
+  refreshTasks$ = input.required<() => Observable<number[]>>();
+  refreshTaskContainer = output<void>();
+  remoteItem = output<void>();
 
   tasks: TaskC[] = [];
-  constructor(
-    private tasksService: TasksService
-  ) { }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['taskContainer']) {
+  private tasksService = inject(TasksService);
+
+  constructor() {
+    effect(() => {
       this.refreshSubtasks();
-    }
-
-  }
-
-  ngOnInit(): void {
-    this.refreshSubtasks();
-    this.tasksService.getTasks(this.taskContainer.tasks).subscribe(res => this.tasks = res)
+    });
   }
 
   refreshSubtasks() {
-    this.tasksService.getTasks(this.taskContainer.tasks).subscribe((newSubtasks ) => {
+    this.tasksService.getTasks(this.taskContainer().tasks).subscribe((newSubtasks) => {
       this.tasks = newSubtasks;
     });
   }
 
   refreshTasks() {
-    this.refreshTasks$().subscribe(tasks => {
-      this.taskContainer.tasks = tasks;
+    this.refreshTasks$()().subscribe(tasks => {
+      this.taskContainer().tasks = tasks;
       this.tasksService.getTasks(tasks).subscribe(res => this.tasks = res);
     })
   }

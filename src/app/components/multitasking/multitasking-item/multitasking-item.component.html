@@ -1,6 +1,6 @@
 
 <div style="display: flex; align-items: baseline; margin-bottom: 1rem">
-    <div>{{taskContainer.getFullDescription()}}</div>
+    <div>{{taskContainer().getFullDescription()}}</div>
     <button
         mat-icon-button
         (click)="remoteItem.emit()"
@@ -10,7 +10,7 @@
     </button>
 </div>
 <app-tasks-list
-  [container]="taskContainer"
+  [container]="taskContainer()"
   [showTitle]="true"
   [tasks]="tasks"
   [level]="0"
