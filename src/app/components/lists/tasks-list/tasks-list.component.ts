@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   inject
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { TaskC } from "../../../models/task-class";
 import { SelectionModel } from "@angular/cdk/collections";
 import * as _ from "lodash";
@@ -17,10 +17,8 @@ import { every, isNaN } from "lodash";
 import { CommandsService, CommandsStateInterface } from "../../../services/commands.service";
 import { MatDialog } from "@angular/material/dialog";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
-import { Store } from "@ngxs/store";
-import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
-import { AppState } from "../../../state/app.state";
-import { distinctUntilChanged, map, withLatestFrom } from "rxjs/operators";
+import { AppStore } from "../../../state/app.store";
+import { distinctUntilChanged, map } from "rxjs/operators";
 import { taskContainerDescriptionsAreEqual } from "../../../shared/libs/utils.lib";
 import { NavigationService } from "../../../services/navigation.service";
 import { isTask } from "../../../shared/constants";
@@ -72,7 +70,7 @@ export class TasksListComponent implements OnInit, OnChanges {
   private navigationService = inject(NavigationService);
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
-  private store = inject(Store);
+  private appStore = inject(AppStore);
   private destroyRef = inject(DestroyRef);
 
   /**
@@ -83,21 +81,19 @@ export class TasksListComponent implements OnInit, OnChanges {
    */
   ngOnInit(): void {
     this.commandsService.getDataStateChange()
-      .pipe(
-        withLatestFrom(this.store.select(AppState.getDisabledHotkeys)),
-        takeUntilDestroyed(this.destroyRef))
-      .subscribe(([state, hotkeysDisabled]: [CommandsStateInterface, boolean]) => {
-        if (hotkeysDisabled) {
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state: CommandsStateInterface) => {
+        if (this.appStore.disabledHotkeys()) {
           return;
         }
         this.handleTaskCommand(state.command, state.args);
       })
 
-    this.store.select(AppState.getFocusedTaskForSubtasks).pipe(
+    toObservable(this.appStore.focusedTaskForSubtasks).pipe(
       takeUntilDestroyed(this.destroyRef),
-      map((el: TaskContainer | null) => this.showTitle() && el && this.container().getFullDescription() === el.getFullDescription(),
-        distinctUntilChanged()
-      )).subscribe((el) => {
+      map((el: TaskContainer | null) => this.showTitle() && el && this.container().getFullDescription() === el.getFullDescription()),
+      distinctUntilChanged()
+    ).subscribe((el) => {
       this.isContainerFocused = !!el;
       this.cdr.detectChanges();
     });
@@ -133,7 +129,7 @@ export class TasksListComponent implements OnInit, OnChanges {
             .subscribe((newTask: TaskC) => {
               if (makeSelected) {
                 this.tasksByIdMap[newTask.id] = {container: newTask, tasks: []};
-                this.store.dispatch(new SetFocusedTaskForSubtasks(newTask));
+                this.appStore.setFocusedTaskForSubtasks(newTask);
               }
               this.refreshTasks.emit();
             })
@@ -209,7 +205,7 @@ export class TasksListComponent implements OnInit, OnChanges {
       }
     }
 
-    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.tasks.length) {
+    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.tasks().length) {
       const index = +arr[0] - 1;
       const task = this.tasks()[index];
 
@@ -367,7 +363,7 @@ export class TasksListComponent implements OnInit, OnChanges {
           }
           this.tasksService.getTasks(task.tasks).subscribe(tasks => {
             this.tasksByIdMap[task.id] = {tasks, container: task};
-            this.store.dispatch(new SetFocusedTaskForSubtasks(task));
+            this.appStore.setFocusedTaskForSubtasks(task);
           });
         }
       }
@@ -385,7 +381,7 @@ export class TasksListComponent implements OnInit, OnChanges {
       this.tasksService.getTasks(subtask.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
         this.tasksByIdMap[subtask.id] = {container: subtask, tasks: res};
         if (!$event.altKey) {
-          this.store.dispatch(new SetFocusedTaskForSubtasks(subtask));
+          this.appStore.setFocusedTaskForSubtasks(subtask);
         }
       })
     }
@@ -401,7 +397,7 @@ export class TasksListComponent implements OnInit, OnChanges {
    * Фокусирование задачи
    */
   focusSubtask() {
-    this.store.dispatch(new SetFocusedTaskForSubtasks(this.container()));
+    this.appStore.setFocusedTaskForSubtasks(this.container());
   }
 
   /**
@@ -423,7 +419,7 @@ export class TasksListComponent implements OnInit, OnChanges {
   private checkIfTaskForSubtasksIsLast() {
     if (Object.keys(this.tasksByIdMap).length === 1) {
       const id = +Object.keys(this.tasksByIdMap)[0];
-      this.store.dispatch(new SetFocusedTaskForSubtasks(this.tasksByIdMap[id].container));
+      this.appStore.setFocusedTaskForSubtasks(this.tasksByIdMap[id].container);
     }
   }
 

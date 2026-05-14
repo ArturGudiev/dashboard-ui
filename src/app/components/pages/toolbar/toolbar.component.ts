@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -17,8 +17,7 @@ import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 import { FormsModule } from "@angular/forms";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { GetDatetimeDialogComponent } from "../../dialogs/get-datetime-dialog/get-datetime-dialog.component";
-import { Store } from "@ngxs/store";
-import { SetDoneTaskFromDate } from "../../../state/app.actions";
+import { AppStore } from "../../../state/app.store";
 
 @Component({
   selector: 'app-toolbar',
@@ -43,6 +42,8 @@ export class ToolbarComponent implements OnInit {
   showUntilValue = false;
   value: string = '';
 
+  private appStore = inject(AppStore);
+
   constructor(
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
@@ -52,7 +53,6 @@ export class ToolbarComponent implements OnInit {
     private navigateService: NavigationService,
     private messageService: MessageService,
     private router: Router,
-    private store: Store,
 
   ) { }
 
@@ -88,9 +88,8 @@ export class ToolbarComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.store.dispatch(new SetDoneTaskFromDate(result.dateTimeValue)).subscribe(() => {
-          this.dashboardService.updateDoneTasksNumber();
-        });
+        this.appStore.setDoneTaskFromDate(result.dateTimeValue);
+        this.dashboardService.updateDoneTasksNumber();
         return;
       }
     });
@@ -127,6 +126,7 @@ export class ToolbarComponent implements OnInit {
     this.hotkeys.addShortcut({keys: 'Control.Alt.y'}).subscribe(() => this.commandService.setCommand('new-task-for-focused-task-and-go'));
     this.hotkeys.addShortcut({keys: 'Control.Meta.y'}).subscribe(() => this.commandService.setCommand('new-task-for-focused-task-and-go'));
     this.hotkeys.addShortcut({keys: '='}).subscribe(() => this.commandService.setCommand('task'));
+    this.hotkeys.addShortcut({keys: '+'}).subscribe(() => this.commandService.setCommand('task'));
     this.hotkeys.addShortcut({keys: 'Meta.o'}).subscribe(() => this.commandService.setCommand('selected-task'));
     this.hotkeys.addShortcut({keys: 'Alt.o'}).subscribe(() => this.commandService.setCommand('selected-task'));
 

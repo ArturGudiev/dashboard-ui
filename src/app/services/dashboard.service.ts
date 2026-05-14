@@ -1,8 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from "rxjs";
 import { ApiService } from "./api.service";
-import { AppState } from "../state/app.state";
-import { Store } from "@ngxs/store";
+import { AppStore } from "../state/app.store";
 
 export interface DashboardStateInterface {
   doneTasks: number;
@@ -20,7 +19,7 @@ export class DashboardService {
   private data = new BehaviorSubject(this.initialState);
 
   private tasksApiService = inject(ApiService);
-  private store = inject(Store);
+  private appStore = inject(AppStore);
 
   getDataCurrentState(): DashboardStateInterface {
     return this.data.getValue();
@@ -40,14 +39,12 @@ export class DashboardService {
   }
 
   async updateDoneTasksNumber() {
-    this.store.select(AppState.getDoneTaskFromDate).subscribe(from => {
-        this.tasksApiService._getDoneTasksNumber(from).subscribe((res: any) => {
-          if (typeof res.doneTasks == 'number') {
-            this.setDoneTasks(res.doneTasks);
-          }
-        })
+    const from = this.appStore.doneTaskFromDate();
+    this.tasksApiService._getDoneTasksNumber(from).subscribe((res: any) => {
+      if (typeof res.doneTasks == 'number') {
+        this.setDoneTasks(res.doneTasks);
       }
-    );
+    });
   }
 
   setDoneTasksUntilValue(doneTasksUntilValue: number) {

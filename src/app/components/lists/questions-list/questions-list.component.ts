@@ -5,8 +5,7 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { Router } from "@angular/router";
 import { TaskC } from "../../../models/task-class";
 import { MatCheckboxChange } from "@angular/material/checkbox";
-import { SetFocusedTaskForSubtasks } from "../../../state/app.actions";
-import { Store } from "@ngxs/store";
+import { AppStore } from "../../../state/app.store";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { GET_VALUE_DIALOG_OPTIONS } from "../../../shared/constants";
 import { MatDialog } from "@angular/material/dialog";
@@ -41,7 +40,7 @@ export class QuestionsListComponent implements OnInit {
   private tasksService = inject(TasksService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
-  private store = inject(Store);
+  private appStore = inject(AppStore);
   private commandsService = inject(CommandsService);
   private destroyRef = inject(DestroyRef);
 
@@ -138,7 +137,7 @@ export class QuestionsListComponent implements OnInit {
       this.tasksService.getTasks(question.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
         this.tasksByIdMap[question.id] = {container: question, tasks: res};
         if (Object.keys(this.tasksByIdMap).length === 1) {
-          this.store.dispatch(new SetFocusedTaskForSubtasks(question));
+          this.appStore.setFocusedTaskForSubtasks(question);
         }
       })
       ;
