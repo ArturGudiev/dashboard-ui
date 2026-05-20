@@ -135,8 +135,9 @@ export class TaskContainerSignalComponent implements OnInit {
 
   }
 
+  /** Reload container from parent so `taskContainer().tasks` IDs match the server (e.g. after add task). */
   refreshTasks(): void {
-    this.tasksResource.reload();
+    this.refreshContainer.emit();
   }
 
   private refreshTaskContainerParts() {
