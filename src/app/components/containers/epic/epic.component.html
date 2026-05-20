@@ -1,16 +1,12 @@
-@if (epicResource.isLoading()) {
+@if (showInitialLoadSpinner()) {
   <mat-spinner></mat-spinner>
-} @else {
-  @let epic = epicResource.value();
-  @let parentsPath = parentsPathResource.value();
-  @if (epic && parentsPath)  {
-    <app-task-container-signal
-      [taskContainer]="epic"
-      [parentsPath]="parentsPath"
-      (refreshContainer)="epicResource.reload()"
-      (updateTaskContainer)="updateEpic()"
-      [showEpics]="true"
-      [showStories]="true"
-    ></app-task-container-signal>
-  }
+} @else if (viewEpic(); as epic) {
+  <app-task-container-signal
+    [taskContainer]="epic"
+    [parentsPath]="viewParentsPath()"
+    (refreshContainer)="epicResource.reload()"
+    (updateTaskContainer)="updateEpic()"
+    [showEpics]="true"
+    [showStories]="true"
+  ></app-task-container-signal>
 }
