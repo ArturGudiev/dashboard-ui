@@ -1,4 +1,4 @@
-import { Component, input, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, input, Input, OnChanges, OnInit, SimpleChanges , ChangeDetectionStrategy} from '@angular/core';
 import { NestedTreeControl } from "@angular/cdk/tree";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { MatTreeModule } from "@angular/material/tree";
@@ -14,6 +14,7 @@ export interface TreeNode {
 
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-my-tree',
   imports: [MatTreeModule, MatIconModule, NgStyle],
   templateUrl: './my-tree.component.html',

@@ -1,4 +1,4 @@
-import { Component, inject, Inject, model } from '@angular/core';
+import { Component, inject, Inject, model , ChangeDetectionStrategy} from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from "@angular/material/dialog";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
@@ -15,6 +15,7 @@ export interface AddLogDialogResult {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-log-dialog',
   imports: [
     CdkTextareaAutosize,

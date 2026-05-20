@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter, withNavigationErrorHandler } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withNavigationErrorHandler } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -12,6 +12,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(
       routes,
+      withComponentInputBinding(),
       withNavigationErrorHandler((error) => {
         // Handles router navigation failures (e.g. errors while loading a route/resolver/guard).
         console.error('Navigation error:', error);

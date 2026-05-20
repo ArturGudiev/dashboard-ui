@@ -1,5 +1,6 @@
 import {
-  ChangeDetectorRef,
+  afterNextRender,
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
@@ -26,7 +27,8 @@ import { MatInputModule } from "@angular/material/input";
   ],
   templateUrl: './notes.component.html',
   standalone: true,
-  styleUrls: ['./notes.component.sass']
+  styleUrls: ['./notes.component.sass'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotesComponent implements OnInit {
   editValue = signal<boolean>(false);
@@ -35,13 +37,11 @@ export class NotesComponent implements OnInit {
   updateNotes = output<string>();
   valueText = viewChild<ElementRef>('valueText');
 
-  private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.toggleEditEvent().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.editNotesValue());
   }
-
 
   updateNotesValue() {
     const valueText = this.valueText();
@@ -52,11 +52,10 @@ export class NotesComponent implements OnInit {
   }
 
   toggleEditValue() {
-    this.editValue.set(!this.editValue());
-    this.cdr.detectChanges(); // without it it won't focus automatically todo find out why
+    this.editValue.update(value => !value);
 
     if (this.editValue()) {
-      this.valueText()?.nativeElement.focus();
+      afterNextRender(() => this.valueText()?.nativeElement.focus());
     }
   }
 

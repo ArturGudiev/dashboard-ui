@@ -1,4 +1,4 @@
-import { Component, DestroyRef, EventEmitter, inject, input, Input, OnInit, output, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Question } from "../../../models/question";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -21,6 +21,7 @@ import { QuestionsService } from "../../../services/task-container-services/ques
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-questions-list',
   imports: [
     MatTableModule,
@@ -39,9 +40,9 @@ export class QuestionsListComponent implements OnInit {
   questions = input.required<Question[]>();
   refreshQuestions = output<void>();
   readonly displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
+  readonly expandedSubtasks = signal<Record<number, { tasks: TaskC[]; container: TaskContainer }>>({});
+  readonly tasksByIdMapKeys = computed(() => Object.keys(this.expandedSubtasks()).map(Number));
   readonly selection = new SelectionModel<Question>(true, []);
-
-  readonly tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
   private questionsService = inject(QuestionsService);
   private tasksService = inject(TasksService);
   private router = inject(Router);
@@ -49,10 +50,6 @@ export class QuestionsListComponent implements OnInit {
   private appStore = inject(AppStore);
   private commandsService = inject(CommandsService);
   private destroyRef = inject(DestroyRef);
-
-  get tasksByIdMapKeys(): number[] {
-    return Object.keys(this.tasksByIdMap).map(e => Number(e));
-  }
 
   ngOnInit(): void {
     this.commandsService.getDataStateChange().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(state => {
@@ -98,7 +95,10 @@ export class QuestionsListComponent implements OnInit {
   refreshTasksOfSelectedQuestion(id: number) {
     this.questionsService.getQuestion(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(problem => {
       this.tasksService.getTasks(problem.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(tasks => {
-        this.tasksByIdMap[id] = {tasks, container: problem};
+        this.expandedSubtasks.update(map => ({
+          ...map,
+          [id]: { tasks, container: problem },
+        }));
       })
     })
   }
@@ -106,7 +106,7 @@ export class QuestionsListComponent implements OnInit {
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.questions.length;
+    const numRows = this.questions().length;
     return numSelected === numRows;
   }
 
@@ -128,7 +128,7 @@ export class QuestionsListComponent implements OnInit {
    * @param subtask
    */
   checkedElement(question: Question): boolean {
-    return Object.keys(this.tasksByIdMap).includes(String(question.id));
+    return Object.hasOwn(this.expandedSubtasks(), question.id);
   }
 
   /**
@@ -141,14 +141,19 @@ export class QuestionsListComponent implements OnInit {
   setShowSubtasksField($event: MatCheckboxChange, question: Question) {
     if ($event.checked) {
       this.tasksService.getTasks(question.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
-        this.tasksByIdMap[question.id] = {container: question, tasks: res};
-        if (Object.keys(this.tasksByIdMap).length === 1) {
+        this.expandedSubtasks.update(map => ({
+          ...map,
+          [question.id]: { container: question, tasks: res },
+        }));
+        if (Object.keys(this.expandedSubtasks()).length === 1) {
           this.appStore.setFocusedTaskForSubtasks(question);
         }
-      })
-      ;
+      });
     } else {
-      delete this.tasksByIdMap[question.id];
+      this.expandedSubtasks.update(map => {
+        const { [question.id]: _removed, ...rest } = map;
+        return rest;
+      });
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit , ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DashboardService } from "./services/dashboard.service";
@@ -6,6 +6,7 @@ import { AlertService, IAlertsDataState } from "./services/alert.service";
 import { SidenavComponent } from "./components/pages/sidenav/sidenav.component";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-root',
     imports: [SidenavComponent],
   templateUrl: './app.component.html',

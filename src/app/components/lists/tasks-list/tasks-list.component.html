@@ -3,7 +3,7 @@
   <h3
     id="subtasks-task-container-title"
     (click)="focusSubtask()"
-    [ngClass]="{ 'selected-for-subtasks': isContainerFocused }"
+    [ngClass]="{ 'selected-for-subtasks': isContainerFocused() }"
     >
     {{ container().getFullDescription() }}
   </h3>
@@ -26,11 +26,11 @@
       </button>
 
       <!-- Завершить выделенные задачи -->
-      @if (showFinishSelectedTasksIcon) {
+      @if (showFinishSelectedTasksIcon()) {
         <button
           mat-mini-fab color="primary"
           class="finish-tasks-button"
-          [disabled]="!this.selection.hasValue()"
+          [disabled]="!hasSelection()"
           (click)="onFinishTasksClick()"
           >
           <mat-icon class="tasks-icon">done</mat-icon>
@@ -38,7 +38,7 @@
       }
 
       <!-- Завершить все задачи -->
-      @if (showFinishAllTasksIcon) {
+      @if (showFinishAllTasksIcon()) {
         <button
           mat-mini-fab
           class="finish-tasks-button"
@@ -74,8 +74,8 @@
           >
           <mat-checkbox
             (change)="$event ? onMainCheckboxClick() : null"
-            [checked]="selection.hasValue() && areAllSelected()"
-            [indeterminate]="selection.hasValue() && !areAllSelected()"
+            [checked]="hasSelection() && areAllSelected()"
+            [indeterminate]="hasSelection() && !areAllSelected()"
             >
           </mat-checkbox>
         </th>
@@ -83,12 +83,12 @@
         <!-- 2) Колонка с чекбоксами для выделения (header)  -->
         <td mat-cell
           *matCellDef="let row; let i = index"
-          [ngClass]="{'highlight': selection.selected.includes(row.id)}"
+          [ngClass]="{'highlight': isSelected(row.id)}"
           >
           <mat-checkbox
             (click)="$event.stopPropagation()"
-            (change)="$event ? selection.toggle(row.id) : null"
-            [checked]="selection.isSelected(row.id)"
+            (change)="$event ? toggleSelection(row.id) : null"
+            [checked]="isSelected(row.id)"
             >
           </mat-checkbox>
         </td>
@@ -99,7 +99,7 @@
         <th mat-header-cell *matHeaderCellDef> No.</th>
         <td mat-cell
           class="row-link"
-          [ngClass]="{'highlight': selection.selected.includes(subtask.id)}"
+          [ngClass]="{'highlight': isSelected(subtask.id)}"
           (click)="onSubtaskClick(subtask)"
           *matCellDef="let subtask; let i = index"
           >
@@ -114,7 +114,7 @@
           mat-cell
           *matCellDef="let subtask;"
           (click)="onSubtaskClick(subtask)"
-          [ngClass]="{'highlight': selection.selected.includes(subtask.id)}"
+          [ngClass]="{'highlight': isSelected(subtask.id)}"
           >
           <span
             class="row-link"
@@ -137,7 +137,7 @@
           *matCellDef="let subtask; let i=index"
           id="row-{{i}}"
           class="row-link"
-          [ngClass]="{'highlight': selection.selected.includes(subtask.id)}"
+          [ngClass]="{'highlight': isSelected(subtask.id)}"
           >
           <mat-icon (click)="finishSubtask(subtask)">done</mat-icon>
         </td>
@@ -152,7 +152,7 @@
           *matCellDef="let subtask; let i=index"
           id="row-{{i}}"
           class="row-link"
-          [ngClass]="{'highlight': selection.selected.includes(subtask.id)}"
+          [ngClass]="{'highlight': isSelected(subtask.id)}"
           >
           <mat-checkbox
             [checked]="checkedElement(subtask)"
@@ -168,12 +168,12 @@
 
     <!-- Список списков подзадач соотетствующий выбранным (для отображения подзадач) задачам -->
     <div id="subtasks-of-selected-tasks">
-      @for (item of tasksByIdMapKeys; track item) {
+      @for (item of tasksByIdMapKeys(); track item) {
         <app-tasks-list
-          [container]="tasksByIdMap[item].container"
-          [tasks]="tasksByIdMap[item].tasks"
+          [container]="expandedSubtasks()[item].container"
+          [tasks]="expandedSubtasks()[item].tasks"
           (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
-          (resolveParent)="resolveContainer(tasksByIdMap[item].container)"
+          (resolveParent)="resolveContainer(expandedSubtasks()[item].container)"
           [showTitle]="true"
           [level]="level() + 1"
         ></app-tasks-list>

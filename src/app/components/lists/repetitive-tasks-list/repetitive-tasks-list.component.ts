@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, effect, inject, input, output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, input, output, ViewChild , ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
@@ -13,6 +13,7 @@ import { ModelsRepetitiveTaskResponse } from "../../../types/generated";
 import { RepetitiveTasksService } from "../../../services/task-container-services/repetitive-tasks.service";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'dash-repetitive-tasks-list',
   templateUrl: './repetitive-tasks-list.component.html',
   imports: [

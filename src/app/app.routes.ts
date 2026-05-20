@@ -15,7 +15,7 @@ export const routes: Routes = [
   {path: 'question/:id', component: QuestionComponent},
   {path: 'problem/:id', component: ProblemComponent},
   {path: 'story/:id', component: StoryComponent},
-  {path: 'epic/:id', component: EpicComponent},
+  {path: 'epic/:epicId', component: EpicComponent},
   {path: 'epics', component: EpicsComponent},
   {path: 'repetitive-tasks', component: RepetitiveTasksComponent},
   {path: 'help', component: HelpComponent},

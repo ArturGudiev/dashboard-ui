@@ -86,10 +86,10 @@
 
     <!-- Список списков подзадач соотетствующий выбранным (для отображения подзадач) задачам -->
     <div id="subtasks-of-selected-tasks">
-      @for (item of tasksByIdMapKeys; track item) {
+      @for (item of tasksByIdMapKeys(); track item) {
         <app-tasks-list
-          [container]="tasksByIdMap[item].container"
-          [tasks]="tasksByIdMap[item].tasks"
+          [container]="expandedSubtasks()[item].container"
+          [tasks]="expandedSubtasks()[item].tasks"
           (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
           [showTitle]="true"
           [level]="1"

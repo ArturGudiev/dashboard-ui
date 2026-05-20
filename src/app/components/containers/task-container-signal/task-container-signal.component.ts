@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, HostListener, inject, input, OnInit, output, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Hotkey, HotkeysService } from "angular2-hotkeys";
@@ -23,7 +23,6 @@ import { SubStoriesComponent } from "../../lists/substories/sub-stories.componen
 import { QuestionsListComponent } from "../../lists/questions-list/questions-list.component";
 import { ProblemsListComponent } from "../../lists/problems-list/problems-list.component";
 
-import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
 import { TaskContainer } from "../../../models/interfaces/task-container";
@@ -35,10 +34,14 @@ import { ProblemsService } from "../../../services/task-container-services/probl
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { UtilsService } from "../../../services/utils.service";
 import { ContainerReportComponent } from "../container-report/container-report.component";
+import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
+
+/** Stable fallback so `[tasks]="… ?? []"` does not allocate a new array every CD tick (breaks TasksListComponent's effect). */
+const EMPTY_TASKS: TaskC[] = [];
 
 @Component({
-  selector: 'app-task-container',
-  templateUrl: './task-container.component.html',
+  selector: 'app-task-container-signal',
+  templateUrl: './task-container-signal.component.html',
   imports: [
     MatButtonModule,
     MatIconModule,
@@ -46,35 +49,41 @@ import { ContainerReportComponent } from "../container-report/container-report.c
     ParentsPathComponent,
     EpicsListComponent,
     SubStoriesComponent,
-    QuestionsListComponent,
-    ProblemsListComponent,
+    // QuestionsListComponent,
+    // ProblemsListComponent,
     NotesComponent,
+    ContainerReportComponent,
     TasksListComponent,
-    ContainerReportComponent
   ],
   standalone: true,
-  styleUrls: ['./task-container.component.sass'],
+  styleUrls: ['./task-container-signal.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskContainerComponent implements OnInit {
+export class TaskContainerSignalComponent implements OnInit {
   taskContainer = input.required<TaskContainer>();
 
   parentsPath = input.required<string[]>();
   showEpics = input<boolean>(false);
   showStories = input<boolean>(false);
 
-  refreshTasks$ = input.required<() => Observable<number[]>>();
-  refreshProblems$ = input.required<() => Observable<number[]>>();
-  refreshQuestions$ = input.required<() => Observable<number[]>>();
+  refreshContainer = output<void>();
 
   onDoneAllClick = output<void>();
   updateTaskContainer = output<void>();
-  refreshTaskContainer = output<void>();
   resolve = output<void>();
 
   readonly displayReport = signal(false);
 
-  tasks = signal<TaskC[]>([]);
+  // tasks = signal<TaskC[]>([]);
+
+  tasksResource = rxResource<TaskC[], { tasks: number[] }>({
+    params: () => ({ tasks: this.taskContainer().tasks }),
+    stream: ({ params }) => this.tasksService.getTasks(params.tasks),
+  });
+
+  /** Use a stable empty reference until the resource resolves; avoid `?? []` in the template. */
+  readonly tasksForList = computed(() => this.tasksResource.value() ?? EMPTY_TASKS);
+
   epics = signal<Epic[]>([]);
   stories = signal<Story[]>([]);
   problems = signal<Problem[]>([]);
@@ -101,11 +110,7 @@ export class TaskContainerComponent implements OnInit {
   constructor() {
     effect(() => {
       const container = this.taskContainer();
-      if (!container) {
-        return;
-      }
-      this.showEpics();
-      this.showStories();
+      if (!container) { return; }
       this.refreshTaskContainerParts();
     });
   }
@@ -117,7 +122,7 @@ export class TaskContainerComponent implements OnInit {
     }));
     this._hotkeysService.add(new Hotkey('alt+shift+r', (): boolean => {
       this.addRecord();
-      return false; // Prevent bubbling
+      return false;
     }));
 
     this.commandsService.getDataStateChange().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(state => {
@@ -126,8 +131,12 @@ export class TaskContainerComponent implements OnInit {
 
     this.taskContainerService.refreshSubtasks$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.refreshTaskContainer.emit());
+      .subscribe(() => this.refreshContainer.emit());
 
+  }
+
+  refreshTasks(): void {
+    this.tasksResource.reload();
   }
 
   private refreshTaskContainerParts() {
@@ -135,9 +144,7 @@ export class TaskContainerComponent implements OnInit {
     if (!container) {
       return;
     }
-    this.refreshTasks();
-    this.refreshProblems();
-    this.refreshQuestions();
+
     if (this.showStories()) {
       this.refreshSubstories();
     }
@@ -194,7 +201,7 @@ export class TaskContainerComponent implements OnInit {
   }
 
   finishAllTasks() {
-    this.tasksService.finishTasks(this.tasks()).subscribe(() => this.refreshTasks());
+    // this.tasksService.finishTasks(this.tasksResource.value() ?? []).subscribe(() => this.refreshContainer.emit());
   }
 
   private finishProblemHandler(args: string[]) {
@@ -213,20 +220,23 @@ export class TaskContainerComponent implements OnInit {
       return;
     }
     if (args.length > 0 && args[0] && /^\d+-\d+$/.test(args[0])) {
+      const tasks = this.tasksResource.value() ?? [];
       const numbers = args[0].split('-');
       const num1 = +numbers[0] - 1;
       const num2 = +numbers[1] - 1;
       const rangeNumbers = _.range(num1, num2 + 1);
-      const tasksToFinish = rangeNumbers.map((index: number) => this.tasks()[index]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks());
+      const tasksToFinish = rangeNumbers.map((index: number) => tasks[index]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshContainer.emit());
     } else if (args.length > 0 && args[0] && args[0].includes(',')) {
+      const tasks = this.tasksResource.value() ?? [];
       const numbers = args[0].split(',').map(str => +str);
-      const tasksToFinish = numbers.map((number: number) => this.tasks()[number - 1]);
-      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks());
+      const tasksToFinish = numbers.map((number: number) => tasks[number - 1]);
+      this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshContainer.emit());
     } else {
       const index = +args[0];
-      if (Number.isInteger(index) && index >= 1 && index <= this.tasks().length) {
-        this.tasksService.finishTask(this.tasks()[index - 1]).subscribe(() => this.refreshTasks());
+      const tasks = this.tasksResource.value() ?? [];
+      if (Number.isInteger(index) && index >= 1 && index <= tasks.length) {
+        this.tasksService.finishTask(tasks[index - 1]).subscribe(() => this.refreshContainer.emit());
       }
     }
   }
@@ -237,7 +247,7 @@ export class TaskContainerComponent implements OnInit {
 
   addQuestion(): void {
     this.questionsService.createQuestionFromDialog(this.taskContainer())
-      .subscribe(() => this.refreshTaskContainer.emit());
+      .subscribe(() => this.refreshContainer.emit());
   }
 
   goToParentHandler(description: string): void {
@@ -267,29 +277,6 @@ export class TaskContainerComponent implements OnInit {
   updateNotes(newNotesValue: string) {
     this.taskContainer().notes = newNotesValue;
     this.updateTaskContainer.emit();
-  }
-
-  refreshTasks() {
-    this.refreshTasks$()().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(tasks => {
-      this.taskContainer().tasks = tasks;
-      this.tasksService.getTasks(tasks).subscribe(res => this.tasks.set(res));
-    })
-  }
-
-  refreshProblems() {
-    this.refreshProblems$()().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(problems => {
-      this.taskContainer().problems = problems;
-      this.problemsService.getProblems(problems).subscribe(res => this.problems.set(res));
-    })
-
-  }
-
-  refreshQuestions() {
-    this.refreshQuestions$()().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(questions => {
-      this.taskContainer().questions = questions;
-      this.questionsService.getQuestions(questions).subscribe(res => this.questions.set(res));
-    })
-
   }
 
   refreshSubstories():Observable<Story[]> {

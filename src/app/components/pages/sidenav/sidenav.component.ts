@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectionStrategy} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
 import { MatToolbar } from "@angular/material/toolbar";
@@ -6,6 +6,7 @@ import { MatListItem, MatNavList } from "@angular/material/list";
 import { ToolbarComponent } from "../toolbar/toolbar.component";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   imports: [

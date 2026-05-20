@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { MatFormField, MatHint, MatInput, MatLabel } from "@angular/material/input";
 import { MatIcon } from "@angular/material/icon";
@@ -8,6 +8,7 @@ import moment from "moment";
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-get-datetime-dialog',
   imports: [
     FormsModule,

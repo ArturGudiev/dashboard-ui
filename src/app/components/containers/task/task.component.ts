@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskC } from '../../../models/task-class';
@@ -12,6 +12,7 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task',
   templateUrl: './task.component.html',
   imports: [
@@ -22,12 +23,9 @@ import { TaskContainerService } from "../../../services/task-container-services/
   styleUrls: ['./task.component.sass']
 })
 export class TaskComponent implements OnInit, OnDestroy {
-  get task() {
-    return this._task;
-  }
+  readonly task = signal<TaskC | null>(null);
 
   id!: number;
-  private _task!: TaskC; // TODO use resolve
   parentsPath = signal<string[]>([]);
   isLoading = signal<boolean>(true);
 
@@ -47,11 +45,11 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   private setTask(val: TaskC, updatePath = true) {
-    this._task = val;
+    this.task.set(val);
 
-    this.titleService.setTitle(this.task.getFullDescription());
-    if (this.task !== null && updatePath) {
-      this.tasksContainerService.getParentsPath(this.task).subscribe((res: string[]) => {
+    this.titleService.setTitle(val.getFullDescription());
+    if (updatePath) {
+      this.tasksContainerService.getParentsPath(val).subscribe((res: string[]) => {
         this.parentsPath.set(res);
       });
     }
@@ -85,10 +83,11 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   onDoneAllClick() {
-    if (!this.task) {
+    const currentTask = this.task();
+    if (!currentTask) {
       return;
     }
-    this.tasksService.finishTask(this.task).subscribe(() => {
+    this.tasksService.finishTask(currentTask).subscribe(() => {
       if (this.parentsPath() && this.parentsPath().length > 1) {
         const description = this.parentsPath().slice(-2, -1)[0];
         this.goToParentHandler(description);
@@ -107,9 +106,10 @@ export class TaskComponent implements OnInit, OnDestroy {
    * Сохранение задачи (например, для обновления в базе заметок)
    */
   updateTask() {
-    if (!this.task) {
+    const currentTask = this.task();
+    if (!currentTask) {
       return;
     }
-    this.tasksService.updateTask(this.task).subscribe((task: TaskC) => this.setTask(task, false));
+    this.tasksService.updateTask(currentTask).subscribe((task: TaskC) => this.setTask(task, false));
   }
 }

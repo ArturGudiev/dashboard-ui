@@ -1,10 +1,11 @@
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, input, OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { MyTreeComponent, TreeNode } from "../tree/my-tree.component";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-report',
   imports: [
     MyTreeComponent,

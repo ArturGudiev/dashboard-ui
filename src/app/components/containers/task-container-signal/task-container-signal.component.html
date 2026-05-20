@@ -5,10 +5,10 @@
         mat-button
         type="button"
         (click)="toggleReport()"
-        >
+      >
         {{ toggleReportTitle() }}
       </button>
-      @if (displayReport()) {
+      @if ( displayReport() ) {
         <app-report [container]="taskContainer()"></app-report>
       }
 
@@ -18,16 +18,14 @@
         <div class="description-wrapper">
 
           @if (taskContainer().getFullDescription()) {
-            <div
-              id="description-line"
-              >
+            <div id="description-line">
               <!--  Перейти к родительской вершине -->
               <button
                 id="go-to-parent-button"
                 mat-mini-fab
                 color="accent"
                 (click)="goToNearestParent()"
-                >
+              >
                 <mat-icon>north</mat-icon>
               </button>
               <!-- Описание контейнера-->
@@ -91,7 +89,7 @@
       }
 
       <!-- Истории -->
-      @if (this.showStories() && stories().length > 0) {
+      @if ( this.showStories() && stories().length > 0 ) {
         <app-substories
           [stories]="stories()"
           (onStoryClick)="navigateToStory($event)"
@@ -102,24 +100,24 @@
       <!-- Задачи -->
       <app-tasks-list
         (refreshTasks)="refreshTasks()"
-        [tasks]="tasks()"
+        [tasks]="tasksForList()"
         [level]="0"
         [container]="taskContainer()"
       ></app-tasks-list>
 
       <!-- Вопросы -->
-      <app-questions-list
+      <!-- <app-questions-list
         [container]="taskContainer()"
-        (refreshQuestions)="refreshQuestions()"
-        [questions]="questions()"
-      ></app-questions-list>
+        (refreshQuestions)="refreshContainer()"
+        [questions]="taskContainer().questions"
+      ></app-questions-list> -->
 
       <!-- Проблемы -->
-      <app-problems-list
+      <!-- <app-problems-list
         [container]="taskContainer()"
-        (refreshProblems)="refreshProblems()"
-        [problems]="problems()"
-      ></app-problems-list>
+        (refreshProblems)="refreshContainer()"
+        [problems]="taskContainer().problems"
+      ></app-problems-list> -->
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, EventEmitter, inject, input, Input, OnInit, output, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Problem } from "../../../models/problem";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -21,6 +21,7 @@ import { ProblemsService } from "../../../services/task-container-services/probl
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-problems-list',
   templateUrl: './problems-list.component.html',
   imports: [
@@ -40,7 +41,8 @@ export class ProblemsListComponent implements OnInit {
   refreshProblems = output<void>();
   
   readonly displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
-  readonly tasksByIdMap: { [key: number]: { tasks: TaskC[], container: TaskContainer }; } = {};
+  readonly expandedSubtasks = signal<Record<number, { tasks: TaskC[]; container: TaskContainer }>>({});
+  readonly tasksByIdMapKeys = computed(() => Object.keys(this.expandedSubtasks()).map(Number));
   readonly selection = new SelectionModel<Problem>(true, []);
 
   private problemsService = inject(ProblemsService);
@@ -50,10 +52,6 @@ export class ProblemsListComponent implements OnInit {
   private dialog = inject(MatDialog);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
-
-  get tasksByIdMapKeys(): number[] {
-    return Object.keys(this.tasksByIdMap).map(e => Number(e));
-  }
 
   ngOnInit(): void {
     this.commandsService.getDataStateChange()
@@ -98,7 +96,7 @@ export class ProblemsListComponent implements OnInit {
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.problems.length;
+    const numRows = this.problems().length;
     return numSelected === numRows;
   }
 
@@ -112,7 +110,10 @@ export class ProblemsListComponent implements OnInit {
   refreshTasksOfSelectedSubtask(id: number) {
     this.problemsService.getProblem(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(problem => {
       this.tasksService.getTasks(problem.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(tasks => {
-        this.tasksByIdMap[id] = {tasks, container: problem};
+        this.expandedSubtasks.update(map => ({
+          ...map,
+          [id]: { tasks, container: problem },
+        }));
       })
     })
   }
@@ -135,7 +136,7 @@ export class ProblemsListComponent implements OnInit {
    * @param subtask
    */
   checkedElement(subproblem: Problem): boolean {
-    return Object.keys(this.tasksByIdMap).includes(String(subproblem.id));
+    return Object.hasOwn(this.expandedSubtasks(), subproblem.id);
   }
 
   /**
@@ -148,14 +149,19 @@ export class ProblemsListComponent implements OnInit {
   setShowSubtasksField($event: MatCheckboxChange, problem: Problem) {
     if ($event.checked) {
       this.tasksService.getTasks(problem.tasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(res => {
-        this.tasksByIdMap[problem.id] = {container: problem, tasks: res};
-        if (Object.keys(this.tasksByIdMap).length === 1) {
+        this.expandedSubtasks.update(map => ({
+          ...map,
+          [problem.id]: { container: problem, tasks: res },
+        }));
+        if (Object.keys(this.expandedSubtasks()).length === 1) {
           this.appStore.setFocusedTaskForSubtasks(problem);
         }
-      })
-      ;
+      });
     } else {
-      delete this.tasksByIdMap[problem.id];
+      this.expandedSubtasks.update(map => {
+        const { [problem.id]: _removed, ...rest } = map;
+        return rest;
+      });
     }
   }
 

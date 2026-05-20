@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, effect, inject, input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, input, ViewChild , ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import { Epic } from "../../../models/epic";
 import { MatPaginator } from "@angular/material/paginator";
@@ -10,6 +10,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatPaginatorModule } from "@angular/material/paginator";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-epics-list',
   templateUrl: './epics-list.component.html',
   imports: [

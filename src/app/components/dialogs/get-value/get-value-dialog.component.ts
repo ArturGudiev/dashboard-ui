@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject , ChangeDetectionStrategy} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatFormField } from "@angular/material/form-field";
@@ -10,6 +10,7 @@ import { MatInput } from "@angular/material/input";
 import { MatLabel } from "@angular/material/form-field";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-get-value',
     templateUrl: './get-value-dialog.component.html',
     imports: [

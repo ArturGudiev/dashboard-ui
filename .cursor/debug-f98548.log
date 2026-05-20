@@ -1,0 +1,4 @@
+{"sessionId":"f98548","hypothesisId":"H1","location":"epic.component.ts:load","message":"getEpic requested","data":{"id":1},"timestamp":1779080609306}
+{"sessionId":"f98548","hypothesisId":"H1","location":"epic.component.ts:load","message":"getEpic success","data":{"epicId":1},"timestamp":1779080609328}
+{"sessionId":"f98548","hypothesisId":"H1","location":"epic.component.ts:load","message":"getEpic requested","data":{"id":1},"timestamp":1779080666550}
+{"sessionId":"f98548","hypothesisId":"H1","location":"epic.component.ts:load","message":"getEpic success","data":{"epicId":1},"timestamp":1779080666633}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { isNumber } from 'lodash';
 import { map } from "rxjs/operators";
@@ -21,10 +21,11 @@ import { TasksService } from "../../services/task-container-services/tasks.servi
     ReactiveFormsModule,
     MultitaskingItemComponent
 ],
-    styleUrls: ['./multitasking.component.sass']
+    styleUrls: ['./multitasking.component.sass'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultitaskingComponent implements OnInit {
-  taskContainers: TaskContainer[] = [];
+  readonly taskContainers = signal<TaskContainer[]>([]);
   taskContainerInput = '';
   inputFormControl = new FormControl('');
   constructor(
@@ -53,7 +54,7 @@ export class MultitaskingComponent implements OnInit {
         this.taskContainerService.getTaskContainer('task', +value)
           .subscribe(container => {
             if (container) {
-              this.taskContainers.push(container);
+              this.taskContainers.update(containers => [...containers, container]);
             }
           })
       }
@@ -75,7 +76,7 @@ export class MultitaskingComponent implements OnInit {
     if (isTaskContainerType(type)) {
       this.taskContainerService.getTaskContainer(type, +id).subscribe(container => {
         if (container)
-        this.taskContainers.push(container);
+        this.taskContainers.update(containers => [...containers, container]);
       })
     }
   }
@@ -84,7 +85,11 @@ export class MultitaskingComponent implements OnInit {
     this.taskContainerService.getTaskContainer(taskContainer.type, taskContainer.id)
       .subscribe(res => {
         if (res) {
-          this.taskContainers[index] = res;
+          this.taskContainers.update(containers => {
+            const nextContainers = [...containers];
+            nextContainers[index] = res;
+            return nextContainers;
+          });
         }
       });
   }
@@ -94,7 +99,7 @@ export class MultitaskingComponent implements OnInit {
    * @param index
    */
   removeItem(index: number) {
-    this.taskContainers.splice(index, 1);
+    this.taskContainers.update(containers => containers.filter((_, currentIndex) => currentIndex !== index));
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output , ChangeDetectionStrategy} from '@angular/core';
 import { Story } from "../../../models/story";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatTableModule } from "@angular/material/table";
@@ -8,6 +8,7 @@ import { MatIconModule } from "@angular/material/icon";
 
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-substories',
   imports: [MatTableModule, MatCheckboxModule, MatButtonModule, MatIconModule],
   templateUrl: './sub-stories.component.html',

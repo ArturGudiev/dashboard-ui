@@ -1,4 +1,5 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -32,17 +33,19 @@ import { AppStore } from "../../../state/app.store";
 
   ],
   standalone: true,
-  styleUrls: ['./toolbar.component.scss']
+  styleUrls: ['./toolbar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolbarComponent implements OnInit {
 
   @Output() toggleSidenav = new EventEmitter<void>();
-  doneTasks: number = 0;
-  doneTasksUntilValue = 0;
-  showUntilValue = false;
+  readonly doneTasks = signal(0);
+  readonly doneTasksUntilValue = signal(0);
+  readonly showUntilValue = signal(false);
   value: string = '';
 
   private appStore = inject(AppStore);
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private dialog: MatDialog,
@@ -57,13 +60,17 @@ export class ToolbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.dashboardService.getDataStateChange().subscribe((state: DashboardStateInterface) => {
-      this.doneTasks = state.doneTasks;
-      this.doneTasksUntilValue = state.doneTasksUntilValue;
-      this.showUntilValue = state.showUntilValue;
+    this.dashboardService.getDataStateChange()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state: DashboardStateInterface) => {
+      this.doneTasks.set(state.doneTasks);
+      this.doneTasksUntilValue.set(state.doneTasksUntilValue);
+      this.showUntilValue.set(state.showUntilValue);
     });
 
-    this.commandService.getDataStateChange().subscribe(state => {
+    this.commandService.getDataStateChange()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(state => {
       this.handleCommand(state.command);
     });
 
@@ -238,7 +245,7 @@ export class ToolbarComponent implements OnInit {
 
   private handleCommand(command: string) {
     if (command === '+5') {
-      this.dashboardService.setDoneTasksUntilValue(this.doneTasks + 5);
+      this.dashboardService.setDoneTasksUntilValue(this.doneTasks() + 5);
     }
   }
 

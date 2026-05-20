@@ -1,4 +1,4 @@
-import { Component, effect, inject, Inject, model, signal } from '@angular/core';
+import { Component, effect, inject, Inject, model, signal , ChangeDetectionStrategy} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { LogsService } from "../../../services/logs.service";
@@ -9,6 +9,7 @@ import { MatFormField, MatOption, MatSelect } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-logs-dialog',
   imports: [MatPaginator, MatSelect, MatOption, MatFormField, MatFormFieldModule],
   template: `

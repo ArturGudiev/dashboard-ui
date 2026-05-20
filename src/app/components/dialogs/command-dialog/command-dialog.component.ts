@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject , ChangeDetectionStrategy} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from "@angular/material/dialog";
 import { TaskC } from "../../../models/task-class";
@@ -7,6 +7,7 @@ import { MatButton } from "@angular/material/button";
 import { MatInput } from "@angular/material/input";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-command-dialog',
     templateUrl: './command-dialog.component.html',
     imports: [

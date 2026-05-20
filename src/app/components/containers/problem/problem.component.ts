@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
@@ -13,6 +13,7 @@ import { ProblemsService } from "../../../services/task-container-services/probl
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-problem',
   templateUrl: './problem.component.html',
   imports: [

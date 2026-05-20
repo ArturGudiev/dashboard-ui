@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit , ChangeDetectionStrategy} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TaskC } from '../../../models/task-class';
@@ -9,6 +9,7 @@ import { MatButton } from "@angular/material/button";
 import { MatLabel } from "@angular/material/form-field";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-new-task-dialog',
     templateUrl: './new-task-dialog.component.html',
     imports: [

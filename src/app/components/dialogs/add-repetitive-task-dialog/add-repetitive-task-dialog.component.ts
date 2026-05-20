@@ -1,4 +1,4 @@
-import { Component, inject, Inject, signal } from '@angular/core';
+import { Component, inject, Inject, signal , ChangeDetectionStrategy} from '@angular/core';
 import { MatButton } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
@@ -9,6 +9,7 @@ import { RepetitiveTasksService } from "../../../services/task-container-service
 import { ModelsRepetitiveTaskShort } from "../../../types/generated";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-repetitive-task-dialog',
   imports: [
     MatButton,

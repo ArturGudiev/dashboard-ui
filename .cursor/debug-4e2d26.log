@@ -1,0 +1,3 @@
+{"sessionId":"4e2d26","runId":"run8","hypothesisId":"H1","location":"epic.component.ts:params","message":"route params","data":{"id":1},"timestamp":1778821647992}
+{"sessionId":"4e2d26","runId":"run8","hypothesisId":"H6","location":"epic.component.ts:refreshEpic","message":"refreshEpic called","data":{"id":1},"timestamp":1778821647993}
+{"sessionId":"4e2d26","runId":"run8","hypothesisId":"H2","location":"epic.component.ts:getEpic-next","message":"epic loaded","data":{"epicId":1,"isLoading":false},"timestamp":1778821648008}

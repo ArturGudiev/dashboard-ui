@@ -1,9 +1,10 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output , ChangeDetectionStrategy} from '@angular/core';
 import { NgStyle } from "@angular/common";
 import { LongClickDirectiveDirective } from "../../../directives/long-click-directive.directive";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-parents-path',
   imports: [
     NgStyle,

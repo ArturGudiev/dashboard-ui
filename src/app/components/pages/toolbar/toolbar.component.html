@@ -11,20 +11,20 @@
   </div>
   <span class="example-spacer"></span>
 
-  @if(showUntilValue) {
+  @if(showUntilValue()) {
     <div
       style="margin-right: 3rem"1
       (click)="onUntilValueClick()"
-      [class.shining-text]="doneTasks >= doneTasksUntilValue"
-      [style.color]="doneTasks >= doneTasksUntilValue ? 'red' : undefined"
+      [class.shining-text]="doneTasks() >= doneTasksUntilValue()"
+      [style.color]="doneTasks() >= doneTasksUntilValue() ? 'red' : undefined"
     >
-      {{doneTasksUntilValue}}
+      {{doneTasksUntilValue()}}
     </div>
   }
   <div
     id="doneTasksButton"
     style="padding-right: 5rem"
     (click)="openGetDatetimeDialog()"
-  >{{doneTasks}}</div>
+  >{{doneTasks()}}</div>
 
 </mat-toolbar>

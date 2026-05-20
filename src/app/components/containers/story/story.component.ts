@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Story } from "../../../models/story";
 import { ActivatedRoute } from "@angular/router";
@@ -11,6 +11,7 @@ import { StoriesService } from "../../../services/task-container-services/storie
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-story',
     templateUrl: './story.component.html',
     imports: [

@@ -1,74 +1,56 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject, input, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { Title } from "@angular/platform-browser";
-import { ActivatedRoute } from "@angular/router";
 import { Epic } from "../../../models/epic";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
-import { map } from "rxjs/operators";
-import { TaskContainerComponent } from "../task-container/task-container.component";
+import { of } from "rxjs";
 import { EpicsService } from "../../../services/task-container-services/epics.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
+import { TaskContainerSignalComponent } from "../task-container-signal/task-container-signal.component";
 
 @Component({
-    selector: 'app-epic',
-    templateUrl: './epic.component.html',
-    imports: [
-      MatProgressSpinner,
-      TaskContainerComponent
-    ],
-    styleUrls: ['./epic.component.sass']
+  selector: 'app-epic',
+  templateUrl: './epic.component.html',
+  imports: [
+    MatProgressSpinner,
+    TaskContainerSignalComponent
+  ],
+  styleUrls: ['./epic.component.sass']
 })
-export class EpicComponent implements OnInit {
-  id!: number;
-  epic!: Epic; 
+export class EpicComponent {
+  
+  epicId = input.required<number>();
   parentsPath = signal<string[]>([]);
-  isLoading = signal<boolean>(true);
+  
+  epicResource = rxResource<Epic, { id: number }>({
+    params: () => ({ id: this.epicId() ?? 0 }),
+    stream: ({ params }) => this.epicsService.getEpic(params.id),
+  });
 
-  refreshSubtasks$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.tasks));
-  refreshProblemsList$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.problems));
-  refreshQuestionsList$ = () => this.epicsService.getEpic(this.id).pipe(map(e => e.questions));
+  parentsPathResource = rxResource<string[], { epic: Epic | null }>({
+    params: () => ({ epic: this.epicResource.value() ?? null }),
+    stream: ({ params }) => {
+      if (!params.epic) {
+        return of([]);
+      }
+      return this.taskContainerService.getParentsPath(params.epic);
+    },
+  });
 
-  private route = inject(ActivatedRoute);
+
   private epicsService = inject(EpicsService);
   private titleService = inject(Title);
   private taskContainerService = inject(TaskContainerService);
-  private destroyRef = inject(DestroyRef);
+
   
-  ngOnInit(): void {
-    this.route.params.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(params => {
-        this.id = params['id'];
-        this.refreshEpic();
-      });
-  }
 
-  refreshEpic() {
-    this.isLoading.set(true);
-    this.epicsService.getEpic(this.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((epic: Epic) => {
-      this.epic = epic;
-      this.titleService.setTitle(epic.getFullDescription());
-      if (epic) {
-        this.taskContainerService.getParentsPath(epic)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((res: string[]) => {
-            this.parentsPath.set(res);
-          });
-      }
-      this.isLoading.set(false);
-    });
-  }
-
-  /**
-   * Сохранение эпика (например, для обновления в базе заметок)
-   */
-  updateEpic() {
-    if (!this.epic) {
-      return;
-    }
-    const epicVal = this.epic;
-    if (epicVal) {
-      this.epicsService.updateEpic(epicVal).subscribe((epic: Epic) => this.epic = epic);
-    }
+  updateEpic() { // TODO 
+  //   if (!this.epic) {
+  //     return;
+  //   }
+  //   this.epicsService.updateEpic(this.epic)
+  //     .pipe(takeUntilDestroyed(this.destroyRef))
+  //     .subscribe((updatedEpic: Epic) => this.epic = updatedEpic);
   }
 }
