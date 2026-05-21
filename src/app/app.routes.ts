@@ -4,6 +4,7 @@ import { TaskComponent } from "./components/containers/task/task.component";
 import { ProblemComponent } from "./components/containers/problem/problem.component";
 import { StoryComponent } from "./components/containers/story/story.component";
 import { EpicComponent } from "./components/containers/epic/epic.component";
+import { epicResolver } from "./resolvers/epic.resolver";
 import { EpicsComponent } from "./components/pages/epics/epics.component";
 import { HelpComponent } from "./components/pages/help/help.component";
 import { QuestionComponent } from "./components/containers/question/question.component";
@@ -15,7 +16,12 @@ export const routes: Routes = [
   {path: 'question/:id', component: QuestionComponent},
   {path: 'problem/:id', component: ProblemComponent},
   {path: 'story/:id', component: StoryComponent},
-  {path: 'epic/:epicId', component: EpicComponent},
+  {
+    path: 'epic/:epicId',
+    component: EpicComponent,
+    resolve: { epic: epicResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
   {path: 'epics', component: EpicsComponent},
   {path: 'repetitive-tasks', component: RepetitiveTasksComponent},
   {path: 'help', component: HelpComponent},

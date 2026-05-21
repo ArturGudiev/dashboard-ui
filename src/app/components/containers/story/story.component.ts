@@ -1,76 +1,63 @@
-import { Component, DestroyRef, inject, OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Story } from "../../../models/story";
-import { ActivatedRoute } from "@angular/router";
-import { Title } from "@angular/platform-browser";
-import { map } from "rxjs/operators";
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
-
-import { TaskContainerComponent } from "../task-container/task-container.component";
-import { StoriesService } from "../../../services/task-container-services/stories.service";
-import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
+import { Story } from '../../../models/story';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { StoriesService } from '../../../services/task-container-services/stories.service';
+import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-story',
-    templateUrl: './story.component.html',
-    imports: [
-    MatProgressSpinner,
-    TaskContainerComponent
-],
-    styleUrls: ['./story.component.sass']
+  selector: 'app-story',
+  templateUrl: './story.component.html',
+  imports: [MatProgressSpinner, TaskContainerSignalComponent],
+  styleUrls: ['./story.component.sass'],
 })
-export class StoryComponent implements OnInit {
-  id!: number; // TODO add resolvers
-  story!: Story; // USE resolvers
-  parentsPath = signal<string[]>([]);
-  isLoading = signal<boolean>(true);
+export class StoryComponent {
+  id = input.required<number>();
 
-  refreshSubtasks$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.tasks));
-  refreshProblemsList$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.problems));
-  refreshQuestionsList$ = () => this.storiesService.getStory(this.id).pipe(map(e => e.questions));
+  storyResource = rxResource<Story, { id: number }>({
+    params: () => ({ id: this.id() ?? 0 }),
+    stream: ({ params }) => this.storiesService.getStory(params.id),
+  });
 
-  private route = inject(ActivatedRoute);
+  private lastStory = signal<Story | undefined>(undefined);
+  private staleCacheStoryId: number | null = null;
+
+  readonly showInitialLoadSpinner = computed(() => {
+    const loading = this.storyResource.isLoading();
+    const noLive = this.storyResource.value() == null;
+    const noStale = this.lastStory() == null;
+    return loading && noLive && noStale;
+  });
+
+  readonly viewStory = computed(() => this.storyResource.value() ?? this.lastStory());
+
   private storiesService = inject(StoriesService);
   private titleService = inject(Title);
-  private taskContainerService = inject(TaskContainerService);
-  private destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
-    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-      this.id = params['id'];
-      this.refreshStory();
+  constructor() {
+    effect(() => {
+      const routeId = this.id();
+      if (this.staleCacheStoryId !== routeId) {
+        this.staleCacheStoryId = routeId;
+        this.lastStory.set(undefined);
+      }
+    });
+
+    effect(() => {
+      const s = this.storyResource.value();
+      if (s != null) {
+        this.lastStory.set(s);
+        this.titleService.setTitle(s.getFullDescription());
+      }
     });
   }
 
-  refreshStory() {
-    this.isLoading.set(true);
-    this.storiesService.getStory(this.id).subscribe((story: Story) => {
-      this.story = story;
-      this.titleService.setTitle(this.story.getFullDescription());
-      if (this.story !== null) {
-        this.taskContainerService.getParentsPath(this.story).subscribe((res: string[]) => {
-          this.parentsPath.set(res);
-        });
-      }
-      this.isLoading.set(false);
-    })
-  }
-
-  refreshSubtasks() {
-    this.storiesService
-      .getStory(this.id)
-      .subscribe(story => this.story.tasks = story.tasks)
-  }
-
-  /**
-   * Сохранение истории (например, для обновления в базе заметок)
-   */
   updateStory() {
-    if (!this.story) {
+    const story = this.viewStory();
+    if (!story) {
       return;
     }
-    this.storiesService.updateStory(this.story).subscribe((story: Story) => this.story = story);
+    this.storiesService.updateStory(story).subscribe((updated: Story) => this.lastStory.set(updated));
   }
-
 }

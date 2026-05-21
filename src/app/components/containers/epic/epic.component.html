@@ -1,10 +1,7 @@
-@if (showInitialLoadSpinner()) {
-  <mat-spinner></mat-spinner>
-} @else if (viewEpic(); as epic) {
+@if (viewEpic(); as epic) {
   <app-task-container-signal
     [taskContainer]="epic"
-    [parentsPath]="viewParentsPath()"
-    (refreshContainer)="epicResource.reload()"
+    (refreshContainer)="reloadEpic()"
     (updateTaskContainer)="updateEpic()"
     [showEpics]="true"
     [showStories]="true"

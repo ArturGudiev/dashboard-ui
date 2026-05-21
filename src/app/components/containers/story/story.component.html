@@ -1,13 +1,9 @@
-@if( isLoading() ) {
+@if (showInitialLoadSpinner()) {
   <mat-spinner></mat-spinner>
-} @else {
-  <app-task-container
+} @else if (viewStory(); as story) {
+  <app-task-container-signal
     [taskContainer]="story"
-    [parentsPath]="parentsPath()"
-    (refreshTaskContainer)="refreshStory()"
-    [refreshTasks$]="refreshSubtasks$"
-    [refreshProblems$]="refreshProblemsList$"
-    [refreshQuestions$]="refreshQuestionsList$"
+    (refreshContainer)="storyResource.reload()"
     (updateTaskContainer)="updateStory()"
-  ></app-task-container>
+  ></app-task-container-signal>
 }

@@ -38,6 +38,7 @@ import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component"
 
 /** Stable fallback so `[tasks]="… ?? []"` does not allocate a new array every CD tick (breaks TasksListComponent's effect). */
 const EMPTY_TASKS: TaskC[] = [];
+const EMPTY_PARENTS_PATH: string[] = [];
 
 @Component({
   selector: 'app-task-container-signal',
@@ -62,7 +63,6 @@ const EMPTY_TASKS: TaskC[] = [];
 export class TaskContainerSignalComponent implements OnInit {
   taskContainer = input.required<TaskContainer>();
 
-  parentsPath = input.required<string[]>();
   showEpics = input<boolean>(false);
   showStories = input<boolean>(false);
 
@@ -81,8 +81,23 @@ export class TaskContainerSignalComponent implements OnInit {
     stream: ({ params }) => this.tasksService.getTasks(params.tasks),
   });
 
+  parentsPathResource = rxResource<string[], { containerKey: string }>({
+    params: () => {
+      const c = this.taskContainer();
+      return { containerKey: `${c.type}:${c.id}` };
+    },
+    stream: () => this.taskContainerService.getParentsPath(this.taskContainer()),
+  });
+
   /** Use a stable empty reference until the resource resolves; avoid `?? []` in the template. */
   readonly tasksForList = computed(() => this.tasksResource.value() ?? EMPTY_TASKS);
+
+  private lastParentsPath = signal<string[]>([]);
+
+  readonly viewParentsPath = computed(() => {
+    const live = this.parentsPathResource.value() ?? [];
+    return live.length > 0 ? live : (this.lastParentsPath().length > 0 ? this.lastParentsPath() : EMPTY_PARENTS_PATH);
+  });
 
   epics = signal<Epic[]>([]);
   stories = signal<Story[]>([]);
@@ -112,6 +127,13 @@ export class TaskContainerSignalComponent implements OnInit {
       const container = this.taskContainer();
       if (!container) { return; }
       this.refreshTaskContainerParts();
+    });
+
+    effect(() => {
+      const path = this.parentsPathResource.value();
+      if (path != null) {
+        this.lastParentsPath.set(path);
+      }
     });
   }
 
@@ -336,7 +358,7 @@ export class TaskContainerSignalComponent implements OnInit {
   }
 
   private addTaskToParentInteractively() {
-    this.utilsService.selectFromList(this.parentsPath().slice(0, -1)).subscribe((parent: string | undefined) => {
+    this.utilsService.selectFromList(this.viewParentsPath().slice(0, -1)).subscribe((parent: string | undefined) => {
       if (parent) {
         this.taskContainerService.addTaskToContainerByShortDescription(parent);
       }
@@ -345,10 +367,10 @@ export class TaskContainerSignalComponent implements OnInit {
 
   private goToParentInteractively() {
     this.utilsService
-      .selectIndexFromList(this.parentsPath().slice(0, -1))
+      .selectIndexFromList(this.viewParentsPath().slice(0, -1))
       .subscribe((val: number | undefined) => {
         if (val !== undefined) {
-          this.goToParentHandler(this.parentsPath()[val]);
+          this.goToParentHandler(this.viewParentsPath()[val]);
         }
     });
   }

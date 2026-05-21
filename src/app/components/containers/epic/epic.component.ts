@@ -1,105 +1,79 @@
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { Title } from "@angular/platform-browser";
-import { Epic } from "../../../models/epic";
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
-
-import { of } from "rxjs";
-import { EpicsService } from "../../../services/task-container-services/epics.service";
-import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
-import { TaskContainerSignalComponent } from "../task-container-signal/task-container-signal.component";
+import { Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
+import { Epic } from '../../../models/epic';
+import { EpicsService } from '../../../services/task-container-services/epics.service';
+import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
   selector: 'app-epic',
   templateUrl: './epic.component.html',
-  imports: [
-    MatProgressSpinner,
-    TaskContainerSignalComponent
-  ],
-  styleUrls: ['./epic.component.sass']
+  imports: [TaskContainerSignalComponent],
+  styleUrls: ['./epic.component.sass'],
 })
 export class EpicComponent {
-
   epicId = input.required<number>();
+  epic = input.required<Epic>();
 
-  epicResource = rxResource<Epic, { id: number }>({
-    params: () => ({ id: this.epicId() ?? 0 }),
-    stream: ({ params }) => this.epicsService.getEpic(params.id),
-  });
+  /** Route param may arrive as string; epic.id is always a number. */
+  private readonly routeEpicId = computed(() => Number(this.epicId()));
 
-  parentsPathResource = rxResource<string[], { epic: Epic | null }>({
-    params: () => ({ epic: this.epicResource.value() ?? null }),
-    stream: ({ params }) => {
-      if (!params.epic) {
-        return of([]);
-      }
-      return this.taskContainerService.getParentsPath(params.epic);
-    },
-  });
+  private currentEpic = signal<Epic | undefined>(undefined);
 
-  /** Survives rxResource reload so the page does not swap to a spinner (and lose scroll). */
-  private lastEpic = signal<Epic | undefined>(undefined);
-  private lastParentsPath = signal<string[]>([]);
-  private staleCacheEpicId: number | null = null;
-
-  /** Full-page spinner only before we have ever resolved this route's epic. */
-  readonly showInitialLoadSpinner = computed(() => {
-    const loading = this.epicResource.isLoading();
-    const noLive = this.epicResource.value() == null;
-    const noStale = this.lastEpic() == null;
-    return loading && noLive && noStale;
-  });
-
-  readonly viewEpic = computed(() => this.epicResource.value() ?? this.lastEpic());
-
-  readonly viewParentsPath = computed(() => {
-    const live = this.parentsPathResource.value() ?? [];
-    if (
-      this.epicResource.isLoading()
-      && this.epicResource.value() == null
-      && this.lastEpic() != null
-    ) {
-      return this.lastParentsPath();
+  readonly viewEpic = computed(() => {
+    const routeId = this.routeEpicId();
+    const cur = this.currentEpic();
+    if (cur != null && cur.id === routeId) {
+      return cur;
     }
-    return live.length > 0 ? live : this.lastParentsPath();
+    const resolved = this.epic();
+    return resolved.id === routeId ? resolved : undefined;
   });
 
   private epicsService = inject(EpicsService);
   private titleService = inject(Title);
-  private taskContainerService = inject(TaskContainerService);
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
-    effect(() => {
-      const id = this.epicId();
-      if (this.staleCacheEpicId !== id) {
-        this.staleCacheEpicId = id;
-        this.lastEpic.set(undefined);
-        this.lastParentsPath.set([]);
+    effect((onCleanup) => {
+      const routeId = this.routeEpicId();
+      const resolved = this.epic();
+
+      if (resolved.id === routeId) {
+        this.currentEpic.set(resolved);
+        return;
       }
+
+      // Resolver/input can lag behind route param on same-component navigation.
+      const sub = this.epicsService.getEpic(routeId).subscribe((epic) => {
+        if (this.routeEpicId() === routeId) {
+          this.currentEpic.set(epic);
+        }
+      });
+      onCleanup(() => sub.unsubscribe());
     });
 
     effect(() => {
-      const e = this.epicResource.value();
+      const e = this.viewEpic();
       if (e != null) {
-        this.lastEpic.set(e);
-      }
-    });
-
-    effect(() => {
-      const hasLiveEpic = this.epicResource.value() != null;
-      const path = this.parentsPathResource.value();
-      if (hasLiveEpic && path != null) {
-        this.lastParentsPath.set(path);
+        this.titleService.setTitle(e.getFullDescription());
       }
     });
   }
 
-  updateEpic() { // TODO 
-  //   if (!this.epic) {
-  //     return;
-  //   }
-  //   this.epicsService.updateEpic(this.epic)
-  //     .pipe(takeUntilDestroyed(this.destroyRef))
-  //     .subscribe((updatedEpic: Epic) => this.epic = updatedEpic);
+  reloadEpic(): void {
+    const routeId = this.routeEpicId();
+    this.epicsService
+      .getEpic(routeId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((epic) => {
+        if (this.routeEpicId() === routeId) {
+          this.currentEpic.set(epic);
+        }
+      });
+  }
+
+  updateEpic(): void {
+    // TODO
   }
 }
