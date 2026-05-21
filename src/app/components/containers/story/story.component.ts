@@ -1,63 +1,47 @@
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { Story } from '../../../models/story';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { StoriesService } from '../../../services/task-container-services/stories.service';
 import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
   selector: 'app-story',
   templateUrl: './story.component.html',
-  imports: [MatProgressSpinner, TaskContainerSignalComponent],
+  imports: [TaskContainerSignalComponent],
   styleUrls: ['./story.component.sass'],
 })
 export class StoryComponent {
+  /** From route param `id` (withComponentInputBinding). */
   id = input.required<number>();
 
-  storyResource = rxResource<Story, { id: number }>({
-    params: () => ({ id: this.id() ?? 0 }),
-    stream: ({ params }) => this.storiesService.getStory(params.id),
-  });
+  /** From route resolve `story` — refreshed when `id` changes (`runGuardsAndResolvers: 'paramsChange'`). */
+  story = input.required<Story>();
 
-  private lastStory = signal<Story | undefined>(undefined);
-  private staleCacheStoryId: number | null = null;
-
-  readonly showInitialLoadSpinner = computed(() => {
-    const loading = this.storyResource.isLoading();
-    const noLive = this.storyResource.value() == null;
-    const noStale = this.lastStory() == null;
-    return loading && noLive && noStale;
-  });
-
-  readonly viewStory = computed(() => this.storyResource.value() ?? this.lastStory());
+  /** Resolver value, or last `reloadStory()` result (e.g. after adding a task). */
+  readonly storyForView = linkedSignal(() => this.story());
 
   private storiesService = inject(StoriesService);
   private titleService = inject(Title);
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     effect(() => {
-      const routeId = this.id();
-      if (this.staleCacheStoryId !== routeId) {
-        this.staleCacheStoryId = routeId;
-        this.lastStory.set(undefined);
-      }
-    });
-
-    effect(() => {
-      const s = this.storyResource.value();
-      if (s != null) {
-        this.lastStory.set(s);
-        this.titleService.setTitle(s.getFullDescription());
-      }
+      this.titleService.setTitle(this.storyForView().getFullDescription());
     });
   }
 
-  updateStory() {
-    const story = this.viewStory();
-    if (!story) {
-      return;
-    }
-    this.storiesService.updateStory(story).subscribe((updated: Story) => this.lastStory.set(updated));
+  reloadStory(): void {
+    this.storiesService
+      .getStory(Number(this.id()))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((story) => this.storyForView.set(story));
+  }
+
+  updateStory(): void {
+    this.storiesService
+      .updateStory(this.storyForView())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((updated) => this.storyForView.set(updated));
   }
 }

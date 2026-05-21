@@ -1,186 +1,158 @@
-<!-- Описание контейнера, выделенное желтой линией при фокусировке -->
-@if (showTitle()) {
-  <h3
-    id="subtasks-task-container-title"
-    (click)="focusSubtask()"
-    [ngClass]="{ 'selected-for-subtasks': isContainerFocused() }"
+<div class="tasks-list-host" [@tasksListRefresh]="tasksTrackKey()">
+  @if (showTitle()) {
+    <h3
+      id="subtasks-task-container-title"
+      (click)="focusSubtask()"
+      [ngClass]="{ 'selected-for-subtasks': isContainerFocused() }"
     >
-    {{ container().getFullDescription() }}
-  </h3>
-}
+      {{ container().getFullDescription() }}
+    </h3>
+  }
 
-<!--Иконки "Добавления задачи", "Завершения выделенных/всех задач" -->
-@if (tasks().length > 0) {
-  <div id="subtasks-actions">
-    <div style="display: flex; align-items: center;">
-      <h2 id="subtasks-title">Tasks</h2>
+  @if (tasks().length > 0) {
+    <div id="subtasks-actions">
+      <div style="display: flex; align-items: center;">
+        <h2 id="subtasks-title">Tasks</h2>
 
-      <!-- Иконка плюса для добавления задачи -->
-      <button
-        id="add-task-button"
-        mat-mini-fab
-        color="primary"
-        (click)="addTask()"
-        >
-        <mat-icon class="tasks-icon">add</mat-icon>
-      </button>
-
-      <!-- Завершить выделенные задачи -->
-      @if (showFinishSelectedTasksIcon()) {
         <button
-          mat-mini-fab color="primary"
-          class="finish-tasks-button"
-          [disabled]="!hasSelection()"
-          (click)="onFinishTasksClick()"
-          >
-          <mat-icon class="tasks-icon">done</mat-icon>
-        </button>
-      }
-
-      <!-- Завершить все задачи -->
-      @if (showFinishAllTasksIcon()) {
-        <button
+          id="add-task-button"
           mat-mini-fab
-          class="finish-tasks-button"
           color="primary"
-          [disabled]="this.tasks().length === 0"
-          (click)="onFinishAllTasksHandler()"
-          >
-          <mat-icon class="tasks-icon">done_outline</mat-icon>
+          (click)="addTask()"
+        >
+          <mat-icon class="tasks-icon">add</mat-icon>
         </button>
-      }
+
+        @if (showFinishSelectedTasksIcon()) {
+          <button
+            mat-mini-fab
+            color="primary"
+            class="finish-tasks-button"
+            [disabled]="!hasSelection()"
+            (click)="onFinishTasksClick()"
+          >
+            <mat-icon class="tasks-icon">done</mat-icon>
+          </button>
+        }
+
+        @if (showFinishAllTasksIcon()) {
+          <button
+            mat-mini-fab
+            class="finish-tasks-button"
+            color="primary"
+            [disabled]="this.tasks().length === 0"
+            (click)="onFinishAllTasksHandler()"
+          >
+            <mat-icon class="tasks-icon">done_outline</mat-icon>
+          </button>
+        }
+      </div>
     </div>
-  </div>
 
-}
-
-<!-- Таблица задач-->
-@if(tasks().length > 0){
-  <div
-    id="table-wrapper"
-    >
-    <table
-      id="subtasks-table"
-      mat-table
-      [dataSource]="tasks()"
-      class="mat-elevation-z8"
+    <div id="table-wrapper">
+      <table
+        id="subtasks-table"
+        mat-table
+        [dataSource]="tasks()"
+        class="mat-elevation-z8"
       >
-
-      <!--  1) Колонка с чекбоксами для выделения (header)  -->
-      <ng-container matColumnDef="select">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          >
-          <mat-checkbox
-            (change)="$event ? onMainCheckboxClick() : null"
-            [checked]="hasSelection() && areAllSelected()"
-            [indeterminate]="hasSelection() && !areAllSelected()"
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+              (change)="$event ? onMainCheckboxClick() : null"
+              [checked]="hasSelection() && areAllSelected()"
+              [indeterminate]="hasSelection() && !areAllSelected()"
             >
-          </mat-checkbox>
-        </th>
+            </mat-checkbox>
+          </th>
 
-        <!-- 2) Колонка с чекбоксами для выделения (header)  -->
-        <td mat-cell
-          *matCellDef="let row; let i = index"
-          [ngClass]="{'highlight': isSelected(row.id)}"
+          <td
+            mat-cell
+            *matCellDef="let row; let i = index"
+            [ngClass]="{'highlight': isSelected(row.id)}"
           >
-          <mat-checkbox
-            (click)="$event.stopPropagation()"
-            (change)="$event ? toggleSelection(row.id) : null"
-            [checked]="isSelected(row.id)"
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="$event ? toggleSelection(row.id) : null"
+              [checked]="isSelected(row.id)"
             >
-          </mat-checkbox>
-        </td>
-      </ng-container>
+            </mat-checkbox>
+          </td>
+        </ng-container>
 
-      <!-- 3) Колонка с порядковым номером -->
-      <ng-container matColumnDef="position">
-        <th mat-header-cell *matHeaderCellDef> No.</th>
-        <td mat-cell
-          class="row-link"
-          [ngClass]="{'highlight': isSelected(subtask.id)}"
-          (click)="onSubtaskClick(subtask)"
-          *matCellDef="let subtask; let i = index"
-          >
-          <span>{{ i + 1 }}</span>
-        </td>
-      </ng-container>
-
-      <!-- 4) Колонка с описанием задачи -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td
-          mat-cell
-          *matCellDef="let subtask;"
-          (click)="onSubtaskClick(subtask)"
-          [ngClass]="{'highlight': isSelected(subtask.id)}"
-          >
-          <span
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef>No.</th>
+          <td
+            mat-cell
             class="row-link"
+            [ngClass]="{'highlight': isSelected(subtask.id)}"
             (click)="onSubtaskClick(subtask)"
+            *matCellDef="let subtask; let i = index"
+          >
+            <span>{{ i + 1 }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td
+            mat-cell
+            *matCellDef="let subtask;"
+            (click)="onSubtaskClick(subtask)"
+            [ngClass]="{'highlight': isSelected(subtask.id)}"
+          >
+            <span class="row-link" (click)="onSubtaskClick(subtask)">
+              {{ subtask.description }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td
+            mat-cell
+            *matCellDef="let subtask; let i=index"
+            id="row-{{i}}"
+            class="row-link"
+            [ngClass]="{'highlight': isSelected(subtask.id)}"
+          >
+            <mat-icon (click)="finishSubtask(subtask)">done</mat-icon>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="showSubtasks">
+          <th mat-header-cell *matHeaderCellDef>Subtasks</th>
+          <td
+            mat-cell
+            *matCellDef="let subtask; let i=index"
+            id="row-{{i}}"
+            class="row-link"
+            [ngClass]="{'highlight': isSelected(subtask.id)}"
+          >
+            <mat-checkbox
+              [checked]="checkedElement(subtask)"
+              (click)="setShowSubtasksFieldClickHandler($event, subtask)"
             >
-            {{ subtask.description }}
-          </span>
-        </td>
-      </ng-container>
+            </mat-checkbox>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          >
-          Actions
-        </th>
-        <td
-          mat-cell
-          *matCellDef="let subtask; let i=index"
-          id="row-{{i}}"
-          class="row-link"
-          [ngClass]="{'highlight': isSelected(subtask.id)}"
-          >
-          <mat-icon (click)="finishSubtask(subtask)">done</mat-icon>
-        </td>
-      </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
 
-
-      <!-- Чекбокс для отображенмя подзадач -->
-      <ng-container matColumnDef="showSubtasks">
-        <th mat-header-cell *matHeaderCellDef>Subtasks</th>
-        <td
-          mat-cell
-          *matCellDef="let subtask; let i=index"
-          id="row-{{i}}"
-          class="row-link"
-          [ngClass]="{'highlight': isSelected(subtask.id)}"
-          >
-          <mat-checkbox
-            [checked]="checkedElement(subtask)"
-            (click)="setShowSubtasksFieldClickHandler($event, subtask)"
-          >
-          </mat-checkbox>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-
-    <!-- Список списков подзадач соотетствующий выбранным (для отображения подзадач) задачам -->
-    <div id="subtasks-of-selected-tasks">
-      @for (item of tasksByIdMapKeys(); track item) {
-        <app-tasks-list
-          [container]="expandedSubtasks()[item].container"
-          [tasks]="expandedSubtasks()[item].tasks"
-          (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
-          (resolveParent)="resolveContainer(expandedSubtasks()[item].container)"
-          [showTitle]="true"
-          [level]="level() + 1"
-        ></app-tasks-list>
-      }
+      <div id="subtasks-of-selected-tasks">
+        @for (item of tasksByIdMapKeys(); track item) {
+          <app-tasks-list
+            [container]="expandedSubtasks()[item].container"
+            [tasks]="expandedSubtasks()[item].tasks"
+            (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
+            (resolveParent)="resolveContainer(expandedSubtasks()[item].container)"
+            [showTitle]="true"
+            [level]="level() + 1"
+          ></app-tasks-list>
+        }
+      </div>
     </div>
-
-  </div>
-}
-
-
+  }
+</div>

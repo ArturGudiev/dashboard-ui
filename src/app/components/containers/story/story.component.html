@@ -1,9 +1,7 @@
-@if (showInitialLoadSpinner()) {
-  <mat-spinner></mat-spinner>
-} @else if (viewStory(); as story) {
+@if (storyForView(); as story) {
   <app-task-container-signal
     [taskContainer]="story"
-    (refreshContainer)="storyResource.reload()"
+    (refreshContainer)="reloadStory()"
     (updateTaskContainer)="updateStory()"
   ></app-task-container-signal>
 }

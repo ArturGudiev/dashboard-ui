@@ -1,4 +1,4 @@
-@if (viewEpic(); as epic) {
+@if (epicForView(); as epic) {
   <app-task-container-signal
     [taskContainer]="epic"
     (refreshContainer)="reloadEpic()"

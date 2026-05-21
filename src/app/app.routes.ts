@@ -3,6 +3,7 @@ import { MainPageComponent } from "./components/pages/main-page/main-page.compon
 import { TaskComponent } from "./components/containers/task/task.component";
 import { ProblemComponent } from "./components/containers/problem/problem.component";
 import { StoryComponent } from "./components/containers/story/story.component";
+import { storyResolver } from "./resolvers/story.resolver";
 import { EpicComponent } from "./components/containers/epic/epic.component";
 import { epicResolver } from "./resolvers/epic.resolver";
 import { EpicsComponent } from "./components/pages/epics/epics.component";
@@ -15,7 +16,12 @@ export const routes: Routes = [
   { path: 'task/:id', component: TaskComponent},
   {path: 'question/:id', component: QuestionComponent},
   {path: 'problem/:id', component: ProblemComponent},
-  {path: 'story/:id', component: StoryComponent},
+  {
+    path: 'story/:id',
+    component: StoryComponent,
+    resolve: { story: storyResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
   {
     path: 'epic/:epicId',
     component: EpicComponent,

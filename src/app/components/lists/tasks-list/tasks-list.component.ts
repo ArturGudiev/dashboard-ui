@@ -30,6 +30,7 @@ import { NgClass } from "@angular/common";
 import { TaskContainer } from "../../../models/interfaces/task-container";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
+import { tasksListRefreshAnimation } from './tasks-list.animations';
 
 type ExpandedSubtasks = Record<number, { tasks: TaskC[]; container: TaskContainer }>;
 
@@ -45,6 +46,7 @@ type ExpandedSubtasks = Record<number, { tasks: TaskC[]; container: TaskContaine
   ],
   standalone: true,
   styleUrls: ['./tasks-list.component.sass'],
+  animations: [tasksListRefreshAnimation],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksListComponent implements OnInit {
@@ -53,6 +55,9 @@ export class TasksListComponent implements OnInit {
   showTitle = input(false);
   tasks = input.required<TaskC[]>();
   level = input(0);
+
+  /** Changes when tasks are reloaded — drives fade animation. */
+  readonly tasksTrackKey = computed(() => this.tasks().map((t) => t.id).join(','));
   refreshTasks = output<void>();
   resolveParent = output<void>();
 

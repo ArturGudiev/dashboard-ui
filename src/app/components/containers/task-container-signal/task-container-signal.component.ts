@@ -89,8 +89,16 @@ export class TaskContainerSignalComponent implements OnInit {
     stream: () => this.taskContainerService.getParentsPath(this.taskContainer()),
   });
 
-  /** Use a stable empty reference until the resource resolves; avoid `?? []` in the template. */
-  readonly tasksForList = computed(() => this.tasksResource.value() ?? EMPTY_TASKS);
+  private lastTasks = signal<TaskC[]>([]);
+
+  /** Keep previous rows while tasksResource reloads so the list does not unmount and blink. */
+  readonly tasksForList = computed(() => {
+    const live = this.tasksResource.value();
+    if (live != null) {
+      return live;
+    }
+    return this.lastTasks().length > 0 ? this.lastTasks() : EMPTY_TASKS;
+  });
 
   private lastParentsPath = signal<string[]>([]);
 
@@ -133,6 +141,13 @@ export class TaskContainerSignalComponent implements OnInit {
       const path = this.parentsPathResource.value();
       if (path != null) {
         this.lastParentsPath.set(path);
+      }
+    });
+
+    effect(() => {
+      const tasks = this.tasksResource.value();
+      if (tasks != null) {
+        this.lastTasks.set(tasks);
       }
     });
   }
