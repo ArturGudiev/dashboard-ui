@@ -1,8 +1,17 @@
-// export const taskResolver: ResolveFn<boolean> = (route, state) => {
-//   const service = inject(TasksService);
-//   const id = route.paramMap.get('id');  // Fetch the route parameter
-//   if (id && Number.isInteger(id)) {
-//     return service.getTask(+id);  // Fetch data or return a default value
-//   }
-//   return of(null);
-// };
+import { inject } from '@angular/core';
+import { ResolveFn, Router } from '@angular/router';
+import { of } from 'rxjs';
+import { TaskC } from '../models/task-class';
+import { TasksService } from '../services/task-container-services/tasks.service';
+
+export const taskResolver: ResolveFn<TaskC> = (route) => {
+  const id = Number(route.paramMap.get('id'));
+  const navState = inject(Router).currentNavigation()?.extras.state;
+  if (navState) {
+    const task = TaskC.createFromObj(navState);
+    if (task.id === id) {
+      return of(task);
+    }
+  }
+  return inject(TasksService).getTask(id);
+};

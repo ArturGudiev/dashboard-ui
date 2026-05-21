@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainPageComponent } from "./components/pages/main-page/main-page.component";
 import { TaskComponent } from "./components/containers/task/task.component";
+import { taskResolver } from "./resolvers/task.resolver";
 import { ProblemComponent } from "./components/containers/problem/problem.component";
 import { problemResolver } from "./resolvers/problem.resolver";
 import { StoryComponent } from "./components/containers/story/story.component";
@@ -15,7 +16,12 @@ import { RepetitiveTasksComponent } from "./components/pages/repetitive-tasks/re
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},
-  { path: 'task/:id', component: TaskComponent},
+  {
+    path: 'task/:id',
+    component: TaskComponent,
+    resolve: { task: taskResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
   {
     path: 'question/:id',
     component: QuestionComponent,

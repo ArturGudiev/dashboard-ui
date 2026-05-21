@@ -341,6 +341,13 @@ export class TaskContainerSignalComponent implements OnInit {
       });
       return;
     }
+    if (container.type === 'task') {
+      this.tasksService
+        .finishTask(container as TaskC)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.navigateToParentAfterResolve());
+      return;
+    }
     this.onDoneAllClick.emit();
   }
 

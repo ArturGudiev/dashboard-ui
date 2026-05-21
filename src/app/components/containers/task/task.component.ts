@@ -1,115 +1,47 @@
-import { Component, DestroyRef, inject, OnDestroy, OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { TaskC } from '../../../models/task-class';
-import { getUrlByDescription } from '../../../shared/libs/dashboard.lib';
-import { Title } from "@angular/platform-browser";
-import { map } from "rxjs/operators";
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
-
-import { TaskContainerComponent } from "../task-container/task-container.component";
-import { TasksService } from "../../../services/task-container-services/tasks.service";
-import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
+import { TasksService } from '../../../services/task-container-services/tasks.service';
+import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task',
   templateUrl: './task.component.html',
-  imports: [
-    MatProgressSpinner,
-    TaskContainerComponent,
-  ],
-  standalone: true,
-  styleUrls: ['./task.component.sass']
+  imports: [TaskContainerSignalComponent],
+  styleUrls: ['./task.component.sass'],
 })
-export class TaskComponent implements OnInit, OnDestroy {
-  readonly task = signal<TaskC | null>(null);
+export class TaskComponent {
+  /** From route param `id` (withComponentInputBinding). */
+  id = input.required<number>();
 
-  id!: number;
-  parentsPath = signal<string[]>([]);
-  isLoading = signal<boolean>(true);
+  /** From route resolve `task` — refreshed when `id` changes (`runGuardsAndResolvers: 'paramsChange'`). */
+  task = input.required<TaskC>();
 
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private titleService = inject(Title);
+  /** Resolver value, or last `reloadTask()` result (e.g. after adding a subtask). */
+  readonly taskForView = linkedSignal(() => this.task());
+
   private tasksService = inject(TasksService);
-  private tasksContainerService = inject(TaskContainerService);
+  private titleService = inject(Title);
   private destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
-    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-      this.isLoading.set(true);
-      this.id = params['id'];
-      this.refreshTaskForTheFirstTime();
+  constructor() {
+    effect(() => {
+      this.titleService.setTitle(this.taskForView().getFullDescription());
     });
   }
 
-  private setTask(val: TaskC, updatePath = true) {
-    this.task.set(val);
-
-    this.titleService.setTitle(val.getFullDescription());
-    if (updatePath) {
-      this.tasksContainerService.getParentsPath(val).subscribe((res: string[]) => {
-        this.parentsPath.set(res);
-      });
-    }
+  reloadTask(): void {
+    this.tasksService
+      .getTask(Number(this.id()))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((t) => this.taskForView.set(t));
   }
 
-  private refreshTaskForTheFirstTime() {
-    const state = this.router.currentNavigation()?.extras.state;
-    if (state) {
-      // History restores state as a plain object — rehydrate so TaskContainer methods exist.
-      this.setTask(TaskC.createFromObj(state));
-      this.isLoading.set(false);
-      return;
-    }
-    this.refreshTask();
-  }
-
-  refreshTask(): void {
-    this.isLoading.set(true);
-    this.tasksService.getTask(this.id).subscribe(task => {
-      this.setTask(task);
-      this.isLoading.set(false);
-    })
-  }
-
-  refreshSubtasks$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.tasks));
-  refreshProblemsList$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.problems));
-  refreshQuestionsList$ = () => this.tasksService.getTask(this.id).pipe(map(e => e.questions));
-
-  ngOnDestroy(): void {
-    this.isLoading.set(true);
-  }
-
-  onDoneAllClick() {
-    const currentTask = this.task();
-    if (!currentTask) {
-      return;
-    }
-    this.tasksService.finishTask(currentTask).subscribe(() => {
-      if (this.parentsPath() && this.parentsPath().length > 1) {
-        const description = this.parentsPath().slice(-2, -1)[0];
-        this.goToParentHandler(description);
-      }
-    });
-  }
-
-  goToParentHandler(description: string) {
-    const urls = getUrlByDescription(description);
-    if (urls) {
-      this.router.navigate(urls).then();
-    }
-  }
-
-  /**
-   * Сохранение задачи (например, для обновления в базе заметок)
-   */
-  updateTask() {
-    const currentTask = this.task();
-    if (!currentTask) {
-      return;
-    }
-    this.tasksService.updateTask(currentTask).subscribe((task: TaskC) => this.setTask(task, false));
+  updateTask(): void {
+    this.tasksService
+      .updateTask(this.taskForView())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((updated) => this.taskForView.set(updated));
   }
 }
