@@ -37,7 +37,7 @@
                 id="done-all-button"
                 mat-mini-fab
                 color="accent"
-                (click)="onDoneAllClick.emit()"
+                (click)="onDoneAllButtonClick()"
                 >
                 <mat-icon>done_all</mat-icon>
               </button>
@@ -105,19 +105,21 @@
         [container]="taskContainer()"
       ></app-tasks-list>
 
-      <!-- Вопросы -->
-      <!-- <app-questions-list
-        [container]="taskContainer()"
-        (refreshQuestions)="refreshContainer()"
-        [questions]="taskContainer().questions"
-      ></app-questions-list> -->
+      @if (showQuestions()) {
+        <app-questions-list
+          [container]="taskContainer()"
+          (refreshQuestions)="refreshQuestions()"
+          [questions]="questionsForList()"
+        ></app-questions-list>
+      }
 
-      <!-- Проблемы -->
-      <!-- <app-problems-list
-        [container]="taskContainer()"
-        (refreshProblems)="refreshContainer()"
-        [problems]="taskContainer().problems"
-      ></app-problems-list> -->
+      @if (showProblems()) {
+        <app-problems-list
+          [container]="taskContainer()"
+          (refreshProblems)="refreshProblems()"
+          [problems]="problemsForList()"
+        ></app-problems-list>
+      }
     </div>
   </div>
 </div>

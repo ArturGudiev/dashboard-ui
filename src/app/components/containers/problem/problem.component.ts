@@ -1,96 +1,46 @@
-import { Component, DestroyRef, inject, OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from "@angular/router";
-import { Title } from "@angular/platform-browser";
-import { MatDialog } from "@angular/material/dialog";
-import { Problem } from "../../../models/problem";
-import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
-import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { map } from "rxjs/operators";
-import { TaskContainerComponent } from "../task-container/task-container.component";
-import { ProblemsService } from "../../../services/task-container-services/problems.service";
-import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
+import { Title } from '@angular/platform-browser';
+import { Problem } from '../../../models/problem';
+import { ProblemsService } from '../../../services/task-container-services/problems.service';
+import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-problem',
   templateUrl: './problem.component.html',
-  imports: [
-    MatProgressSpinner,
-    TaskContainerComponent
-  ],
-  standalone: true,
-  styleUrls: ['./problem.component.sass']
+  imports: [TaskContainerSignalComponent],
+  styleUrls: ['./problem.component.sass'],
 })
-export class ProblemComponent implements OnInit {
-  id!: number;
-  problem!: Problem;
+export class ProblemComponent {
+  /** From route param `id` (withComponentInputBinding). */
+  id = input.required<number>();
 
-  parentsPath = signal<string[]>([]);
-  isLoading = signal<boolean>(true);
+  /** From route resolve `problem` — refreshed when `id` changes (`runGuardsAndResolvers: 'paramsChange'`). */
+  problem = input.required<Problem>();
 
-  refreshSubtasks$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.tasks));
-  refreshProblemsList$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.problems));
-  refreshQuestionsList$ = () => this.problemsService.getProblem(this.id).pipe(map(e => e.questions));
+  readonly problemForView = linkedSignal(() => this.problem());
 
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private titleService = inject(Title);
-  private dialog = inject(MatDialog);
   private problemsService = inject(ProblemsService);
-  private taskContainerService = inject(TaskContainerService);
+  private titleService = inject(Title);
   private destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
-    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-      this.isLoading.set(true);
-      this.id = params['id'];
-      this.refreshProblem();
-    })
-  }
-
-  refreshProblem(): void {
-    this.problemsService.getProblem(this.id)
-      .subscribe((problem: Problem) => {
-        this.problem = problem;
-        this.isLoading.set(false);
-        this.titleService.setTitle(this.problem.getFullDescription());
-        if (this.problem !== null) {
-          this.taskContainerService.getParentsPath(this.problem).subscribe((res: string[]) => this.parentsPath.set(res));
-        }
-      });
-  }
-
-  onGoToNearestParent() {
-    if (this.parentsPath() && this.parentsPath().length <= 1) { return; }
-    this.goToParentHandler(this.parentsPath().slice(-2, -1)[0]);
-  }
-
-  goToParentHandler(description: string) {
-    const urls = getUrlByDescription(description);
-    if (urls) {
-      this.router.navigate(urls).then();
-    }
-  }
-
-
-  onDoneAllClick() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent,
-      { data: {title: 'Solution', inputWidth: '40rem'}});
-    dialogRef.afterClosed().subscribe((solution: string) => {
-      if (solution) {
-        this.problemsService.solveTheProblem(this.problem, solution).subscribe(() => {
-          this.onGoToNearestParent();
-        });
-      }
+  constructor() {
+    effect(() => {
+      this.titleService.setTitle(this.problemForView().getFullDescription());
     });
   }
 
-  updateProblem() {
-    this.problemsService.updateProblem(this.problem)
+  reloadProblem(): void {
+    this.problemsService
+      .getProblem(Number(this.id()))
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((problem: Problem) => this.problem = problem);
+      .subscribe((p) => this.problemForView.set(p));
   }
 
+  updateProblem(): void {
+    this.problemsService
+      .updateProblem(this.problemForView())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((updated) => this.problemForView.set(updated));
+  }
 }

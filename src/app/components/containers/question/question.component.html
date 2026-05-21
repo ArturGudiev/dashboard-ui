@@ -1,15 +1,9 @@
-@if(isLoading()) {
-  <mat-spinner></mat-spinner>
-} @else {
-  <app-task-container
+@if (questionForView(); as question) {
+  <app-task-container-signal
     [taskContainer]="question"
-    [parentsPath]="parentsPath()"
-    (onDoneAllClick)="onDoneAllClick()"
+    (refreshContainer)="reloadQuestion()"
     (updateTaskContainer)="updateQuestion()"
-    (refreshTaskContainer)="refreshQuestion()"
-    [refreshTasks$]="refreshSubtasks$"
-    [refreshProblems$]="refreshProblemsList$"
-    [refreshQuestions$]="refreshQuestionsList$"
-    (resolve)="onDoneAllClick()"
-  ></app-task-container>
+    [showQuestions]="true"
+    [showProblems]="true"
+  ></app-task-container-signal>
 }

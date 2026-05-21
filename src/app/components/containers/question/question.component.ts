@@ -1,100 +1,46 @@
-import { Component, DestroyRef, inject, OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from "@angular/router";
-import { Title } from "@angular/platform-browser";
-import { MatDialog } from "@angular/material/dialog";
-import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
-import { Question } from "../../../models/question";
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
-import { map } from "rxjs/operators";
-import { TaskContainerComponent } from "../task-container/task-container.component";
-import { QuestionsService } from "../../../services/task-container-services/questions.service";
-import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
+import { Title } from '@angular/platform-browser';
+import { Question } from '../../../models/question';
+import { QuestionsService } from '../../../services/task-container-services/questions.service';
+import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-question',
   templateUrl: './question.component.html',
-  imports: [
-    MatProgressSpinner,
-    TaskContainerComponent
-  ],
-  standalone: true,
-  styleUrls: ['./question.component.sass']
+  imports: [TaskContainerSignalComponent],
+  styleUrls: ['./question.component.sass'],
 })
-export class QuestionComponent implements OnInit {
-  id!: number;
-  question!: Question; // TODO resolvers
-  parentsPath = signal<string[]>([]);
-  isLoading = signal<boolean>(true);
+export class QuestionComponent {
+  /** From route param `id` (withComponentInputBinding). */
+  id = input.required<number>();
 
-  refreshSubtasks$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.tasks));
-  refreshProblemsList$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.problems));
-  refreshQuestionsList$ = () => this.questionsService.getQuestion(this.id).pipe(map(e => e.questions));
+  /** From route resolve `question` — refreshed when `id` changes (`runGuardsAndResolvers: 'paramsChange'`). */
+  question = input.required<Question>();
 
+  readonly questionForView = linkedSignal(() => this.question());
+
+  private questionsService = inject(QuestionsService);
+  private titleService = inject(Title);
   private destroyRef = inject(DestroyRef);
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private titleService: Title,
-    public dialog: MatDialog,
-    private questionsService: QuestionsService,
-    private taskContainerService: TaskContainerService
-  ) {
-  }
-
-  ngOnInit(): void {
-    this.route.params.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
-      this.isLoading.set(true);
-      this.id = params['id'];
-      this.refreshQuestion();
-    })
-  }
-
-  refreshQuestion(): void {
-    this.questionsService.getQuestion(this.id)
-    .subscribe((question: Question) => {
-      this.question = question;
-      this.isLoading.set(false);
-      this.titleService.setTitle(this.question.getFullDescription());
-      this.taskContainerService.getParentsPath(this.question).subscribe((res: string[]) => this.parentsPath.set(res));
+  constructor() {
+    effect(() => {
+      this.titleService.setTitle(this.questionForView().getFullDescription());
     });
   }
 
-  onGoToNearestParent() {
-    if (this.parentsPath() && this.parentsPath().length <= 1) {
-      return;
-    }
-    this.goToParentHandler(this.parentsPath().slice(-2, -1)[0]);
+  reloadQuestion(): void {
+    this.questionsService
+      .getQuestion(Number(this.id()))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((q) => this.questionForView.set(q));
   }
 
-  goToParentHandler(description: string) {
-    const urls = getUrlByDescription(description);
-    if (urls) {
-      this.router.navigate(urls).then();
-    }
+  updateQuestion(): void {
+    this.questionsService
+      .updateQuestion(this.questionForView())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((updated) => this.questionForView.set(updated));
   }
-
-  onDoneAllClick() {
-    const dialogRef = this.dialog.open(GetValueDialogComponent,
-      {data: {title: 'Solution', inputWidth: '40rem'}});
-    dialogRef.afterClosed().subscribe((answer: string) => {
-      console.log('after closed dialog', answer);
-      if (answer) {
-        this.questionsService.answerTheQuestion(this.question, answer).subscribe(() => {
-          this.onGoToNearestParent();
-        });
-      }
-    });
-  }
-
-  updateQuestion() {
-    this.questionsService.updateQuestion(this.question)
-      .subscribe((question: Question) => {
-        this.question = question;
-      });
-  }
-
 }

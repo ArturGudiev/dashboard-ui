@@ -22,6 +22,7 @@ import { EpicsListComponent } from "../../lists/epics-list/epics-list.component"
 import { SubStoriesComponent } from "../../lists/substories/sub-stories.component";
 import { QuestionsListComponent } from "../../lists/questions-list/questions-list.component";
 import { ProblemsListComponent } from "../../lists/problems-list/problems-list.component";
+import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
@@ -38,6 +39,8 @@ import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component"
 
 /** Stable fallback so `[tasks]="… ?? []"` does not allocate a new array every CD tick (breaks TasksListComponent's effect). */
 const EMPTY_TASKS: TaskC[] = [];
+const EMPTY_QUESTIONS: Question[] = [];
+const EMPTY_PROBLEMS: Problem[] = [];
 const EMPTY_PARENTS_PATH: string[] = [];
 
 @Component({
@@ -50,8 +53,8 @@ const EMPTY_PARENTS_PATH: string[] = [];
     ParentsPathComponent,
     EpicsListComponent,
     SubStoriesComponent,
-    // QuestionsListComponent,
-    // ProblemsListComponent,
+    QuestionsListComponent,
+    ProblemsListComponent,
     NotesComponent,
     ContainerReportComponent,
     TasksListComponent,
@@ -65,6 +68,8 @@ export class TaskContainerSignalComponent implements OnInit {
 
   showEpics = input<boolean>(false);
   showStories = input<boolean>(false);
+  showQuestions = input<boolean>(false);
+  showProblems = input<boolean>(false);
 
   refreshContainer = output<void>();
 
@@ -89,7 +94,21 @@ export class TaskContainerSignalComponent implements OnInit {
     stream: () => this.taskContainerService.getParentsPath(this.taskContainer()),
   });
 
+  questionsResource = rxResource<Question[], { ids: number[] }>({
+    params: () => ({ ids: this.taskContainer().questions ?? [] }),
+    stream: ({ params }) =>
+      params.ids.length ? this.questionsService.getQuestions(params.ids) : of([]),
+  });
+
+  problemsResource = rxResource<Problem[], { ids: number[] }>({
+    params: () => ({ ids: this.taskContainer().problems ?? [] }),
+    stream: ({ params }) =>
+      params.ids.length ? this.problemsService.getProblems(params.ids) : of([]),
+  });
+
   private lastTasks = signal<TaskC[]>([]);
+  private lastQuestions = signal<Question[]>([]);
+  private lastProblems = signal<Problem[]>([]);
 
   /** Keep previous rows while tasksResource reloads so the list does not unmount and blink. */
   readonly tasksForList = computed(() => {
@@ -98,6 +117,22 @@ export class TaskContainerSignalComponent implements OnInit {
       return live;
     }
     return this.lastTasks().length > 0 ? this.lastTasks() : EMPTY_TASKS;
+  });
+
+  readonly questionsForList = computed(() => {
+    const live = this.questionsResource.value();
+    if (live != null) {
+      return live;
+    }
+    return this.lastQuestions().length > 0 ? this.lastQuestions() : EMPTY_QUESTIONS;
+  });
+
+  readonly problemsForList = computed(() => {
+    const live = this.problemsResource.value();
+    if (live != null) {
+      return live;
+    }
+    return this.lastProblems().length > 0 ? this.lastProblems() : EMPTY_PROBLEMS;
   });
 
   private lastParentsPath = signal<string[]>([]);
@@ -150,6 +185,20 @@ export class TaskContainerSignalComponent implements OnInit {
         this.lastTasks.set(tasks);
       }
     });
+
+    effect(() => {
+      const questions = this.questionsResource.value();
+      if (questions != null) {
+        this.lastQuestions.set(questions);
+      }
+    });
+
+    effect(() => {
+      const problems = this.problemsResource.value();
+      if (problems != null) {
+        this.lastProblems.set(problems);
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -174,6 +223,14 @@ export class TaskContainerSignalComponent implements OnInit {
 
   /** Reload container from parent so `taskContainer().tasks` IDs match the server (e.g. after add task). */
   refreshTasks(): void {
+    this.refreshContainer.emit();
+  }
+
+  refreshQuestions(): void {
+    this.refreshContainer.emit();
+  }
+
+  refreshProblems(): void {
     this.refreshContainer.emit();
   }
 
@@ -210,7 +267,7 @@ export class TaskContainerSignalComponent implements OnInit {
       this.finishAllTasks();
     }
     if (['r', 'res', 'resolve'].includes(arr[0])) {
-      this.resolve.emit();
+      this.onDoneAllButtonClick();
     }
     if (['notes'].includes(arr[0])) {
       this.callEditNotesEvent();
@@ -247,10 +304,52 @@ export class TaskContainerSignalComponent implements OnInit {
       return;
     }
     const index = +args[0];
-    if (Number.isInteger(index) && index >= 1 && index <= this.problems().length) {
-      const problem = this.problems()[index - 1];
+    const problems = this.problemsForList();
+    if (Number.isInteger(index) && index >= 1 && index <= problems.length) {
+      const problem = problems[index - 1];
       this.solveTheProblem(problem);
     }
+  }
+
+  onDoneAllButtonClick(): void {
+    const container = this.taskContainer();
+    if (container.type === 'question') {
+      const dialogRef = this.dialog.open(GetValueDialogComponent, {
+        data: { title: 'Solution', inputWidth: '40rem' },
+      });
+      dialogRef.afterClosed().subscribe((answer: string) => {
+        if (answer) {
+          this.questionsService
+            .answerTheQuestion(container as Question, answer)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.navigateToParentAfterResolve());
+        }
+      });
+      return;
+    }
+    if (container.type === 'problem') {
+      const dialogRef = this.dialog.open(GetValueDialogComponent, {
+        data: { title: 'Solution', inputWidth: '40rem' },
+      });
+      dialogRef.afterClosed().subscribe((solution: string) => {
+        if (solution) {
+          this.problemsService
+            .solveTheProblem(container as Problem, solution)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.navigateToParentAfterResolve());
+        }
+      });
+      return;
+    }
+    this.onDoneAllClick.emit();
+  }
+
+  private navigateToParentAfterResolve(): void {
+    const parentsPath = this.viewParentsPath();
+    if (parentsPath.length <= 1) {
+      return;
+    }
+    this.goToParentHandler(parentsPath.slice(-2, -1)[0]);
   }
 
   private finishTaskHandler(args: string[]) {
