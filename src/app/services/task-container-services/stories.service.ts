@@ -7,6 +7,7 @@ import { type Story } from '../../models/story';
 import { type TaskContainer } from '../../models/interfaces/task-container';
 import { NEW_STORY_DIALOG_OPTIONS } from '../../shared/constants';
 import { ApiService } from '../api.service';
+import { type ModelsNewStoryRequest, type ModelsStoryShort } from '../../types/generated';
 
 @Injectable({
   providedIn: 'root',
@@ -27,10 +28,7 @@ export class StoriesService {
     return this.apiService._updateStory(story);
   }
 
-  createNewStory(obj: {
-    story: { description: string; tags: string[]; notes: string };
-    parent: { id: number; type: string };
-  }): Observable<Story> {
+  createNewStory(obj: ModelsNewStoryRequest): Observable<Story> {
     return this.apiService._createNewStory(obj);
   }
 
@@ -45,9 +43,9 @@ export class StoriesService {
     return dialogRef.afterClosed().pipe(
       filter((responseObj: { description?: string; notes?: string } | null) => !!responseObj?.description),
       switchMap((responseObj) => {
-        const story = {
+        const story: ModelsStoryShort = {
           description: responseObj!.description!,
-          tags: [] as string[],
+          tags: [],
           notes: responseObj!.notes ?? '',
         };
         const parent = { id: taskContainer.id, type: taskContainer.type };

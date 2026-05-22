@@ -1,15 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { type Observable } from "rxjs";
-import { ApiService } from "../api.service";
+import { ApiService, type NameValueEntityPayload } from "../api.service";
 import { type Action } from "../../models/classes/action";
 import { type Knowledge } from "../../models/knowledge";
-
-type NameValueEntityPayload = {
-  name: string;
-  value: string;
-  tags: string[];
-  extension: string;
-};
 
 @Injectable({
   providedIn: 'root'
