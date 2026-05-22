@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from "./api.service";
-import { Observable } from "rxjs";
-import { ModelsAliasModel } from "../types/generated";
+import { type Observable } from "rxjs";
+import { type ModelsAliasModel } from "../types/generated";
 
 @Injectable({
   providedIn: 'root'

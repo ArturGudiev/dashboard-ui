@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, effect, inject, input, ViewChild , ChangeDetectionStrategy} from '@angular/core';
+import { type AfterViewInit, Component, effect, inject, input, ViewChild , ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
-import { Epic } from "../../../models/epic";
+import { type Epic } from "../../../models/epic";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 

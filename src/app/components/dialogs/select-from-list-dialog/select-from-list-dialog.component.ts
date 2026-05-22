@@ -1,7 +1,7 @@
 /**
  * Диалоговое окно для выбора значения из списка
  */
-import { Component, DestroyRef, HostListener, Inject, OnInit, signal, inject , ChangeDetectionStrategy} from '@angular/core';
+import { Component, DestroyRef, HostListener, Inject, type OnInit, signal, inject , ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { CommandsService } from "../../../services/commands.service";

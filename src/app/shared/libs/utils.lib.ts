@@ -1,4 +1,4 @@
-import { TaskContainerDescription } from "../../models/interfaces/types";
+import { type TaskContainerDescription } from "../../models/interfaces/types";
 
 export function getJSONFileContent() { }
 

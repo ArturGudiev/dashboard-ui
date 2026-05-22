@@ -6,16 +6,16 @@ import {
   effect,
   input,
   output,
-  OnInit,
+  type OnInit,
   inject,
   signal,
   untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TaskC } from "../../../models/task-class";
+import { type TaskC } from "../../../models/task-class";
 import * as _ from "lodash";
 import { every, isNaN } from "lodash";
-import { CommandsService, CommandsStateInterface } from "../../../services/commands.service";
+import { CommandsService, type CommandsStateInterface } from "../../../services/commands.service";
 import { MatDialog } from "@angular/material/dialog";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { AppStore } from "../../../state/app.store";
@@ -27,7 +27,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { NgClass } from "@angular/common";
-import { TaskContainer } from "../../../models/interfaces/task-container";
+import { type TaskContainer } from "../../../models/interfaces/task-container";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 import { tasksListRefreshAnimation } from './tasks-list.animations';

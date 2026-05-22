@@ -1,7 +1,7 @@
 import { Component, inject , ChangeDetectionStrategy} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from "@angular/material/dialog";
-import { TaskC } from "../../../models/task-class";
+import { type TaskC } from "../../../models/task-class";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatButton } from "@angular/material/button";
 import { MatInput } from "@angular/material/input";

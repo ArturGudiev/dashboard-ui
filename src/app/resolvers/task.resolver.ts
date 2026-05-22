@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { ResolveFn, Router } from '@angular/router';
+import { type ResolveFn, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { TaskC } from '../models/task-class';
 import { TasksService } from '../services/task-container-services/tasks.service';

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit , ChangeDetectionStrategy} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TaskC } from '../../../models/task-class';
+import { type TaskC } from '../../../models/task-class';
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { MatFormField } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";

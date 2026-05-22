@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, inject, type OnInit, Output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
 import { MatButton } from "@angular/material/button";
-import { DashboardService, DashboardStateInterface } from "../../../services/dashboard.service";
+import { DashboardService, type DashboardStateInterface } from "../../../services/dashboard.service";
 import { Hotkeys } from "../../../classes/hotkeys";
 import { CommandsService } from "../../../services/commands.service";
 import { NavigationService } from "../../../services/navigation.service";

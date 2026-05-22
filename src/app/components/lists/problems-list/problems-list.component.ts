@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, type OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Problem } from "../../../models/problem";
+import { type Problem } from "../../../models/problem";
 import { SelectionModel } from "@angular/cdk/collections";
 import { Router } from "@angular/router";
-import { TaskC } from "../../../models/task-class";
-import { MatCheckboxChange } from "@angular/material/checkbox";
+import { type TaskC } from "../../../models/task-class";
+import { type MatCheckboxChange } from "@angular/material/checkbox";
 import { AppStore } from "../../../state/app.store";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -16,7 +16,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { NgClass } from "@angular/common";
 import { TasksListComponent } from "../tasks-list/tasks-list.component";
-import { TaskContainer } from "../../../models/interfaces/task-container";
+import { type TaskContainer } from "../../../models/interfaces/task-container";
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 

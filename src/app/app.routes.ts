@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { type Routes } from '@angular/router';
 import { MainPageComponent } from "./components/pages/main-page/main-page.component";
 import { TaskComponent } from "./components/containers/task/task.component";
 import { taskResolver } from "./resolvers/task.resolver";

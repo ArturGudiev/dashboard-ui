@@ -1,5 +1,5 @@
 import { Component, input, output , ChangeDetectionStrategy} from '@angular/core';
-import { Story } from "../../../models/story";
+import { type Story } from "../../../models/story";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatTableModule } from "@angular/material/table";
 import { MatCheckboxModule } from "@angular/material/checkbox";

@@ -1,18 +1,18 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, HostListener, inject, input, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, HostListener, inject, input, type OnInit, output, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Hotkey, HotkeysService } from "angular2-hotkeys";
 import * as _ from "lodash";
-import { Observable, of, Subject } from "rxjs";
-import { Problem } from "../../../models/problem";
-import { Question } from "../../../models/question";
-import { Story } from "../../../models/story";
-import { TaskC } from "../../../models/task-class";
+import { type Observable, of, Subject } from "rxjs";
+import { type Problem } from "../../../models/problem";
+import { type Question } from "../../../models/question";
+import { type Story } from "../../../models/story";
+import { type TaskC } from "../../../models/task-class";
 import { CommandsService } from "../../../services/commands.service";
 import { RecordsService } from "../../../services/records.service";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
-import { Epic } from "../../../models/epic";
+import { type Epic } from "../../../models/epic";
 import { RecordsListDialogComponent } from "../../dialogs/records-list-dialog/records-list-dialog.component";
 import { HelpComponent } from "../../pages/help/help.component";
 import { MatButtonModule } from "@angular/material/button";
@@ -26,7 +26,7 @@ import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialo
 
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
-import { TaskContainer } from "../../../models/interfaces/task-container";
+import { type TaskContainer } from "../../../models/interfaces/task-container";
 import { QuestionsService } from "../../../services/task-container-services/questions.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 import { StoriesService } from "../../../services/task-container-services/stories.service";

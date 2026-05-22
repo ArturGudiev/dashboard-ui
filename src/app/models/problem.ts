@@ -1,6 +1,6 @@
 import { pick } from "lodash";
-import { TaskContainer } from "./interfaces/task-container";
-import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "./interfaces/types";
+import { type TaskContainer } from "./interfaces/task-container";
+import { type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
 
 export class Problem implements TaskContainer {
   static readonly PREFIX = 'Problem-';

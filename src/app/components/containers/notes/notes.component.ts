@@ -3,16 +3,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  ElementRef,
+  type ElementRef,
   input,
-  OnInit,
+  type OnInit,
   signal,
   output,
   viewChild,
   inject,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from "rxjs";
+import { type Observable } from "rxjs";
 import { FormsModule } from "@angular/forms";
 
 import { MatFormFieldModule } from "@angular/material/form-field";

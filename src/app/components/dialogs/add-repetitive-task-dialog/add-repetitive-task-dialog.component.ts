@@ -3,10 +3,10 @@ import { MatButton } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
 import { ReactiveFormsModule } from "@angular/forms";
-import { TaskContainer } from "../../../models/interfaces/task-container";
+import { type TaskContainer } from "../../../models/interfaces/task-container";
 import { form, FormField, min, required } from "@angular/forms/signals";
 import { RepetitiveTasksService } from "../../../services/task-container-services/repetitive-tasks.service";
-import { ModelsRepetitiveTaskShort } from "../../../types/generated";
+import { type ModelsRepetitiveTaskShort } from "../../../types/generated";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

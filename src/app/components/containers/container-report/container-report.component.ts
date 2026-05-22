@@ -1,6 +1,6 @@
-import { Component, input, OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
-import { TaskContainer } from "../../../models/interfaces/task-container";
-import { MyTreeComponent, TreeNode } from "../tree/my-tree.component";
+import { Component, input, type OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
+import { type TaskContainer } from "../../../models/interfaces/task-container";
+import { MyTreeComponent, type TreeNode } from "../tree/my-tree.component";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 

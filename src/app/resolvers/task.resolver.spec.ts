@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ResolveFn } from '@angular/router';
+import { type ResolveFn } from '@angular/router';
 
 import { taskResolver } from './task.resolver';
 

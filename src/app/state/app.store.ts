@@ -1,5 +1,5 @@
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { TaskContainer } from '../models/interfaces/task-container';
+import { type TaskContainer } from '../models/interfaces/task-container';
 
 interface AppState {
   focusedTaskForSubtasks: TaskContainer | null;

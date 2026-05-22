@@ -1,10 +1,10 @@
-import { Component, effect, inject, Inject, model, signal , ChangeDetectionStrategy} from '@angular/core';
+import { Component, effect, inject, Inject, model, signal , ChangeDetectionStrategy, type OnInit} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { TaskContainer } from "../../../models/interfaces/task-container";
+import { type TaskContainer } from "../../../models/interfaces/task-container";
 import { LogsService } from "../../../services/logs.service";
-import { EntLogMessage } from "../../../types/generated";
-import { Subscription } from "rxjs";
-import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { type EntLogMessage } from "../../../types/generated";
+import { type Subscription } from "rxjs";
+import { MatPaginator, type PageEvent } from "@angular/material/paginator";
 import { MatFormField, MatOption, MatSelect } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 
@@ -41,7 +41,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
   standalone: true,
   styleUrl: './logs-dialog.component.scss'
 })
-export class LogsDialogComponent {
+export class LogsDialogComponent implements OnInit {
   perPage = signal(20);
   page = signal(0);
   total = signal(0);

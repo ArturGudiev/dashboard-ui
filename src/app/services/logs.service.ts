@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from "./api.service";
-import { TaskContainer } from "../models/interfaces/task-container";
-import { HandlersNewLogMessageRequest, HandlersPaginatedResponseEntLogMessage } from "../types/generated";
-import { Observable } from "rxjs";
+import { type TaskContainer } from "../models/interfaces/task-container";
+import { type HandlersNewLogMessageRequest, type HandlersPaginatedResponseEntLogMessage } from "../types/generated";
+import { type Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'

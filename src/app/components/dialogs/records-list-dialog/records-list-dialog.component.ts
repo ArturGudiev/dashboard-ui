@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { RecordsService } from "../../../services/records.service";
-import { RecordItem } from "../../../models/record-item";
-import { MatPaginator, PageEvent } from "@angular/material/paginator";
-import { IArrayResponse } from "../../../services/api.service";
-import { MatButtonToggle, MatButtonToggleChange, MatButtonToggleGroup } from "@angular/material/button-toggle";
+import { type RecordItem } from "../../../models/record-item";
+import { MatPaginator, type PageEvent } from "@angular/material/paginator";
+import { type IArrayResponse } from "../../../services/api.service";
+import { MatButtonToggle, type MatButtonToggleChange, MatButtonToggleGroup } from "@angular/material/button-toggle";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { IArrayParams } from "../../../models/interfaces/array-params";
+import { type IArrayParams } from "../../../models/interfaces/array-params";
 
 type SelectedOptionType = 'node' | 'all' | 'node_plus_children';
 

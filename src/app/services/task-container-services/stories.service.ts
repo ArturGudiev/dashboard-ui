@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { NewTaskDialogComponent } from '../../components/dialogs/new-task-dialog/new-task-dialog.component';
-import { Story } from '../../models/story';
-import { TaskContainer } from '../../models/interfaces/task-container';
+import { type Story } from '../../models/story';
+import { type TaskContainer } from '../../models/interfaces/task-container';
 import { NEW_STORY_DIALOG_OPTIONS } from '../../shared/constants';
 import { ApiService } from '../api.service';
 

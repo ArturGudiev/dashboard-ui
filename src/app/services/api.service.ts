@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { TaskC } from '../models/task-class';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { type Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Epic } from "../models/epic";
 import { Story } from "../models/story";
@@ -10,19 +10,31 @@ import { Question } from "../models/question";
 import { Knowledge } from "../models/knowledge";
 import { RecordItem } from "../models/record-item";
 import { Action } from '../models/classes/action';
-import { TaskContainer } from "../models/interfaces/task-container";
-import { IArrayParams } from "../models/interfaces/array-params";
+import { type TaskContainer } from "../models/interfaces/task-container";
+import { type IArrayParams } from "../models/interfaces/array-params";
 import { AppConfigService } from './app-config.service';
 import {
-  EntLogMessage,
-  EntRepetitiveTaskExecution,
-  HandlersNewLogMessageRequest,
-  HandlersNewRepetitiveTaskRequest,
-  HandlersPaginatedResponseEntLogMessage,
-  ModelsAliasModel,
-  ModelsRepetitiveTaskResponse
+  type EntLogMessage,
+  type EntRepetitiveTaskExecution,
+  type HandlersIdsRequest,
+  type HandlersNewLogMessageRequest,
+  type HandlersNewTaskRequest,
+  type HandlersNewRepetitiveTaskRequest,
+  type HandlersPaginatedResponseEntLogMessage,
+  type EntTask,
+  type HandlersTaskResponse,
+  type ModelsAliasModel,
+  type ModelsRepetitiveTaskResponse,
+  type ModelsTaskFull,
 } from "../types/generated";
-import { TaskContainerType } from "../models/interfaces/types";
+import {
+  type EmptyJsonResponse,
+  taskFromEnt,
+  taskFromFinishResponse,
+  taskFromFull,
+  toUpdateTaskBody,
+} from '../shared/libs/task-api.lib';
+import { type TaskContainerType } from "../models/interfaces/types";
 import {
   toEpicPartial,
   toProblemPartial,
@@ -48,11 +60,11 @@ export class ApiService {
   private http = inject(HttpClient);
   private appConfig = inject(AppConfigService);
 
+  /** GET /task/:id — handler returns `models.TaskFull`. */
   _getTask(id: number): Observable<TaskC> {
-    return this.http.get<TaskC>(`${this.baseUrl}/task/${id}`)
-      .pipe(
-        map((obj) => TaskC.createFromObj(obj))
-      );
+    return this.http
+      .get<ModelsTaskFull>(`${this.baseUrl}/task/${id}`)
+      .pipe(map(taskFromFull));
   }
 
   _getParentsPath(obj: TaskContainer): Observable<string[]> {
@@ -61,48 +73,56 @@ export class ApiService {
   }
 
   _getTasks(ids: number[]): Observable<TaskC[]> {
-    return this.http.post(`${this.baseUrl}/get-tasks`,
-      { ids }
-    ).pipe(
-      map((tasks: any) => tasks.map((t: TaskC) => TaskC.createFromObj(t))
-      ));
+    const body: HandlersIdsRequest = { ids };
+    return this.http
+      .post<ModelsTaskFull[]>(`${this.baseUrl}/get-tasks`, body)
+      .pipe(map((tasks) => tasks.map(taskFromFull)));
   }
 
-  _createNewTask(obj: any): Observable<TaskC> {
-    return this.http.post<TaskC>(`${this.baseUrl}/new-task`, obj).pipe(map(TaskC.createFromObj));
+  /** POST /new-task — handler returns `models.TaskFull` (via GetTaskFull after create). */
+  _createNewTask(request: HandlersNewTaskRequest): Observable<TaskC> {
+    return this.http
+      .post<ModelsTaskFull>(`${this.baseUrl}/new-task`, request)
+      .pipe(map(taskFromFull));
   }
 
-  _finishTask(task: TaskC): Observable<any> {
-    return this.http.put(`${this.baseUrl}/finish-task/${task.id}`, {});
+  /** PUT /finish-task/:id — handler returns `handlers.TaskResponse`. */
+  _finishTask(task: TaskC): Observable<TaskC> {
+    return this.http
+      .put<HandlersTaskResponse>(`${this.baseUrl}/finish-task/${task.id}`, {})
+      .pipe(map(taskFromFinishResponse));
   }
 
-  _finishTaskById(id: number): Observable<any> {
-    return this.http.put(`${this.baseUrl}/finish-task/${id}`, {});
+  _finishTaskById(id: number): Observable<TaskC> {
+    return this.http
+      .put<HandlersTaskResponse>(`${this.baseUrl}/finish-task/${id}`, {})
+      .pipe(map(taskFromFinishResponse));
   }
 
-
-  _finishTasks(tasks: TaskC[]) {
-    return this.http.put(`${this.baseUrl}/finish-tasks-by-ids/`, tasks.map(el => el.id)).pipe();
-  }
-
-  _finishTasksByIds(ids: number[]) {
-    return this.http.put(`${this.baseUrl}/finish-tasks-by-ids/`, ids).pipe();
-  }
-
-  _addAnonymousTask(): Observable<any> {
-    return this.http.put(`${this.baseUrl}/add-anonymous-task`, {});
-  }
-
-  _updateTask(task: TaskC): Observable<TaskC> {
-    return this.http.put<TaskC>(`${this.baseUrl}/update-task`, {
-      id: task.id,
-      description: task.description,
-      notes: task.notes,
-      tags: task.tags,
-      done: task.done,
-    }).pipe(
-      map((obj) => TaskC.createFromObj(obj)),
+  /** PUT /finish-tasks-by-ids — handler returns `{}`. */
+  _finishTasks(tasks: TaskC[]): Observable<EmptyJsonResponse> {
+    return this.http.put<EmptyJsonResponse>(
+      `${this.baseUrl}/finish-tasks-by-ids/`,
+      tasks.map((el) => el.id),
     );
+  }
+
+  _finishTasksByIds(ids: number[]): Observable<EmptyJsonResponse> {
+    return this.http.put<EmptyJsonResponse>(`${this.baseUrl}/finish-tasks-by-ids/`, ids);
+  }
+
+  /** PUT /add-anonymous-task — handler returns `ent.Task`. */
+  _addAnonymousTask(): Observable<TaskC> {
+    return this.http
+      .put<EntTask>(`${this.baseUrl}/add-anonymous-task`, {})
+      .pipe(map(taskFromEnt));
+  }
+
+  /** PUT /update-task — handler returns `models.TaskFull`. */
+  _updateTask(task: TaskC): Observable<TaskC> {
+    return this.http
+      .put<ModelsTaskFull>(`${this.baseUrl}/update-task`, toUpdateTaskBody(task))
+      .pipe(map(taskFromFull));
   }
 
   _getDoneTasksNumber(from: string | null) {

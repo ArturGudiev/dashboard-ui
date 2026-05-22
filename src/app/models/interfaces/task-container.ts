@@ -1,4 +1,4 @@
-import { ContainerDescription, TaskContainerDescription, TaskContainerType } from "./types";
+import { type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./types";
 
 export interface ITaskContainerChildElements {
   tasks: number[]

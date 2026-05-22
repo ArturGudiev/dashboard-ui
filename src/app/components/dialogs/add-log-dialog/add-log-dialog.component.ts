@@ -5,7 +5,7 @@ import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { MatButton } from "@angular/material/button";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
-import { TaskContainer } from "../../../models/interfaces/task-container";
+import { type TaskContainer } from "../../../models/interfaces/task-container";
 import { MatOption, MatSelect } from "@angular/material/select";
 
 export interface AddLogDialogResult {
@@ -82,7 +82,7 @@ export class AddLogDialogComponent {
   }
 
   onSubmit() {
-    let dialogResult: AddLogDialogResult = {
+    const dialogResult: AddLogDialogResult = {
       logMessage: this.myForm.value.valueField ?? '',
       isContainerLog: this.myForm.value.isContainerLog ?? false,
       logType: this.logType()

@@ -1,7 +1,7 @@
-import { Epic } from '../../models/epic';
-import { Problem } from '../../models/problem';
-import { Question } from '../../models/question';
-import { Story } from '../../models/story';
+import { type Epic } from '../../models/epic';
+import { type Problem } from '../../models/problem';
+import { type Question } from '../../models/question';
+import { type Story } from '../../models/story';
 
 /** Fields accepted by PUT /update-epic, /update-story, etc. */
 export function toEpicPartial(epic: Epic) {

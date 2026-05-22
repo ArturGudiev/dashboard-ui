@@ -2,7 +2,7 @@ import { Component, inject , ChangeDetectionStrategy} from '@angular/core';
 import { AsyncPipe } from "@angular/common";
 import { RepetitiveTasksService } from "../../../services/task-container-services/repetitive-tasks.service";
 import { RepetitiveTasksListComponent } from "../../lists/repetitive-tasks-list/repetitive-tasks-list.component";
-import { ModelsRepetitiveTaskResponse } from "../../../types/generated";
+import { type ModelsRepetitiveTaskResponse } from "../../../types/generated";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

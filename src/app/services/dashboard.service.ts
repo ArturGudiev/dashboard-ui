@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, type Observable } from "rxjs";
 import { ApiService } from "./api.service";
 import { AppStore } from "../state/app.store";
 

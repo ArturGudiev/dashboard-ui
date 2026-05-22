@@ -7,7 +7,9 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "sass"
+          "style": "sass",
+          "changeDetection": "OnPush",
+          "standalone": true
         }
       },
       "root": "",
@@ -28,7 +30,11 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              { "input": "src", "glob": "env.js", "output": "/" }
+              {
+                "input": "src",
+                "glob": "env.js",
+                "output": "/"
+              }
             ],
             "styles": [
               "node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
@@ -109,7 +115,11 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              { "input": "src", "glob": "env.js", "output": "/" }
+              {
+                "input": "src",
+                "glob": "env.js",
+                "output": "/"
+              }
             ],
             "styles": [
               "node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
@@ -117,6 +127,15 @@
               "src/styles.sass"
             ],
             "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
@@ -149,6 +168,9 @@
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   }
 }

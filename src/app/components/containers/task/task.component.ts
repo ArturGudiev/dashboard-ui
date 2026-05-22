@@ -1,7 +1,7 @@
 import { Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
-import { TaskC } from '../../../models/task-class';
+import { type TaskC } from '../../../models/task-class';
 import { TasksService } from '../../../services/task-container-services/tasks.service';
 import { linkedContainerForView } from '../../../shared/libs/container-view.lib';
 import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';

@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { EMPTY, Observable } from "rxjs";
+import { EMPTY, type Observable } from "rxjs";
 import { ApiService } from "../api.service";
 import {
-  EntRepetitiveTaskExecution,
-  HandlersNewRepetitiveTaskRequest,
-  ModelsRepetitiveTaskResponse,
-  ModelsRepetitiveTaskShort
+  type EntRepetitiveTaskExecution,
+  type HandlersNewRepetitiveTaskRequest,
+  type ModelsRepetitiveTaskResponse,
+  type ModelsRepetitiveTaskShort
 } from "../../types/generated";
 import {
   AddRepetitiveTaskDialogComponent

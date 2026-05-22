@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Observable, Subject} from "rxjs";
+import {type Observable, Subject} from "rxjs";
 
 export interface CommandsStateInterface {
   command: string;

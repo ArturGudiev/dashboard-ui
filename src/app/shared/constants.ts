@@ -1,5 +1,5 @@
-import { TaskC } from "../models/task-class";
-import { TaskContainer } from "../models/interfaces/task-container";
+import { type TaskC } from "../models/task-class";
+import { type TaskContainer } from "../models/interfaces/task-container";
 
 export const sapphireBlue = '#0F52BA'
 export const colorBlue = '#6497b1'

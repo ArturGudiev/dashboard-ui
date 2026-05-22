@@ -1,26 +1,26 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable, of, Subject } from "rxjs";
+import { type Observable, of, Subject } from "rxjs";
 import { TasksService } from './tasks.service';
 import { ProblemsService } from './problems.service';
 import { QuestionsService } from './questions.service';
 import { EpicsService } from "./epics.service";
 import { StoriesService } from "./stories.service";
-import { TaskContainer } from "../../models/interfaces/task-container";
+import { type TaskContainer } from "../../models/interfaces/task-container";
 import { ApiService } from "../api.service";
-import { TaskContainerType } from "../../models/interfaces/types";
-import { Epic } from "../../models/epic";
-import { Story } from "../../models/story";
-import { Problem } from "../../models/problem";
-import { Question } from "../../models/question";
-import { TaskC } from "../../models/task-class";
+import { type TaskContainerType } from "../../models/interfaces/types";
+import { type Epic } from "../../models/epic";
+import { type Story } from "../../models/story";
+import { type Problem } from "../../models/problem";
+import { type Question } from "../../models/question";
+import { type TaskC } from "../../models/task-class";
 import { NEW_QUESTION_DIALOG_OPTIONS } from "../../shared/constants";
 import { switchMap } from "rxjs/operators";
 import { MatDialog } from "@angular/material/dialog";
 import { LogsService } from "../logs.service";
-import { EntLogMessage } from "../../types/generated";
+import { type EntLogMessage } from "../../types/generated";
 import {
   AddLogDialogComponent,
-  AddLogDialogResult
+  type AddLogDialogResult
 } from "../../components/dialogs/add-log-dialog/add-log-dialog.component";
 import { LogsDialogComponent } from "../../components/dialogs/logs-dialog/logs-dialog.component";
 
@@ -99,9 +99,7 @@ export class TaskContainerService {
       });
     return dialogRef.afterClosed()
       .pipe(
-        // filter((description: string) => !!description),
         switchMap((obj: AddLogDialogResult) => {
-          console.log(obj, 'After closed subscription');
           return this.logsService.addLogMessage(
             obj.logMessage,
             obj.isContainerLog ? taskContainer : undefined,
@@ -112,7 +110,7 @@ export class TaskContainerService {
   }
 
   openLogsDialog(taskContainer: TaskContainer) {
-    const dialogRef = this.dialog.open(LogsDialogComponent,
+    this.dialog.open(LogsDialogComponent,
       {data: { taskContainer },
          height: '1000px', width: '800px',
       });

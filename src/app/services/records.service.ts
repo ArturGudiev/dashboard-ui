@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { RecordItem } from "../models/record-item";
-import { ApiService, IArrayResponse } from "./api.service";
-import { Observable } from "rxjs";
+import { type RecordItem } from "../models/record-item";
+import { ApiService, type IArrayResponse } from "./api.service";
+import { type Observable } from "rxjs";
 import { GetValueDialogComponent } from "../components/dialogs/get-value/get-value-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-import { IArrayParams } from "../models/interfaces/array-params";
+import { type IArrayParams } from "../models/interfaces/array-params";
 
 @Injectable({
   providedIn: 'root'

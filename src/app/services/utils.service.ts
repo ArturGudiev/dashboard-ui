@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable } from "rxjs";
+import { type Observable } from "rxjs";
 import { AppStore } from "../state/app.store";
 import { SelectFromListDialog } from "../components/dialogs/select-from-list-dialog/select-from-list-dialog.component";
 import { MatDialog } from "@angular/material/dialog";

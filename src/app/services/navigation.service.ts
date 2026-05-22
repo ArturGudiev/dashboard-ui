@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { AliasesService } from "./aliases.service";
 import { AlertService } from "./alert.service";
 import { TasksService } from "./task-container-services/tasks.service";
-import { ModelsAliasModel } from "../types/generated";
+import { type ModelsAliasModel } from "../types/generated";
 
 @Injectable({
   providedIn: 'root'

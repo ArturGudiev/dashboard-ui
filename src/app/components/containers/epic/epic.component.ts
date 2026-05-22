@@ -1,7 +1,7 @@
 import { Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
-import { Epic } from '../../../models/epic';
+import { type Epic } from '../../../models/epic';
 import { EpicsService } from '../../../services/task-container-services/epics.service';
 import { linkedContainerForView } from '../../../shared/libs/container-view.lib';
 import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';

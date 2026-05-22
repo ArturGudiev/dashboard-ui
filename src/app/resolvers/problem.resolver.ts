@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
-import { ResolveFn } from '@angular/router';
-import { Problem } from '../models/problem';
+import { type ResolveFn } from '@angular/router';
+import { type Problem } from '../models/problem';
 import { ProblemsService } from '../services/task-container-services/problems.service';
 
 export const problemResolver: ResolveFn<Problem> = (route) => {
