@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { TaskC } from '../models/task-class';
+import { type TaskC } from '../models/task-class';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { type Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

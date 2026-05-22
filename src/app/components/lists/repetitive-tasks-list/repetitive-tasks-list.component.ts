@@ -1,16 +1,16 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { type AfterViewInit, Component, effect, inject, input, output, ViewChild , ChangeDetectionStrategy} from '@angular/core';
-import { Router } from '@angular/router';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, effect, inject, input, output, ViewChild } from '@angular/core';
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
+import { Router } from '@angular/router';
 
-import { MatTableModule } from "@angular/material/table";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatIconModule } from "@angular/material/icon";
-import { type ModelsRepetitiveTaskResponse } from "../../../types/generated";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatTableModule } from "@angular/material/table";
 import { RepetitiveTasksService } from "../../../services/task-container-services/repetitive-tasks.service";
+import { type ModelsRepetitiveTaskResponse } from "../../../types/generated";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

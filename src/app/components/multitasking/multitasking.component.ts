@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, type OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { isNumber } from 'lodash';
-import { map } from "rxjs/operators";
-import { type Observable, of } from "rxjs";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { isNumber } from 'lodash';
+import { type Observable, of } from "rxjs";
+import { map } from "rxjs/operators";
 
-import { MultitaskingItemComponent } from "./multitasking-item/multitasking-item.component";
-import { type TaskContainer } from "../../models/interfaces/task-container";
+import { TaskContainer } from "../../models/interfaces/task-container";
 import { isTaskContainerType } from "../../models/interfaces/types";
 import { TaskContainerService } from "../../services/task-container-services/task-container.service";
 import { TasksService } from "../../services/task-container-services/tasks.service";
+import { MultitaskingItemComponent } from "./multitasking-item/multitasking-item.component";
 
 @Component({
     selector: 'app-multitasking',

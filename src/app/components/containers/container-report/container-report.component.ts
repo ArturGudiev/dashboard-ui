@@ -24,7 +24,7 @@ export class ContainerReportComponent implements OnInit {
   ngOnInit(): void {
     this.taskContainerService.getReport(this.container()).subscribe(res => {
       this.loading.set(false);
-      this.treeData.set([res]);
+      this.treeData.set(res ? [res] : []);
     });
   }
 
