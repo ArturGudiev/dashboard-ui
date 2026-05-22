@@ -7,7 +7,12 @@ import { type TaskContainer } from "../../models/interfaces/task-container";
 import { type Problem } from "../../models/problem";
 import { DashboardService } from "../dashboard.service";
 import { GetValueDialogComponent } from "../../components/dialogs/get-value/get-value-dialog.component";
-import { NEW_TASK_DIALOG_OPTIONS } from "../../shared/constants";
+import { GET_VALUE_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from "../../shared/constants";
+import {
+  type HandlersNewProblemRequest,
+  type ModelsProblemFull,
+  type ModelsProblemShort
+} from "../../types/generated";
 
 export interface RefreshProblemsState {
   taskContainer: TaskContainer;
@@ -31,22 +36,29 @@ export class ProblemsService {
     return this.apiService._getProblems(ids).pipe(map(arr => arr.filter(e => Boolean(!e.solution))));
   }
 
-  finishProblem(problem: Problem): Observable<any> {
-    throw Error('not implemented finish problem');
+  finishProblem(problem: Problem): Observable<ModelsProblemFull> {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {
+      data: { title: 'Solution', inputWidth: '40rem' },
+      ...GET_VALUE_DIALOG_OPTIONS,
+    });
+    return dialogRef.afterClosed().pipe(
+      filter((solution: string): solution is string => !!solution),
+      switchMap((solution: string) => this.solveTheProblem(problem, solution)),
+    );
   }
 
-  getProblem(id: any): Observable<Problem> {
+  getProblem(id: number): Observable<Problem> {
     return this.apiService._getProblem(id);
   }
 
-  solveTheProblem(problem: Problem, solution: string): Observable<any> {
+  solveTheProblem(problem: Problem, solution: string): Observable<ModelsProblemFull> {
     return this.apiService._solveTheProblem(problem.id, solution).pipe(
       tap({
         complete: () => this.dashboardService.updateDoneTasksNumber()
       }));
   }
 
-  createNewProblem(obj: any): Observable<Problem> {
+  createNewProblem(obj: HandlersNewProblemRequest): Observable<Problem> {
     return this.apiService._createNewProblem(obj);
   }
 
@@ -60,7 +72,7 @@ export class ProblemsService {
       .pipe(
         filter((description: string) => !!description),
         switchMap((description: string) => {
-          const problem = {
+          const problem: ModelsProblemShort = {
             description: description,
             tags: [],
             notes: "",
@@ -71,7 +83,7 @@ export class ProblemsService {
       )
   }
 
-  callSolveTheProblemDialog(problem: Problem, taskContainer: TaskContainer) {
+  callSolveTheProblemDialog(problem: Problem) {
     const dialogRef = this.dialog.open(GetValueDialogComponent, {data: {title: 'Solution'}});
     dialogRef.afterClosed().subscribe((solution: string) => {
       if (solution) {

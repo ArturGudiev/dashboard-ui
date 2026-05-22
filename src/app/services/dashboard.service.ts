@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, type Observable } from "rxjs";
-import { ApiService } from "./api.service";
+import { ApiService, type DoneTasksCountResponse } from "./api.service";
 import { AppStore } from "../state/app.store";
 
 export interface DashboardStateInterface {
@@ -40,8 +40,8 @@ export class DashboardService {
 
   async updateDoneTasksNumber() {
     const from = this.appStore.doneTaskFromDate();
-    this.tasksApiService._getDoneTasksNumber(from).subscribe((res: any) => {
-      if (typeof res.doneTasks == 'number') {
+    this.tasksApiService._getDoneTasksNumber(from).subscribe((res: DoneTasksCountResponse) => {
+      if (typeof res.doneTasks === 'number') {
         this.setDoneTasks(res.doneTasks);
       }
     });

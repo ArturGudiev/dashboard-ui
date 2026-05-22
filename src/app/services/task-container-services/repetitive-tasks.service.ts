@@ -36,12 +36,12 @@ export class RepetitiveTasksService {
   /**
    *  Open dialog to add a new repetitive task
    */
-  openAddRepetitiveTaskDialog(): Observable<any> {
+  openAddRepetitiveTaskDialog(): Observable<void | null> {
     if (this.addRepetitiveTaskDialogOpened) {
       return EMPTY;
     }
     this.addRepetitiveTaskDialogOpened = true;
-    const dialogRef = this.dialog.open(
+    const dialogRef = this.dialog.open<AddRepetitiveTaskDialogComponent, unknown, void | null>(
       AddRepetitiveTaskDialogComponent,
       {
         height: '600px',

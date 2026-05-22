@@ -1,7 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { type Observable } from "rxjs";
 import { ApiService } from "../api.service";
+import { type Action } from "../../models/classes/action";
 import { type Knowledge } from "../../models/knowledge";
+
+type NameValueEntityPayload = {
+  name: string;
+  value: string;
+  tags: string[];
+  extension: string;
+};
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +20,7 @@ export class KnowledgeService {
 
   //----------Actions start -----------------
 
-  createNewAction(actionObject: {name: any; value: any; tags: string[], extension: string}) {
+  createNewAction(actionObject: NameValueEntityPayload): Observable<Action> {
     return this.apiService._createNewAction(actionObject);
   }
 
@@ -29,7 +37,7 @@ export class KnowledgeService {
     return this.apiService._getKnowledgeBits(ids);
   }
 
-  createNewKnowledge(knowledgeObject: {name: any; value: any; tags: string[], extension: string}) {
+  createNewKnowledge(knowledgeObject: NameValueEntityPayload): Observable<Knowledge> {
     return this.apiService._createNewKnowledge(knowledgeObject);
   }
 

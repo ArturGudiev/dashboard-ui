@@ -314,7 +314,7 @@ export class TaskContainerComponent implements OnInit {
   }
 
   solveTheProblem(problem: Problem): void {
-    this.problemsService.callSolveTheProblemDialog(problem, this.taskContainer());
+    this.problemsService.callSolveTheProblemDialog(problem);
   }
 
   @HostListener('document:keydown.code.Alt.r')

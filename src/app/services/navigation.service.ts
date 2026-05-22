@@ -53,12 +53,11 @@ export class NavigationService {
     this.aliasService.getAliasRecord(navItem).subscribe(
       {
         next: val => {
-          console.log('ALIAS HERE', val);
           this.navigateByAlias(val);
         },
         error: (error) => {
           this.alertService.showAlert('Alias not found');
-          console.log('Error alias not found: ', error);
+          console.error('Alias not found:', error);
         }
       })
   }
@@ -112,8 +111,7 @@ export class NavigationService {
             this.router.navigate(['task', id], {state: res}).then()
           }
         },
-      error: res => {
-        console.log('No such task');
+      error: () => {
         this.alertService.showAlert(`No such task with id ${id}`, 2000, 'info');
       }
     })

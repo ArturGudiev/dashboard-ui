@@ -43,6 +43,11 @@ import {
   toStoryPartial,
 } from '../shared/libs/container-update.lib';
 
+/** GET /done-tasks — Go `handlers.DoneTasksResponse`. */
+export interface DoneTasksCountResponse {
+  doneTasks: number;
+}
+
 export interface IArrayResponse<T> {
   arrInfo: {
     length: number
@@ -126,13 +131,12 @@ export class ApiService {
       .pipe(map(taskFromFull));
   }
 
-  _getDoneTasksNumber(from: string | null) {
-    console.log('===== _getDoneTasksNumber', from);
+  _getDoneTasksNumber(from: string | null): Observable<DoneTasksCountResponse> {
     let params = new HttpParams();
     if (from) {
       params = params.set('from', String(from));
     }
-    return this.http.get(`${this.baseUrl}/done-tasks`, { params });
+    return this.http.get<DoneTasksCountResponse>(`${this.baseUrl}/done-tasks`, { params });
   }
 
   //-----------------------------------------epics--------------------------------------------

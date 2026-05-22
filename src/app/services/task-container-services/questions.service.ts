@@ -5,10 +5,14 @@ import { MatDialog } from "@angular/material/dialog";
 import { ApiService } from "../api.service";
 import { DashboardService } from "../dashboard.service";
 import { type Question } from "../../models/question";
-import { TaskContainerDescription } from "../../models/interfaces/types";
 import { type TaskContainer } from "../../models/interfaces/task-container";
 import { GetValueDialogComponent } from "../../components/dialogs/get-value/get-value-dialog.component";
 import { NEW_QUESTION_DIALOG_OPTIONS } from "../../shared/constants";
+import {
+  type HandlersNewQuestionRequest,
+  type ModelsQuestionFull,
+  type ModelsQuestionShort
+} from "../../types/generated";
 
 
 @Injectable({
@@ -28,16 +32,17 @@ export class QuestionsService {
     return this.apiService._getQuestions(ids).pipe(map(arr => arr.filter(e => !e.answer)));
   }
 
-  createNewQuestion(obj: any): Observable<Question> {
+  createNewQuestion(obj: HandlersNewQuestionRequest): Observable<Question> {
     return this.apiService._createNewQuestion(obj);
   }
 
-  finishQuestion(question: Question): Observable<any> {
-    throw Error('not implemented finish question');
+  // finishQuestion(question: Question): Observable<any> {
 
-  }
+  //   throw Error('not implemented finish question');
 
-  answerTheQuestion(question: Question, answer: string): Observable<any> {
+  // }
+
+  answerTheQuestion(question: Question, answer: string): Observable<ModelsQuestionFull> {
     return this.apiService._answerTheQuestion(question.id, answer).pipe(
       tap({
         complete: () => this.dashboardService.updateDoneTasksNumber()
@@ -57,7 +62,7 @@ export class QuestionsService {
     .pipe(
       filter((description: string) => !!description),
       switchMap((description: string) => {
-        const question: any = {
+        const question: ModelsQuestionShort = {
           description: description,
           tags: [],
           notes: "",
