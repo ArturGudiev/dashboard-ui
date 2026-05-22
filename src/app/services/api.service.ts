@@ -11,6 +11,7 @@ import { Knowledge } from "../models/knowledge";
 import { RecordItem } from "../models/record-item";
 import { Action } from '../models/classes/action';
 import { type TaskContainer } from "../models/interfaces/task-container";
+import { type TreeNode } from "../components/containers/tree/my-tree.component";
 import { type IArrayParams } from "../models/interfaces/array-params";
 import { AppConfigService } from './app-config.service';
 import {
@@ -380,8 +381,8 @@ export class ApiService {
     return this.http.post<any>(`${this.baseUrl}/report/`, obj);
   }
 
-  getTaskReport(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/task-report/${id}`);
+  getTaskReport(id: number): Observable<TreeNode | null> {
+    return this.http.get<TreeNode | null>(`${this.baseUrl}/task-report/${id}`);
   }
   //------------------------------------ reports ----------------------------------------
 

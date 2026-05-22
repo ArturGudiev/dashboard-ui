@@ -23,6 +23,7 @@ import {
   type AddLogDialogResult
 } from "../../components/dialogs/add-log-dialog/add-log-dialog.component";
 import { LogsDialogComponent } from "../../components/dialogs/logs-dialog/logs-dialog.component";
+import { type TreeNode } from "../../components/containers/tree/my-tree.component";
 
 @Injectable({
   providedIn: 'root'
@@ -123,7 +124,7 @@ export class TaskContainerService {
    *
    * @param task
    */
-  getReport(container: TaskContainer): Observable<any> {
-    return this.apiService.getTaskReport(container.id)
+  getReport(container: TaskContainer): Observable<TreeNode | null> {
+    return this.apiService.getTaskReport(container.id);
   }
 }
