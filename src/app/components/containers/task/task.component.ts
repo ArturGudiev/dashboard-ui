@@ -1,8 +1,9 @@
-import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { TaskC } from '../../../models/task-class';
 import { TasksService } from '../../../services/task-container-services/tasks.service';
+import { linkedContainerForView } from '../../../shared/libs/container-view.lib';
 import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
@@ -19,7 +20,7 @@ export class TaskComponent {
   task = input.required<TaskC>();
 
   /** Resolver value, or last `reloadTask()` result (e.g. after adding a subtask). */
-  readonly taskForView = linkedSignal(() => this.task());
+  readonly taskForView = linkedContainerForView(() => this.id(), () => this.task());
 
   private tasksService = inject(TasksService);
   private titleService = inject(Title);
@@ -27,7 +28,10 @@ export class TaskComponent {
 
   constructor() {
     effect(() => {
-      this.titleService.setTitle(this.taskForView().getFullDescription());
+      const task = this.taskForView();
+      if (task) {
+        this.titleService.setTitle(task.getFullDescription());
+      }
     });
   }
 
@@ -39,8 +43,12 @@ export class TaskComponent {
   }
 
   updateTask(): void {
+    const task = this.taskForView();
+    if (!task) {
+      return;
+    }
     this.tasksService
-      .updateTask(this.taskForView())
+      .updateTask(task)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((updated) => this.taskForView.set(updated));
   }

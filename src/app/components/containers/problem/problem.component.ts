@@ -1,8 +1,9 @@
-import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { Problem } from '../../../models/problem';
 import { ProblemsService } from '../../../services/task-container-services/problems.service';
+import { linkedContainerForView } from '../../../shared/libs/container-view.lib';
 import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
@@ -18,7 +19,7 @@ export class ProblemComponent {
   /** From route resolve `problem` — refreshed when `id` changes (`runGuardsAndResolvers: 'paramsChange'`). */
   problem = input.required<Problem>();
 
-  readonly problemForView = linkedSignal(() => this.problem());
+  readonly problemForView = linkedContainerForView(() => this.id(), () => this.problem());
 
   private problemsService = inject(ProblemsService);
   private titleService = inject(Title);
@@ -26,7 +27,10 @@ export class ProblemComponent {
 
   constructor() {
     effect(() => {
-      this.titleService.setTitle(this.problemForView().getFullDescription());
+      const problem = this.problemForView();
+      if (problem) {
+        this.titleService.setTitle(problem.getFullDescription());
+      }
     });
   }
 
@@ -38,8 +42,12 @@ export class ProblemComponent {
   }
 
   updateProblem(): void {
+    const problem = this.problemForView();
+    if (!problem) {
+      return;
+    }
     this.problemsService
-      .updateProblem(this.problemForView())
+      .updateProblem(problem)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((updated) => this.problemForView.set(updated));
   }

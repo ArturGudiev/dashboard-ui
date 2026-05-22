@@ -1,55 +1,51 @@
+<div id="substories-actions">
+  <h2 id="substories-title">Stories</h2>
+  <button 
+    mat-mini-fab
+    color="primary"
+    id="add-story-button"
+    (click)="addSubstory.emit()">
+    <mat-icon class="stories-icon">add</mat-icon>
+  </button>
+</div>
+
 @if (stories().length > 0) {
-  <div id="substories-actions">
-    <h2 id="substories-title">Stories</h2>
-    <button mat-mini-fab color="primary" id="add-story-button" (click)="addSubstory.emit()">
-      <mat-icon class="stories-icon">add</mat-icon>
-    </button>
-
-  </div>
-
   <div id="table-wrapper">
-    @if (stories().length > 0) {
-      <table
-        id="substories-table"
-        mat-table
-        [dataSource]="stories()"
-        class="mat-elevation-z8"
-        >
-        <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox (change)="$event ? storiesSelectAllToggle() : null"
-              [checked]="selection.hasValue() && isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()"
-              >
-            </mat-checkbox>
-          </th>
-          <td mat-cell *matCellDef="let row">
-            <mat-checkbox (click)="$event.stopPropagation()"
-              (change)="$event ? selection.toggle(row) : null"
-              [checked]="selection.isSelected(row)">
-            </mat-checkbox>
-          </td>
-        </ng-container>
-        <!-- Position Column -->
-        <ng-container matColumnDef="position">
-          <th mat-header-cell *matHeaderCellDef> No.</th>
-          <td mat-cell class="row-link" (click)="onSubstoryClick(story)" *matCellDef="let story; let i = index">
-            <span>{{i + 1}}</span>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef> Description</th>
-          <td mat-cell *matCellDef="let story;" (click)="onSubstoryClick(story)">
-            <span class="row-link" (click)="onSubstoryClick(story)">{{story.description}}</span>
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    }
+    <table
+      id="substories-table"
+      mat-table
+      [dataSource]="stories()"
+      class="mat-elevation-z8"
+      >
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? storiesSelectAllToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            >
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef> No.</th>
+        <td mat-cell class="row-link" (click)="onSubstoryClick(story)" *matCellDef="let story; let i = index">
+          <span>{{i + 1}}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description</th>
+        <td mat-cell *matCellDef="let story;" (click)="onSubstoryClick(story)">
+          <span class="row-link" (click)="onSubstoryClick(story)">{{story.description}}</span>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   </div>
-
 }
-
-
-

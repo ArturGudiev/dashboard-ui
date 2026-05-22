@@ -335,10 +335,6 @@ export class TaskContainerComponent implements OnInit {
     this.recordsService.callAddRecordDialog(this.taskContainer().getFullDescription());
   }
 
-  addSubstory() {
-    // TODO fill it
-  }
-
   navigateToStory(story: Story) {
     this.router.navigate(['story', story.id]).then();
   }

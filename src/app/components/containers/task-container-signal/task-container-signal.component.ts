@@ -41,6 +41,7 @@ import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component"
 const EMPTY_TASKS: TaskC[] = [];
 const EMPTY_QUESTIONS: Question[] = [];
 const EMPTY_PROBLEMS: Problem[] = [];
+const EMPTY_STORIES: Story[] = [];
 const EMPTY_PARENTS_PATH: string[] = [];
 
 @Component({
@@ -106,9 +107,29 @@ export class TaskContainerSignalComponent implements OnInit {
       params.ids.length ? this.problemsService.getProblems(params.ids) : of([]),
   });
 
+  /** Enabled for epic/story containers (or when `[showStories]="true"`). */
+  private readonly showStoriesEnabled = computed(
+    () =>
+      this.showStories() ||
+      this.taskContainer().type === 'epic' ||
+      this.taskContainer().type === 'story',
+  );
+
+  storiesResource = rxResource<Story[], { enabled: boolean; ids: number[] }>({
+    params: () => ({
+      enabled: this.showStoriesEnabled(),
+      ids: this.taskContainer().stories ?? [],
+    }),
+    stream: ({ params }) =>
+      params.enabled && params.ids.length
+        ? this.storiesService.getStories(params.ids)
+        : of([]),
+  });
+
   private lastTasks = signal<TaskC[]>([]);
   private lastQuestions = signal<Question[]>([]);
   private lastProblems = signal<Problem[]>([]);
+  private lastStories = signal<Story[]>([]);
 
   /** Keep previous rows while tasksResource reloads so the list does not unmount and blink. */
   readonly tasksForList = computed(() => {
@@ -133,6 +154,14 @@ export class TaskContainerSignalComponent implements OnInit {
       return live;
     }
     return this.lastProblems().length > 0 ? this.lastProblems() : EMPTY_PROBLEMS;
+  });
+
+  readonly storiesForList = computed(() => {
+    const live = this.storiesResource.value();
+    if (live != null) {
+      return live;
+    }
+    return this.lastStories().length > 0 ? this.lastStories() : EMPTY_STORIES;
   });
 
   private lastParentsPath = signal<string[]>([]);
@@ -165,10 +194,21 @@ export class TaskContainerSignalComponent implements OnInit {
   private utilsService = inject(UtilsService);
   private destroyRef = inject(DestroyRef);
 
+  private lastContainerKey = '';
+
   constructor() {
     effect(() => {
       const container = this.taskContainer();
-      if (!container) { return; }
+      const key = `${container.type}:${container.id}`;
+      if (this.lastContainerKey !== key) {
+        this.lastContainerKey = key;
+        this.lastTasks.set([]);
+        this.lastQuestions.set([]);
+        this.lastProblems.set([]);
+        this.lastParentsPath.set([]);
+        this.stories.set([]);
+        this.epics.set([]);
+      }
       this.refreshTaskContainerParts();
     });
 
@@ -466,8 +506,11 @@ export class TaskContainerSignalComponent implements OnInit {
     this.recordsService.callAddRecordDialog(this.taskContainer().getFullDescription());
   }
 
-  addSubstory() {
-    // TODO fill it
+  addSubstory(): void {
+    this.storiesService
+      .createStoryFromDialog(this.taskContainer())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.refreshContainer.emit());
   }
 
   navigateToStory(story: Story) {

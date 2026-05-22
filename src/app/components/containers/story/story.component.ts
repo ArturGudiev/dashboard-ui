@@ -1,8 +1,9 @@
-import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { Story } from '../../../models/story';
 import { StoriesService } from '../../../services/task-container-services/stories.service';
+import { linkedContainerForView } from '../../../shared/libs/container-view.lib';
 import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
@@ -19,7 +20,7 @@ export class StoryComponent {
   story = input.required<Story>();
 
   /** Resolver value, or last `reloadStory()` result (e.g. after adding a task). */
-  readonly storyForView = linkedSignal(() => this.story());
+  readonly storyForView = linkedContainerForView(() => this.id(), () => this.story());
 
   private storiesService = inject(StoriesService);
   private titleService = inject(Title);
@@ -27,7 +28,10 @@ export class StoryComponent {
 
   constructor() {
     effect(() => {
-      this.titleService.setTitle(this.storyForView().getFullDescription());
+      const story = this.storyForView();
+      if (story) {
+        this.titleService.setTitle(story.getFullDescription());
+      }
     });
   }
 
@@ -39,8 +43,12 @@ export class StoryComponent {
   }
 
   updateStory(): void {
+    const story = this.storyForView();
+    if (!story) {
+      return;
+    }
     this.storiesService
-      .updateStory(this.storyForView())
+      .updateStory(story)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((updated) => this.storyForView.set(updated));
   }

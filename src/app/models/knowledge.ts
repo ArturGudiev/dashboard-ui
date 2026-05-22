@@ -10,7 +10,7 @@ export class Knowledge implements TaskContainer {
   value: string;
   tags: string[]
   extension?: string;
-  notes = ''; // TODO do we need it?
+  notes = '';
   tasks: number[];
   problems: number[];
   questions: number[];

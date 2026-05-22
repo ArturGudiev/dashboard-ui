@@ -23,6 +23,12 @@ import {
   ModelsRepetitiveTaskResponse
 } from "../types/generated";
 import { TaskContainerType } from "../models/interfaces/types";
+import {
+  toEpicPartial,
+  toProblemPartial,
+  toQuestionPartial,
+  toStoryPartial,
+} from '../shared/libs/container-update.lib';
 
 export interface IArrayResponse<T> {
   arrInfo: {
@@ -88,10 +94,15 @@ export class ApiService {
   }
 
   _updateTask(task: TaskC): Observable<TaskC> {
-    return this.http.put<TaskC>(`${this.baseUrl}/update-task/`, task)
-      .pipe(
-        map((obj) => TaskC.createFromObj(obj))
-      );
+    return this.http.put<TaskC>(`${this.baseUrl}/update-task`, {
+      id: task.id,
+      description: task.description,
+      notes: task.notes,
+      tags: task.tags,
+      done: task.done,
+    }).pipe(
+      map((obj) => TaskC.createFromObj(obj)),
+    );
   }
 
   _getDoneTasksNumber(from: string | null) {
@@ -126,7 +137,7 @@ export class ApiService {
   }
 
   _updateEpic(epic: Epic): Observable<Epic> {
-    return this.http.put<Epic>(`${this.baseUrl}/update-epic/`, epic)
+    return this.http.put<Epic>(`${this.baseUrl}/update-epic`, toEpicPartial(epic))
       .pipe(
         map((obj) => Epic.createFromObj(obj))
       );
@@ -150,10 +161,16 @@ export class ApiService {
   }
 
   _updateStory(story: Story): Observable<Story> {
-    return this.http.put<Story>(`${this.baseUrl}/update-story/`, story)
+    return this.http.put<Story>(`${this.baseUrl}/update-story`, toStoryPartial(story))
       .pipe(
         map((obj) => Story.createFromObj(obj))
       );
+  }
+
+  _createNewStory(obj: { story: { description: string; tags: string[]; notes: string }; parent: { id: number; type: string } }): Observable<Story> {
+    return this.http.post<Story>(`${this.baseUrl}/new-story`, obj).pipe(
+      map((obj) => Story.createFromObj(obj)),
+    );
   }
   //------------------------------------stories-------------------------------------------------
   //------------------------------------problems-------------------------------------------------
@@ -177,7 +194,7 @@ export class ApiService {
   }
 
   updateProblem(problem: Problem): Observable<Problem> {
-    return this.http.put<Problem>(`${this.baseUrl}/update-problem/`, problem)
+    return this.http.put<Problem>(`${this.baseUrl}/update-problem`, toProblemPartial(problem))
       .pipe(
         map((obj) => Problem.createFromObj(obj))
       );
@@ -203,7 +220,7 @@ export class ApiService {
   }
 
   updateQuestion(question: Question): Observable<Question> {
-    return this.http.put<Question>(`${this.baseUrl}/update-question/`, question)
+    return this.http.put<Question>(`${this.baseUrl}/update-question`, toQuestionPartial(question))
       .pipe(
         map((obj) => Question.createFromObj(obj))
       );

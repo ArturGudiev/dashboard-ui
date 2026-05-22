@@ -1,8 +1,9 @@
-import { Component, DestroyRef, effect, inject, input, linkedSignal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { Epic } from '../../../models/epic';
 import { EpicsService } from '../../../services/task-container-services/epics.service';
+import { linkedContainerForView } from '../../../shared/libs/container-view.lib';
 import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
 
 @Component({
@@ -19,7 +20,7 @@ export class EpicComponent {
   epic = input.required<Epic>();
 
   /** Resolver value, or last `reloadEpic()` result (e.g. after adding a task). */
-  readonly epicForView = linkedSignal(() => this.epic());
+  readonly epicForView = linkedContainerForView(() => this.epicId(), () => this.epic());
 
   private epicsService = inject(EpicsService);
   private titleService = inject(Title);
@@ -27,7 +28,10 @@ export class EpicComponent {
 
   constructor() {
     effect(() => {
-      this.titleService.setTitle(this.epicForView().getFullDescription());
+      const epic = this.epicForView();
+      if (epic) {
+        this.titleService.setTitle(epic.getFullDescription());
+      }
     });
   }
 
@@ -39,6 +43,13 @@ export class EpicComponent {
   }
 
   updateEpic(): void {
-    // TODO
+    const epic = this.epicForView();
+    if (!epic) {
+      return;
+    }
+    this.epicsService
+      .updateEpic(epic)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((updated) => this.epicForView.set(updated));
   }
 }
