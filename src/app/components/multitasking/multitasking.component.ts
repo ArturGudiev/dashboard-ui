@@ -87,7 +87,8 @@ export class MultitaskingComponent {
             return nextContainers;
           });
         }
-      });
+      }
+    );
   }
 
   /**
