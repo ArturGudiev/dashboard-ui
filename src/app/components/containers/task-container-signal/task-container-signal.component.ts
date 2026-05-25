@@ -74,7 +74,7 @@ export class TaskContainerSignalComponent implements OnInit {
 
   refreshContainer = output<void>();
 
-  onDoneAllClick = output<void>();
+  doneAllClick = output<void>();
   updateTaskContainer = output<void>();
   resolve = output<void>();
 
@@ -388,7 +388,7 @@ export class TaskContainerSignalComponent implements OnInit {
         .subscribe(() => this.navigateToParentAfterResolve());
       return;
     }
-    this.onDoneAllClick.emit();
+    this.doneAllClick.emit();
   }
 
   private navigateToParentAfterResolve(): void {
@@ -490,14 +490,11 @@ export class TaskContainerSignalComponent implements OnInit {
 
   @HostListener('document:keydown.code.Alt.r')
   showRecords(): void {
-    const dialogRef = this.dialog.open(RecordsListDialogComponent,
-      {
-        panelClass: 'custom-dialog-container',
-        height: '600px',
-        width: '1000px',
-        data: {tag: this.taskContainer().getFullDescription()}});
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('Dialog was closed RecordsListDialogComponent');
+    this.dialog.open(RecordsListDialogComponent, {
+      panelClass: 'custom-dialog-container',
+      height: '600px',
+      width: '1000px',
+      data: { tag: this.taskContainer().getFullDescription() },
     });
   }
 

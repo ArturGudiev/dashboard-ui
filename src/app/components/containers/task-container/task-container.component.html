@@ -39,7 +39,7 @@
                 id="done-all-button"
                 mat-mini-fab
                 color="accent"
-                (click)="onDoneAllClick.emit()"
+                (click)="doneAllClick.emit()"
                 >
                 <mat-icon>done_all</mat-icon>
               </button>
@@ -78,7 +78,7 @@
       <app-parents-path
         id="parents-path"
         [parentsPath]="parentsPath()"
-        (onParentClick)="goToParentHandler($event)"
+        (parentClick)="goToParentHandler($event)"
       ></app-parents-path>
     </div>
 

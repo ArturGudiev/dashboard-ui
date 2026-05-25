@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { type TaskC } from '../../../models/task-class';
@@ -11,6 +11,7 @@ import { TaskContainerSignalComponent } from '../task-container-signal/task-cont
   templateUrl: './task.component.html',
   imports: [TaskContainerSignalComponent],
   styleUrls: ['./task.component.sass'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskComponent {
   /** From route param `id` (withComponentInputBinding). */

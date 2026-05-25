@@ -17,7 +17,7 @@ import { TaskContainerService } from "../../../services/task-container-services/
 export class ParentsPathComponent {
 
   parentsPath = input.required<string[]>();
-  onParentClick = output<string>();
+  parentClick = output<string>();
 
   private taskContainerService = inject(TaskContainerService);
 

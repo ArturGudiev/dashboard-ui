@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { type Epic } from '../../../models/epic';
@@ -11,6 +11,7 @@ import { TaskContainerSignalComponent } from '../task-container-signal/task-cont
   templateUrl: './epic.component.html',
   imports: [TaskContainerSignalComponent],
   styleUrls: ['./epic.component.sass'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EpicComponent {
   /** From route param `epicId` (withComponentInputBinding). */
