@@ -1,4 +1,4 @@
-import { Component , ChangeDetectionStrategy} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenav, MatSidenavContainer } from '@angular/material/sidenav';
 import { MatToolbar } from "@angular/material/toolbar";
@@ -21,4 +21,10 @@ import { ToolbarComponent } from "../toolbar/toolbar.component";
   standalone: true,
   styleUrls: ['./sidenav.component.sass']
 })
-export class SidenavComponent { }
+export class SidenavComponent {
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+
+  closeSidenav(): void {
+    this.sidenav.opened = false;
+  }
+}

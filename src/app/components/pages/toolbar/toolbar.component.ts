@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
 import { MatButton } from "@angular/material/button";
-import { DashboardService, type DashboardStateInterface } from "../../../services/dashboard.service";
+import { DashboardService } from "../../../services/dashboard.service";
+import type { DashboardStateInterface } from "../../../services/dashboard.service";
 import { Hotkeys } from "../../../classes/hotkeys";
 import { CommandsService } from "../../../services/commands.service";
 import { NavigationService } from "../../../services/navigation.service";
@@ -46,18 +47,14 @@ export class ToolbarComponent implements OnInit {
 
   private appStore = inject(AppStore);
   private destroyRef = inject(DestroyRef);
-
-  constructor(
-    private dialog: MatDialog,
-    private _snackBar: MatSnackBar,
-    private dashboardService: DashboardService,
-    private hotkeys: Hotkeys,
-    private commandService: CommandsService,
-    private navigateService: NavigationService,
-    private messageService: MessageService,
-    private router: Router,
-
-  ) { }
+  private dialog = inject(MatDialog);
+  private _snackBar = inject(MatSnackBar);
+  private dashboardService = inject(DashboardService);
+  private hotkeys = inject(Hotkeys);
+  private commandService = inject(CommandsService);
+  private navigateService = inject(NavigationService);
+  private messageService = inject(MessageService);
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.dashboardService.getDataStateChange()
@@ -74,14 +71,6 @@ export class ToolbarComponent implements OnInit {
       this.handleCommand(state.command);
     });
 
-    const symbols = {
-      meta: '&#8984;', // ⌘
-      shift: '&#8679;', // ⇧
-      left: '&#8592;', // ←
-      right: '&#8594;', // →
-      up: '&#8593;', // ↑
-      down: '&#8595;' // ↓
-    };
     this.addHotkeys();
   }
 
@@ -113,14 +102,12 @@ export class ToolbarComponent implements OnInit {
       this.hotkeys.addShortcut({keys: `Meta.${i}`}).subscribe(() => this.messageService.showMessage(`Meta + ${i}`));
       this.hotkeys.addShortcut({keys: `Option.${i}`}).subscribe(() => this.messageService.showMessage(`Option + ${i}`));
       this.hotkeys.addShortcut({keys: `Control.${i}`}).subscribe(() => this.commandService.setCommand(i.toString()));
-      this.hotkeys.addShortcut({keys: `Control.Alt.${i}`}).subscribe(() => {
-        console.log('Select specific subtask original');
-        return this.commandService.setCommand('select-specific-task', { index: i - 1 });
-      });
-      this.hotkeys.addShortcut({keys: `Control.Shift.${i}`}).subscribe(() => {
-        console.log('Select specific subtask original');
-        return this.commandService.setCommand('select-specific-task', { index: i - 1 });
-      });
+      this.hotkeys.addShortcut({keys: `Control.Alt.${i}`}).subscribe(() =>
+        this.commandService.setCommand('select-specific-task', { index: i - 1 }),
+      );
+      this.hotkeys.addShortcut({keys: `Control.Shift.${i}`}).subscribe(() =>
+        this.commandService.setCommand('select-specific-task', { index: i - 1 }),
+      );
     }
     this.hotkeys.addShortcut({keys: 'Control.u'}).subscribe(() => this.commandService.setCommand('parent'));
     this.hotkeys.addShortcut({keys: 'Control.g'}).subscribe(() => this.onNavToClick());
@@ -143,15 +130,12 @@ export class ToolbarComponent implements OnInit {
     this.hotkeys.addShortcut({keys: 'Control.q'}).subscribe(() => this.commandService.setCommand('question'));
     this.hotkeys.addShortcut({keys: 'Control.t'}).subscribe(() => this.commandService.setCommand('fta'));
     this.hotkeys.addShortcut({keys: 'Control.Shift.r'}).subscribe(() => this.commandService.setCommand('fresolve'));
-    this.hotkeys.addShortcut({keys: 'Control.Shift.t'}).subscribe(() => {
-      console.log('Control.Shift.t');
-      this.commandService.setCommand('focus-fta');
-    });
-
-    this.hotkeys.addShortcut({keys: 'Control.Alt.t'}).subscribe(() => {
-      console.log('Control.Alt.t');
-      this.commandService.setCommand('focus-fta');
-    });
+    this.hotkeys.addShortcut({keys: 'Control.Shift.t'}).subscribe(() =>
+      this.commandService.setCommand('focus-fta'),
+    );
+    this.hotkeys.addShortcut({keys: 'Control.Alt.t'}).subscribe(() =>
+      this.commandService.setCommand('focus-fta'),
+    );
     this.hotkeys.addShortcut({keys: 'Control.m'}).subscribe(() => this.commandService.setCommand('notes'));
     this.hotkeys.addShortcut({keys: '\\'}).subscribe(() => this.commandService.setCommand('anonymous'));
 
@@ -211,7 +195,6 @@ export class ToolbarComponent implements OnInit {
   }
 
   private openCommandDialog() {
-    console.log('toolbar.component.ts -- openCommandDialog');
     const dialogRef = this.dialog.open(CommandDialogComponent,
       {
         height: '300px',

@@ -46,6 +46,15 @@ $iconWidth: 56px;
   }
 }
 
+.toolbar-interactive {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
 #doneTasksButton {
   cursor: pointer;
 }
