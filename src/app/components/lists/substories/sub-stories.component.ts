@@ -1,4 +1,4 @@
-import { Component, input, output , ChangeDetectionStrategy} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { type Story } from "../../../models/story";
 import { SelectionModel } from "@angular/cdk/collections";
 import { MatTableModule } from "@angular/material/table";
@@ -18,7 +18,7 @@ import { MatIconModule } from "@angular/material/icon";
 export class SubStoriesComponent {
 
   stories = input.required<Story[]>();
-  onStoryClick = output<Story>();
+  storyClick = output<Story>();
   addSubstory = output<void>();
   readonly selection = new SelectionModel<Story>(true, []);
   readonly displayedColumns: string[] = ['select', 'position', 'description'];
@@ -38,6 +38,6 @@ export class SubStoriesComponent {
   }
 
   onSubstoryClick(story: Story) {
-    this.onStoryClick.emit(story);
+    this.storyClick.emit(story);
   }
 }

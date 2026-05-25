@@ -93,7 +93,7 @@
       @if ( this.showStories() && stories().length > 0 ) {
         <app-substories
           [stories]="stories()"
-          (onStoryClick)="navigateToStory($event)"
+          (storyClick)="navigateToStory($event)"
           (addSubstory)="addSubstory()"
         ></app-substories>
       }

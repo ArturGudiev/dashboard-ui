@@ -29,13 +29,16 @@ import { type ModelsRepetitiveTaskResponse } from "../../../types/generated";
 export class RepetitiveTasksListComponent implements AfterViewInit {
   repetitiveTasks = input.required<ModelsRepetitiveTaskResponse[]>();
   updateList = output<void>();
-  onItemExecutedMark = output<ModelsRepetitiveTaskResponse>();
+  itemExecutedMark = output<ModelsRepetitiveTaskResponse>();
+
+  private readonly router = inject(Router);
   repetitiveTasksService = inject(RepetitiveTasksService);
+
   readonly selection = new SelectionModel<ModelsRepetitiveTaskResponse>(true, []);
   readonly displayedColumns: string[] = ['select', 'description', 'actions'];
   readonly dataSource = new MatTableDataSource<ModelsRepetitiveTaskResponse>([]);
 
-  constructor(private router: Router) {
+  constructor() {
     effect(() => {
       this.dataSource.data = this.repetitiveTasks();
     });
@@ -54,7 +57,7 @@ export class RepetitiveTasksListComponent implements AfterViewInit {
   finishRepetitiveTask(task: ModelsRepetitiveTaskResponse) {
     const toMark = confirm(`Do you really want to mark ths task "${task.description}" as done?`);
     if (toMark) {
-      this.onItemExecutedMark.emit(task);
+      this.itemExecutedMark.emit(task);
     }
   }
 
