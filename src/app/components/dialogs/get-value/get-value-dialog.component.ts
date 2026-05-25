@@ -33,12 +33,12 @@ export class GetValueDialogComponent {
     ]),
   });
 
-  get getDataInputWidthStyle(): any {
-    return this.data.inputWidth && {'width': this.data.inputWidth};
+  get getDataInputWidthStyle(): Record<string, string> | null {
+    return this.data.inputWidth ? { width: this.data.inputWidth } : null;
   }
 
   dialogRef = inject(MatDialogRef<GetValueDialogComponent>);
-  data = inject<{ title: string, inputWidth?: number, multiline?: boolean }>(MAT_DIALOG_DATA);
+  data = inject<{ title: string, inputWidth?: string, multiline?: boolean }>(MAT_DIALOG_DATA);
 
   onNoClick(): void {
     this.dialogRef.close(null);

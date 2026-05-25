@@ -1,4 +1,4 @@
-import { Component, effect, inject, Inject, model, signal , ChangeDetectionStrategy, type OnInit} from '@angular/core';
+import { Component, effect, inject, model, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { type TaskContainer } from "../../../models/interfaces/task-container";
 import { LogsService } from "../../../services/logs.service";
@@ -31,7 +31,6 @@ import { MatFormFieldModule } from "@angular/material/form-field";
     }
     <mat-paginator
       [pageIndex]="page()"
-      (change)="onPaginatorChange($event)"
       [length]="total()"
       [pageSize]="perPage()"
       (page)="handlePageEvent($event)"
@@ -41,7 +40,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
   standalone: true,
   styleUrl: './logs-dialog.component.scss'
 })
-export class LogsDialogComponent implements OnInit {
+export class LogsDialogComponent {
   perPage = signal(20);
   page = signal(0);
   total = signal(0);
@@ -71,7 +70,7 @@ export class LogsDialogComponent implements OnInit {
             this.page.set(messagesResponse.page);
             this.total.set(messagesResponse.total);
           },
-          error: (err) => {
+          error: () => {
             this.logMessages.set([]);
             this.page.set(1);
             this.total.set(0);
@@ -83,17 +82,6 @@ export class LogsDialogComponent implements OnInit {
       },
       { allowSignalWrites: true }
     );
-  }
-
-  ngOnInit(): void {
-    console.log('ngOnInit === ', this.data);
-    console.log(this.data.taskContainer);
-  }
-
-  protected readonly Math = Math;
-
-  onPaginatorChange($event: Event) {
-    console.log('onPaginatorChange', $event);
   }
 
   handlePageEvent(val: PageEvent): void {
