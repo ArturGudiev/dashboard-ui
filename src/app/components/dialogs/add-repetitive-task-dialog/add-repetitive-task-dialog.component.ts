@@ -1,4 +1,4 @@
-import { Component, inject, Inject, signal , ChangeDetectionStrategy} from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy} from '@angular/core';
 import { MatButton } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatFormField, MatInput, MatLabel } from "@angular/material/input";
@@ -86,7 +86,7 @@ export class AddRepetitiveTaskDialogComponent {
       tags: this.taskModel().tags.split(',').map(el => el.trim()),
       onceInDays: this.taskModel().once_in_days
     };
-    this.repetitiveTasksService.addNewRepetitiveTask(repetitiveTask).subscribe(res => {
+    this.repetitiveTasksService.addNewRepetitiveTask(repetitiveTask).subscribe(() => {
       this.dialogRef.close();
     });
 

@@ -1,4 +1,4 @@
-import { Component, input, Input, type OnChanges, type OnInit, type SimpleChanges , ChangeDetectionStrategy} from '@angular/core';
+import { Component, input, type OnChanges, type OnInit, type SimpleChanges , ChangeDetectionStrategy} from '@angular/core';
 import { NestedTreeControl } from "@angular/cdk/tree";
 import { MatTreeNestedDataSource } from "@angular/material/tree";
 import { MatTreeModule } from "@angular/material/tree";
