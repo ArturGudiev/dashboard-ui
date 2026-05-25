@@ -26,7 +26,11 @@ export interface SelectFromListDialogData<T = string> {
         <div
           class="value-item"
           [ngClass]="{'selected-item': selectedIndex() === $index}"
+          tabindex="0"
+          role="button"
           (click)="closeDialogWithSelectedItem(content)"
+          (keydown.enter)="closeDialogWithSelectedItem(content)"
+          (keydown.space)="closeDialogWithSelectedItem(content); $event.preventDefault()"
         >
           {{$index + 1}}. {{ data.mapFunction ? data.mapFunction(content) : content }}
         </div>

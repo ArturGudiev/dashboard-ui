@@ -44,15 +44,32 @@
         <!-- Position Column -->
         <ng-container matColumnDef="position">
           <th mat-header-cell *matHeaderCellDef> No.</th>
-          <td mat-cell class="row-link red-color" (click)="onProblemClick(problem)"
-            *matCellDef="let problem; let i = index">
+          <td
+            mat-cell
+            class="row-link red-color"
+            tabindex="0"
+            role="button"
+            *matCellDef="let problem; let i = index"
+            (click)="onProblemClick(problem)"
+            (keydown.enter)="onProblemClick(problem)"
+            (keydown.space)="onProblemClick(problem); $event.preventDefault()"
+          >
             <span>{{ i + 1 }}</span>
           </td>
         </ng-container>
         <ng-container matColumnDef="description">
           <th mat-header-cell *matHeaderCellDef> Description</th>
-          <td mat-cell *matCellDef="let problem;" (click)="onProblemClick(problem)">
-            <span class="row-link red-color" (click)="onProblemClick(problem)">{{ problem.description }}</span>
+          <td
+            mat-cell
+            class="row-link red-color"
+            tabindex="0"
+            role="button"
+            *matCellDef="let problem"
+            (click)="onProblemClick(problem)"
+            (keydown.enter)="onProblemClick(problem)"
+            (keydown.space)="onProblemClick(problem); $event.preventDefault()"
+          >
+            <span>{{ problem.description }}</span>
           </td>
         </ng-container>
         <!--Иконка решения проблемы -->

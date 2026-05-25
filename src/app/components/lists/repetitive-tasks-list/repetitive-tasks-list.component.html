@@ -42,8 +42,17 @@
 
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef> Description</th>
-        <td mat-cell *matCellDef="let repetitiveTask;" (click)="onRepetitiveTaskClick(repetitiveTask)">
-          <span class="row-link" (click)="onRepetitiveTaskClick(repetitiveTask)">{{ repetitiveTask.description }}</span>
+        <td
+          mat-cell
+          class="row-link"
+          tabindex="0"
+          role="button"
+          *matCellDef="let repetitiveTask"
+          (click)="onRepetitiveTaskClick(repetitiveTask)"
+          (keydown.enter)="onRepetitiveTaskClick(repetitiveTask)"
+          (keydown.space)="onRepetitiveTaskClick(repetitiveTask); $event.preventDefault()"
+        >
+          <span>{{ repetitiveTask.description }}</span>
         </td>
       </ng-container>
 

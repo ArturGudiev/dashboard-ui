@@ -35,8 +35,17 @@
 
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef> Description</th>
-        <td mat-cell *matCellDef="let epic;" (click)="onSubepicClick(epic)">
-          <span class="row-link" (click)="onSubepicClick(epic)">{{ epic.description }}</span>
+        <td
+          mat-cell
+          class="row-link"
+          tabindex="0"
+          role="button"
+          *matCellDef="let epic"
+          (click)="onSubepicClick(epic)"
+          (keydown.enter)="onSubepicClick(epic)"
+          (keydown.space)="onSubepicClick(epic); $event.preventDefault()"
+        >
+          <span>{{ epic.description }}</span>
         </td>
       </ng-container>
 
