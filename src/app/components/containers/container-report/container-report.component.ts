@@ -1,4 +1,4 @@
-import { Component, input, type OnInit, signal , ChangeDetectionStrategy} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, type OnInit, signal } from '@angular/core';
 import { type TaskContainer } from "../../../models/interfaces/task-container";
 import { MyTreeComponent, type TreeNode } from "../tree/my-tree.component";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
@@ -19,7 +19,8 @@ export class ContainerReportComponent implements OnInit {
   container = input.required<TaskContainer>();
   treeData = signal<TreeNode[]>([]);
   loading = signal<boolean>(true);
-  constructor(private readonly taskContainerService: TaskContainerService) { }
+
+  private readonly taskContainerService = inject(TaskContainerService);
 
   ngOnInit(): void {
     this.taskContainerService.getReport(this.container()).subscribe(res => {

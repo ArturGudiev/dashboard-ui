@@ -1,30 +1,28 @@
 import { Observable } from "rxjs";
-import { DOCUMENT, Inject, Injectable } from "@angular/core";
+import { DOCUMENT, inject, Injectable } from "@angular/core";
 import { EventManager } from "@angular/platform-browser";
 
-
 type Options = {
-  element: any;
+  element: Document | HTMLElement;
   keys: string;
-}
+};
 
 @Injectable({ providedIn: 'root' })
 export class Hotkeys {
-  defaults: Partial<Options> = {
-    element: this.document
-  }
+  private eventManager = inject(EventManager);
+  private document = inject(DOCUMENT);
 
-  constructor(private eventManager: EventManager,
-              @Inject(DOCUMENT) private document: Document) {
-  }
+  defaults: Partial<Options> = {
+    element: this.document,
+  };
 
   addShortcut(options: Partial<Options>) {
     const merged = { ...this.defaults, ...options };
     const event = `keydown.${merged.keys}`;
 
-    return new Observable(observer => {
-      const handler = (e: any) => {
-        e.preventDefault()
+    return new Observable<Event>(observer => {
+      const handler = (e: Event) => {
+        e.preventDefault();
         observer.next(e);
       };
 
@@ -35,6 +33,6 @@ export class Hotkeys {
       return () => {
         dispose();
       };
-    })
+    });
   }
 }
