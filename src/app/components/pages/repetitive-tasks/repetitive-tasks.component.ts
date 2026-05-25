@@ -1,7 +1,7 @@
 import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RepetitiveTasksService } from "../../../services/task-container-services/repetitive-tasks.service";
-import { ModelsRepetitiveTaskResponse } from "../../../types/generated";
+import type { ModelsRepetitiveTaskResponse } from "../../../types/generated";
 import { RepetitiveTasksListComponent } from "../../lists/repetitive-tasks-list/repetitive-tasks-list.component";
 
 @Component({

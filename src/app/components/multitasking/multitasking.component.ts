@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, type OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -6,7 +6,7 @@ import { isNumber } from 'lodash';
 import { type Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { TaskContainer } from "../../models/interfaces/task-container";
+import type { TaskContainer } from "../../models/interfaces/task-container";
 import { isTaskContainerType } from "../../models/interfaces/types";
 import { TaskContainerService } from "../../services/task-container-services/task-container.service";
 import { TasksService } from "../../services/task-container-services/tasks.service";
@@ -25,17 +25,12 @@ import { MultitaskingItemComponent } from "./multitasking-item/multitasking-item
     styleUrls: ['./multitasking.component.sass'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MultitaskingComponent implements OnInit {
+export class MultitaskingComponent {
   readonly taskContainers = signal<TaskContainer[]>([]);
   taskContainerInput = '';
   inputFormControl = new FormControl('');
-  constructor(
-    private taskContainerService: TaskContainerService,
-    private tasksService: TasksService,
-  ) { }
-
-  ngOnInit(): void {
-  }
+  private taskContainerService = inject(TaskContainerService);
+  private tasksService = inject(TasksService);
 
   getTaskContainerRefreshTasks(container: TaskContainer): () => Observable<number[]> {
     if (container.getTaskContainerDescription()[0] === "task") {
@@ -49,7 +44,6 @@ export class MultitaskingComponent implements OnInit {
     if (!value) {
       return;
     }
-    console.log('addTaskContainer', value);
     if (!value.includes(' ') ) {
       if (isNumber(+value)) {
         this.taskContainerService.getTaskContainer('task', +value)
@@ -61,7 +55,8 @@ export class MultitaskingComponent implements OnInit {
       }
       return;
     }
-    let [type, id] = value.split(' ');
+    const [rawType, id] = value.split(' ');
+    let type = rawType;
     if(type === 'p') {
       type = 'problem';
     }
