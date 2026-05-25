@@ -2,7 +2,9 @@
   @if (showTitle()) {
     <h3
       id="subtasks-task-container-title"
+      tabindex="0"
       (click)="focusSubtask()"
+      (keydown.enter)="focusSubtask()"
       [ngClass]="{ 'selected-for-subtasks': isContainerFocused() }"
     >
       {{ container().getFullDescription() }}
@@ -101,7 +103,7 @@
             (click)="onSubtaskClick(subtask)"
             [ngClass]="{'highlight': isSelected(subtask.id)}"
           >
-            <span class="row-link" (click)="onSubtaskClick(subtask)">
+            <span class="row-link">
               {{ subtask.description }}
             </span>
           </td>

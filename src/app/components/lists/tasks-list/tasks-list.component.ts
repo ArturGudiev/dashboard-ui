@@ -28,7 +28,11 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { NgClass } from "@angular/common";
 import { type TaskContainer } from "../../../models/interfaces/task-container";
-import { TasksService } from "../../../services/task-container-services/tasks.service";
+import {
+  type CreateNewTaskRequest,
+  type NewTaskDialogResult,
+  TasksService,
+} from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
 import { tasksListRefreshAnimation } from './tasks-list.animations';
 
@@ -47,7 +51,7 @@ type ExpandedSubtasks = Record<number, { tasks: TaskC[]; container: TaskContaine
   standalone: true,
   styleUrls: ['./tasks-list.component.sass'],
   animations: [tasksListRefreshAnimation],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksListComponent implements OnInit {
 
@@ -114,21 +118,22 @@ export class TasksListComponent implements OnInit {
 
   addTask(makeSelected = false) {
     this.tasksService.openAddTaskDialog()
-      .subscribe((responseObj: any) => {
+      .subscribe((responseObj: NewTaskDialogResult | undefined) => {
         this.tasksService.addTaskDialogOpened = false;
         if (!responseObj) {
           return;
         }
         const description = responseObj.description;
         if (description) {
-          const task: any = {
-            description: description,
-            tags: [],
-            done: false,
-            notes: responseObj.notes,
-          }
-          const parent = { id: this.container().id, type: this.container().type };
-          this.tasksService.createNewTask({ task, parent })
+          const request: CreateNewTaskRequest = {
+            task: {
+              description,
+              tags: [],
+              notes: responseObj.notes ?? '',
+            },
+            parent: { id: this.container().id, type: this.container().type },
+          };
+          this.tasksService.createNewTask(request)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((newTask: TaskC) => {
               if (makeSelected) {
@@ -170,7 +175,7 @@ export class TasksListComponent implements OnInit {
     }
   }
 
-  private handleTaskCommand(command: string, commandArgs: object) {
+  private handleTaskCommand(command: string, _commandArgs: object) {
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['select-subtask'].includes(arr[0])) {
@@ -376,21 +381,22 @@ export class TasksListComponent implements OnInit {
 
   private addTaskAndGoToIt() {
     this.tasksService.openAddTaskDialog()
-      .subscribe((responseObj: any) => {
+      .subscribe((responseObj: NewTaskDialogResult | undefined) => {
         this.tasksService.addTaskDialogOpened = false;
         if (!responseObj) {
           return;
         }
         const description = responseObj.description;
         if (description) {
-          const task: any = {
-            description: description,
-            tags: [],
-            done: false,
-            notes: responseObj.notes,
-          }
-          const parent = { id: this.container().id, type: this.container().type };
-          this.tasksService.createNewTask({ task, parent })
+          const request: CreateNewTaskRequest = {
+            task: {
+              description,
+              tags: [],
+              notes: responseObj.notes ?? '',
+            },
+            parent: { id: this.container().id, type: this.container().type },
+          };
+          this.tasksService.createNewTask(request)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((newTask: TaskC) => {
               this.navigationService.navigateToTask(newTask.id);
