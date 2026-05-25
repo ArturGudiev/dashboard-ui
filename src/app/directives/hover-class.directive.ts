@@ -1,13 +1,13 @@
-import {Directive, type ElementRef, HostListener, Input} from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, Input } from '@angular/core';
 
 @Directive({
   standalone: true,
   selector: '[hover-class]'
 })
 export class HoverClassDirective {
+  @Input('hover-class') hoverClass!: string;
 
-  constructor(public elementRef:ElementRef) { }
-  @Input('hover-class') hoverClass:any;
+  private readonly elementRef = inject(ElementRef);
 
   @HostListener('mouseenter') onMouseEnter() {
     this.elementRef.nativeElement.classList.add(this.hoverClass);
