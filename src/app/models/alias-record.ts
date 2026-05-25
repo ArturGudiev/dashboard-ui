@@ -12,7 +12,7 @@ export class AliasesRecord implements AliasesRecordInterface{
   description?: string;
   path?: string;
 
-  constructor(obj: any) {
+  constructor(obj: { aliases: string[]; destination: string; description?: string; path?: string }) {
     this.aliases = obj.aliases;
     this.destination = obj.destination;
     if (obj.description) {
@@ -21,7 +21,6 @@ export class AliasesRecord implements AliasesRecordInterface{
     if (obj.path) {
       this.path = obj.path;
     }
-
   }
 
 }

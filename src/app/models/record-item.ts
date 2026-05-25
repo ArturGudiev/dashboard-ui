@@ -14,7 +14,7 @@ export class RecordItem {
     this.tags = tags;
   }
 
-  static createRecordsItemFromObj(obj: any): RecordItem {
+  static createRecordsItemFromObj(obj: RecordItem): RecordItem {
     return new RecordItem(obj._id, obj.message, obj.date, obj.tags)
   }
 }

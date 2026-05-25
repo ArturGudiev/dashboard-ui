@@ -23,7 +23,15 @@ export class Action implements TaskContainer {
 
 
   constructor(_id: number, name: string, definition: string, tags: string[],
-              otherFields: any = {}) {
+              otherFields: {
+                tasks?: number[],
+                problems?: number[],
+                questions?: number[],
+                definitions?: number[],
+                actions?: number[],
+                knowledgeBits?: number[],
+                parentContainers?: ContainerDescription[],
+              } = {}) {
     this.id = _id;
     this.name = name;
     this.value = definition;
@@ -41,7 +49,7 @@ export class Action implements TaskContainer {
     return Action.prefix + this.id + ' ' + this.name;
   }
 
-  static createFromObj(actionObj: any): Action {
+  static createFromObj(actionObj: Action): Action {
     return new Action(actionObj.id, actionObj.name, actionObj.value, actionObj.tags,
       pick(actionObj, ['parentContainers', 'tasks', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions'])

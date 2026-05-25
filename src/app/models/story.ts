@@ -1,6 +1,23 @@
 import { pick } from 'lodash';
 import { type TaskContainer } from "./interfaces/task-container";
-import { type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+import { type ContainerDescriptionSource, type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+
+export type StoryCreateSource = {
+  id?: number;
+  description?: string;
+  tags?: string[];
+  closed?: boolean;
+  notes?: string;
+  tasks?: number[];
+  stories?: number[];
+  problems?: number[];
+  questions?: number[];
+  definitions?: number[];
+  actions?: number[];
+  knowledgeBits?: number[];
+  knowledgeNodes?: number[];
+  parentContainers?: ContainerDescriptionSource[];
+};
 
 export class Story implements TaskContainer {
   static readonly PREFIX = 'Story-';
@@ -25,14 +42,14 @@ export class Story implements TaskContainer {
   constructor(id: number, description: string, tags: string[], closed = false,
               notes = '',
               otherFields: {
-                tasks?: any,
-                stories?: any,
-                problems?: any,
-                questions?: any,
-                definitions?: any,
-                actions?: any,
-                knowledgeBits?: any,
-                parentContainers?: ContainerDescription[],
+                tasks?: number[],
+                stories?: number[],
+                problems?: number[],
+                questions?: number[],
+                definitions?: number[],
+                actions?: number[],
+                knowledgeBits?: number[],
+                parentContainers?: ContainerDescriptionSource[],
               } = {}) {
     this.id = id;
     this.description = description;
@@ -43,7 +60,7 @@ export class Story implements TaskContainer {
     this.problems = otherFields?.problems ?? [];
     this.questions = otherFields?.questions ?? [];
     this.stories = otherFields?.stories ?? [];
-    this.parentContainers = otherFields?.parentContainers ?? [];
+    this.parentContainers = (otherFields?.parentContainers ?? []) as ContainerDescription[];
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
@@ -54,9 +71,9 @@ export class Story implements TaskContainer {
   }
 
 
-  static createFromObj(storyObj: any): Story {
+  static createFromObj(storyObj: StoryCreateSource): Story {
     // check here object has all necessary fields
-    return new Story(storyObj.id, storyObj.description, storyObj.tags, storyObj.closed, storyObj.notes,
+    return new Story(storyObj.id!, storyObj.description!, storyObj.tags ?? [], storyObj.closed, storyObj.notes,
       pick(storyObj, ['parentContainers', 'tasks', 'stories', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
   }

@@ -25,14 +25,14 @@ export class Epic implements TaskContainer{
 
   constructor(id: number, description: string, tags: string[], closed = false, notes = '',
               otherFields: {
-                tasks?: any,
-                stories?: any,
-                epics?: any,
-                problems?: any,
-                questions?: any,
-                definitions?: any,
-                actions?: any,
-                knowledgeBits?: any,
+                tasks?: number[],
+                stories?: number[],
+                epics?: number[],
+                problems?: number[],
+                questions?: number[],
+                definitions?: number[],
+                actions?: number[],
+                knowledgeBits?: number[],
                 parentContainers?: ContainerDescription[],
               } = {}
   ) {
@@ -56,7 +56,7 @@ export class Epic implements TaskContainer{
     return `${Epic.PREFIX}${this.id} ${this.description}`
   }
 
-  static createFromObj(epicObj: any): Epic {
+  static createFromObj(epicObj: Epic): Epic {
     return new Epic(epicObj.id, epicObj.description, epicObj.tags, epicObj.closed, epicObj.notes,
       pick(epicObj, ['parentContainers', 'epics', 'tasks', 'stories', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))

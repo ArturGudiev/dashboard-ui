@@ -1,6 +1,22 @@
 import { pick } from 'lodash';
 import { type TaskContainer } from "./interfaces/task-container";
-import { type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+import { type ContainerDescriptionSource, type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+
+export type TaskCCreateSource = {
+  id: number;
+  description: string;
+  done: boolean;
+  tags?: string[];
+  notes?: string;
+  tasks?: number[];
+  problems?: number[];
+  questions?: number[];
+  definitions?: number[];
+  actions?: number[];
+  knowledgeBits?: number[];
+  knowledgeNodes?: number[];
+  parentContainers?: ContainerDescriptionSource[];
+};
 
 export class TaskC implements TaskContainer {
   static readonly PREFIX = 'Task-';
@@ -27,13 +43,13 @@ export class TaskC implements TaskContainer {
               tags: string[] = [],
               notes = '',
               otherFields: {
-                tasks?: any,
-                problems?: any,
-                questions?: any,
-                definitions?: any,
-                actions?: any,
-                knowledgeBits?: any,
-                parentContainers?: ContainerDescription[],
+                tasks?: number[],
+                problems?: number[],
+                questions?: number[],
+                definitions?: number[],
+                actions?: number[],
+                knowledgeBits?: number[],
+                parentContainers?: ContainerDescriptionSource[],
               } = {}
   ) {
     this.description = description;
@@ -47,14 +63,14 @@ export class TaskC implements TaskContainer {
     this.definitions = otherFields?.definitions ?? [];
     this.actions = otherFields?.actions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
-    this.parentContainers = otherFields?.parentContainers ?? [];
+    this.parentContainers = (otherFields?.parentContainers ?? []) as ContainerDescription[];
   }
 
   getFullDescription(): string {
     return `${(TaskC.PREFIX)}${this.id} ${this.description}`
   }
 
-  static createFromObj(taskObj: any): TaskC {
+  static createFromObj(taskObj: TaskCCreateSource): TaskC {
     // check here object has all necessary fields
     return new TaskC(taskObj.id, taskObj.description, taskObj.done, taskObj.tags, taskObj.notes,
       pick(taskObj, ['parentContainers', 'tasks', 'problems', 'questions',

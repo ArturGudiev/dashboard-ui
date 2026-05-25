@@ -1,32 +1,35 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, inject, Output } from '@angular/core';
 
 @Directive({
   selector: '[appLongClickDirective]',
   standalone: true
 })
 export class LongClickDirectiveDirective {
-  @Output() longClick = new EventEmitter();
-  @Output() simpleClick = new EventEmitter();
+  @Output() longClick = new EventEmitter<void>();
+  @Output() simpleClick = new EventEmitter<MouseEvent>();
 
-  private touchTimeout: any | undefined;
+  private readonly el = inject(ElementRef);
+  private touchTimeout: number | undefined;
   private readonly longPressDuration = 500; // Time in milliseconds
   private longClickTriggered = false;
 
-  constructor(private el: ElementRef) {
-    this.el.nativeElement.addEventListener('click', (event: any) => {
-      if (this.longClickTriggered) {
-        event.stopImmediatePropagation();
-        this.longClickTriggered = false;
-      } else {
-        this.simpleClick.emit(event);
-      }
-    }, true);
+  constructor() {
+    this.el.nativeElement.addEventListener('click', this.onNativeClick, true);
   }
+
+  private readonly onNativeClick = (event: MouseEvent) => {
+    if (this.longClickTriggered) {
+      event.stopImmediatePropagation();
+      this.longClickTriggered = false;
+    } else {
+      this.simpleClick.emit(event);
+    }
+  };
 
   @HostListener('mousedown')
   @HostListener('touchstart')
   onMouseDown() {
-    this.touchTimeout = setTimeout(() => {
+    this.touchTimeout = window.setTimeout(() => {
       this.longClick.emit();
       this.longClickTriggered = true;
     }, this.longPressDuration);

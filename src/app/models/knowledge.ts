@@ -22,12 +22,12 @@ export class Knowledge implements TaskContainer {
 
   constructor(id: number, name: string, value: string, tags: string[], extension?: string,
               otherFields: {
-                tasks?: any,
-                problems?: any,
-                questions?: any,
-                definitions?: any,
-                actions?: any,
-                knowledgeBits?: any,
+                tasks?: number[],
+                problems?: number[],
+                questions?: number[],
+                definitions?: number[],
+                actions?: number[],
+                knowledgeBits?: number[],
                 parentContainers?: ContainerDescription[],
               } = {}
   ) {
@@ -52,7 +52,7 @@ export class Knowledge implements TaskContainer {
     return Knowledge.prefix + this.id + ' ' + this.name;
   }
 
-  static createFromObj(obj: any): Knowledge {
+  static createFromObj(obj: Knowledge): Knowledge {
     
     return new Knowledge(obj.id, obj.name, obj.value, obj.tags, obj.extension,
       pick(obj, ['parentContainers', 'tasks', 'problems', 'questions',

@@ -1,6 +1,22 @@
 import { pick } from "lodash";
 import { type TaskContainer } from "./interfaces/task-container";
-import { type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+import { type ContainerDescriptionSource, type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+
+export type ProblemCreateSource = {
+  id?: number;
+  description?: string;
+  tags?: string[];
+  solution?: string;
+  notes?: string;
+  tasks?: number[];
+  problems?: number[];
+  questions?: number[];
+  definitions?: number[];
+  actions?: number[];
+  knowledgeBits?: number[];
+  knowledgeNodes?: number[];
+  parentContainers?: ContainerDescriptionSource[];
+};
 
 export class Problem implements TaskContainer {
   static readonly PREFIX = 'Problem-';
@@ -10,7 +26,7 @@ export class Problem implements TaskContainer {
   id: number;
   description: string;
   tags: string[];
-  notes = '';
+  notes: string = '';
   tasks: number[];
   problems: number[];
   questions: number[];
@@ -23,15 +39,15 @@ export class Problem implements TaskContainer {
 
   solution?: string;
 
-  constructor(id: number, description: string, tags: string[], solution?: string, notes?: '',
+  constructor(id: number, description: string, tags: string[], solution?: string, notes = '',
               otherFields: {
-                tasks?: any,
-                problems?: any,
-                questions?: any,
-                definitions?: any,
-                actions?: any,
-                knowledgeBits?: any,
-                parentContainers?: ContainerDescription[],
+                tasks?: number[],
+                problems?: number[],
+                questions?: number[],
+                definitions?: number[],
+                actions?: number[],
+                knowledgeBits?: number[],
+                parentContainers?: ContainerDescriptionSource[],
               } = {}
   ) {
     this.id = id;
@@ -44,7 +60,7 @@ export class Problem implements TaskContainer {
     this.tasks = otherFields?.tasks ?? [];
     this.problems = otherFields?.problems ?? [];
     this.questions = otherFields?.questions ?? [];
-    this.parentContainers = otherFields?.parentContainers ?? [];
+    this.parentContainers = (otherFields?.parentContainers ?? []) as ContainerDescription[];
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
@@ -56,8 +72,8 @@ export class Problem implements TaskContainer {
     return `${Problem.PREFIX}${this.id} ${this.description}`
   }
 
-  static createFromObj(obj: any): Problem {
-    return new Problem(obj.id, obj.description, obj.tags, obj.solution, obj.notes,
+  static createFromObj(obj: ProblemCreateSource): Problem {
+    return new Problem(obj.id!, obj.description!, obj.tags ?? [], obj.solution, obj.notes,
       pick(obj, ['parentContainers', 'tasks', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
   }

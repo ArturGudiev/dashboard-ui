@@ -19,3 +19,9 @@ export interface ContainerDescription {
   id: number;
   type: TaskContainerType
 }
+
+/** Plain object from API / router state before normalization to ContainerDescription. */
+export type ContainerDescriptionSource = {
+  id?: number;
+  type?: string;
+};
