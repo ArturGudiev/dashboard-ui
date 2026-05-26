@@ -336,7 +336,8 @@ export class TaskContainerSignalComponent implements OnInit {
   }
 
   finishAllTasks() {
-    // this.tasksService.finishTasks(this.tasksResource.value() ?? []).subscribe(() => this.refreshContainer.emit());
+    this.tasksService.finishTasks(this.tasksResource.value() ?? [])
+      .subscribe(() => this.refreshContainer.emit());
   }
 
   private finishProblemHandler(args: string[]) {

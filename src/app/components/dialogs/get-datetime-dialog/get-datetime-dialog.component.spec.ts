@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideMatDialogTest } from '../../../testing/test-utils';
 import { GetDatetimeDialogComponent } from './get-datetime-dialog.component';
 
 describe('GetDatetimeDialogComponent', () => {
@@ -8,7 +8,8 @@ describe('GetDatetimeDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GetDatetimeDialogComponent]
+      imports: [GetDatetimeDialogComponent],
+      providers: provideMatDialogTest(),
     })
     .compileComponents();
 

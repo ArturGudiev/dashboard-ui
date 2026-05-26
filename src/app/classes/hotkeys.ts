@@ -16,9 +16,10 @@ export class Hotkeys {
     element: this.document,
   };
 
-  addShortcut(options: Partial<Options>) {
+  addShortcut(options: Partial<Options> & Pick<Options, 'keys'>) {
     const merged = { ...this.defaults, ...options };
     const event = `keydown.${merged.keys}`;
+    const element = this.resolveEventElement(merged.element);
 
     return new Observable<Event>(observer => {
       const handler = (e: Event) => {
@@ -27,12 +28,17 @@ export class Hotkeys {
       };
 
       const dispose = this.eventManager.addEventListener(
-        merged.element, event, handler
+        element, event, handler
       );
 
       return () => {
         dispose();
       };
     });
+  }
+
+  private resolveEventElement(element: Document | HTMLElement | undefined): HTMLElement {
+    const target = element ?? this.document;
+    return target instanceof Document ? target.documentElement : target;
   }
 }

@@ -8,7 +8,7 @@ describe('EpicsListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EpicsListComponent ]
+      imports: [ EpicsListComponent ]
     })
     .compileComponents();
   });
@@ -16,6 +16,7 @@ describe('EpicsListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EpicsListComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('epics', []);
     fixture.detectChanges();
   });
 

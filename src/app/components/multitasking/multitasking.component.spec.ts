@@ -8,7 +8,7 @@ describe('MultitaskingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MultitaskingComponent ]
+      imports: [ MultitaskingComponent ]
     })
     .compileComponents();
   });
