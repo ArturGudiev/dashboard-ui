@@ -93,8 +93,6 @@ export class TasksListComponent implements OnInit {
   constructor() {
     effect(() => {
       this.tasks();
-      // makeChangesAfterTasksChanged reads selectedIds/expandedSubtasks; keep that work untracked
-      // or selectedIds updates re-enter this effect in a tight loop.
       untracked(() => this.makeChangesAfterTasksChanged());
     });
   }
