@@ -95,7 +95,7 @@ export class NavigationService {
       this.navigateToKnowledgeNode(id);
     }
 
-    if (val.type === 'scheduled-task') {
+    if (val.type === 'repetitive-task') {
       this.navigateToScheduledTask(id);
     }
   }

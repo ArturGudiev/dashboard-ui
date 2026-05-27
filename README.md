@@ -26,6 +26,15 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
-## Генерация типов с бэкенда
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Автоматическая генерация типов Typescript
+1. Запустить обновленный бэкенд (например на http://localhost:8000)
+2. Перейти в папку src\types
+3. Удалить папку generated
+4. Выполнить команду
+```
+
+ npx @hey-api/openapi-ts -i /Users/arturgudiev/Programming/projects/dashboard-go/docs/swagger.json -o ./generated
+
+```
+

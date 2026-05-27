@@ -158,6 +158,12 @@ export class ApiService {
       .pipe(map(taskFromFull));
   }
 
+  _patchTask(id: number, newTaskName: string): Observable<TaskC> {
+    return this.http
+      .patch<ModelsTaskFull>(`${this.baseUrl}/task/${id}`, { description: newTaskName })
+      .pipe(map(taskFromFull));
+  }
+
   _getDoneTasksNumber(from: string | null): Observable<DoneTasksCountResponse> {
     let params = new HttpParams();
     if (from) {
@@ -195,6 +201,12 @@ export class ApiService {
       );
   }
 
+  _patchEpic(id: number, newName: string): Observable<Epic> {
+    return this.http
+      .patch<Epic>(`${this.baseUrl}/epic/${id}`, { description: newName })
+      .pipe(map((obj) => Epic.createFromObj(obj)));
+  }
+
 //------------------------------------stories-------------------------------------------------
   _getStory(id: number) {
     return this.http.get<Story>(`${this.baseUrl}/story/${id}`)
@@ -221,6 +233,12 @@ export class ApiService {
     return this.http.post<Story>(`${this.baseUrl}/new-story`, obj).pipe(
       map((story) => Story.createFromObj(story)),
     );
+  }
+
+  _patchStory(id: number, newName: string): Observable<Story> {
+    return this.http
+      .patch<Story>(`${this.baseUrl}/story/${id}`, { description: newName })
+      .pipe(map((obj) => Story.createFromObj(obj)));
   }
   //------------------------------------stories-------------------------------------------------
   //------------------------------------problems-------------------------------------------------
@@ -253,6 +271,12 @@ export class ApiService {
 
   _createNewProblem(obj: HandlersNewProblemRequest): Observable<Problem> {
     return this.http.post<Problem>(`${this.baseUrl}/new-problem`, obj);
+  }
+
+  _patchProblem(id: number, newName: string): Observable<Problem> {
+    return this.http
+      .patch<Problem>(`${this.baseUrl}/problem/${id}`, { description: newName })
+      .pipe(map((obj) => Problem.createFromObj(obj)));
   }
 
   //----------------------------------------problems-----------------------------------------
@@ -291,6 +315,12 @@ export class ApiService {
       .pipe(
         map((obj) => Question.createFromObj(obj))
       );
+  }
+
+  _patchQuestion(id: number, newName: string): Observable<Question> {
+    return this.http
+      .patch<Question>(`${this.baseUrl}/question/${id}`, { description: newName })
+      .pipe(map((obj) => Question.createFromObj(obj)));
   }
 
   //----------------------------------------questions------------------------------------------
@@ -430,6 +460,13 @@ export class ApiService {
     return this.http.post<ModelsRepetitiveTaskResponse>(
       `${this.baseUrl}/new-repetitive-task`,
       { ...obj }
+    );
+  }
+
+  _patchRepetitiveTask(id: number, newName: string): Observable<ModelsRepetitiveTaskResponse> {
+    return this.http.patch<ModelsRepetitiveTaskResponse>(
+      `${this.baseUrl}/repetitive-tasks/${id}`,
+      { description: newName },
     );
   }
   //------------------------------------ repetitive tasks  ----------------------------------------

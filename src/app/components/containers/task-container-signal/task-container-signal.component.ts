@@ -36,6 +36,7 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
 import { UtilsService } from "../../../services/utils.service";
 import { ContainerReportComponent } from "../container-report/container-report.component";
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
+import { GET_VALUE_DIALOG_OPTIONS } from '../../../shared/constants';
 
 /** Stable fallback so `[tasks]="… ?? []"` does not allocate a new array every CD tick (breaks TasksListComponent's effect). */
 const EMPTY_TASKS: TaskC[] = [];
@@ -400,6 +401,28 @@ export class TaskContainerSignalComponent implements OnInit {
     this.goToParentHandler(parentsPath.slice(-2, -1)[0]);
   }
 
+  renameTask(): void {
+    const container = this.taskContainer();
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {
+      data: {
+        title: 'new name for the task',
+        inputWidth: '40rem',
+        initialValue: (container as TaskC).description,
+        selectInitialValue: true,
+      },
+      ...GET_VALUE_DIALOG_OPTIONS,
+    });
+
+    
+    dialogRef.afterClosed().subscribe((newTaskName: string) => {
+      if (newTaskName) {
+        this.taskContainerService
+          .renameTaskContainer(this.taskContainer(), newTaskName)
+          .subscribe(() => this.refreshContainer.emit());
+      }
+    });
+  }
+
   private finishTaskHandler(args: string[]) {
     if (!args || args.length === 0) {
       return;
@@ -536,7 +559,6 @@ export class TaskContainerSignalComponent implements OnInit {
         }
     });
   }
-
 
   /**
    *

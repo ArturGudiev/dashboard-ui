@@ -11,14 +11,16 @@
         [ngStyle]="getDataInputWidthStyle"
       >
         <mat-label>{{data.title}}</mat-label>
-        <input id="value-input"   matInput formControlName="valueField">
+        <input #valueInput id="value-input" matInput formControlName="valueField">
       </mat-form-field>
     </div>
   } @else {
     <mat-form-field appearance="fill" style="width: 40rem">
       <mat-label>{{data.title}}</mat-label>
       <textarea
-        matInput formControlName="valueField"
+        #valueInput
+        matInput
+        formControlName="valueField"
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
         cdkAutosizeMinRows="5"

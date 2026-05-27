@@ -24,6 +24,7 @@ import {
 } from "../../components/dialogs/add-log-dialog/add-log-dialog.component";
 import { LogsDialogComponent } from "../../components/dialogs/logs-dialog/logs-dialog.component";
 import { type TreeNode } from "../../components/containers/tree/my-tree.component";
+import { type ModelsRepetitiveTaskResponse } from '../../types/generated';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +58,30 @@ export class TaskContainerService {
         return of(null);
     }
   }
+  
+  renameTaskContainer(
+    taskContainer: TaskContainer,
+    newTaskName: string,
+  ): Observable<TaskContainer | ModelsRepetitiveTaskResponse> {
+    const { id, type } = taskContainer;
+    switch (type) {
+      case 'task':
+        return this.apiService._patchTask(id, newTaskName);
+      case 'epic':
+        return this.apiService._patchEpic(id, newTaskName);
+      case 'story':
+        return this.apiService._patchStory(id, newTaskName);
+      case 'problem':
+        return this.apiService._patchProblem(id, newTaskName);
+      case 'question':
+        return this.apiService._patchQuestion(id, newTaskName);
+      case 'repetitive-task':
+        return this.apiService._patchRepetitiveTask(id, newTaskName);
+      default:
+        throw new Error(`Cannot rename container of type "${type}"`);
+    }
+  }
+
 
   addTaskToContainerByShortDescription(containerDescription: string) {
     const matches = containerDescription.match(/^(.+)-(\d+)/)

@@ -189,6 +189,11 @@ export type HandlersParentsPathRequest = {
     type: string;
 };
 
+export type HandlersPatchContainerByIdRequest = {
+    description?: string;
+    notes?: string;
+};
+
 export type HandlersPatchTaskByIdRequest = {
     description?: string;
     notes?: string;
@@ -663,6 +668,53 @@ export type GetEpicByIdResponses = {
 };
 
 export type GetEpicByIdResponse = GetEpicByIdResponses[keyof GetEpicByIdResponses];
+
+export type PatchEpicByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchContainerByIdRequest;
+    path: {
+        /**
+         * Epic ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/epic/{id}';
+};
+
+export type PatchEpicByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchEpicByIdError = PatchEpicByIdErrors[keyof PatchEpicByIdErrors];
+
+export type PatchEpicByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsEpicFull;
+};
+
+export type PatchEpicByIdResponse = PatchEpicByIdResponses[keyof PatchEpicByIdResponses];
 
 export type GetEpicsData = {
     body?: never;
@@ -1463,6 +1515,53 @@ export type GetProblemByIdResponses = {
 
 export type GetProblemByIdResponse = GetProblemByIdResponses[keyof GetProblemByIdResponses];
 
+export type PatchProblemByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchContainerByIdRequest;
+    path: {
+        /**
+         * Problem ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/problem/{id}';
+};
+
+export type PatchProblemByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchProblemByIdError = PatchProblemByIdErrors[keyof PatchProblemByIdErrors];
+
+export type PatchProblemByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsProblemFull;
+};
+
+export type PatchProblemByIdResponse = PatchProblemByIdResponses[keyof PatchProblemByIdResponses];
+
 export type GetQuestionByIdData = {
     body?: never;
     path: {
@@ -1506,6 +1605,53 @@ export type GetQuestionByIdResponses = {
 };
 
 export type GetQuestionByIdResponse = GetQuestionByIdResponses[keyof GetQuestionByIdResponses];
+
+export type PatchQuestionByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchContainerByIdRequest;
+    path: {
+        /**
+         * Question ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/question/{id}';
+};
+
+export type PatchQuestionByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchQuestionByIdError = PatchQuestionByIdErrors[keyof PatchQuestionByIdErrors];
+
+export type PatchQuestionByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsQuestionFull;
+};
+
+export type PatchQuestionByIdResponse = PatchQuestionByIdResponses[keyof PatchQuestionByIdResponses];
 
 export type GetRepetitiveTasksData = {
     body?: never;
@@ -1570,6 +1716,53 @@ export type GetRepetitiveTasksByIdResponses = {
 };
 
 export type GetRepetitiveTasksByIdResponse = GetRepetitiveTasksByIdResponses[keyof GetRepetitiveTasksByIdResponses];
+
+export type PatchRepetitiveTasksByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchContainerByIdRequest;
+    path: {
+        /**
+         * Repetitive task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/repetitive-tasks/{id}';
+};
+
+export type PatchRepetitiveTasksByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchRepetitiveTasksByIdError = PatchRepetitiveTasksByIdErrors[keyof PatchRepetitiveTasksByIdErrors];
+
+export type PatchRepetitiveTasksByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsRepetitiveTaskResponse;
+};
+
+export type PatchRepetitiveTasksByIdResponse = PatchRepetitiveTasksByIdResponses[keyof PatchRepetitiveTasksByIdResponses];
 
 export type GetRepetitiveTasksByIdExecutionsData = {
     body?: never;
@@ -1737,6 +1930,53 @@ export type GetStoryByIdResponses = {
 };
 
 export type GetStoryByIdResponse = GetStoryByIdResponses[keyof GetStoryByIdResponses];
+
+export type PatchStoryByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchContainerByIdRequest;
+    path: {
+        /**
+         * Story ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/story/{id}';
+};
+
+export type PatchStoryByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchStoryByIdError = PatchStoryByIdErrors[keyof PatchStoryByIdErrors];
+
+export type PatchStoryByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsStoryFull;
+};
+
+export type PatchStoryByIdResponse = PatchStoryByIdResponses[keyof PatchStoryByIdResponses];
 
 export type GetTaskReportByIdData = {
     body?: never;

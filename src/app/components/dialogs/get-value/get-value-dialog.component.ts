@@ -1,4 +1,11 @@
-import { Component, inject , ChangeDetectionStrategy} from '@angular/core';
+import {
+  type AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  type ElementRef,
+  inject,
+  viewChild,
+} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatFormField } from "@angular/material/form-field";
@@ -8,6 +15,14 @@ import { MatButton } from "@angular/material/button";
 import { MatDialogActions } from "@angular/material/dialog";
 import { MatInput } from "@angular/material/input";
 import { MatLabel } from "@angular/material/form-field";
+
+export interface GetValueDialogData {
+  title: string;
+  inputWidth?: string;
+  multiline?: boolean;
+  initialValue?: string | null;
+  selectInitialValue?: boolean;
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,11 +40,15 @@ import { MatLabel } from "@angular/material/form-field";
     ],
     styleUrls: ['./get-value-dialog.component.sass']
 })
-export class GetValueDialogComponent {
+export class GetValueDialogComponent implements AfterViewInit {
+
+  dialogRef = inject(MatDialogRef<GetValueDialogComponent>);
+  data = inject<GetValueDialogData>(MAT_DIALOG_DATA);
+  valueInput = viewChild<ElementRef<HTMLInputElement | HTMLTextAreaElement>>('valueInput');
 
   myForm = new FormGroup({
-    valueField: new FormControl(null, [
-      Validators.required
+    valueField: new FormControl(this.data.initialValue ?? '', [
+      Validators.required,
     ]),
   });
 
@@ -37,8 +56,19 @@ export class GetValueDialogComponent {
     return this.data.inputWidth ? { width: this.data.inputWidth } : null;
   }
 
-  dialogRef = inject(MatDialogRef<GetValueDialogComponent>);
-  data = inject<{ title: string, inputWidth?: string, multiline?: boolean }>(MAT_DIALOG_DATA);
+  ngAfterViewInit(): void {
+    if (!this.data.selectInitialValue) {
+      return;
+    }
+    setTimeout(() => {
+      const el = this.valueInput()?.nativeElement;
+      if (!el) {
+        return;
+      }
+      el.focus();
+      el.select();
+    });
+  }
 
   onNoClick(): void {
     this.dialogRef.close(null);

@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetAliasesByAliasData, GetAliasesByAliasErrors, GetAliasesByAliasResponses, GetData, GetDoneTasksData, GetDoneTasksErrors, GetDoneTasksResponses, GetEpicByIdData, GetEpicByIdErrors, GetEpicByIdResponses, GetEpicsData, GetEpicsErrors, GetEpicsResponses, GetLogMessagesByIdData, GetLogMessagesByIdErrors, GetLogMessagesByIdResponses, GetLogMessagesData, GetLogMessagesErrors, GetLogMessagesResponses, GetProblemByIdData, GetProblemByIdErrors, GetProblemByIdResponses, GetQuestionByIdData, GetQuestionByIdErrors, GetQuestionByIdResponses, GetRepetitiveTasksByIdData, GetRepetitiveTasksByIdErrors, GetRepetitiveTasksByIdExecutionsData, GetRepetitiveTasksByIdExecutionsErrors, GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdResponses, GetRepetitiveTasksData, GetRepetitiveTasksErrors, GetRepetitiveTasksResponses, GetResponses, GetStoryByIdData, GetStoryByIdErrors, GetStoryByIdResponses, GetTaskByIdData, GetTaskByIdErrors, GetTaskByIdResponses, GetTaskReportByIdData, GetTaskReportByIdErrors, GetTaskReportByIdResponses, GetTestsData, GetTestsErrors, GetTestsResponses, PatchTaskByIdData, PatchTaskByIdErrors, PatchTaskByIdResponses, PostAnswerQuestionByIdData, PostAnswerQuestionByIdErrors, PostAnswerQuestionByIdResponses, PostGetEpicsData, PostGetEpicsErrors, PostGetEpicsResponses, PostGetProblemsData, PostGetProblemsErrors, PostGetProblemsResponses, PostGetQuestionsData, PostGetQuestionsErrors, PostGetQuestionsResponses, PostGetStoriesData, PostGetStoriesErrors, PostGetStoriesResponses, PostGetTasksData, PostGetTasksErrors, PostGetTasksResponses, PostLogMessagesData, PostLogMessagesErrors, PostLogMessagesResponses, PostNewEpicData, PostNewEpicErrors, PostNewEpicResponses, PostNewProblemData, PostNewProblemErrors, PostNewProblemResponses, PostNewQuestionData, PostNewQuestionErrors, PostNewQuestionResponses, PostNewRepetitiveTaskData, PostNewRepetitiveTaskErrors, PostNewRepetitiveTaskResponses, PostNewStoryData, PostNewStoryErrors, PostNewStoryResponses, PostNewTaskData, PostNewTaskErrors, PostNewTaskResponses, PostParentsPathData, PostParentsPathErrors, PostParentsPathResponses, PostRepetitiveTasksByIdExecutionsData, PostRepetitiveTasksByIdExecutionsErrors, PostRepetitiveTasksByIdExecutionsResponses, PutAddAnonymousTaskData, PutAddAnonymousTaskErrors, PutAddAnonymousTaskResponses, PutFinishTaskByIdData, PutFinishTaskByIdErrors, PutFinishTaskByIdResponses, PutFinishTasksByIdsData, PutFinishTasksByIdsErrors, PutFinishTasksByIdsResponses, PutFinishTasksData, PutFinishTasksErrors, PutFinishTasksResponses, PutSolveProblemByIdData, PutSolveProblemByIdErrors, PutSolveProblemByIdResponses, PutUpdateEpicData, PutUpdateEpicErrors, PutUpdateEpicResponses, PutUpdateProblemData, PutUpdateProblemErrors, PutUpdateProblemResponses, PutUpdateQuestionData, PutUpdateQuestionErrors, PutUpdateQuestionResponses, PutUpdateStoryData, PutUpdateStoryErrors, PutUpdateStoryResponses, PutUpdateTaskData, PutUpdateTaskErrors, PutUpdateTaskResponses } from './types.gen';
+import type { GetAliasesByAliasData, GetAliasesByAliasErrors, GetAliasesByAliasResponses, GetData, GetDoneTasksData, GetDoneTasksErrors, GetDoneTasksResponses, GetEpicByIdData, GetEpicByIdErrors, GetEpicByIdResponses, GetEpicsData, GetEpicsErrors, GetEpicsResponses, GetLogMessagesByIdData, GetLogMessagesByIdErrors, GetLogMessagesByIdResponses, GetLogMessagesData, GetLogMessagesErrors, GetLogMessagesResponses, GetProblemByIdData, GetProblemByIdErrors, GetProblemByIdResponses, GetQuestionByIdData, GetQuestionByIdErrors, GetQuestionByIdResponses, GetRepetitiveTasksByIdData, GetRepetitiveTasksByIdErrors, GetRepetitiveTasksByIdExecutionsData, GetRepetitiveTasksByIdExecutionsErrors, GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdResponses, GetRepetitiveTasksData, GetRepetitiveTasksErrors, GetRepetitiveTasksResponses, GetResponses, GetStoryByIdData, GetStoryByIdErrors, GetStoryByIdResponses, GetTaskByIdData, GetTaskByIdErrors, GetTaskByIdResponses, GetTaskReportByIdData, GetTaskReportByIdErrors, GetTaskReportByIdResponses, GetTestsData, GetTestsErrors, GetTestsResponses, PatchEpicByIdData, PatchEpicByIdErrors, PatchEpicByIdResponses, PatchProblemByIdData, PatchProblemByIdErrors, PatchProblemByIdResponses, PatchQuestionByIdData, PatchQuestionByIdErrors, PatchQuestionByIdResponses, PatchRepetitiveTasksByIdData, PatchRepetitiveTasksByIdErrors, PatchRepetitiveTasksByIdResponses, PatchStoryByIdData, PatchStoryByIdErrors, PatchStoryByIdResponses, PatchTaskByIdData, PatchTaskByIdErrors, PatchTaskByIdResponses, PostAnswerQuestionByIdData, PostAnswerQuestionByIdErrors, PostAnswerQuestionByIdResponses, PostGetEpicsData, PostGetEpicsErrors, PostGetEpicsResponses, PostGetProblemsData, PostGetProblemsErrors, PostGetProblemsResponses, PostGetQuestionsData, PostGetQuestionsErrors, PostGetQuestionsResponses, PostGetStoriesData, PostGetStoriesErrors, PostGetStoriesResponses, PostGetTasksData, PostGetTasksErrors, PostGetTasksResponses, PostLogMessagesData, PostLogMessagesErrors, PostLogMessagesResponses, PostNewEpicData, PostNewEpicErrors, PostNewEpicResponses, PostNewProblemData, PostNewProblemErrors, PostNewProblemResponses, PostNewQuestionData, PostNewQuestionErrors, PostNewQuestionResponses, PostNewRepetitiveTaskData, PostNewRepetitiveTaskErrors, PostNewRepetitiveTaskResponses, PostNewStoryData, PostNewStoryErrors, PostNewStoryResponses, PostNewTaskData, PostNewTaskErrors, PostNewTaskResponses, PostParentsPathData, PostParentsPathErrors, PostParentsPathResponses, PostRepetitiveTasksByIdExecutionsData, PostRepetitiveTasksByIdExecutionsErrors, PostRepetitiveTasksByIdExecutionsResponses, PutAddAnonymousTaskData, PutAddAnonymousTaskErrors, PutAddAnonymousTaskResponses, PutFinishTaskByIdData, PutFinishTaskByIdErrors, PutFinishTaskByIdResponses, PutFinishTasksByIdsData, PutFinishTasksByIdsErrors, PutFinishTasksByIdsResponses, PutFinishTasksData, PutFinishTasksErrors, PutFinishTasksResponses, PutSolveProblemByIdData, PutSolveProblemByIdErrors, PutSolveProblemByIdResponses, PutUpdateEpicData, PutUpdateEpicErrors, PutUpdateEpicResponses, PutUpdateProblemData, PutUpdateProblemErrors, PutUpdateProblemResponses, PutUpdateQuestionData, PutUpdateQuestionErrors, PutUpdateQuestionResponses, PutUpdateStoryData, PutUpdateStoryErrors, PutUpdateStoryResponses, PutUpdateTaskData, PutUpdateTaskErrors, PutUpdateTaskResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -66,6 +66,20 @@ export const getDoneTasks = <ThrowOnError extends boolean = false>(options?: Opt
  * Returns a epic by its ID
  */
 export const getEpicById = <ThrowOnError extends boolean = false>(options: Options<GetEpicByIdData, ThrowOnError>) => (options.client ?? client).get<GetEpicByIdResponses, GetEpicByIdErrors, ThrowOnError>({ url: '/epic/{id}', ...options });
+
+/**
+ * Patch epic by ID
+ *
+ * Partially updates an epic's description and/or notes
+ */
+export const patchEpicById = <ThrowOnError extends boolean = false>(options: Options<PatchEpicByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchEpicByIdResponses, PatchEpicByIdErrors, ThrowOnError>({
+    url: '/epic/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Get epics
@@ -313,11 +327,39 @@ export const postParentsPath = <ThrowOnError extends boolean = false>(options: O
 export const getProblemById = <ThrowOnError extends boolean = false>(options: Options<GetProblemByIdData, ThrowOnError>) => (options.client ?? client).get<GetProblemByIdResponses, GetProblemByIdErrors, ThrowOnError>({ url: '/problem/{id}', ...options });
 
 /**
+ * Patch problem by ID
+ *
+ * Partially updates a problem's description and/or notes
+ */
+export const patchProblemById = <ThrowOnError extends boolean = false>(options: Options<PatchProblemByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchProblemByIdResponses, PatchProblemByIdErrors, ThrowOnError>({
+    url: '/problem/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
  * Get question by ID
  *
  * Returns a question by its ID
  */
 export const getQuestionById = <ThrowOnError extends boolean = false>(options: Options<GetQuestionByIdData, ThrowOnError>) => (options.client ?? client).get<GetQuestionByIdResponses, GetQuestionByIdErrors, ThrowOnError>({ url: '/question/{id}', ...options });
+
+/**
+ * Patch question by ID
+ *
+ * Partially updates a question's description and/or notes
+ */
+export const patchQuestionById = <ThrowOnError extends boolean = false>(options: Options<PatchQuestionByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchQuestionByIdResponses, PatchQuestionByIdErrors, ThrowOnError>({
+    url: '/question/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Get repetitive tasks
@@ -332,6 +374,20 @@ export const getRepetitiveTasks = <ThrowOnError extends boolean = false>(options
  * Returns repetitive task by ID
  */
 export const getRepetitiveTasksById = <ThrowOnError extends boolean = false>(options: Options<GetRepetitiveTasksByIdData, ThrowOnError>) => (options.client ?? client).get<GetRepetitiveTasksByIdResponses, GetRepetitiveTasksByIdErrors, ThrowOnError>({ url: '/repetitive-tasks/{id}', ...options });
+
+/**
+ * Patch repetitive task by ID
+ *
+ * Partially updates a repetitive task's description and/or notes
+ */
+export const patchRepetitiveTasksById = <ThrowOnError extends boolean = false>(options: Options<PatchRepetitiveTasksByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchRepetitiveTasksByIdResponses, PatchRepetitiveTasksByIdErrors, ThrowOnError>({
+    url: '/repetitive-tasks/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * List repetitive task executions
@@ -367,6 +423,20 @@ export const putSolveProblemById = <ThrowOnError extends boolean = false>(option
  * Returns a story by its ID
  */
 export const getStoryById = <ThrowOnError extends boolean = false>(options: Options<GetStoryByIdData, ThrowOnError>) => (options.client ?? client).get<GetStoryByIdResponses, GetStoryByIdErrors, ThrowOnError>({ url: '/story/{id}', ...options });
+
+/**
+ * Patch story by ID
+ *
+ * Partially updates a story's description and/or notes
+ */
+export const patchStoryById = <ThrowOnError extends boolean = false>(options: Options<PatchStoryByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchStoryByIdResponses, PatchStoryByIdErrors, ThrowOnError>({
+    url: '/story/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Task completion report tree
