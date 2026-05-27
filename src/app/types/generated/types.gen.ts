@@ -189,6 +189,11 @@ export type HandlersParentsPathRequest = {
     type: string;
 };
 
+export type HandlersPatchTaskByIdRequest = {
+    description?: string;
+    notes?: string;
+};
+
 export type HandlersSolveProblemRequest = {
     solution: string;
 };
@@ -423,12 +428,18 @@ export type ModelsTaskFull = {
 };
 
 export type ModelsTaskPartial = {
-    bool?: boolean;
     description?: string;
+    done?: boolean;
     doneDateTime?: string;
     id?: number;
     notes?: string;
     tags?: Array<string>;
+};
+
+export type ModelsTaskReportTreeNode = {
+    children?: Array<ModelsTaskReportTreeNode>;
+    depth?: number;
+    name?: string;
 };
 
 export type ModelsTaskShort = {
@@ -437,7 +448,7 @@ export type ModelsTaskShort = {
     tags?: Array<string>;
 };
 
-export type SchemaAliasType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'scheduled-task' | 'state' | 'file';
+export type SchemaAliasType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'state' | 'file';
 
 export type SchemaContainerType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'state';
 
@@ -1727,6 +1738,50 @@ export type GetStoryByIdResponses = {
 
 export type GetStoryByIdResponse = GetStoryByIdResponses[keyof GetStoryByIdResponses];
 
+export type GetTaskReportByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Root task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/task-report/{id}';
+};
+
+export type GetTaskReportByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetTaskReportByIdError = GetTaskReportByIdErrors[keyof GetTaskReportByIdErrors];
+
+export type GetTaskReportByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsTaskReportTreeNode;
+};
+
+export type GetTaskReportByIdResponse = GetTaskReportByIdResponses[keyof GetTaskReportByIdResponses];
+
 export type GetTaskByIdData = {
     body?: never;
     path: {
@@ -1770,6 +1825,53 @@ export type GetTaskByIdResponses = {
 };
 
 export type GetTaskByIdResponse = GetTaskByIdResponses[keyof GetTaskByIdResponses];
+
+export type PatchTaskByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchTaskByIdRequest;
+    path: {
+        /**
+         * Task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/task/{id}';
+};
+
+export type PatchTaskByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchTaskByIdError = PatchTaskByIdErrors[keyof PatchTaskByIdErrors];
+
+export type PatchTaskByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsTaskFull;
+};
+
+export type PatchTaskByIdResponse = PatchTaskByIdResponses[keyof PatchTaskByIdResponses];
 
 export type GetTestsData = {
     body?: never;

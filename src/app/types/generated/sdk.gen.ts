@@ -2,127 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type {
-  GetAliasesByAliasData,
-  GetAliasesByAliasErrors,
-  GetAliasesByAliasResponses,
-  GetData,
-  GetDoneTasksData,
-  GetDoneTasksErrors,
-  GetDoneTasksResponses,
-  GetEpicByIdData,
-  GetEpicByIdErrors,
-  GetEpicByIdResponses,
-  GetEpicsData,
-  GetEpicsErrors,
-  GetEpicsResponses,
-  GetLogMessagesByIdData,
-  GetLogMessagesByIdErrors,
-  GetLogMessagesByIdResponses,
-  GetLogMessagesData,
-  GetLogMessagesErrors,
-  GetLogMessagesResponses,
-  GetProblemByIdData,
-  GetProblemByIdErrors,
-  GetProblemByIdResponses,
-  GetQuestionByIdData,
-  GetQuestionByIdErrors,
-  GetQuestionByIdResponses,
-  GetRepetitiveTasksByIdData,
-  GetRepetitiveTasksByIdErrors,
-  GetRepetitiveTasksByIdExecutionsData,
-  GetRepetitiveTasksByIdExecutionsErrors,
-  GetRepetitiveTasksByIdExecutionsResponses,
-  GetRepetitiveTasksByIdResponses,
-  GetRepetitiveTasksData,
-  GetRepetitiveTasksErrors,
-  GetRepetitiveTasksResponses,
-  GetResponses,
-  GetStoryByIdData,
-  GetStoryByIdErrors,
-  GetStoryByIdResponses,
-  GetTaskByIdData,
-  GetTaskByIdErrors,
-  GetTaskByIdResponses,
-  GetTestsData,
-  GetTestsErrors,
-  GetTestsResponses,
-  PostAnswerQuestionByIdData,
-  PostAnswerQuestionByIdErrors,
-  PostAnswerQuestionByIdResponses,
-  PostGetEpicsData,
-  PostGetEpicsErrors,
-  PostGetEpicsResponses,
-  PostGetProblemsData,
-  PostGetProblemsErrors,
-  PostGetProblemsResponses,
-  PostGetQuestionsData,
-  PostGetQuestionsErrors,
-  PostGetQuestionsResponses,
-  PostGetStoriesData,
-  PostGetStoriesErrors,
-  PostGetStoriesResponses,
-  PostGetTasksData,
-  PostGetTasksErrors,
-  PostGetTasksResponses,
-  PostLogMessagesData,
-  PostLogMessagesErrors,
-  PostLogMessagesResponses,
-  PostNewEpicData,
-  PostNewEpicErrors,
-  PostNewEpicResponses,
-  PostNewProblemData,
-  PostNewProblemErrors,
-  PostNewProblemResponses,
-  PostNewQuestionData,
-  PostNewQuestionErrors,
-  PostNewQuestionResponses,
-  PostNewRepetitiveTaskData,
-  PostNewRepetitiveTaskErrors,
-  PostNewRepetitiveTaskResponses,
-  PostNewStoryData,
-  PostNewStoryErrors,
-  PostNewStoryResponses,
-  PostNewTaskData,
-  PostNewTaskErrors,
-  PostNewTaskResponses,
-  PostParentsPathData,
-  PostParentsPathErrors,
-  PostParentsPathResponses,
-  PostRepetitiveTasksByIdExecutionsData,
-  PostRepetitiveTasksByIdExecutionsErrors,
-  PostRepetitiveTasksByIdExecutionsResponses,
-  PutAddAnonymousTaskData,
-  PutAddAnonymousTaskErrors,
-  PutAddAnonymousTaskResponses,
-  PutFinishTaskByIdData,
-  PutFinishTaskByIdErrors,
-  PutFinishTaskByIdResponses,
-  PutFinishTasksByIdsData,
-  PutFinishTasksByIdsErrors,
-  PutFinishTasksByIdsResponses,
-  PutFinishTasksData,
-  PutFinishTasksErrors,
-  PutFinishTasksResponses,
-  PutSolveProblemByIdData,
-  PutSolveProblemByIdErrors,
-  PutSolveProblemByIdResponses,
-  PutUpdateEpicData,
-  PutUpdateEpicErrors,
-  PutUpdateEpicResponses,
-  PutUpdateProblemData,
-  PutUpdateProblemErrors,
-  PutUpdateProblemResponses,
-  PutUpdateQuestionData,
-  PutUpdateQuestionErrors,
-  PutUpdateQuestionResponses,
-  PutUpdateStoryData,
-  PutUpdateStoryErrors,
-  PutUpdateStoryResponses,
-  PutUpdateTaskData,
-  PutUpdateTaskErrors,
-  PutUpdateTaskResponses
-} from './types.gen';
+import type { GetAliasesByAliasData, GetAliasesByAliasErrors, GetAliasesByAliasResponses, GetData, GetDoneTasksData, GetDoneTasksErrors, GetDoneTasksResponses, GetEpicByIdData, GetEpicByIdErrors, GetEpicByIdResponses, GetEpicsData, GetEpicsErrors, GetEpicsResponses, GetLogMessagesByIdData, GetLogMessagesByIdErrors, GetLogMessagesByIdResponses, GetLogMessagesData, GetLogMessagesErrors, GetLogMessagesResponses, GetProblemByIdData, GetProblemByIdErrors, GetProblemByIdResponses, GetQuestionByIdData, GetQuestionByIdErrors, GetQuestionByIdResponses, GetRepetitiveTasksByIdData, GetRepetitiveTasksByIdErrors, GetRepetitiveTasksByIdExecutionsData, GetRepetitiveTasksByIdExecutionsErrors, GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdResponses, GetRepetitiveTasksData, GetRepetitiveTasksErrors, GetRepetitiveTasksResponses, GetResponses, GetStoryByIdData, GetStoryByIdErrors, GetStoryByIdResponses, GetTaskByIdData, GetTaskByIdErrors, GetTaskByIdResponses, GetTaskReportByIdData, GetTaskReportByIdErrors, GetTaskReportByIdResponses, GetTestsData, GetTestsErrors, GetTestsResponses, PatchTaskByIdData, PatchTaskByIdErrors, PatchTaskByIdResponses, PostAnswerQuestionByIdData, PostAnswerQuestionByIdErrors, PostAnswerQuestionByIdResponses, PostGetEpicsData, PostGetEpicsErrors, PostGetEpicsResponses, PostGetProblemsData, PostGetProblemsErrors, PostGetProblemsResponses, PostGetQuestionsData, PostGetQuestionsErrors, PostGetQuestionsResponses, PostGetStoriesData, PostGetStoriesErrors, PostGetStoriesResponses, PostGetTasksData, PostGetTasksErrors, PostGetTasksResponses, PostLogMessagesData, PostLogMessagesErrors, PostLogMessagesResponses, PostNewEpicData, PostNewEpicErrors, PostNewEpicResponses, PostNewProblemData, PostNewProblemErrors, PostNewProblemResponses, PostNewQuestionData, PostNewQuestionErrors, PostNewQuestionResponses, PostNewRepetitiveTaskData, PostNewRepetitiveTaskErrors, PostNewRepetitiveTaskResponses, PostNewStoryData, PostNewStoryErrors, PostNewStoryResponses, PostNewTaskData, PostNewTaskErrors, PostNewTaskResponses, PostParentsPathData, PostParentsPathErrors, PostParentsPathResponses, PostRepetitiveTasksByIdExecutionsData, PostRepetitiveTasksByIdExecutionsErrors, PostRepetitiveTasksByIdExecutionsResponses, PutAddAnonymousTaskData, PutAddAnonymousTaskErrors, PutAddAnonymousTaskResponses, PutFinishTaskByIdData, PutFinishTaskByIdErrors, PutFinishTaskByIdResponses, PutFinishTasksByIdsData, PutFinishTasksByIdsErrors, PutFinishTasksByIdsResponses, PutFinishTasksData, PutFinishTasksErrors, PutFinishTasksResponses, PutSolveProblemByIdData, PutSolveProblemByIdErrors, PutSolveProblemByIdResponses, PutUpdateEpicData, PutUpdateEpicErrors, PutUpdateEpicResponses, PutUpdateProblemData, PutUpdateProblemErrors, PutUpdateProblemResponses, PutUpdateQuestionData, PutUpdateQuestionErrors, PutUpdateQuestionResponses, PutUpdateStoryData, PutUpdateStoryErrors, PutUpdateStoryResponses, PutUpdateTaskData, PutUpdateTaskErrors, PutUpdateTaskResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -489,11 +369,32 @@ export const putSolveProblemById = <ThrowOnError extends boolean = false>(option
 export const getStoryById = <ThrowOnError extends boolean = false>(options: Options<GetStoryByIdData, ThrowOnError>) => (options.client ?? client).get<GetStoryByIdResponses, GetStoryByIdErrors, ThrowOnError>({ url: '/story/{id}', ...options });
 
 /**
+ * Task completion report tree
+ *
+ * Returns a tree of done descendant tasks under the root task. The response body is JSON null when there are no done descendants.
+ */
+export const getTaskReportById = <ThrowOnError extends boolean = false>(options: Options<GetTaskReportByIdData, ThrowOnError>) => (options.client ?? client).get<GetTaskReportByIdResponses, GetTaskReportByIdErrors, ThrowOnError>({ url: '/task-report/{id}', ...options });
+
+/**
  * Get task by ID
  *
  * Returns a task by its ID
  */
 export const getTaskById = <ThrowOnError extends boolean = false>(options: Options<GetTaskByIdData, ThrowOnError>) => (options.client ?? client).get<GetTaskByIdResponses, GetTaskByIdErrors, ThrowOnError>({ url: '/task/{id}', ...options });
+
+/**
+ * Patch task by ID
+ *
+ * Partially updates a task's description and/or notes
+ */
+export const patchTaskById = <ThrowOnError extends boolean = false>(options: Options<PatchTaskByIdData, ThrowOnError>) => (options.client ?? client).patch<PatchTaskByIdResponses, PatchTaskByIdErrors, ThrowOnError>({
+    url: '/task/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Get all tests
