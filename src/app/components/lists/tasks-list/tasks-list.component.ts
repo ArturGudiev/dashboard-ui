@@ -1,4 +1,9 @@
 import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import {
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -42,6 +47,7 @@ type ExpandedSubtasks = Record<number, { tasks: TaskC[]; container: TaskContaine
   selector: 'app-tasks-list',
   templateUrl: './tasks-list.component.html',
   imports: [
+    DragDropModule,
     MatTableModule,
     MatCheckboxModule,
     MatButtonModule,
@@ -64,6 +70,7 @@ export class TasksListComponent implements OnInit {
   readonly tasksTrackKey = computed(() => this.tasks().map((t) => t.id).join(','));
   refreshTasks = output<void>();
   resolveParent = output<void>();
+  reorderDone = output<number[]>();
 
   readonly displayedColumns: string[] = ['select', 'position', 'description', 'actions', 'showSubtasks'];
   readonly selectedIds = signal<readonly number[]>([]);
@@ -81,6 +88,8 @@ export class TasksListComponent implements OnInit {
     const selectedCount = this.selectedIds().length;
     return selectedCount > 0 && selectedCount < this.tasks().length;
   });
+  readonly reorderMode = signal(false);
+  readonly reorderedTasks = signal<TaskC[]>([]);
 
   private tasksService = inject(TasksService);
   private taskContainerService = inject(TaskContainerService);
@@ -291,6 +300,24 @@ export class TasksListComponent implements OnInit {
     const subtasks = this.tasks();
     this.tasksService.finishTasks(subtasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       () => this.refreshTasks.emit());
+  }
+
+  startReorderMode(): void {
+    this.reorderedTasks.set([...this.tasks()]);
+    this.reorderMode.set(true);
+  }
+
+  dropReorderedTask(event: CdkDragDrop<TaskC[]>): void {
+    this.reorderedTasks.update((tasks) => {
+      const updated = [...tasks];
+      moveItemInArray(updated, event.previousIndex, event.currentIndex);
+      return updated;
+    });
+  }
+
+  finishReorderMode(): void {
+    this.reorderMode.set(false);
+    this.reorderDone.emit(this.reorderedTasks().map((task) => task.id));
   }
 
   onSubtaskClick(task: TaskC) {

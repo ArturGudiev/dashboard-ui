@@ -271,6 +271,11 @@ export class TaskContainerSignalComponent implements OnInit {
     this.refreshContainer.emit();
   }
 
+  onTasksReordered(newOrder: number[]): void {
+    console.log('new order', newOrder);
+    this.taskContainerService.changeOrderOfTasks(this.taskContainer(), newOrder).subscribe(() => this.refreshContainer.emit()); // TODO: handle error
+  }
+
   refreshProblems(): void {
     this.refreshContainer.emit();
   }

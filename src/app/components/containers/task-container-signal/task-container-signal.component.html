@@ -102,6 +102,7 @@
       <!-- Задачи -->
       <app-tasks-list
         (refreshTasks)="refreshTasks()"
+        (reorderDone)="onTasksReordered($event)"
         [tasks]="tasksForList()"
         [level]="0"
         [container]="taskContainer()"

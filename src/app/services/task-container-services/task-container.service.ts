@@ -152,4 +152,8 @@ export class TaskContainerService {
   getReport(container: TaskContainer): Observable<TreeNode | null> {
     return this.apiService.getTaskReport(container.id);
   }
+
+  changeOrderOfTasks(container: TaskContainer, newOrder: number[]): Observable<void> {
+    return this.apiService.changeOrderOfTasks(container.type, container.id, newOrder);
+  }
 }

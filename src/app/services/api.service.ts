@@ -471,4 +471,10 @@ export class ApiService {
   }
   //------------------------------------ repetitive tasks  ----------------------------------------
 
+  //------------------------------------ container ----------------------------------------
+  changeOrderOfTasks(containerType: TaskContainerType, containerId: number, tasksInNewOrder: number[]): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/change-tasks-order`, { containerType, containerId, tasksInNewOrder });
+  }
+  //------------------------------------ contianer ----------------------------------------
+
 }

@@ -48,16 +48,38 @@
             <mat-icon class="tasks-icon">done_outline</mat-icon>
           </button>
         }
+
+        @if (!reorderMode()) {
+          <button
+            mat-mini-fab
+            class="finish-tasks-button"
+            color="primary"
+            [disabled]="this.tasks().length === 0"
+            (click)="startReorderMode()"
+          >
+            <mat-icon class="tasks-icon">reorder</mat-icon>
+          </button>
+        } @else {
+          <button
+            mat-mini-fab
+            class="finish-tasks-button"
+            color="primary"
+            (click)="finishReorderMode()"
+          >
+            <mat-icon class="tasks-icon">check</mat-icon>
+          </button>
+        }
       </div>
     </div>
 
     <div id="table-wrapper">
-      <table
-        id="subtasks-table"
-        mat-table
-        [dataSource]="tasks()"
-        class="mat-elevation-z8"
-      >
+      @if (!reorderMode()) {
+        <table
+          id="subtasks-table"
+          mat-table
+          [dataSource]="tasks()"
+          class="mat-elevation-z8"
+        >
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef>
             <mat-checkbox
@@ -141,7 +163,17 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+        </table>
+      } @else {
+        <div id="reorder-list" cdkDropList (cdkDropListDropped)="dropReorderedTask($event)">
+          @for (task of reorderedTasks(); track task.id; let i = $index) {
+            <div class="reorder-item" cdkDrag>
+              <span>{{ i + 1 }}.</span>
+              <span>{{ task.description }}</span>
+            </div>
+          }
+        </div>
+      }
 
       <div id="subtasks-of-selected-tasks">
         @for (item of tasksByIdMapKeys(); track item) {
