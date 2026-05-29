@@ -4,6 +4,37 @@ export type ClientOptions = {
     baseUrl: 'http://localhost:8080/' | 'https://localhost:8080/' | (string & {});
 };
 
+export type EntContainerVariables = {
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the ContainerVariablesQuery when eager-loading is set.
+     */
+    edges?: EntContainerVariablesEdges;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * VariableName holds the value of the "variable_name" field.
+     */
+    variable_name?: string;
+    /**
+     * VariableValue holds the value of the "variable_value" field.
+     */
+    variable_value?: string;
+    /**
+     * VariablesStackID holds the value of the "variables_stack_id" field.
+     */
+    variables_stack_id?: number;
+};
+
+export type EntContainerVariablesEdges = {
+    /**
+     * VariablesStack holds the value of the variables_stack edge.
+     */
+    variables_stack?: EntVariablesStack;
+};
+
 export type EntLogMessage = {
     /**
      * ContainerID holds the value of the "container_id" field.
@@ -136,8 +167,48 @@ export type EntTask = {
     tags?: Array<string>;
 };
 
+export type EntVariablesStack = {
+    /**
+     * ContainerID holds the value of the "container_id" field.
+     */
+    container_id?: number;
+    /**
+     * ContainerType holds the value of the "container_type" field.
+     */
+    container_type?: SchemaContainerType;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the VariablesStackQuery when eager-loading is set.
+     */
+    edges?: EntVariablesStackEdges;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+};
+
+export type EntVariablesStackEdges = {
+    /**
+     * ContainerVariables holds the value of the container_variables edge.
+     */
+    container_variables?: Array<EntContainerVariables>;
+};
+
+export type HandlersAddContainerVariableRequest = {
+    containerID: number;
+    containerType: SchemaContainerType;
+    variableName: string;
+    variableValue?: string;
+};
+
 export type HandlersAnswerQuestionRequest = {
     answer: string;
+};
+
+export type HandlersChangeTasksOrderRequest = {
+    containerID: number;
+    containerType: SchemaContainerType;
+    tasksInNewOrder: Array<number>;
 };
 
 export type HandlersIdsRequest = {
@@ -243,6 +314,12 @@ export type ModelsAliasModel = {
 export type ModelsContainerDescription = {
     id?: number;
     type?: SchemaContainerType;
+};
+
+export type ModelsContainerVariable = {
+    id?: number;
+    variableName?: string;
+    variableValue?: string;
 };
 
 export type ModelsEpicFull = {
@@ -430,6 +507,7 @@ export type ModelsTaskFull = {
     questions?: Array<number>;
     tags?: Array<string>;
     tasks?: Array<number>;
+    variables?: Array<ModelsContainerVariable>;
 };
 
 export type ModelsTaskPartial = {
@@ -592,6 +670,138 @@ export type PostAnswerQuestionByIdResponses = {
 };
 
 export type PostAnswerQuestionByIdResponse = PostAnswerQuestionByIdResponses[keyof PostAnswerQuestionByIdResponses];
+
+export type PostChangeTasksOrderData = {
+    /**
+     * Change tasks order request
+     */
+    body: HandlersChangeTasksOrderRequest;
+    path?: never;
+    query?: never;
+    url: '/change-tasks-order';
+};
+
+export type PostChangeTasksOrderErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostChangeTasksOrderError = PostChangeTasksOrderErrors[keyof PostChangeTasksOrderErrors];
+
+export type PostChangeTasksOrderResponses = {
+    /**
+     * OK
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type PostChangeTasksOrderResponse = PostChangeTasksOrderResponses[keyof PostChangeTasksOrderResponses];
+
+export type PostContainerVariablesData = {
+    /**
+     * Variable creation request
+     */
+    body: HandlersAddContainerVariableRequest;
+    path?: never;
+    query?: never;
+    url: '/container-variables';
+};
+
+export type PostContainerVariablesErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Conflict
+     */
+    409: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostContainerVariablesError = PostContainerVariablesErrors[keyof PostContainerVariablesErrors];
+
+export type PostContainerVariablesResponses = {
+    /**
+     * OK
+     */
+    200: EntContainerVariables;
+};
+
+export type PostContainerVariablesResponse = PostContainerVariablesResponses[keyof PostContainerVariablesResponses];
+
+export type DeleteContainerVariablesByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Container variable ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/container-variables/{id}';
+};
+
+export type DeleteContainerVariablesByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type DeleteContainerVariablesByIdError = DeleteContainerVariablesByIdErrors[keyof DeleteContainerVariablesByIdErrors];
+
+export type DeleteContainerVariablesByIdResponses = {
+    /**
+     * OK
+     */
+    200: {
+        [key: string]: string;
+    };
+};
+
+export type DeleteContainerVariablesByIdResponse = DeleteContainerVariablesByIdResponses[keyof DeleteContainerVariablesByIdResponses];
 
 export type GetDoneTasksData = {
     body?: never;

@@ -1,7 +1,8 @@
-import { TaskC, type TaskCCreateSource } from '../../models/task-class';
+import { TaskC, type ContainerVariable, type TaskCCreateSource } from '../../models/task-class';
 import {
   type EntTask,
   type HandlersTaskResponse,
+  type ModelsContainerVariable,
   type ModelsTaskFull,
 } from '../../types/generated';
 
@@ -29,6 +30,16 @@ export function isTaskCCreateSource(value: unknown): value is TaskCCreateSource 
   );
 }
 
+function toContainerVariables(variables?: ModelsContainerVariable[]): ContainerVariable[] {
+  return (variables ?? []).map((variable) => {
+    const { id, variableName, variableValue } = variable;
+    if (id == null || variableName == null || variableValue == null) {
+      throw new Error('Invalid container variable payload from API');
+    }
+    return { id, variableName, variableValue };
+  });
+}
+
 function toTaskCCreateSource(dto: {
   id?: number;
   description?: string;
@@ -43,6 +54,7 @@ function toTaskCCreateSource(dto: {
   knowledgeNodes?: number[];
   actions?: number[];
   parentContainers?: TaskCCreateSource['parentContainers'];
+  variables?: ModelsContainerVariable[];
 }): TaskCCreateSource {
   const { id, description, done } = dto;
   if (id == null || description == null || done == null) {
@@ -62,6 +74,7 @@ function toTaskCCreateSource(dto: {
     knowledgeNodes: dto.knowledgeNodes,
     actions: dto.actions,
     parentContainers: dto.parentContainers,
+    variables: toContainerVariables(dto.variables),
   };
 }
 
