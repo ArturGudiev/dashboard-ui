@@ -1,6 +1,7 @@
 import { pick } from 'lodash';
 import { type TaskContainer } from "./interfaces/task-container";
 import { type ContainerDescriptionSource, type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+import { type ContainerVariable } from "./task-class";
 
 export type StoryCreateSource = {
   id?: number;
@@ -17,6 +18,7 @@ export type StoryCreateSource = {
   knowledgeBits?: number[];
   knowledgeNodes?: number[];
   parentContainers?: ContainerDescriptionSource[];
+  variables?: ContainerVariable[];
 };
 
 export class Story implements TaskContainer {
@@ -37,6 +39,7 @@ export class Story implements TaskContainer {
   knowledgeBits: number[] = [];
   stories: number[] = [];
   parentContainers: ContainerDescription[] = [];
+  variables: ContainerVariable[] = [];
 
 
   constructor(id: number, description: string, tags: string[], closed = false,
@@ -50,6 +53,7 @@ export class Story implements TaskContainer {
                 actions?: number[],
                 knowledgeBits?: number[],
                 parentContainers?: ContainerDescriptionSource[],
+                variables?: ContainerVariable[],
               } = {}) {
     this.id = id;
     this.description = description;
@@ -64,6 +68,7 @@ export class Story implements TaskContainer {
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
+    this.variables = otherFields?.variables ?? [];
   }
 
   getFullDescription(): string {
@@ -75,7 +80,7 @@ export class Story implements TaskContainer {
     // check here object has all necessary fields
     return new Story(storyObj.id!, storyObj.description!, storyObj.tags ?? [], storyObj.closed, storyObj.notes,
       pick(storyObj, ['parentContainers', 'tasks', 'stories', 'problems', 'questions',
-        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
+        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions', 'variables']))
   }
 
   getTaskContainerDescription(): TaskContainerDescription {

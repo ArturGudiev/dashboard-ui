@@ -23,6 +23,7 @@ import { SubStoriesComponent } from "../../lists/substories/sub-stories.componen
 import { QuestionsListComponent } from "../../lists/questions-list/questions-list.component";
 import { ProblemsListComponent } from "../../lists/problems-list/problems-list.component";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
+import { VariableDialogComponent, type VariableDialogResult } from "../../dialogs/variable-dialog/variable-dialog.component";
 
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
@@ -36,7 +37,9 @@ import { TasksService } from "../../../services/task-container-services/tasks.se
 import { UtilsService } from "../../../services/utils.service";
 import { ContainerReportComponent } from "../container-report/container-report.component";
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
-import { GET_VALUE_DIALOG_OPTIONS } from '../../../shared/constants';
+import { VariablesTableComponent } from "../../lists/variables-table/variables-table.component";
+import { GET_VALUE_DIALOG_OPTIONS, VARIABLE_DIALOG_OPTIONS } from '../../../shared/constants';
+import { ContainerVariablesApiService } from '../../../services/container-variables-api.service';
 
 /** Stable fallback so `[tasks]="… ?? []"` does not allocate a new array every CD tick (breaks TasksListComponent's effect). */
 const EMPTY_TASKS: TaskC[] = [];
@@ -60,6 +63,7 @@ const EMPTY_PARENTS_PATH: string[] = [];
     NotesComponent,
     ContainerReportComponent,
     TasksListComponent,
+    VariablesTableComponent,
   ],
   standalone: true,
   styleUrls: ['./task-container-signal.component.sass'],
@@ -194,6 +198,7 @@ export class TaskContainerSignalComponent implements OnInit {
   private _hotkeysService = inject(HotkeysService);
   private utilsService = inject(UtilsService);
   private destroyRef = inject(DestroyRef);
+  private containerVariablesApiService = inject(ContainerVariablesApiService);
 
   private lastContainerKey = '';
 
@@ -418,7 +423,7 @@ export class TaskContainerSignalComponent implements OnInit {
       ...GET_VALUE_DIALOG_OPTIONS,
     });
 
-    
+
     dialogRef.afterClosed().subscribe((newTaskName: string) => {
       if (newTaskName) {
         this.taskContainerService
@@ -494,7 +499,7 @@ export class TaskContainerSignalComponent implements OnInit {
 
   refreshSubstories():Observable<Story[]> {
     const taskContainerVal = this.taskContainer();
-    
+
     if (!taskContainerVal.stories?.length) {
       return of([]);
     }
@@ -570,5 +575,28 @@ export class TaskContainerSignalComponent implements OnInit {
    */
   toggleReport() {
     this.displayReport.update(value => !value);
+  }
+
+  addVariable(): void {
+    this.openVariableDialog();
+  }
+
+  private openVariableDialog(): void {
+    const dialogRef = this.dialog.open(VariableDialogComponent, {
+      data: {},
+      ...VARIABLE_DIALOG_OPTIONS,
+    });
+
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result: VariableDialogResult | null) => {
+      if (!result) {
+        return;
+      }
+
+      this.containerVariablesApiService.addVariable(
+        this.taskContainer(),
+        result.variableName,
+        result.variableValue,
+      ).subscribe(() => this.refreshContainer.emit());
+    });
   }
 }

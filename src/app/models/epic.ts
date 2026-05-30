@@ -1,6 +1,7 @@
 import { pick } from "lodash";
 import { type TaskContainer } from "./interfaces/task-container";
 import { type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+import { type ContainerVariable } from "./task-class";
 
 export class Epic implements TaskContainer{
   static readonly PREFIX = 'Epic-';
@@ -22,6 +23,7 @@ export class Epic implements TaskContainer{
   knowledgeBits: number[] = [];
   parentContainers: ContainerDescription[] = [];
   tags: string[];
+  variables: ContainerVariable[] = [];
 
   constructor(id: number, description: string, tags: string[], closed = false, notes = '',
               otherFields: {
@@ -34,6 +36,7 @@ export class Epic implements TaskContainer{
                 actions?: number[],
                 knowledgeBits?: number[],
                 parentContainers?: ContainerDescription[],
+                variables?: ContainerVariable[],
               } = {}
   ) {
     this.id = id;
@@ -50,6 +53,7 @@ export class Epic implements TaskContainer{
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
     this.parentContainers = otherFields?.parentContainers ?? [];
+    this.variables = otherFields?.variables ?? [];
   }
 
   getFullDescription(): string {
@@ -59,7 +63,7 @@ export class Epic implements TaskContainer{
   static createFromObj(epicObj: Epic): Epic {
     return new Epic(epicObj.id, epicObj.description, epicObj.tags, epicObj.closed, epicObj.notes,
       pick(epicObj, ['parentContainers', 'epics', 'tasks', 'stories', 'problems', 'questions',
-        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
+        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions', 'variables']))
   }
 
   getTaskContainerDescription(): TaskContainerDescription {

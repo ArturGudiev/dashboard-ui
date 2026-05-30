@@ -17,7 +17,7 @@ import {
   untracked,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type TaskC } from "../../../models/task-class";
+import { type ContainerVariable, type TaskC } from "../../../models/task-class";
 import * as _ from "lodash";
 import { every, isNaN } from "lodash";
 import { CommandsService, type CommandsStateInterface } from "../../../services/commands.service";
@@ -39,6 +39,7 @@ import {
   TasksService,
 } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
+import { VariablesService } from "../../../services/variables.service";
 import { tasksListRefreshAnimation } from './tasks-list.animations';
 
 type ExpandedSubtasks = Record<number, { tasks: TaskC[]; container: TaskContainer }>;
@@ -64,6 +65,7 @@ export class TasksListComponent implements OnInit {
   container = input.required<TaskContainer>();
   showTitle = input(false);
   tasks = input.required<TaskC[]>();
+  variables = input<ContainerVariable[]>([]);
   level = input(0);
 
   /** Changes when tasks are reloaded — drives fade animation. */
@@ -97,6 +99,7 @@ export class TasksListComponent implements OnInit {
   private navigationService = inject(NavigationService);
   private dialog = inject(MatDialog);
   private appStore = inject(AppStore);
+  private variablesService = inject(VariablesService);
   private destroyRef = inject(DestroyRef);
 
   constructor() {
@@ -134,9 +137,9 @@ export class TasksListComponent implements OnInit {
         if (description) {
           const request: CreateNewTaskRequest = {
             task: {
-              description,
+              description: this.interpolateTaskText(description),
               tags: [],
-              notes: responseObj.notes ?? '',
+              notes: this.interpolateTaskText(responseObj.notes ?? ''),
             },
             parent: { id: this.container().id, type: this.container().type },
           };
@@ -415,9 +418,9 @@ export class TasksListComponent implements OnInit {
         if (description) {
           const request: CreateNewTaskRequest = {
             task: {
-              description,
+              description: this.interpolateTaskText(description),
               tags: [],
-              notes: responseObj.notes ?? '',
+              notes: this.interpolateTaskText(responseObj.notes ?? ''),
             },
             parent: { id: this.container().id, type: this.container().type },
           };
@@ -428,6 +431,10 @@ export class TasksListComponent implements OnInit {
             })
         }
       })
+  }
+
+  private interpolateTaskText(text: string): string {
+    return this.variablesService.interpolateString(text, this.variables());
   }
 
   resolveContainer(container: TaskContainer) {

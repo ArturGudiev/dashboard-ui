@@ -1,6 +1,7 @@
 import { pick } from "lodash";
 import { type TaskContainer } from "./interfaces/task-container";
 import { type ContainerDescriptionSource, type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+import { type ContainerVariable } from "./task-class";
 
 export type ProblemCreateSource = {
   id?: number;
@@ -16,6 +17,7 @@ export type ProblemCreateSource = {
   knowledgeBits?: number[];
   knowledgeNodes?: number[];
   parentContainers?: ContainerDescriptionSource[];
+  variables?: ContainerVariable[];
 };
 
 export class Problem implements TaskContainer {
@@ -35,6 +37,7 @@ export class Problem implements TaskContainer {
   actions: number[] = [];
   definitions: number[] = [];
   knowledgeBits: number[] = [];
+  variables: ContainerVariable[] = [];
 
 
   solution?: string;
@@ -48,6 +51,7 @@ export class Problem implements TaskContainer {
                 actions?: number[],
                 knowledgeBits?: number[],
                 parentContainers?: ContainerDescriptionSource[],
+                variables?: ContainerVariable[],
               } = {}
   ) {
     this.id = id;
@@ -64,6 +68,7 @@ export class Problem implements TaskContainer {
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
+    this.variables = otherFields?.variables ?? [];
 
   }
 
@@ -75,7 +80,7 @@ export class Problem implements TaskContainer {
   static createFromObj(obj: ProblemCreateSource): Problem {
     return new Problem(obj.id!, obj.description!, obj.tags ?? [], obj.solution, obj.notes,
       pick(obj, ['parentContainers', 'tasks', 'problems', 'questions',
-        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
+        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions', 'variables']))
   }
 
   getTaskContainerDescription(): TaskContainerDescription {

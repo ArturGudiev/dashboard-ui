@@ -1,5 +1,16 @@
 <div id="content-wrapper">
   <div id="task-content">
+    @if (taskContainer().variables.length > 0) {
+      <div id="variables-overlay">
+        <app-variables-table
+          class="overlay-position"
+          [variables]="taskContainer().variables"
+          (addVariableClick)="addVariable()"
+          (refreshContainer)="refreshContainer.emit()"
+        ></app-variables-table>
+      </div>
+    }
+
     <div style="width: 100%">
       <button
         mat-button
@@ -58,6 +69,7 @@
                 <button mat-menu-item (click)="callEditNotesEvent()">Edit notes</button>
                 <button mat-menu-item (click)="addRecord()">Add record</button>
                 <button mat-menu-item (click)="showRecords()">Show records</button>
+                <button mat-menu-item (click)="addVariable()">Add variable</button>
               </mat-menu>
             </div>
           }
@@ -104,6 +116,7 @@
         (refreshTasks)="refreshTasks()"
         (reorderDone)="onTasksReordered($event)"
         [tasks]="tasksForList()"
+        [variables]="taskContainer().variables"
         [level]="0"
         [container]="taskContainer()"
       ></app-tasks-list>

@@ -1,6 +1,7 @@
 import { pick } from "lodash";
 import { type TaskContainer } from "../interfaces/task-container";
 import { type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "../interfaces/types";
+import { type ContainerVariable } from "../task-class";
 
 export class Action implements TaskContainer {
   static readonly prefix = 'Action-';
@@ -20,6 +21,7 @@ export class Action implements TaskContainer {
   actions: number[] = [];
   definitions: number[] = [];
   knowledgeBits: number[] = [];
+  variables: ContainerVariable[] = [];
 
 
   constructor(_id: number, name: string, definition: string, tags: string[],
@@ -31,6 +33,7 @@ export class Action implements TaskContainer {
                 actions?: number[],
                 knowledgeBits?: number[],
                 parentContainers?: ContainerDescription[],
+                variables?: ContainerVariable[],
               } = {}) {
     this.id = _id;
     this.name = name;
@@ -43,6 +46,7 @@ export class Action implements TaskContainer {
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
+    this.variables = otherFields?.variables ?? [];
   }
 
   public getFullDescription(): string {
@@ -52,7 +56,7 @@ export class Action implements TaskContainer {
   static createFromObj(actionObj: Action): Action {
     return new Action(actionObj.id, actionObj.name, actionObj.value, actionObj.tags,
       pick(actionObj, ['parentContainers', 'tasks', 'problems', 'questions',
-        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions'])
+        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions', 'variables'])
     )
   }
 

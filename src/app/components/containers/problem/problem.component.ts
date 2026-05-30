@@ -11,6 +11,7 @@ import { TaskContainerSignalComponent } from '../task-container-signal/task-cont
   templateUrl: './problem.component.html',
   imports: [TaskContainerSignalComponent],
   styleUrls: ['./problem.component.sass'],
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProblemComponent {

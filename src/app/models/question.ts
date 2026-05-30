@@ -1,6 +1,7 @@
 import { pick } from 'lodash';
 import { type TaskContainer } from "./interfaces/task-container";
 import { type ContainerDescriptionSource, type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./interfaces/types";
+import { type ContainerVariable } from "./task-class";
 
 export type QuestionCreateSource = {
   id?: number;
@@ -16,6 +17,7 @@ export type QuestionCreateSource = {
   knowledgeBits?: number[];
   knowledgeNodes?: number[];
   parentContainers?: ContainerDescriptionSource[];
+  variables?: ContainerVariable[];
 };
 
 export class Question implements TaskContainer {
@@ -34,6 +36,7 @@ export class Question implements TaskContainer {
   actions: number[] = [];
   definitions: number[] = [];
   knowledgeBits: number[] = [];
+  variables: ContainerVariable[] = [];
 
   constructor(id: number, description: string, tags: string[],
               answer?: string, notes = '',
@@ -45,6 +48,7 @@ export class Question implements TaskContainer {
                 actions?: number[],
                 knowledgeBits?: number[],
                 parentContainers?: ContainerDescriptionSource[],
+                variables?: ContainerVariable[],
               } = {}
   ) {
     this.id = id;
@@ -61,6 +65,7 @@ export class Question implements TaskContainer {
     this.actions = otherFields?.actions ?? [];
     this.definitions = otherFields?.definitions ?? [];
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
+    this.variables = otherFields?.variables ?? [];
   }
 
 
@@ -71,7 +76,7 @@ export class Question implements TaskContainer {
   static createFromObj(obj: QuestionCreateSource): Question {
     return new Question(obj.id!, obj.description!, obj.tags ?? [], obj.answer, obj.notes,
       pick(obj, ['parentContainers', 'tasks', 'problems', 'questions',
-        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions']))
+        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions', 'variables']))
   }
 
   getTaskContainerDescription(): TaskContainerDescription {

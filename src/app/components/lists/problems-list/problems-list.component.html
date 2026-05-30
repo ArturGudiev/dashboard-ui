@@ -108,6 +108,7 @@
         <app-tasks-list
           [container]="expandedSubtasks()[item].container"
           [tasks]="expandedSubtasks()[item].tasks"
+          [variables]="expandedSubtasks()[item].container.variables"
           (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
           [showTitle]="true"
           [level]="1"

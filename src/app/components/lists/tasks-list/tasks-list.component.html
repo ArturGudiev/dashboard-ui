@@ -175,11 +175,13 @@
         </div>
       }
 
+      <!-- [variables]="expandedSubtasks()[item].container.variables" -->
       <div id="subtasks-of-selected-tasks">
         @for (item of tasksByIdMapKeys(); track item) {
           <app-tasks-list
             [container]="expandedSubtasks()[item].container"
             [tasks]="expandedSubtasks()[item].tasks"
+            [variables]="variables()"
             (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
             (resolveParent)="resolveContainer(expandedSubtasks()[item].container)"
             [showTitle]="true"

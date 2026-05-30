@@ -5,8 +5,23 @@
   width: 100%
 
   #task-content
+    position: relative
     margin-right: 2rem
     width: 100%
+    overflow: visible
+
+#variables-overlay
+  position: fixed
+  top: 4.5rem
+  right: 1.5rem
+  padding-left: 2rem
+  z-index: 100
+  overflow: visible
+  max-height: none
+  pointer-events: none
+
+  app-variables-table
+    pointer-events: auto
 
 .description-wrapper
   display: flex
