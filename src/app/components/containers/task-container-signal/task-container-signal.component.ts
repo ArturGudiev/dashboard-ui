@@ -8,7 +8,7 @@ import { type Observable, of, Subject } from "rxjs";
 import { type Problem } from "../../../models/problem";
 import { type Question } from "../../../models/question";
 import { type Story } from "../../../models/story";
-import { type TaskC } from "../../../models/task-class";
+import { ContainerVariable, type TaskC } from "../../../models/task-class";
 import { CommandsService } from "../../../services/commands.service";
 import { RecordsService } from "../../../services/records.service";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
@@ -40,6 +40,7 @@ import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component"
 import { VariablesTableComponent } from "../../lists/variables-table/variables-table.component";
 import { GET_VALUE_DIALOG_OPTIONS, VARIABLE_DIALOG_OPTIONS } from '../../../shared/constants';
 import { ContainerVariablesApiService } from '../../../services/container-variables-api.service';
+import { AppStore } from "../../../state/app.store";
 
 /** Stable fallback so `[tasks]="… ?? []"` does not allocate a new array every CD tick (breaks TasksListComponent's effect). */
 const EMPTY_TASKS: TaskC[] = [];
@@ -183,6 +184,10 @@ export class TaskContainerSignalComponent implements OnInit {
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
 
+  variables = computed<ContainerVariable[]>(() =>
+    this.appStore.variablesStack() ?? this.taskContainer().variables
+  )
+
   readonly toggleReportTitle = computed(() => this.displayReport() ? 'Hide report' : 'Show report');
 
   private questionsService = inject(QuestionsService);
@@ -198,6 +203,7 @@ export class TaskContainerSignalComponent implements OnInit {
   private _hotkeysService = inject(HotkeysService);
   private utilsService = inject(UtilsService);
   private destroyRef = inject(DestroyRef);
+  private appStore = inject(AppStore);
   private containerVariablesApiService = inject(ContainerVariablesApiService);
 
   private lastContainerKey = '';
@@ -343,6 +349,28 @@ export class TaskContainerSignalComponent implements OnInit {
     }
     if (['ls', 'logs', 'l'].includes(arr[0])) {
       this.taskContainerService.openLogsDialog(this.taskContainer());
+    }
+    if (['set-stack'].includes(arr[0])) {
+      this.utilsService
+        .selectIndexFromList(this.viewParentsPath().slice(0, -1))
+        .subscribe((val: number | undefined) => {
+          if (val) {
+            this.selectVariablesStackHandler(this.viewParentsPath()[val]);
+
+          }
+        });
+
+    }
+  }
+
+  selectVariablesStackHandler(containerDescription: string) {
+    const firstWord = containerDescription.split(' ')[0];
+    const firstWordParts = firstWord.split('-').map(el => el.toLowerCase());
+    const id = Number(firstWordParts[1]);
+    if (firstWordParts[0] === 'task') {
+      this.tasksService.getTask(id).subscribe(task => {
+        this.appStore.setVariablesStack(task.variables);
+      })
     }
   }
 

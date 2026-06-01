@@ -4,7 +4,7 @@
       <div id="variables-overlay">
         <app-variables-table
           class="overlay-position"
-          [variables]="taskContainer().variables"
+          [variables]="variables()"
           (addVariableClick)="addVariable()"
           (refreshContainer)="refreshContainer.emit()"
         ></app-variables-table>
@@ -116,7 +116,7 @@
         (refreshTasks)="refreshTasks()"
         (reorderDone)="onTasksReordered($event)"
         [tasks]="tasksForList()"
-        [variables]="taskContainer().variables"
+        [variables]="variables()"
         [level]="0"
         [container]="taskContainer()"
       ></app-tasks-list>

@@ -191,6 +191,9 @@ export class TaskContainerComponent implements OnInit {
     if (['ls', 'logs', 'l'].includes(arr[0])) {
       this.taskContainerService.openLogsDialog(this.taskContainer());
     }
+    if (['set-stack'].includes(arr[0])) {
+      alert('set-stack command!!!!');
+    }
   }
 
   finishAllTasks() {
@@ -294,7 +297,7 @@ export class TaskContainerComponent implements OnInit {
 
   refreshSubstories():Observable<Story[]> {
     const taskContainerVal = this.taskContainer();
-    
+
     if (!taskContainerVal.stories?.length) {
       return of([]);
     }
