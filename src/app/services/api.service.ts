@@ -16,7 +16,11 @@ import { type IArrayParams } from "../models/interfaces/array-params";
 import { AppConfigService } from './app-config.service';
 import {
   type EntLogMessage,
+  type EntLongTask,
+  type EntLongTaskSubmission,
   type EntRepetitiveTaskExecution,
+  type HandlersAddLongTaskSubmissionRequest,
+  type HandlersNewLongTaskRequest,
   type HandlersAnswerQuestionRequest,
   type HandlersIdsRequest,
   type HandlersNewLogMessageRequest,
@@ -102,6 +106,11 @@ export class ApiService {
 
   _getParentsPath(obj: TaskContainer): Observable<string[]> {
     const body = { type: obj.type, id: obj.id };
+    return this.http.post<string[]>(`${this.baseUrl}/parents-path`, body).pipe(map(arr => arr.reverse()));
+  }
+
+  _getLongTaskParentsPath(id: number): Observable<string[]> {
+    const body = { type: 'long-task', id };
     return this.http.post<string[]>(`${this.baseUrl}/parents-path`, body).pipe(map(arr => arr.reverse()));
   }
 
@@ -441,6 +450,33 @@ export class ApiService {
     return this.http.get<TreeNode | null>(`${this.baseUrl}/task-report/${id}`);
   }
   //------------------------------------ reports ----------------------------------------
+
+  //------------------------------------ long tasks  ----------------------------------------
+  _getAllLongTasks(open?: boolean): Observable<EntLongTask[]> {
+    const params = open === undefined ? undefined : new HttpParams({ fromObject: { open } });
+    return this.http.get<EntLongTask[]>(`${this.baseUrl}/long-tasks`, { params });
+  }
+
+  _getLongTask(id: number): Observable<EntLongTask> {
+    return this.http.get<EntLongTask>(`${this.baseUrl}/long-tasks/${id}`);
+  }
+
+  _createLongTask(obj: HandlersNewLongTaskRequest): Observable<EntLongTask> {
+    return this.http.post<EntLongTask>(`${this.baseUrl}/long-tasks`, { ...obj });
+  }
+
+  _patchLongTask(id: number, body: { description?: string; notes?: string }): Observable<EntLongTask> {
+    return this.http.patch<EntLongTask>(`${this.baseUrl}/long-tasks/${id}`, body);
+  }
+
+  _getLongTaskSubmissions(id: number): Observable<EntLongTaskSubmission[]> {
+    return this.http.get<EntLongTaskSubmission[]>(`${this.baseUrl}/long-tasks/${id}/submissions`);
+  }
+
+  _addLongTaskSubmission(id: number, body: HandlersAddLongTaskSubmissionRequest): Observable<EntLongTaskSubmission> {
+    return this.http.post<EntLongTaskSubmission>(`${this.baseUrl}/long-tasks/${id}/submissions`, body);
+  }
+  //------------------------------------ long tasks  ----------------------------------------
 
   //------------------------------------ repetitive tasks  ----------------------------------------
   _getAllRepetitiveTasks(actual = true): Observable<ModelsRepetitiveTaskResponse[]> {

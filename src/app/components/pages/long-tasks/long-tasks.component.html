@@ -1,0 +1,6 @@
+@if (longTasks$ | async; as longTasks) {
+  <app-long-tasks-list
+    [longTasks]="longTasks ?? []"
+    (updateList)="updateList()"
+  />
+}

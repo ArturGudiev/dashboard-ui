@@ -1,0 +1,75 @@
+@if (longTaskForView(); as task) {
+  <div id="content-wrapper">
+    <div class="description-wrapper">
+      <div id="description-line">
+        <button
+          id="go-to-parent-button"
+          mat-mini-fab
+          color="accent"
+          (click)="goToNearestParent()"
+          aria-label="Go to parent"
+        >
+          <mat-icon>north</mat-icon>
+        </button>
+        <div id="full-description-title">
+          {{ getFullDescription(task) }}
+        </div>
+        <button
+          id="more-icon"
+          [matMenuTriggerFor]="menu"
+          mat-mini-fab
+          color="accent"
+          aria-label="Long task actions"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="addSubmission()">Add submission</button>
+        </mat-menu>
+      </div>
+    </div>
+
+    <div id="long-task-meta">
+      <div><strong>Progress:</strong> {{ formatProgress(task) }}</div>
+      @if (task.done) {
+        <div><strong>Status:</strong> done</div>
+      }
+      @if (task.notes) {
+        <div id="long-task-notes"><strong>Notes:</strong> {{ task.notes }}</div>
+      }
+    </div>
+
+    <div id="submissions-section">
+      <h2>Submissions</h2>
+      @if (submissions().length > 0) {
+        <table mat-table [dataSource]="submissions()" class="mat-elevation-z2 submissions-table">
+          <ng-container matColumnDef="execution_date">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let submission">
+              {{ submission.execution_date | date: 'yyyy-MM-dd HH:mm' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="progress">
+            <th mat-header-cell *matHeaderCellDef>Progress</th>
+            <td mat-cell *matCellDef="let submission">
+              {{ formatSubmissionProgress(submission) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="comments">
+            <th mat-header-cell *matHeaderCellDef>Comments</th>
+            <td mat-cell *matCellDef="let submission">
+              {{ submission.comments || '—' }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="submissionColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: submissionColumns"></tr>
+        </table>
+      } @else {
+        <p>No submissions yet.</p>
+      }
+    </div>
+  </div>
+}

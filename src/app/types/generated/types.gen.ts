@@ -62,6 +62,96 @@ export type EntLogMessage = {
     notes?: string;
 };
 
+export type EntLongTask = {
+    /**
+     * Description holds the value of the "description" field.
+     */
+    description?: string;
+    /**
+     * Done holds the value of the "done" field.
+     */
+    done?: boolean;
+    /**
+     * DoneDateTime holds the value of the "done_date_time" field.
+     */
+    done_date_time?: string;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the LongTaskQuery when eager-loading is set.
+     */
+    edges?: EntLongTaskEdges;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * Notes holds the value of the "notes" field.
+     */
+    notes?: string;
+    /**
+     * ProgressDone holds the value of the "progress_done" field.
+     */
+    progress_done?: number;
+    /**
+     * ProgressTotal holds the value of the "progress_total" field.
+     */
+    progress_total?: number;
+    /**
+     * ProgressUnits holds the value of the "progress_units" field.
+     */
+    progress_units?: string;
+    /**
+     * Tags holds the value of the "tags" field.
+     */
+    tags?: Array<string>;
+};
+
+export type EntLongTaskEdges = {
+    /**
+     * Submissions holds the value of the submissions edge.
+     */
+    submissions?: Array<EntLongTaskSubmission>;
+};
+
+export type EntLongTaskSubmission = {
+    /**
+     * Comments holds the value of the "comments" field.
+     */
+    comments?: string;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the LongTaskSubmissionQuery when eager-loading is set.
+     */
+    edges?: EntLongTaskSubmissionEdges;
+    /**
+     * ExecutionDate holds the value of the "execution_date" field.
+     */
+    execution_date?: string;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * LongTaskID holds the value of the "long_task_id" field.
+     */
+    long_task_id?: number;
+    /**
+     * ProgressToAdd holds the value of the "progress_to_add" field.
+     */
+    progress_to_add?: number;
+    /**
+     * ProgressToSet holds the value of the "progress_to_set" field.
+     */
+    progress_to_set?: number;
+};
+
+export type EntLongTaskSubmissionEdges = {
+    /**
+     * LongTask holds the value of the long_task edge.
+     */
+    long_task?: EntLongTask;
+};
+
 export type EntRepetitiveTask = {
     /**
      * Closed holds the value of the "closed" field.
@@ -201,6 +291,12 @@ export type HandlersAddContainerVariableRequest = {
     variableValue?: string;
 };
 
+export type HandlersAddLongTaskSubmissionRequest = {
+    comments?: string;
+    progressToAdd?: number;
+    progressToSet?: number;
+};
+
 export type HandlersAnswerQuestionRequest = {
     answer: string;
 };
@@ -220,6 +316,11 @@ export type HandlersNewLogMessageRequest = {
     containerType?: SchemaContainerType;
     description?: string;
     logType?: string;
+};
+
+export type HandlersNewLongTaskRequest = {
+    longTask?: ModelsLongTaskShort;
+    parent?: ModelsContainerDescription;
 };
 
 /**
@@ -263,6 +364,11 @@ export type HandlersParentsPathRequest = {
 export type HandlersPatchContainerByIdRequest = {
     description?: string;
     notes?: string;
+};
+
+export type HandlersPatchContainerVariableRequest = {
+    variableName?: string;
+    variableValue?: string;
 };
 
 export type HandlersPatchTaskByIdRequest = {
@@ -332,6 +438,7 @@ export type ModelsEpicFull = {
     id?: number;
     knowledgeBits?: Array<number>;
     knowledgeNodes?: Array<number>;
+    longTasks?: Array<number>;
     notes?: string;
     parentContainers?: Array<ModelsContainerDescription>;
     problems?: Array<number>;
@@ -352,6 +459,15 @@ export type ModelsEpicPartial = {
 export type ModelsEpicShort = {
     description?: string;
     notes?: string;
+    tags?: Array<string>;
+};
+
+export type ModelsLongTaskShort = {
+    description?: string;
+    notes?: string;
+    progressDone?: number;
+    progressTotal?: number;
+    progressUnits?: string;
     tags?: Array<string>;
 };
 
@@ -470,6 +586,7 @@ export type ModelsStoryFull = {
     id?: number;
     knowledgeBits?: Array<number>;
     knowledgeNodes?: Array<number>;
+    longTasks?: Array<number>;
     notes?: string;
     parentContainers?: Array<ModelsContainerDescription>;
     problems?: Array<number>;
@@ -501,6 +618,7 @@ export type ModelsTaskFull = {
     id?: number;
     knowledgeBits?: Array<number>;
     knowledgeNodes?: Array<number>;
+    longTasks?: Array<number>;
     notes?: string;
     parentContainers?: Array<ModelsContainerDescription>;
     problems?: Array<number>;
@@ -533,7 +651,7 @@ export type ModelsTaskShort = {
 
 export type SchemaAliasType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'state' | 'file';
 
-export type SchemaContainerType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'state';
+export type SchemaContainerType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'long-task' | 'state';
 
 export type GetData = {
     body?: never;
@@ -802,6 +920,59 @@ export type DeleteContainerVariablesByIdResponses = {
 };
 
 export type DeleteContainerVariablesByIdResponse = DeleteContainerVariablesByIdResponses[keyof DeleteContainerVariablesByIdResponses];
+
+export type PatchContainerVariablesByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchContainerVariableRequest;
+    path: {
+        /**
+         * Container variable ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/container-variables/{id}';
+};
+
+export type PatchContainerVariablesByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Conflict
+     */
+    409: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchContainerVariablesByIdError = PatchContainerVariablesByIdErrors[keyof PatchContainerVariablesByIdErrors];
+
+export type PatchContainerVariablesByIdResponses = {
+    /**
+     * OK
+     */
+    200: EntContainerVariables;
+};
+
+export type PatchContainerVariablesByIdResponse = PatchContainerVariablesByIdResponses[keyof PatchContainerVariablesByIdResponses];
 
 export type GetDoneTasksData = {
     body?: never;
@@ -1399,6 +1570,256 @@ export type GetLogMessagesByIdResponses = {
 
 export type GetLogMessagesByIdResponse = GetLogMessagesByIdResponses[keyof GetLogMessagesByIdResponses];
 
+export type GetLongTasksData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Return only open long tasks
+         */
+        open?: boolean;
+    };
+    url: '/long-tasks';
+};
+
+export type GetLongTasksErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetLongTasksError = GetLongTasksErrors[keyof GetLongTasksErrors];
+
+export type GetLongTasksResponses = {
+    /**
+     * OK
+     */
+    200: Array<EntLongTask>;
+};
+
+export type GetLongTasksResponse = GetLongTasksResponses[keyof GetLongTasksResponses];
+
+export type PostLongTasksData = {
+    /**
+     * Long task creation request
+     */
+    body: HandlersNewLongTaskRequest;
+    path?: never;
+    query?: never;
+    url: '/long-tasks';
+};
+
+export type PostLongTasksErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostLongTasksError = PostLongTasksErrors[keyof PostLongTasksErrors];
+
+export type PostLongTasksResponses = {
+    /**
+     * OK
+     */
+    200: EntLongTask;
+};
+
+export type PostLongTasksResponse = PostLongTasksResponses[keyof PostLongTasksResponses];
+
+export type GetLongTasksByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Long task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-tasks/{id}';
+};
+
+export type GetLongTasksByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+};
+
+export type GetLongTasksByIdError = GetLongTasksByIdErrors[keyof GetLongTasksByIdErrors];
+
+export type GetLongTasksByIdResponses = {
+    /**
+     * OK
+     */
+    200: EntLongTask;
+};
+
+export type GetLongTasksByIdResponse = GetLongTasksByIdResponses[keyof GetLongTasksByIdResponses];
+
+export type PatchLongTasksByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchContainerByIdRequest;
+    path: {
+        /**
+         * Long task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-tasks/{id}';
+};
+
+export type PatchLongTasksByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchLongTasksByIdError = PatchLongTasksByIdErrors[keyof PatchLongTasksByIdErrors];
+
+export type PatchLongTasksByIdResponses = {
+    /**
+     * OK
+     */
+    200: EntLongTask;
+};
+
+export type PatchLongTasksByIdResponse = PatchLongTasksByIdResponses[keyof PatchLongTasksByIdResponses];
+
+export type GetLongTasksByIdSubmissionsData = {
+    body?: never;
+    path: {
+        /**
+         * Long task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-tasks/{id}/submissions';
+};
+
+export type GetLongTasksByIdSubmissionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetLongTasksByIdSubmissionsError = GetLongTasksByIdSubmissionsErrors[keyof GetLongTasksByIdSubmissionsErrors];
+
+export type GetLongTasksByIdSubmissionsResponses = {
+    /**
+     * OK
+     */
+    200: Array<EntLongTaskSubmission>;
+};
+
+export type GetLongTasksByIdSubmissionsResponse = GetLongTasksByIdSubmissionsResponses[keyof GetLongTasksByIdSubmissionsResponses];
+
+export type PostLongTasksByIdSubmissionsData = {
+    /**
+     * Submission request
+     */
+    body: HandlersAddLongTaskSubmissionRequest;
+    path: {
+        /**
+         * Long task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-tasks/{id}/submissions';
+};
+
+export type PostLongTasksByIdSubmissionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostLongTasksByIdSubmissionsError = PostLongTasksByIdSubmissionsErrors[keyof PostLongTasksByIdSubmissionsErrors];
+
+export type PostLongTasksByIdSubmissionsResponses = {
+    /**
+     * OK
+     */
+    200: EntLongTaskSubmission;
+};
+
+export type PostLongTasksByIdSubmissionsResponse = PostLongTasksByIdSubmissionsResponses[keyof PostLongTasksByIdSubmissionsResponses];
+
 export type PostNewEpicData = {
     /**
      * Epic creation request
@@ -1934,7 +2355,7 @@ export type PatchRepetitiveTasksByIdData = {
     body: HandlersPatchContainerByIdRequest;
     path: {
         /**
-         * Repetitive task ID
+         * Long task ID
          */
         id: number;
     };
@@ -1969,7 +2390,7 @@ export type PatchRepetitiveTasksByIdResponses = {
     /**
      * OK
      */
-    200: ModelsRepetitiveTaskResponse;
+    200: EntLongTask;
 };
 
 export type PatchRepetitiveTasksByIdResponse = PatchRepetitiveTasksByIdResponses[keyof PatchRepetitiveTasksByIdResponses];

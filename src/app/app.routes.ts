@@ -13,6 +13,9 @@ import { HelpComponent } from "./components/pages/help/help.component";
 import { QuestionComponent } from "./components/containers/question/question.component";
 import { questionResolver } from "./resolvers/question.resolver";
 import { RepetitiveTasksComponent } from "./components/pages/repetitive-tasks/repetitive-tasks.component";
+import { LongTasksComponent } from "./components/pages/long-tasks/long-tasks.component";
+import { LongTaskComponent } from "./components/containers/long-task/long-task.component";
+import { longTaskResolver } from "./resolvers/long-task.resolver";
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},
@@ -48,5 +51,12 @@ export const routes: Routes = [
   },
   {path: 'epics', component: EpicsComponent},
   {path: 'repetitive-tasks', component: RepetitiveTasksComponent},
+  {
+    path: 'long-task/:id',
+    component: LongTaskComponent,
+    resolve: { longTask: longTaskResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
+  {path: 'long-tasks', component: LongTasksComponent},
   {path: 'help', component: HelpComponent},
 ];

@@ -1,0 +1,78 @@
+<div id="long-tasks-actions" class="flex items-center mt-3">
+    <div id="long-tasks-title" class="text-xl">Long tasks</div>
+    <button
+      id="add-long-task-button"
+      class="ms-4"
+      mat-mini-fab
+      color="primary"
+      (click)="addLongTask()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+</div>
+
+@if (longTasks().length > 0) {
+  <div id="table-wrapper">
+    <table
+      id="long-tasks-table"
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+    >
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <div style="display: flex; align-items: center">
+            <mat-checkbox></mat-checkbox>
+            <span style="margin-left: 1rem">No.</span>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let row; let i = index">
+          <div style="display: flex; align-items: center">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)"
+            ></mat-checkbox>
+            <span style="margin-left: 1rem">
+              {{ i + 1 + (paginator ? paginator.pageIndex * paginator.pageSize : 0) }}
+            </span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td
+          mat-cell
+          class="row-link"
+          tabindex="0"
+          role="button"
+          *matCellDef="let longTask"
+          (click)="onLongTaskClick(longTask)"
+          (keydown.enter)="onLongTaskClick(longTask)"
+          (keydown.space)="onLongTaskClick(longTask); $event.preventDefault()"
+        >
+          <span>{{ longTask.description }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="progress">
+        <th mat-header-cell *matHeaderCellDef>Progress</th>
+        <td mat-cell *matCellDef="let longTask">
+          <span>{{ formatProgress(longTask) }}</span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      id="long-tasks-paginator"
+      [pageSize]="15"
+      [pageSizeOptions]="[10, 15, 20]"
+      showFirstLastButtons
+      aria-label="Select page of long tasks"
+    ></mat-paginator>
+  </div>
+}
