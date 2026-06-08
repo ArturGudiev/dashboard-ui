@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LongTasksService } from '../../../services/task-container-services/long-tasks.service';
+import { formatLongTaskProgress } from '../../../shared/libs/long-task.lib';
 import { type EntLongTask } from '../../../types/generated';
 
 @Component({
@@ -57,9 +58,6 @@ export class LongTasksListComponent implements AfterViewInit {
   }
 
   formatProgress(task: EntLongTask): string {
-    const done = task.progress_done ?? 0;
-    const total = task.progress_total ?? 0;
-    const units = task.progress_units ?? '';
-    return `${done} / ${total}${units ? ' ' + units : ''}`;
+    return formatLongTaskProgress(task);
   }
 }

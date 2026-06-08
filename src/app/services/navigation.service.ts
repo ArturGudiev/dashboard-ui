@@ -33,6 +33,10 @@ export class NavigationService {
       this.router.navigate(['epics']).then();;
       return;
     }
+    if (['long', 'long-tasks'].includes(arr[0])) {
+      this.router.navigate(['long-tasks']).then();;
+      return;
+    }
     if (['rep', 'repetitive-tasks'].includes(arr[0])) {
       this.router.navigate(['repetitive-tasks']).then();;
       return;

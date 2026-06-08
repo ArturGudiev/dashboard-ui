@@ -9,6 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { LongTasksService } from '../../../services/task-container-services/long-tasks.service';
 import { getUrlByDescription } from '../../../shared/libs/dashboard.lib';
+import { formatLongTaskProgress } from '../../../shared/libs/long-task.lib';
 import { type EntLongTask, type EntLongTaskSubmission } from '../../../types/generated';
 
 @Component({
@@ -94,10 +95,7 @@ export class LongTaskComponent {
   }
 
   formatProgress(task: EntLongTask): string {
-    const done = task.progress_done ?? 0;
-    const total = task.progress_total ?? 0;
-    const units = task.progress_units ?? '';
-    return `${done} / ${total}${units ? ' ' + units : ''}`;
+    return formatLongTaskProgress(task);
   }
 
   formatSubmissionProgress(submission: EntLongTaskSubmission): string {
