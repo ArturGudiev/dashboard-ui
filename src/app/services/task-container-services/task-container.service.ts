@@ -77,6 +77,8 @@ export class TaskContainerService {
         return this.apiService._patchQuestion(id, newTaskName);
       case 'repetitive-task':
         return this.apiService._patchRepetitiveTask(id, newTaskName);
+      case 'direction':
+        return this.apiService._patchDirection(id, { description: newTaskName });
       default:
         throw new Error(`Cannot rename container of type "${type}"`);
     }

@@ -1,9 +1,9 @@
 
 export type TaskContainerType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit'
-  | 'definition' | 'action' | 'repetitive-task';
+  | 'definition' | 'action' | 'repetitive-task' | 'direction';
 
 export function isTaskContainerType(type: string): type is TaskContainerType {
-  if ( ['epic','story','task','question','problem','knowledge-node','knowledge-bit','definition','action', 'scheduled-task'].includes(type) ) {
+  if ( ['epic','story','task','question','problem','knowledge-node','knowledge-bit','definition','action', 'scheduled-task', 'direction'].includes(type) ) {
     return true;
   }
   return false;

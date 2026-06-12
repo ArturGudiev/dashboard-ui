@@ -37,6 +37,14 @@ export class NavigationService {
       this.router.navigate(['long-tasks']).then();;
       return;
     }
+    if (['directions'].includes(arr[0])) {
+      this.router.navigate(['directions']).then();
+      return;
+    }
+    if (['d', 'direction'].includes(arr[0]) && Number.isInteger(+arr[1])) {
+      this.router.navigate(['direction', arr[1]]).then();
+      return;
+    }
     if (['rep', 'repetitive-tasks'].includes(arr[0])) {
       this.router.navigate(['repetitive-tasks']).then();;
       return;

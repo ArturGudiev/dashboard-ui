@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EMPTY, type Observable } from 'rxjs';
+import { EMPTY, type Observable, forkJoin, of } from 'rxjs';
 import {
   AddLongTaskDialogComponent,
 } from '../../components/dialogs/add-long-task-dialog/add-long-task-dialog.component';
@@ -13,6 +13,7 @@ import {
   type EntLongTaskSubmission,
   type HandlersAddLongTaskSubmissionRequest,
   type HandlersNewLongTaskRequest,
+  type ModelsContainerDescription,
   type ModelsLongTaskShort,
 } from '../../types/generated';
 import { ApiService } from '../api.service';
@@ -34,6 +35,13 @@ export class LongTasksService {
     return this.apiService._getLongTask(id);
   }
 
+  getLongTasksByIds(ids: number[]): Observable<EntLongTask[]> {
+    if (!ids.length) {
+      return of([]);
+    }
+    return forkJoin(ids.map((id) => this.apiService._getLongTask(id)));
+  }
+
   getSubmissions(longTaskId: number): Observable<EntLongTaskSubmission[]> {
     return this.apiService._getLongTaskSubmissions(longTaskId);
   }
@@ -42,8 +50,8 @@ export class LongTasksService {
     return this.apiService._getLongTaskParentsPath(id);
   }
 
-  addNewLongTask(longTask: ModelsLongTaskShort): Observable<EntLongTask> {
-    const obj: HandlersNewLongTaskRequest = { longTask };
+  addNewLongTask(longTask: ModelsLongTaskShort, parent?: ModelsContainerDescription): Observable<EntLongTask> {
+    const obj: HandlersNewLongTaskRequest = { longTask, parent };
     return this.apiService._createLongTask(obj);
   }
 
@@ -51,14 +59,15 @@ export class LongTasksService {
     return this.apiService._addLongTaskSubmission(longTaskId, body);
   }
 
-  openAddLongTaskDialog(): Observable<void | null> {
+  openAddLongTaskDialog(parent?: ModelsContainerDescription): Observable<void | null> {
     if (this.addLongTaskDialogOpened) {
       return EMPTY;
     }
     this.addLongTaskDialogOpened = true;
-    const dialogRef = this.dialog.open<AddLongTaskDialogComponent, unknown, void | null>(
+    const dialogRef = this.dialog.open<AddLongTaskDialogComponent, ModelsContainerDescription | null, void | null>(
       AddLongTaskDialogComponent,
       {
+        data: parent ?? null,
         height: '600px',
         width: '1000px',
       },

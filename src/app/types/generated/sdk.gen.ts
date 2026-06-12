@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteContainerVariablesByIdData, DeleteContainerVariablesByIdErrors, DeleteContainerVariablesByIdResponses, GetAliasesByAliasData, GetAliasesByAliasErrors, GetAliasesByAliasResponses, GetData, GetDoneTasksData, GetDoneTasksErrors, GetDoneTasksResponses, GetEpicByIdData, GetEpicByIdErrors, GetEpicByIdResponses, GetEpicsData, GetEpicsErrors, GetEpicsResponses, GetLogMessagesByIdData, GetLogMessagesByIdErrors, GetLogMessagesByIdResponses, GetLogMessagesData, GetLogMessagesErrors, GetLogMessagesResponses, GetLongTasksByIdData, GetLongTasksByIdErrors, GetLongTasksByIdResponses, GetLongTasksByIdSubmissionsData, GetLongTasksByIdSubmissionsErrors, GetLongTasksByIdSubmissionsResponses, GetLongTasksData, GetLongTasksErrors, GetLongTasksResponses, GetProblemByIdData, GetProblemByIdErrors, GetProblemByIdResponses, GetQuestionByIdData, GetQuestionByIdErrors, GetQuestionByIdResponses, GetRepetitiveTasksByIdData, GetRepetitiveTasksByIdErrors, GetRepetitiveTasksByIdExecutionsData, GetRepetitiveTasksByIdExecutionsErrors, GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdResponses, GetRepetitiveTasksData, GetRepetitiveTasksErrors, GetRepetitiveTasksResponses, GetResponses, GetStoryByIdData, GetStoryByIdErrors, GetStoryByIdResponses, GetTaskByIdData, GetTaskByIdErrors, GetTaskByIdResponses, GetTaskReportByIdData, GetTaskReportByIdErrors, GetTaskReportByIdResponses, GetTestsData, GetTestsErrors, GetTestsResponses, PatchContainerVariablesByIdData, PatchContainerVariablesByIdErrors, PatchContainerVariablesByIdResponses, PatchEpicByIdData, PatchEpicByIdErrors, PatchEpicByIdResponses, PatchLongTasksByIdData, PatchLongTasksByIdErrors, PatchLongTasksByIdResponses, PatchProblemByIdData, PatchProblemByIdErrors, PatchProblemByIdResponses, PatchQuestionByIdData, PatchQuestionByIdErrors, PatchQuestionByIdResponses, PatchRepetitiveTasksByIdData, PatchRepetitiveTasksByIdErrors, PatchRepetitiveTasksByIdResponses, PatchStoryByIdData, PatchStoryByIdErrors, PatchStoryByIdResponses, PatchTaskByIdData, PatchTaskByIdErrors, PatchTaskByIdResponses, PostAnswerQuestionByIdData, PostAnswerQuestionByIdErrors, PostAnswerQuestionByIdResponses, PostChangeTasksOrderData, PostChangeTasksOrderErrors, PostChangeTasksOrderResponses, PostContainerVariablesData, PostContainerVariablesErrors, PostContainerVariablesResponses, PostGetEpicsData, PostGetEpicsErrors, PostGetEpicsResponses, PostGetProblemsData, PostGetProblemsErrors, PostGetProblemsResponses, PostGetQuestionsData, PostGetQuestionsErrors, PostGetQuestionsResponses, PostGetStoriesData, PostGetStoriesErrors, PostGetStoriesResponses, PostGetTasksData, PostGetTasksErrors, PostGetTasksResponses, PostLogMessagesData, PostLogMessagesErrors, PostLogMessagesResponses, PostLongTasksByIdSubmissionsData, PostLongTasksByIdSubmissionsErrors, PostLongTasksByIdSubmissionsResponses, PostLongTasksData, PostLongTasksErrors, PostLongTasksResponses, PostNewEpicData, PostNewEpicErrors, PostNewEpicResponses, PostNewProblemData, PostNewProblemErrors, PostNewProblemResponses, PostNewQuestionData, PostNewQuestionErrors, PostNewQuestionResponses, PostNewRepetitiveTaskData, PostNewRepetitiveTaskErrors, PostNewRepetitiveTaskResponses, PostNewStoryData, PostNewStoryErrors, PostNewStoryResponses, PostNewTaskData, PostNewTaskErrors, PostNewTaskResponses, PostParentsPathData, PostParentsPathErrors, PostParentsPathResponses, PostRepetitiveTasksByIdExecutionsData, PostRepetitiveTasksByIdExecutionsErrors, PostRepetitiveTasksByIdExecutionsResponses, PutAddAnonymousTaskData, PutAddAnonymousTaskErrors, PutAddAnonymousTaskResponses, PutFinishTaskByIdData, PutFinishTaskByIdErrors, PutFinishTaskByIdResponses, PutFinishTasksByIdsData, PutFinishTasksByIdsErrors, PutFinishTasksByIdsResponses, PutFinishTasksData, PutFinishTasksErrors, PutFinishTasksResponses, PutSolveProblemByIdData, PutSolveProblemByIdErrors, PutSolveProblemByIdResponses, PutUpdateEpicData, PutUpdateEpicErrors, PutUpdateEpicResponses, PutUpdateProblemData, PutUpdateProblemErrors, PutUpdateProblemResponses, PutUpdateQuestionData, PutUpdateQuestionErrors, PutUpdateQuestionResponses, PutUpdateStoryData, PutUpdateStoryErrors, PutUpdateStoryResponses, PutUpdateTaskData, PutUpdateTaskErrors, PutUpdateTaskResponses } from './types.gen';
+import type { DeleteContainerVariablesByIdData, DeleteContainerVariablesByIdErrors, DeleteContainerVariablesByIdResponses, GetAliasesByAliasData, GetAliasesByAliasErrors, GetAliasesByAliasResponses, GetData, GetDirectionsByIdData, GetDirectionsByIdErrors, GetDirectionsByIdResponses, GetDirectionsByIdStatsData, GetDirectionsByIdStatsErrors, GetDirectionsByIdStatsResponses, GetDirectionsByIdSubmissionsData, GetDirectionsByIdSubmissionsErrors, GetDirectionsByIdSubmissionsResponses, GetDirectionsData, GetDirectionsErrors, GetDirectionsResponses, GetDoneTasksData, GetDoneTasksErrors, GetDoneTasksResponses, GetEpicByIdData, GetEpicByIdErrors, GetEpicByIdResponses, GetEpicsData, GetEpicsErrors, GetEpicsResponses, GetLogMessagesByIdData, GetLogMessagesByIdErrors, GetLogMessagesByIdResponses, GetLogMessagesData, GetLogMessagesErrors, GetLogMessagesResponses, GetLongTasksByIdData, GetLongTasksByIdErrors, GetLongTasksByIdResponses, GetLongTasksByIdSubmissionsData, GetLongTasksByIdSubmissionsErrors, GetLongTasksByIdSubmissionsResponses, GetLongTasksData, GetLongTasksErrors, GetLongTasksResponses, GetProblemByIdData, GetProblemByIdErrors, GetProblemByIdResponses, GetQuestionByIdData, GetQuestionByIdErrors, GetQuestionByIdResponses, GetRepetitiveTasksByIdData, GetRepetitiveTasksByIdErrors, GetRepetitiveTasksByIdExecutionsData, GetRepetitiveTasksByIdExecutionsErrors, GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdResponses, GetRepetitiveTasksData, GetRepetitiveTasksErrors, GetRepetitiveTasksResponses, GetResponses, GetStoryByIdData, GetStoryByIdErrors, GetStoryByIdResponses, GetTaskByIdData, GetTaskByIdErrors, GetTaskByIdResponses, GetTaskReportByIdData, GetTaskReportByIdErrors, GetTaskReportByIdResponses, GetTestsData, GetTestsErrors, GetTestsResponses, PatchContainerVariablesByIdData, PatchContainerVariablesByIdErrors, PatchContainerVariablesByIdResponses, PatchDirectionsByIdData, PatchDirectionsByIdErrors, PatchDirectionsByIdResponses, PatchEpicByIdData, PatchEpicByIdErrors, PatchEpicByIdResponses, PatchLongTasksByIdData, PatchLongTasksByIdErrors, PatchLongTasksByIdResponses, PatchProblemByIdData, PatchProblemByIdErrors, PatchProblemByIdResponses, PatchQuestionByIdData, PatchQuestionByIdErrors, PatchQuestionByIdResponses, PatchRepetitiveTasksByIdData, PatchRepetitiveTasksByIdErrors, PatchRepetitiveTasksByIdResponses, PatchStoryByIdData, PatchStoryByIdErrors, PatchStoryByIdResponses, PatchTaskByIdData, PatchTaskByIdErrors, PatchTaskByIdResponses, PostAnswerQuestionByIdData, PostAnswerQuestionByIdErrors, PostAnswerQuestionByIdResponses, PostChangeTasksOrderData, PostChangeTasksOrderErrors, PostChangeTasksOrderResponses, PostContainerVariablesData, PostContainerVariablesErrors, PostContainerVariablesResponses, PostDirectionsByIdSubmissionsData, PostDirectionsByIdSubmissionsErrors, PostDirectionsByIdSubmissionsResponses, PostDirectionsData, PostDirectionsErrors, PostDirectionsResponses, PostGetEpicsData, PostGetEpicsErrors, PostGetEpicsResponses, PostGetProblemsData, PostGetProblemsErrors, PostGetProblemsResponses, PostGetQuestionsData, PostGetQuestionsErrors, PostGetQuestionsResponses, PostGetStoriesData, PostGetStoriesErrors, PostGetStoriesResponses, PostGetTasksData, PostGetTasksErrors, PostGetTasksResponses, PostLogMessagesData, PostLogMessagesErrors, PostLogMessagesResponses, PostLongTasksByIdSubmissionsData, PostLongTasksByIdSubmissionsErrors, PostLongTasksByIdSubmissionsResponses, PostLongTasksData, PostLongTasksErrors, PostLongTasksResponses, PostNewEpicData, PostNewEpicErrors, PostNewEpicResponses, PostNewProblemData, PostNewProblemErrors, PostNewProblemResponses, PostNewQuestionData, PostNewQuestionErrors, PostNewQuestionResponses, PostNewRepetitiveTaskData, PostNewRepetitiveTaskErrors, PostNewRepetitiveTaskResponses, PostNewStoryData, PostNewStoryErrors, PostNewStoryResponses, PostNewTaskData, PostNewTaskErrors, PostNewTaskResponses, PostParentsPathData, PostParentsPathErrors, PostParentsPathResponses, PostRepetitiveTasksByIdExecutionsData, PostRepetitiveTasksByIdExecutionsErrors, PostRepetitiveTasksByIdExecutionsResponses, PutAddAnonymousTaskData, PutAddAnonymousTaskErrors, PutAddAnonymousTaskResponses, PutFinishTaskByIdData, PutFinishTaskByIdErrors, PutFinishTaskByIdResponses, PutFinishTasksByIdsData, PutFinishTasksByIdsErrors, PutFinishTasksByIdsResponses, PutFinishTasksData, PutFinishTasksErrors, PutFinishTasksResponses, PutSolveProblemByIdData, PutSolveProblemByIdErrors, PutSolveProblemByIdResponses, PutUpdateEpicData, PutUpdateEpicErrors, PutUpdateEpicResponses, PutUpdateProblemData, PutUpdateProblemErrors, PutUpdateProblemResponses, PutUpdateQuestionData, PutUpdateQuestionErrors, PutUpdateQuestionResponses, PutUpdateStoryData, PutUpdateStoryErrors, PutUpdateStoryResponses, PutUpdateTaskData, PutUpdateTaskErrors, PutUpdateTaskResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -95,6 +95,78 @@ export const deleteContainerVariablesById = <ThrowOnError extends boolean = fals
  */
 export const patchContainerVariablesById = <ThrowOnError extends boolean = false>(options: Options<PatchContainerVariablesByIdData, ThrowOnError>): RequestResult<PatchContainerVariablesByIdResponses, PatchContainerVariablesByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchContainerVariablesByIdResponses, PatchContainerVariablesByIdErrors, ThrowOnError>({
     url: '/container-variables/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get directions
+ *
+ * Returns all directions; use open=true to return only open directions
+ */
+export const getDirections = <ThrowOnError extends boolean = false>(options?: Options<GetDirectionsData, ThrowOnError>): RequestResult<GetDirectionsResponses, GetDirectionsErrors, ThrowOnError> => (options?.client ?? client).get<GetDirectionsResponses, GetDirectionsErrors, ThrowOnError>({ url: '/directions', ...options });
+
+/**
+ * Create new direction
+ *
+ * Creates a new direction with optional parent relationship
+ */
+export const postDirections = <ThrowOnError extends boolean = false>(options: Options<PostDirectionsData, ThrowOnError>): RequestResult<PostDirectionsResponses, PostDirectionsErrors, ThrowOnError> => (options.client ?? client).post<PostDirectionsResponses, PostDirectionsErrors, ThrowOnError>({
+    url: '/directions',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get direction by ID
+ *
+ * Returns a direction by ID with child container IDs
+ */
+export const getDirectionsById = <ThrowOnError extends boolean = false>(options: Options<GetDirectionsByIdData, ThrowOnError>): RequestResult<GetDirectionsByIdResponses, GetDirectionsByIdErrors, ThrowOnError> => (options.client ?? client).get<GetDirectionsByIdResponses, GetDirectionsByIdErrors, ThrowOnError>({ url: '/directions/{id}', ...options });
+
+/**
+ * Patch direction by ID
+ *
+ * Partially updates a repetitive task's description and/or notes
+ * Partially updates a long task's description and/or notes
+ * Partially updates a direction's description, notes, and/or closed state
+ */
+export const patchDirectionsById = <ThrowOnError extends boolean = false>(options: Options<PatchDirectionsByIdData, ThrowOnError>): RequestResult<PatchDirectionsByIdResponses, PatchDirectionsByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchDirectionsByIdResponses, PatchDirectionsByIdErrors, ThrowOnError>({
+    url: '/directions/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get direction stats
+ *
+ * Returns aggregated stats entries for a direction including submissions and descendant activity
+ */
+export const getDirectionsByIdStats = <ThrowOnError extends boolean = false>(options: Options<GetDirectionsByIdStatsData, ThrowOnError>): RequestResult<GetDirectionsByIdStatsResponses, GetDirectionsByIdStatsErrors, ThrowOnError> => (options.client ?? client).get<GetDirectionsByIdStatsResponses, GetDirectionsByIdStatsErrors, ThrowOnError>({ url: '/directions/{id}/stats', ...options });
+
+/**
+ * List direction submissions
+ *
+ * Returns submission records for the given direction (newest first)
+ */
+export const getDirectionsByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<GetDirectionsByIdSubmissionsData, ThrowOnError>): RequestResult<GetDirectionsByIdSubmissionsResponses, GetDirectionsByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).get<GetDirectionsByIdSubmissionsResponses, GetDirectionsByIdSubmissionsErrors, ThrowOnError>({ url: '/directions/{id}/submissions', ...options });
+
+/**
+ * Add direction submission
+ *
+ * Records a text submission for a direction
+ */
+export const postDirectionsByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<PostDirectionsByIdSubmissionsData, ThrowOnError>): RequestResult<PostDirectionsByIdSubmissionsResponses, PostDirectionsByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).post<PostDirectionsByIdSubmissionsResponses, PostDirectionsByIdSubmissionsErrors, ThrowOnError>({
+    url: '/directions/{id}/submissions',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -299,10 +371,11 @@ export const postLongTasks = <ThrowOnError extends boolean = false>(options: Opt
 export const getLongTasksById = <ThrowOnError extends boolean = false>(options: Options<GetLongTasksByIdData, ThrowOnError>): RequestResult<GetLongTasksByIdResponses, GetLongTasksByIdErrors, ThrowOnError> => (options.client ?? client).get<GetLongTasksByIdResponses, GetLongTasksByIdErrors, ThrowOnError>({ url: '/long-tasks/{id}', ...options });
 
 /**
- * Patch long task by ID
+ * Patch direction by ID
  *
  * Partially updates a repetitive task's description and/or notes
  * Partially updates a long task's description and/or notes
+ * Partially updates a direction's description, notes, and/or closed state
  */
 export const patchLongTasksById = <ThrowOnError extends boolean = false>(options: Options<PatchLongTasksByIdData, ThrowOnError>): RequestResult<PatchLongTasksByIdResponses, PatchLongTasksByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchLongTasksByIdResponses, PatchLongTasksByIdErrors, ThrowOnError>({
     url: '/long-tasks/{id}',
@@ -489,10 +562,11 @@ export const getRepetitiveTasks = <ThrowOnError extends boolean = false>(options
 export const getRepetitiveTasksById = <ThrowOnError extends boolean = false>(options: Options<GetRepetitiveTasksByIdData, ThrowOnError>): RequestResult<GetRepetitiveTasksByIdResponses, GetRepetitiveTasksByIdErrors, ThrowOnError> => (options.client ?? client).get<GetRepetitiveTasksByIdResponses, GetRepetitiveTasksByIdErrors, ThrowOnError>({ url: '/repetitive-tasks/{id}', ...options });
 
 /**
- * Patch long task by ID
+ * Patch direction by ID
  *
  * Partially updates a repetitive task's description and/or notes
  * Partially updates a long task's description and/or notes
+ * Partially updates a direction's description, notes, and/or closed state
  */
 export const patchRepetitiveTasksById = <ThrowOnError extends boolean = false>(options: Options<PatchRepetitiveTasksByIdData, ThrowOnError>): RequestResult<PatchRepetitiveTasksByIdResponses, PatchRepetitiveTasksByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchRepetitiveTasksByIdResponses, PatchRepetitiveTasksByIdErrors, ThrowOnError>({
     url: '/repetitive-tasks/{id}',

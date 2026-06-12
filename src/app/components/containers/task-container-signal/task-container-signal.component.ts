@@ -80,6 +80,11 @@ export class TaskContainerSignalComponent implements OnInit {
 
   refreshContainer = output<void>();
 
+  directionAddSubmission = output<void>();
+  directionAddLongTask = output<void>();
+  directionAddSubDirection = output<void>();
+  directionShowStats = output<void>();
+
   doneAllClick = output<void>();
   updateTaskContainer = output<void>();
   resolve = output<void>();
@@ -118,7 +123,8 @@ export class TaskContainerSignalComponent implements OnInit {
     () =>
       this.showStories() ||
       this.taskContainer().type === 'epic' ||
-      this.taskContainer().type === 'story',
+      this.taskContainer().type === 'story' ||
+      this.taskContainer().type === 'direction',
   );
 
   storiesResource = rxResource<Story[], { enabled: boolean; ids: number[] }>({

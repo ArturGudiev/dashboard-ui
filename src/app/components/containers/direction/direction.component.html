@@ -1,0 +1,29 @@
+@if (directionForView(); as direction) {
+  <app-task-container-signal
+    [taskContainer]="direction"
+    [showStories]="true"
+    [showQuestions]="true"
+    [showProblems]="true"
+    (refreshContainer)="reloadDirection()"
+    (updateTaskContainer)="updateDirection()"
+    (directionAddSubmission)="addSubmission()"
+    (directionAddLongTask)="addLongTask()"
+    (directionAddSubDirection)="addSubDirection()"
+    (directionShowStats)="goToStats()"
+  ></app-task-container-signal>
+
+  <div id="direction-sub-directions-section">
+    <app-sub-directions
+      [directions]="childDirectionsResource.value() ?? []"
+      [showAddButton]="false"
+      (directionClick)="openDirection($event)"
+    ></app-sub-directions>
+  </div>
+
+  <div id="direction-long-tasks-section">
+    <app-long-tasks-list
+      [longTasks]="longTasksResource.value() ?? []"
+      [showAddButton]="false"
+    ></app-long-tasks-list>
+  </div>
+}

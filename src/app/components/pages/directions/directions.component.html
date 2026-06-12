@@ -1,0 +1,3 @@
+@if (directions$ | async; as directions) {
+  <app-directions-list [directions]="directions" (updateList)="updateList()"></app-directions-list>
+}

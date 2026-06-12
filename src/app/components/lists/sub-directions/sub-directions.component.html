@@ -1,0 +1,83 @@
+<div id="sub-directions-actions">
+  <h2 id="sub-directions-title">Directions</h2>
+  @if (showAddButton()) {
+    <button
+      mat-mini-fab
+      color="primary"
+      id="add-direction-button"
+      (click)="addSubDirection.emit()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  }
+</div>
+
+@if (directions().length > 0) {
+  <div id="table-wrapper">
+    <table
+      id="sub-directions-table"
+      mat-table
+      [dataSource]="directions()"
+      class="mat-elevation-z8"
+    >
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="$event ? directionsSelectAllToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          ></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td
+          mat-cell
+          class="row-link"
+          tabindex="0"
+          role="button"
+          *matCellDef="let direction; let i = index"
+          (click)="onDirectionClick(direction)"
+          (keydown.enter)="onDirectionClick(direction)"
+          (keydown.space)="onDirectionClick(direction); $event.preventDefault()"
+        >
+          <span>{{ i + 1 }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td
+          mat-cell
+          class="row-link"
+          tabindex="0"
+          role="button"
+          *matCellDef="let direction"
+          (click)="onDirectionClick(direction)"
+          (keydown.enter)="onDirectionClick(direction)"
+          (keydown.space)="onDirectionClick(direction); $event.preventDefault()"
+        >
+          <span>{{ direction.description }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let direction">
+          <span>{{ direction.closed ? 'closed' : 'open' }}</span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+}

@@ -16,6 +16,10 @@ import { RepetitiveTasksComponent } from "./components/pages/repetitive-tasks/re
 import { LongTasksComponent } from "./components/pages/long-tasks/long-tasks.component";
 import { LongTaskComponent } from "./components/containers/long-task/long-task.component";
 import { longTaskResolver } from "./resolvers/long-task.resolver";
+import { DirectionsComponent } from "./components/pages/directions/directions.component";
+import { DirectionComponent } from "./components/containers/direction/direction.component";
+import { DirectionStatsComponent } from "./components/pages/direction-stats/direction-stats.component";
+import { directionResolver } from "./resolvers/direction.resolver";
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},
@@ -58,5 +62,18 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'paramsChange',
   },
   {path: 'long-tasks', component: LongTasksComponent},
+  {path: 'directions', component: DirectionsComponent},
+  {
+    path: 'direction/:id',
+    component: DirectionComponent,
+    resolve: { direction: directionResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
+  {
+    path: 'direction/:id/stats',
+    component: DirectionStatsComponent,
+    resolve: { direction: directionResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
   {path: 'help', component: HelpComponent},
 ];

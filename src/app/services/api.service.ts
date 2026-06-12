@@ -3,6 +3,7 @@ import { type TaskC } from '../models/task-class';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { type Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Direction } from '../models/direction';
 import { Epic } from "../models/epic";
 import { Story } from "../models/story";
 import { Problem } from "../models/problem";
@@ -15,11 +16,16 @@ import { type TreeNode } from "../components/containers/tree/my-tree.component";
 import { type IArrayParams } from "../models/interfaces/array-params";
 import { AppConfigService } from './app-config.service';
 import {
+  type EntDirection,
+  type EntDirectionSubmission,
   type EntLogMessage,
   type EntLongTask,
   type EntLongTaskSubmission,
   type EntRepetitiveTaskExecution,
+  type HandlersAddDirectionSubmissionRequest,
   type HandlersAddLongTaskSubmissionRequest,
+  type HandlersNewDirectionRequest,
+  type HandlersPatchDirectionByIdRequest,
   type HandlersNewLongTaskRequest,
   type HandlersAnswerQuestionRequest,
   type HandlersIdsRequest,
@@ -33,6 +39,8 @@ import {
   type EntTask,
   type HandlersTaskResponse,
   type ModelsAliasModel,
+  type ModelsDirectionFull,
+  type ModelsDirectionStatsEntry,
   type ModelsNewStoryRequest,
   type ModelsProblemFull,
   type ModelsQuestionFull,
@@ -450,6 +458,36 @@ export class ApiService {
     return this.http.get<TreeNode | null>(`${this.baseUrl}/task-report/${id}`);
   }
   //------------------------------------ reports ----------------------------------------
+
+  //------------------------------------ directions  ----------------------------------------
+  _getAllDirections(open?: boolean): Observable<EntDirection[]> {
+    const params = open === undefined ? undefined : new HttpParams({ fromObject: { open } });
+    return this.http.get<EntDirection[]>(`${this.baseUrl}/directions`, { params });
+  }
+
+  _getDirection(id: number): Observable<Direction> {
+    return this.http.get<ModelsDirectionFull>(`${this.baseUrl}/directions/${id}`)
+      .pipe(map((obj) => Direction.createFromObj(obj)));
+  }
+
+  _createDirection(obj: HandlersNewDirectionRequest): Observable<Direction> {
+    return this.http.post<ModelsDirectionFull>(`${this.baseUrl}/directions`, obj)
+      .pipe(map((direction) => Direction.createFromObj(direction)));
+  }
+
+  _patchDirection(id: number, body: HandlersPatchDirectionByIdRequest): Observable<Direction> {
+    return this.http.patch<ModelsDirectionFull>(`${this.baseUrl}/directions/${id}`, body)
+      .pipe(map((direction) => Direction.createFromObj(direction)));
+  }
+
+  _getDirectionStats(id: number): Observable<ModelsDirectionStatsEntry[]> {
+    return this.http.get<ModelsDirectionStatsEntry[]>(`${this.baseUrl}/directions/${id}/stats`);
+  }
+
+  _addDirectionSubmission(id: number, body: HandlersAddDirectionSubmissionRequest): Observable<EntDirectionSubmission> {
+    return this.http.post<EntDirectionSubmission>(`${this.baseUrl}/directions/${id}/submissions`, body);
+  }
+  //------------------------------------ directions  ----------------------------------------
 
   //------------------------------------ long tasks  ----------------------------------------
   _getAllLongTasks(open?: boolean): Observable<EntLongTask[]> {

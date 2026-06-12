@@ -35,6 +35,72 @@ export type EntContainerVariablesEdges = {
     variables_stack?: EntVariablesStack;
 };
 
+export type EntDirection = {
+    /**
+     * Closed holds the value of the "closed" field.
+     */
+    closed?: boolean;
+    /**
+     * Description holds the value of the "description" field.
+     */
+    description?: string;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the DirectionQuery when eager-loading is set.
+     */
+    edges?: EntDirectionEdges;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * Notes holds the value of the "notes" field.
+     */
+    notes?: string;
+    /**
+     * Tags holds the value of the "tags" field.
+     */
+    tags?: Array<string>;
+};
+
+export type EntDirectionEdges = {
+    /**
+     * Submissions holds the value of the submissions edge.
+     */
+    submissions?: Array<EntDirectionSubmission>;
+};
+
+export type EntDirectionSubmission = {
+    /**
+     * DirectionID holds the value of the "direction_id" field.
+     */
+    direction_id?: number;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the DirectionSubmissionQuery when eager-loading is set.
+     */
+    edges?: EntDirectionSubmissionEdges;
+    /**
+     * ExecutionDate holds the value of the "execution_date" field.
+     */
+    execution_date?: string;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * Text holds the value of the "text" field.
+     */
+    text?: string;
+};
+
+export type EntDirectionSubmissionEdges = {
+    /**
+     * Direction holds the value of the direction edge.
+     */
+    direction?: EntDirection;
+};
+
 export type EntLogMessage = {
     /**
      * ContainerID holds the value of the "container_id" field.
@@ -295,6 +361,10 @@ export type HandlersAddContainerVariableRequest = {
     variableValue?: string;
 };
 
+export type HandlersAddDirectionSubmissionRequest = {
+    text?: string;
+};
+
 export type HandlersAddLongTaskSubmissionRequest = {
     comments?: string;
     progressRaw?: string;
@@ -314,6 +384,11 @@ export type HandlersChangeTasksOrderRequest = {
 
 export type HandlersIdsRequest = {
     ids: Array<number>;
+};
+
+export type HandlersNewDirectionRequest = {
+    direction?: ModelsDirectionShort;
+    parent?: ModelsContainerDescription;
 };
 
 export type HandlersNewLogMessageRequest = {
@@ -376,6 +451,12 @@ export type HandlersPatchContainerVariableRequest = {
     variableValue?: string;
 };
 
+export type HandlersPatchDirectionByIdRequest = {
+    closed?: boolean;
+    description?: string;
+    notes?: string;
+};
+
 export type HandlersPatchTaskByIdRequest = {
     description?: string;
     notes?: string;
@@ -431,6 +512,32 @@ export type ModelsContainerVariable = {
     id?: number;
     variableName?: string;
     variableValue?: string;
+};
+
+export type ModelsDirectionFull = {
+    closed?: boolean;
+    description?: string;
+    directions?: Array<number>;
+    id?: number;
+    longTasks?: Array<number>;
+    notes?: string;
+    parentContainers?: Array<ModelsContainerDescription>;
+    problems?: Array<number>;
+    questions?: Array<number>;
+    stories?: Array<number>;
+    tags?: Array<string>;
+    tasks?: Array<number>;
+};
+
+export type ModelsDirectionShort = {
+    description?: string;
+    notes?: string;
+    tags?: Array<string>;
+};
+
+export type ModelsDirectionStatsEntry = {
+    date?: string;
+    text?: string;
 };
 
 export type ModelsEpicFull = {
@@ -656,7 +763,7 @@ export type ModelsTaskShort = {
 
 export type SchemaAliasType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'state' | 'file';
 
-export type SchemaContainerType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'long-task' | 'state';
+export type SchemaContainerType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'long-task' | 'direction' | 'state';
 
 export type GetData = {
     body?: never;
@@ -978,6 +1085,300 @@ export type PatchContainerVariablesByIdResponses = {
 };
 
 export type PatchContainerVariablesByIdResponse = PatchContainerVariablesByIdResponses[keyof PatchContainerVariablesByIdResponses];
+
+export type GetDirectionsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Return only open directions
+         */
+        open?: boolean;
+    };
+    url: '/directions';
+};
+
+export type GetDirectionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetDirectionsError = GetDirectionsErrors[keyof GetDirectionsErrors];
+
+export type GetDirectionsResponses = {
+    /**
+     * OK
+     */
+    200: Array<EntDirection>;
+};
+
+export type GetDirectionsResponse = GetDirectionsResponses[keyof GetDirectionsResponses];
+
+export type PostDirectionsData = {
+    /**
+     * Direction creation request
+     */
+    body: HandlersNewDirectionRequest;
+    path?: never;
+    query?: never;
+    url: '/directions';
+};
+
+export type PostDirectionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostDirectionsError = PostDirectionsErrors[keyof PostDirectionsErrors];
+
+export type PostDirectionsResponses = {
+    /**
+     * OK
+     */
+    200: ModelsDirectionFull;
+};
+
+export type PostDirectionsResponse = PostDirectionsResponses[keyof PostDirectionsResponses];
+
+export type GetDirectionsByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Direction ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/directions/{id}';
+};
+
+export type GetDirectionsByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+};
+
+export type GetDirectionsByIdError = GetDirectionsByIdErrors[keyof GetDirectionsByIdErrors];
+
+export type GetDirectionsByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsDirectionFull;
+};
+
+export type GetDirectionsByIdResponse = GetDirectionsByIdResponses[keyof GetDirectionsByIdResponses];
+
+export type PatchDirectionsByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchDirectionByIdRequest;
+    path: {
+        /**
+         * Direction ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/directions/{id}';
+};
+
+export type PatchDirectionsByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchDirectionsByIdError = PatchDirectionsByIdErrors[keyof PatchDirectionsByIdErrors];
+
+export type PatchDirectionsByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsDirectionFull;
+};
+
+export type PatchDirectionsByIdResponse = PatchDirectionsByIdResponses[keyof PatchDirectionsByIdResponses];
+
+export type GetDirectionsByIdStatsData = {
+    body?: never;
+    path: {
+        /**
+         * Direction ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/directions/{id}/stats';
+};
+
+export type GetDirectionsByIdStatsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetDirectionsByIdStatsError = GetDirectionsByIdStatsErrors[keyof GetDirectionsByIdStatsErrors];
+
+export type GetDirectionsByIdStatsResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsDirectionStatsEntry>;
+};
+
+export type GetDirectionsByIdStatsResponse = GetDirectionsByIdStatsResponses[keyof GetDirectionsByIdStatsResponses];
+
+export type GetDirectionsByIdSubmissionsData = {
+    body?: never;
+    path: {
+        /**
+         * Direction ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/directions/{id}/submissions';
+};
+
+export type GetDirectionsByIdSubmissionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetDirectionsByIdSubmissionsError = GetDirectionsByIdSubmissionsErrors[keyof GetDirectionsByIdSubmissionsErrors];
+
+export type GetDirectionsByIdSubmissionsResponses = {
+    /**
+     * OK
+     */
+    200: Array<EntDirectionSubmission>;
+};
+
+export type GetDirectionsByIdSubmissionsResponse = GetDirectionsByIdSubmissionsResponses[keyof GetDirectionsByIdSubmissionsResponses];
+
+export type PostDirectionsByIdSubmissionsData = {
+    /**
+     * Submission request
+     */
+    body: HandlersAddDirectionSubmissionRequest;
+    path: {
+        /**
+         * Direction ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/directions/{id}/submissions';
+};
+
+export type PostDirectionsByIdSubmissionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostDirectionsByIdSubmissionsError = PostDirectionsByIdSubmissionsErrors[keyof PostDirectionsByIdSubmissionsErrors];
+
+export type PostDirectionsByIdSubmissionsResponses = {
+    /**
+     * OK
+     */
+    200: EntDirectionSubmission;
+};
+
+export type PostDirectionsByIdSubmissionsResponse = PostDirectionsByIdSubmissionsResponses[keyof PostDirectionsByIdSubmissionsResponses];
 
 export type GetDoneTasksData = {
     body?: never;
@@ -1697,10 +2098,10 @@ export type PatchLongTasksByIdData = {
     /**
      * Fields to update
      */
-    body: HandlersPatchContainerByIdRequest;
+    body: HandlersPatchDirectionByIdRequest;
     path: {
         /**
-         * Long task ID
+         * Direction ID
          */
         id: number;
     };
@@ -1735,7 +2136,7 @@ export type PatchLongTasksByIdResponses = {
     /**
      * OK
      */
-    200: EntLongTask;
+    200: ModelsDirectionFull;
 };
 
 export type PatchLongTasksByIdResponse = PatchLongTasksByIdResponses[keyof PatchLongTasksByIdResponses];
@@ -2357,10 +2758,10 @@ export type PatchRepetitiveTasksByIdData = {
     /**
      * Fields to update
      */
-    body: HandlersPatchContainerByIdRequest;
+    body: HandlersPatchDirectionByIdRequest;
     path: {
         /**
-         * Long task ID
+         * Direction ID
          */
         id: number;
     };
@@ -2395,7 +2796,7 @@ export type PatchRepetitiveTasksByIdResponses = {
     /**
      * OK
      */
-    200: EntLongTask;
+    200: ModelsDirectionFull;
 };
 
 export type PatchRepetitiveTasksByIdResponse = PatchRepetitiveTasksByIdResponses[keyof PatchRepetitiveTasksByIdResponses];

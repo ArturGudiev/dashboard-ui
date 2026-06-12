@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { form, FormField, required } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LongTasksService } from '../../../services/task-container-services/long-tasks.service';
-import { type ModelsLongTaskShort } from '../../../types/generated';
+import { type ModelsContainerDescription, type ModelsLongTaskShort } from '../../../types/generated';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,6 +68,7 @@ import { type ModelsLongTaskShort } from '../../../types/generated';
 export class AddLongTaskDialogComponent {
   private longTasksService = inject(LongTasksService);
   dialogRef = inject(MatDialogRef<AddLongTaskDialogComponent>);
+  parent = inject<ModelsContainerDescription | null>(MAT_DIALOG_DATA, { optional: true });
 
   taskModel = signal({
     description: '',
@@ -102,7 +103,7 @@ export class AddLongTaskDialogComponent {
       longTask.progressUnits = model.progressUnits.trim();
     }
 
-    this.longTasksService.addNewLongTask(longTask).subscribe(() => {
+    this.longTasksService.addNewLongTask(longTask, this.parent ?? undefined).subscribe(() => {
       this.dialogRef.close();
     });
   }

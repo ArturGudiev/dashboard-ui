@@ -63,6 +63,12 @@
               </button>
               <!-- Меню для ручного добавления вопросов, рекордов и т.д. -->
               <mat-menu #menu="matMenu">
+                @if (taskContainer().type === 'direction') {
+                  <button mat-menu-item (click)="directionAddSubmission.emit()">Add submission</button>
+                  <button mat-menu-item (click)="directionAddLongTask.emit()">Add long task</button>
+                  <button mat-menu-item (click)="directionAddSubDirection.emit()">Add direction</button>
+                  <button mat-menu-item (click)="directionShowStats.emit()">Show stats</button>
+                }
                 <button mat-menu-item (click)="renameTask()">Rename {{ taskContainer().type }}</button>
                 <button mat-menu-item (click)="addQuestion()">Add a new question</button>
                 <button mat-menu-item (click)="addSubstory()">Add a new substory</button>

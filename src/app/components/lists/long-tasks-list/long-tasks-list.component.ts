@@ -26,6 +26,7 @@ import { type EntLongTask } from '../../../types/generated';
 })
 export class LongTasksListComponent implements AfterViewInit {
   longTasks = input.required<EntLongTask[]>();
+  showAddButton = input(true);
   updateList = output<void>();
 
   private readonly router = inject(Router);
