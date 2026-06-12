@@ -136,6 +136,10 @@ export type EntLongTaskSubmission = {
      */
     long_task_id?: number;
     /**
+     * ProgressRaw holds the value of the "progress_raw" field.
+     */
+    progress_raw?: string;
+    /**
      * ProgressToAdd holds the value of the "progress_to_add" field.
      */
     progress_to_add?: number;
@@ -293,6 +297,7 @@ export type HandlersAddContainerVariableRequest = {
 
 export type HandlersAddLongTaskSubmissionRequest = {
     comments?: string;
+    progressRaw?: string;
     progressToAdd?: number;
     progressToSet?: number;
 };

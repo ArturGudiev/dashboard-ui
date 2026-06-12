@@ -9,7 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { LongTasksService } from '../../../services/task-container-services/long-tasks.service';
 import { getUrlByDescription } from '../../../shared/libs/dashboard.lib';
-import { formatLongTaskProgress } from '../../../shared/libs/long-task.lib';
+import { formatLongTaskProgress, hasNumericProgress } from '../../../shared/libs/long-task.lib';
 import { type EntLongTask, type EntLongTaskSubmission } from '../../../types/generated';
 
 @Component({
@@ -65,8 +65,12 @@ export class LongTaskComponent {
   }
 
   addSubmission(): void {
+    const task = this.longTaskForView();
+    if (!task) {
+      return;
+    }
     this.longTasksService
-      .openAddSubmissionDialog(Number(this.id()))
+      .openAddSubmissionDialog(task)
       .subscribe(() => {
         this.reloadLongTask();
         this.loadSubmissions();
@@ -99,6 +103,10 @@ export class LongTaskComponent {
   }
 
   formatSubmissionProgress(submission: EntLongTaskSubmission): string {
+    const task = this.longTaskForView();
+    if (task && !hasNumericProgress(task)) {
+      return submission.progress_raw ?? '—';
+    }
     if (submission.progress_to_set != null) {
       return `set to ${submission.progress_to_set}`;
     }

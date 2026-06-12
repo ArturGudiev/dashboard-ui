@@ -6,6 +6,7 @@ import {
 } from '../../components/dialogs/add-long-task-dialog/add-long-task-dialog.component';
 import {
   AddLongTaskSubmissionDialogComponent,
+  type AddLongTaskSubmissionDialogData,
 } from '../../components/dialogs/add-long-task-submission-dialog/add-long-task-submission-dialog.component';
 import {
   type EntLongTask,
@@ -68,15 +69,19 @@ export class LongTasksService {
     return dialogRef.afterClosed();
   }
 
-  openAddSubmissionDialog(longTaskId: number): Observable<void | null> {
+  openAddSubmissionDialog(longTask: EntLongTask): Observable<void | null> {
     if (this.addSubmissionDialogOpened) {
       return EMPTY;
     }
     this.addSubmissionDialogOpened = true;
-    const dialogRef = this.dialog.open<AddLongTaskSubmissionDialogComponent, number, void | null>(
+    const dialogData: AddLongTaskSubmissionDialogData = {
+      longTaskId: longTask.id!,
+      longTask,
+    };
+    const dialogRef = this.dialog.open<AddLongTaskSubmissionDialogComponent, AddLongTaskSubmissionDialogData, void | null>(
       AddLongTaskSubmissionDialogComponent,
       {
-        data: longTaskId,
+        data: dialogData,
         width: '500px',
       },
     );

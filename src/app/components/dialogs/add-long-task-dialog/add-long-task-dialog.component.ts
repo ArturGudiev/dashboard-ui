@@ -73,8 +73,8 @@ export class AddLongTaskDialogComponent {
     description: '',
     notes: '',
     tags: '',
-    progressTotal: 100,
-    progressDone: 0,
+    progressTotal: '',
+    progressDone: '',
     progressUnits: 'percents',
   });
 
@@ -90,10 +90,17 @@ export class AddLongTaskDialogComponent {
       description: model.description,
       notes: model.notes,
       tags: model.tags ? model.tags.split(',').map((el) => el.trim()).filter(Boolean) : [],
-      progressTotal: model.progressTotal,
-      progressDone: model.progressDone,
-      progressUnits: model.progressUnits,
     };
+
+    if (model.progressTotal.trim() !== '') {
+      longTask.progressTotal = Number(model.progressTotal);
+    }
+    if (model.progressDone.trim() !== '') {
+      longTask.progressDone = Number(model.progressDone);
+    }
+    if (model.progressUnits.trim()) {
+      longTask.progressUnits = model.progressUnits.trim();
+    }
 
     this.longTasksService.addNewLongTask(longTask).subscribe(() => {
       this.dialogRef.close();
