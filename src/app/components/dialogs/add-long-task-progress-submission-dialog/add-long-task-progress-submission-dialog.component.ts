@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LongTasksService } from '../../../services/task-container-services/long-tasks.service';
+import { MessageService } from '../../../services/message.service';
 import { hasNumericProgressForProgress } from '../../../shared/libs/long-task.lib';
 import {
   type HandlersAddLongTaskProgressSubmissionRequest,
@@ -14,6 +16,23 @@ import {
 export type AddLongTaskProgressSubmissionDialogData = {
   progress: ModelsLongTaskProgress;
 };
+
+/** `datetime-local` inputs require local `YYYY-MM-DDTHH:mm`, not ISO UTC strings. */
+function toDatetimeLocalValue(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function fieldToString(value: string | number | null | undefined): string {
+  if (value == null) {
+    return '';
+  }
+  return String(value).trim();
+}
+
+function hasProgressId(progress: ModelsLongTaskProgress): progress is ModelsLongTaskProgress & { id: number } {
+  return progress.id != null && progress.id > 0;
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +49,12 @@ export type AddLongTaskProgressSubmissionDialogData = {
   template: `
     <form (submit)="onSubmit($event)" class="pt-4 ps-4">
       <div class="text-xl mb-3">Add submission for {{ dialogData.progress.name }}</div>
+
+      @if (!canSubmitForProgress()) {
+        <p class="submit-error">
+          Add a progress record first (legacy task progress cannot receive submissions).
+        </p>
+      }
 
       @if (useNumericProgress()) {
         <mat-form-field>
@@ -58,7 +83,7 @@ export type AddLongTaskProgressSubmissionDialogData = {
         <input matInput [formField]="submissionForm.comments" type="text">
       </mat-form-field>
 
-      <button mat-raised-button type="submit" [disabled]="!isFormValid()">
+      <button mat-raised-button type="submit" [disabled]="!isFormValid() || !canSubmitForProgress()">
         Add
       </button>
     </form>
@@ -68,20 +93,27 @@ export type AddLongTaskProgressSubmissionDialogData = {
       display: flex
       flex-flow: column
       max-width: 20rem
+
+    .submit-error
+      color: #b71c1c
+      margin: 0 0 1rem
   `],
 })
 export class AddLongTaskProgressSubmissionDialogComponent {
   private longTasksService = inject(LongTasksService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
   dialogRef = inject(MatDialogRef<AddLongTaskProgressSubmissionDialogComponent>);
   dialogData = inject<AddLongTaskProgressSubmissionDialogData>(MAT_DIALOG_DATA);
 
   readonly useNumericProgress = computed(() => hasNumericProgressForProgress(this.dialogData.progress));
+  readonly canSubmitForProgress = computed(() => hasProgressId(this.dialogData.progress));
 
   submissionModel = signal({
     progressToAdd: '',
     progressToSet: '',
     progressRaw: '',
-    executionDate: '',
+    executionDate: toDatetimeLocalValue(new Date()),
     comments: '',
   });
 
@@ -90,40 +122,54 @@ export class AddLongTaskProgressSubmissionDialogComponent {
   onSubmit(event: SubmitEvent): void {
     event.preventDefault();
 
+    if (!this.canSubmitForProgress()) {
+      this.messageService.showMessage('Add a progress record before submitting.');
+      return;
+    }
+
     const model = this.submissionModel();
     const body: HandlersAddLongTaskProgressSubmissionRequest = {};
 
     if (this.useNumericProgress()) {
-      if (model.progressToAdd.trim() !== '') {
-        body.progressToAdd = Number(model.progressToAdd);
+      const progressToAdd = fieldToString(model.progressToAdd);
+      const progressToSet = fieldToString(model.progressToSet);
+      if (progressToAdd !== '') {
+        body.progressToAdd = Number(progressToAdd);
       }
-      if (model.progressToSet.trim() !== '') {
-        body.progressToSet = Number(model.progressToSet);
+      if (progressToSet !== '') {
+        body.progressToSet = Number(progressToSet);
       }
-    } else if (model.progressRaw.trim()) {
-      body.progressRaw = model.progressRaw.trim();
+    } else {
+      const progressRaw = fieldToString(model.progressRaw);
+      if (progressRaw) {
+        body.progressRaw = progressRaw;
+      }
     }
 
-    if (model.executionDate.trim()) {
-      body.executionDate = new Date(model.executionDate).toISOString();
+    const executionDate = fieldToString(model.executionDate);
+    if (executionDate) {
+      body.executionDate = new Date(executionDate).toISOString();
     }
 
-    if (model.comments.trim()) {
-      body.comments = model.comments.trim();
+    const comments = fieldToString(model.comments);
+    if (comments) {
+      body.comments = comments;
     }
 
     this.longTasksService
       .addProgressSubmission(this.dialogData.progress.id, body)
-      .subscribe(() => {
-        this.dialogRef.close();
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => this.dialogRef.close(),
+        error: () => this.messageService.showMessage('Failed to add submission.'),
       });
   }
 
   isFormValid(): boolean {
     const model = this.submissionModel();
     if (this.useNumericProgress()) {
-      return model.progressToAdd.trim() !== '' || model.progressToSet.trim() !== '';
+      return fieldToString(model.progressToAdd) !== '' || fieldToString(model.progressToSet) !== '';
     }
-    return model.progressRaw.trim() !== '';
+    return fieldToString(model.progressRaw) !== '';
   }
 }

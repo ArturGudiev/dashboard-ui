@@ -24,7 +24,6 @@ import {
   type EntRepetitiveTaskExecution,
   type HandlersAddDirectionSubmissionRequest,
   type HandlersAddLongTaskProgressRequest,
-  type HandlersAddLongTaskProgressSubmissionRequest,
   type HandlersAddLongTaskSubmissionRequest,
   type HandlersNewDirectionRequest,
   type HandlersPatchDirectionByIdRequest,
@@ -50,7 +49,6 @@ import {
   type ModelsStoryFull,
   type ModelsTaskFull,
   type EntLongTaskProgress,
-  type EntLongTaskProgressSubmission,
   type ModelsLongTaskFull,
   ModelsLongTaskProgressSubmission,
 } from "../types/generated";
@@ -533,16 +531,6 @@ export class ApiService {
 
   _addLongTaskSubmission(id: number, body: HandlersAddLongTaskSubmissionRequest): Observable<EntLongTaskSubmission> {
     return this.http.post<EntLongTaskSubmission>(`${this.baseUrl}/long-tasks/${id}/submissions`, body);
-  }
-
-  _addLongTaskProgressSubmission(
-    progressId: number,
-    body: HandlersAddLongTaskProgressSubmissionRequest,
-  ): Observable<EntLongTaskProgressSubmission> {
-    return this.http.post<EntLongTaskProgressSubmission>(
-      `${this.baseUrl}/long-task-progresses/${progressId}/submissions`,
-      body,
-    );
   }
   //------------------------------------ long tasks  ----------------------------------------
 

@@ -32,6 +32,7 @@ import {
   type ModelsLongTaskShort,
 } from '../../types/generated';
 import { ApiService } from '../api.service';
+import { LongTaskProgressesApiService } from '../long-task-progresses-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +40,7 @@ import { ApiService } from '../api.service';
 export class LongTasksService {
   private dialog = inject(MatDialog);
   private apiService = inject(ApiService);
+  private longTaskProgressesApiService = inject(LongTaskProgressesApiService);
   private addLongTaskDialogOpened = false;
   private addProgressDialogOpened = false;
   private addProgressSubmissionDialogOpened = false;
@@ -84,7 +86,7 @@ export class LongTasksService {
     progressId: number,
     body: HandlersAddLongTaskProgressSubmissionRequest,
   ): Observable<EntLongTaskProgressSubmission> {
-    return this.apiService._addLongTaskProgressSubmission(progressId, body);
+    return this.longTaskProgressesApiService.addSubmission(progressId, body);
   }
 
   openAddLongTaskDialog(parent?: ModelsContainerDescription): Observable<void | null> {

@@ -31,6 +31,7 @@
         <button
           mat-mini-fab
           color="primary"
+          [disabled]="!progress.id"
           (click)="addSubmission.emit(progress)"
           aria-label="Add submission for {{ progress.name }}"
         >
