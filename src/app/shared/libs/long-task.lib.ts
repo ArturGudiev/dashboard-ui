@@ -98,6 +98,13 @@ export function formatLongTaskProgressSubmission(
   return '—';
 }
 
+function formatProgressPercentage(value: number, total: number): string | null {
+  if (total === 0) {
+    return null;
+  }
+  return `${((value / total) * 100).toFixed(2)}%`;
+}
+
 export function formatLongTaskSingleProgress(
   progress: ModelsLongTaskProgress,
 ): string {
@@ -108,5 +115,7 @@ export function formatLongTaskSingleProgress(
   const done = progress.value;
   const total = progress.total;
   const units = progress.units ?? '';
-  return `${done} / ${total}${units ? ' ' + units : ''}`;
+  const main = `${done} / ${total}${units ? ' ' + units : ''}`;
+  const percent = formatProgressPercentage(done, total);
+  return percent != null ? `${main} (${percent})` : main;
 }
