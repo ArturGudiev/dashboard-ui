@@ -1,0 +1,67 @@
+<div class="progresses-header">
+  <div class="progresses-title">Progresses</div>
+  @if (showAddButton()) {
+    <button
+      class="add-progress-button"
+      mat-mini-fab
+      color="primary"
+      (click)="addProgress.emit()"
+      aria-label="Add progress"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  }
+</div>
+
+@if (progresses().length > 0) {
+  <table mat-table [dataSource]="progresses()" class="mat-elevation-z2 progresses-table">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let progress">{{ progress.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let progress">{{ progress.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="add_submission">
+      <th mat-header-cell *matHeaderCellDef>Add submission</th>
+      <td mat-cell *matCellDef="let progress">
+        <button
+          mat-mini-fab
+          color="primary"
+          (click)="addSubmission.emit(progress)"
+          aria-label="Add submission for {{ progress.name }}"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef>Value</th>
+      <td mat-cell *matCellDef="let progress">{{ progress.value ?? '—' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="total">
+      <th mat-header-cell *matHeaderCellDef>Total</th>
+      <td mat-cell *matCellDef="let progress">{{ progress.total ?? '—' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="units">
+      <th mat-header-cell *matHeaderCellDef>Units</th>
+      <td mat-cell *matCellDef="let progress">{{ progress.units || '—' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="summary">
+      <th mat-header-cell *matHeaderCellDef>Progress</th>
+      <td mat-cell *matCellDef="let progress">{{ formatSummary(progress) }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+} @else {
+  <p>No progresses yet.</p>
+}

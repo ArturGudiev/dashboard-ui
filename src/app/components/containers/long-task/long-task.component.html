@@ -24,7 +24,7 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="addSubmission()">Add submission</button>
+          <!-- <button mat-menu-item (click)="addSubmission()">Add submission</button> -->
         </mat-menu>
       </div>
     </div>
@@ -39,6 +39,14 @@
       }
     </div>
 
+    <div id="progresses-section">
+      <app-long-task-progresses-list
+        [progresses]="task.progresses"
+        (addProgress)="addProgress()"
+        (addSubmission)="addProgressSubmission($event)"
+      ></app-long-task-progresses-list>
+    </div>
+
     <div id="submissions-section">
       <h2>Submissions</h2>
       @if (submissions().length > 0) {
@@ -46,14 +54,35 @@
           <ng-container matColumnDef="execution_date">
             <th mat-header-cell *matHeaderCellDef>Date</th>
             <td mat-cell *matCellDef="let submission">
-              {{ submission.execution_date | date: 'yyyy-MM-dd HH:mm' }}
+              {{ submission.executionDate | date: 'yyyy-MM-dd HH:mm' }}
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="progress">
-            <th mat-header-cell *matHeaderCellDef>Progress</th>
+          <ng-container matColumnDef="progress_name">
+            <th mat-header-cell *matHeaderCellDef>Progress name</th>
             <td mat-cell *matCellDef="let submission">
-              {{ formatSubmissionProgress(submission) }}
+              {{ getSubmissionProgressName(submission) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="progress_to_add">
+            <th mat-header-cell *matHeaderCellDef>Progress to add</th>
+            <td mat-cell *matCellDef="let submission">
+              {{ submission.progressToAdd ?? '—' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="progress_to_set">
+            <th mat-header-cell *matHeaderCellDef>Progress to set</th>
+            <td mat-cell *matCellDef="let submission">
+              {{ submission.progressToSet ?? '—' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="progress_raw">
+            <th mat-header-cell *matHeaderCellDef>Progress raw</th>
+            <td mat-cell *matCellDef="let submission">
+              {{ submission.progressRaw ?? '—' }}
             </td>
           </ng-container>
 

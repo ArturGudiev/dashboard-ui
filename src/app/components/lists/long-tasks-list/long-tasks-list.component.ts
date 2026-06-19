@@ -8,7 +8,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LongTasksService } from '../../../services/task-container-services/long-tasks.service';
 import { formatLongTaskProgress } from '../../../shared/libs/long-task.lib';
-import { type EntLongTask } from '../../../types/generated';
+import { ModelsLongTaskFull, type EntLongTask } from '../../../types/generated';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,16 +25,16 @@ import { type EntLongTask } from '../../../types/generated';
   styleUrls: ['./long-tasks-list.component.sass'],
 })
 export class LongTasksListComponent implements AfterViewInit {
-  longTasks = input.required<EntLongTask[]>();
+  longTasks = input.required<ModelsLongTaskFull[]>();
   showAddButton = input(true);
   updateList = output<void>();
 
   private readonly router = inject(Router);
   private readonly longTasksService = inject(LongTasksService);
 
-  readonly selection = new SelectionModel<EntLongTask>(true, []);
+  readonly selection = new SelectionModel<ModelsLongTaskFull>(true, []);
   readonly displayedColumns: string[] = ['select', 'description', 'progress'];
-  readonly dataSource = new MatTableDataSource<EntLongTask>([]);
+  readonly dataSource = new MatTableDataSource<ModelsLongTaskFull>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -48,7 +48,7 @@ export class LongTasksListComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  onLongTaskClick(longTask: EntLongTask): void {
+  onLongTaskClick(longTask: ModelsLongTaskFull): void {
     this.router.navigate(['long-task', longTask.id]);
   }
 
@@ -58,7 +58,7 @@ export class LongTasksListComponent implements AfterViewInit {
     });
   }
 
-  formatProgress(task: EntLongTask): string {
+  formatProgress(task: ModelsLongTaskFull): string {
     return formatLongTaskProgress(task);
   }
 }

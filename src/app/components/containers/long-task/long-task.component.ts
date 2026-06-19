@@ -9,8 +9,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { LongTasksService } from '../../../services/task-container-services/long-tasks.service';
 import { getUrlByDescription } from '../../../shared/libs/dashboard.lib';
-import { formatLongTaskProgress, hasNumericProgress } from '../../../shared/libs/long-task.lib';
-import { type EntLongTask, type EntLongTaskSubmission } from '../../../types/generated';
+import { formatLongTaskProgress, getLongTaskProgressName } from '../../../shared/libs/long-task.lib';
+import { ModelsLongTaskFull, ModelsLongTaskProgress, ModelsLongTaskProgressSubmission } from '../../../types/generated';
+import { LongTaskProgressesListComponent } from '../../lists/long-task-progresses-list/long-task-progresses-list.component';
 
 @Component({
   selector: 'app-long-task',
@@ -23,16 +24,24 @@ import { type EntLongTask, type EntLongTaskSubmission } from '../../../types/gen
     MatIconModule,
     MatMenuModule,
     MatTableModule,
+    LongTaskProgressesListComponent,
   ],
 })
 export class LongTaskComponent {
   id = input.required<number>();
-  longTask = input.required<EntLongTask>();
+  longTask = input.required<ModelsLongTaskFull>();
 
-  readonly longTaskForView = signal<EntLongTask | null>(null);
-  readonly submissions = signal<EntLongTaskSubmission[]>([]);
+  readonly longTaskForView = signal<ModelsLongTaskFull | null>(null);
+  readonly submissions = signal<ModelsLongTaskProgressSubmission[]>([]);
 
-  readonly submissionColumns = ['execution_date', 'progress', 'comments'];
+  readonly submissionColumns = [
+    'execution_date',
+    'progress_name',
+    'progress_to_add',
+    'progress_to_set',
+    'progress_raw',
+    'comments',
+  ];
 
   private longTasksService = inject(LongTasksService);
   private titleService = inject(Title);
@@ -64,20 +73,35 @@ export class LongTaskComponent {
       .subscribe((items) => this.submissions.set(items));
   }
 
-  addSubmission(): void {
-    const task = this.longTaskForView();
-    if (!task) {
-      return;
-    }
+  addProgress(): void {
     this.longTasksService
-      .openAddSubmissionDialog(task)
+      .openAddProgressDialog(Number(this.id()))
+      .subscribe(() => this.reloadLongTask());
+  }
+
+  addProgressSubmission(progress: ModelsLongTaskProgress): void {
+    this.longTasksService
+      .openAddProgressSubmissionDialog(progress)
       .subscribe(() => {
         this.reloadLongTask();
         this.loadSubmissions();
       });
   }
 
-  getFullDescription(task: EntLongTask): string {
+  // addSubmission(): void {
+  //   const task = this.longTaskForView();
+  //   if (!task) {
+  //     return;
+  //   }
+  //   this.longTasksService
+  //     .openAddSubmissionDialog(task)
+  //     .subscribe(() => {
+  //       this.reloadLongTask();
+  //       this.loadSubmissions();
+  //     });
+  // }
+
+  getFullDescription(task: ModelsLongTaskFull): string {
     return `LongTask-${task.id} ${task.description ?? ''}`;
   }
 
@@ -98,21 +122,14 @@ export class LongTaskComponent {
       });
   }
 
-  formatProgress(task: EntLongTask): string {
+  formatProgress(task: ModelsLongTaskFull): string {
     return formatLongTaskProgress(task);
   }
 
-  formatSubmissionProgress(submission: EntLongTaskSubmission): string {
-    const task = this.longTaskForView();
-    if (task && !hasNumericProgress(task)) {
-      return submission.progress_raw ?? '—';
-    }
-    if (submission.progress_to_set != null) {
-      return `set to ${submission.progress_to_set}`;
-    }
-    if (submission.progress_to_add != null) {
-      return `+${submission.progress_to_add}`;
-    }
-    return '—';
+  getSubmissionProgressName(submission: ModelsLongTaskProgressSubmission): string {
+    return getLongTaskProgressName(
+      this.longTaskForView()?.progresses,
+      submission.longTaskProgressID,
+    );
   }
 }

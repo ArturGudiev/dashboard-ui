@@ -132,11 +132,11 @@ export type EntLongTask = {
     /**
      * Description holds the value of the "description" field.
      */
-    description?: string;
+    description: string;
     /**
      * Done holds the value of the "done" field.
      */
-    done?: boolean;
+    done: boolean;
     /**
      * DoneDateTime holds the value of the "done_date_time" field.
      */
@@ -149,11 +149,11 @@ export type EntLongTask = {
     /**
      * ID of the ent.
      */
-    id?: number;
+    id: number;
     /**
      * Notes holds the value of the "notes" field.
      */
-    notes?: string;
+    notes: string;
     /**
      * ProgressDone holds the value of the "progress_done" field.
      */
@@ -161,7 +161,7 @@ export type EntLongTask = {
     /**
      * ProgressTotal holds the value of the "progress_total" field.
      */
-    progress_total?: number;
+    progress_total: number;
     /**
      * ProgressUnits holds the value of the "progress_units" field.
      */
@@ -174,9 +174,99 @@ export type EntLongTask = {
 
 export type EntLongTaskEdges = {
     /**
+     * Progresses holds the value of the progresses edge.
+     */
+    progresses?: Array<EntLongTaskProgress>;
+    /**
      * Submissions holds the value of the submissions edge.
      */
     submissions?: Array<EntLongTaskSubmission>;
+};
+
+export type EntLongTaskProgress = {
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the LongTaskProgressQuery when eager-loading is set.
+     */
+    edges?: EntLongTaskProgressEdges;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * LongTaskID holds the value of the "long_task_id" field.
+     */
+    long_task_id?: number;
+    /**
+     * Name holds the value of the "name" field.
+     */
+    name?: string;
+    /**
+     * Total holds the value of the "total" field.
+     */
+    total?: number;
+    /**
+     * Units holds the value of the "units" field.
+     */
+    units?: string;
+    /**
+     * Value holds the value of the "value" field.
+     */
+    value?: number;
+};
+
+export type EntLongTaskProgressEdges = {
+    /**
+     * LongTask holds the value of the long_task edge.
+     */
+    long_task?: EntLongTask;
+    /**
+     * ProgressSubmissions holds the value of the progress_submissions edge.
+     */
+    progress_submissions?: Array<EntLongTaskProgressSubmission>;
+};
+
+export type EntLongTaskProgressSubmission = {
+    /**
+     * Comments holds the value of the "comments" field.
+     */
+    comments?: string;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the LongTaskProgressSubmissionQuery when eager-loading is set.
+     */
+    edges?: EntLongTaskProgressSubmissionEdges;
+    /**
+     * ExecutionDate holds the value of the "execution_date" field.
+     */
+    execution_date?: string;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * LongTaskProgressID holds the value of the "long_task_progress_id" field.
+     */
+    long_task_progress_id?: number;
+    /**
+     * ProgressRaw holds the value of the "progress_raw" field.
+     */
+    progress_raw?: string;
+    /**
+     * ProgressToAdd holds the value of the "progress_to_add" field.
+     */
+    progress_to_add?: number;
+    /**
+     * ProgressToSet holds the value of the "progress_to_set" field.
+     */
+    progress_to_set?: number;
+};
+
+export type EntLongTaskProgressSubmissionEdges = {
+    /**
+     * LongTaskProgress holds the value of the long_task_progress edge.
+     */
+    long_task_progress?: EntLongTaskProgress;
 };
 
 export type EntLongTaskSubmission = {
@@ -363,6 +453,21 @@ export type HandlersAddContainerVariableRequest = {
 
 export type HandlersAddDirectionSubmissionRequest = {
     text?: string;
+};
+
+export type HandlersAddLongTaskProgressRequest = {
+    name?: string;
+    total?: number;
+    units?: string;
+    value?: number;
+};
+
+export type HandlersAddLongTaskProgressSubmissionRequest = {
+    comments?: string;
+    executionDate?: string;
+    progressRaw?: string;
+    progressToAdd?: number;
+    progressToSet?: number;
 };
 
 export type HandlersAddLongTaskSubmissionRequest = {
@@ -572,6 +677,43 @@ export type ModelsEpicShort = {
     description?: string;
     notes?: string;
     tags?: Array<string>;
+};
+
+export type ModelsLongTaskFull = {
+    description: string;
+    done: boolean;
+    doneDateTime?: string;
+    id: number;
+    notes: string;
+    progresses: Array<ModelsLongTaskProgress>;
+    tags: Array<string>;
+};
+
+export type ModelsLongTaskProgress = {
+    id: number;
+    name: string;
+    total?: number;
+    units?: string;
+    value?: number;
+};
+
+export type ModelsLongTaskProgressFull = {
+    id: number;
+    name: string;
+    submissions: Array<ModelsLongTaskProgressSubmission>;
+    total?: number;
+    units?: string;
+    value?: number;
+};
+
+export type ModelsLongTaskProgressSubmission = {
+    comments?: string;
+    executionDate?: string;
+    id?: number;
+    longTaskProgressID?: number;
+    progressRaw?: string;
+    progressToAdd?: number;
+    progressToSet?: number;
 };
 
 export type ModelsLongTaskShort = {
@@ -1976,6 +2118,123 @@ export type GetLogMessagesByIdResponses = {
 
 export type GetLogMessagesByIdResponse = GetLogMessagesByIdResponses[keyof GetLogMessagesByIdResponses];
 
+export type GetLongTaskProgressesByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Long task progress ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-task-progresses/{id}';
+};
+
+export type GetLongTaskProgressesByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetLongTaskProgressesByIdError = GetLongTaskProgressesByIdErrors[keyof GetLongTaskProgressesByIdErrors];
+
+export type GetLongTaskProgressesByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsLongTaskProgressFull;
+};
+
+export type GetLongTaskProgressesByIdResponse = GetLongTaskProgressesByIdResponses[keyof GetLongTaskProgressesByIdResponses];
+
+export type GetLongTaskProgressesByIdSubmissionsData = {
+    body?: never;
+    path: {
+        /**
+         * Long task progress ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-task-progresses/{id}/submissions';
+};
+
+export type GetLongTaskProgressesByIdSubmissionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetLongTaskProgressesByIdSubmissionsError = GetLongTaskProgressesByIdSubmissionsErrors[keyof GetLongTaskProgressesByIdSubmissionsErrors];
+
+export type GetLongTaskProgressesByIdSubmissionsResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsLongTaskProgressSubmission>;
+};
+
+export type GetLongTaskProgressesByIdSubmissionsResponse = GetLongTaskProgressesByIdSubmissionsResponses[keyof GetLongTaskProgressesByIdSubmissionsResponses];
+
+export type PostLongTaskProgressesByIdSubmissionsData = {
+    /**
+     * Progress submission request
+     */
+    body: HandlersAddLongTaskProgressSubmissionRequest;
+    path: {
+        /**
+         * Long task progress ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-task-progresses/{id}/submissions';
+};
+
+export type PostLongTaskProgressesByIdSubmissionsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostLongTaskProgressesByIdSubmissionsError = PostLongTaskProgressesByIdSubmissionsErrors[keyof PostLongTaskProgressesByIdSubmissionsErrors];
+
+export type PostLongTaskProgressesByIdSubmissionsResponses = {
+    /**
+     * OK
+     */
+    200: EntLongTaskProgressSubmission;
+};
+
+export type PostLongTaskProgressesByIdSubmissionsResponse = PostLongTaskProgressesByIdSubmissionsResponses[keyof PostLongTaskProgressesByIdSubmissionsResponses];
+
 export type GetLongTasksData = {
     body?: never;
     path?: never;
@@ -2009,7 +2268,7 @@ export type GetLongTasksResponses = {
     /**
      * OK
      */
-    200: Array<EntLongTask>;
+    200: Array<Array<ModelsLongTaskFull>>;
 };
 
 export type GetLongTasksResponse = GetLongTasksResponses[keyof GetLongTasksResponses];
@@ -2089,7 +2348,7 @@ export type GetLongTasksByIdResponses = {
     /**
      * OK
      */
-    200: EntLongTask;
+    200: ModelsLongTaskFull;
 };
 
 export type GetLongTasksByIdResponse = GetLongTasksByIdResponses[keyof GetLongTasksByIdResponses];
@@ -2140,6 +2399,85 @@ export type PatchLongTasksByIdResponses = {
 };
 
 export type PatchLongTasksByIdResponse = PatchLongTasksByIdResponses[keyof PatchLongTasksByIdResponses];
+
+export type GetLongTasksByIdProgressesData = {
+    body?: never;
+    path: {
+        /**
+         * Long task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-tasks/{id}/progresses';
+};
+
+export type GetLongTasksByIdProgressesErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetLongTasksByIdProgressesError = GetLongTasksByIdProgressesErrors[keyof GetLongTasksByIdProgressesErrors];
+
+export type GetLongTasksByIdProgressesResponses = {
+    /**
+     * OK
+     */
+    200: Array<EntLongTaskProgress>;
+};
+
+export type GetLongTasksByIdProgressesResponse = GetLongTasksByIdProgressesResponses[keyof GetLongTasksByIdProgressesResponses];
+
+export type PostLongTasksByIdProgressesData = {
+    /**
+     * Progress request
+     */
+    body: HandlersAddLongTaskProgressRequest;
+    path: {
+        /**
+         * Long task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-tasks/{id}/progresses';
+};
+
+export type PostLongTasksByIdProgressesErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostLongTasksByIdProgressesError = PostLongTasksByIdProgressesErrors[keyof PostLongTasksByIdProgressesErrors];
+
+export type PostLongTasksByIdProgressesResponses = {
+    /**
+     * OK
+     */
+    200: EntLongTaskProgress;
+};
+
+export type PostLongTasksByIdProgressesResponse = PostLongTasksByIdProgressesResponses[keyof PostLongTasksByIdProgressesResponses];
 
 export type GetLongTasksByIdSubmissionsData = {
     body?: never;

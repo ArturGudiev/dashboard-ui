@@ -32,8 +32,9 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 2. Перейти в папку src\types
 3. Удалить папку generated
 4. Выполнить команду
-```
 
+```
+    
  npx @hey-api/openapi-ts -i /Users/arturgudiev/Programming/projects/dashboard-go/docs/swagger.json -o ./generated
 
 ```

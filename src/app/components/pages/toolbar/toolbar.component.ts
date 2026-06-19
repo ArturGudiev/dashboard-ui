@@ -194,6 +194,14 @@ export class ToolbarComponent implements OnInit {
     this.commandService.setCommand('logs');
   }
 
+  onLongTasksClick() {
+    this.router.navigate(['long-tasks']);
+  }
+
+  onEpicsClick() {
+    this.router.navigate(['epics']);
+  }
+
   private openCommandDialog() {
     const dialogRef = this.dialog.open(CommandDialogComponent,
       {

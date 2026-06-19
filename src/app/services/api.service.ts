@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { type TaskC } from '../models/task-class';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { type Observable } from 'rxjs';
+import { forkJoin, type Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Direction } from '../models/direction';
 import { Epic } from "../models/epic";
@@ -23,6 +23,8 @@ import {
   type EntLongTaskSubmission,
   type EntRepetitiveTaskExecution,
   type HandlersAddDirectionSubmissionRequest,
+  type HandlersAddLongTaskProgressRequest,
+  type HandlersAddLongTaskProgressSubmissionRequest,
   type HandlersAddLongTaskSubmissionRequest,
   type HandlersNewDirectionRequest,
   type HandlersPatchDirectionByIdRequest,
@@ -47,7 +49,12 @@ import {
   type ModelsRepetitiveTaskResponse,
   type ModelsStoryFull,
   type ModelsTaskFull,
+  type EntLongTaskProgress,
+  type EntLongTaskProgressSubmission,
+  type ModelsLongTaskFull,
+  ModelsLongTaskProgressSubmission,
 } from "../types/generated";
+import { toModelsLongTaskFull } from '../shared/libs/long-task.lib';
 import {
   type EmptyJsonResponse,
   taskFromEnt,
@@ -490,13 +497,26 @@ export class ApiService {
   //------------------------------------ directions  ----------------------------------------
 
   //------------------------------------ long tasks  ----------------------------------------
-  _getAllLongTasks(open?: boolean): Observable<EntLongTask[]> {
+  _getAllLongTasks(open?: boolean): Observable<ModelsLongTaskFull[]> {
     const params = open === undefined ? undefined : new HttpParams({ fromObject: { open } });
-    return this.http.get<EntLongTask[]>(`${this.baseUrl}/long-tasks`, { params });
+    return this.http.get<ModelsLongTaskFull[]>(`${this.baseUrl}/long-tasks`, { params });
   }
 
-  _getLongTask(id: number): Observable<EntLongTask> {
-    return this.http.get<EntLongTask>(`${this.baseUrl}/long-tasks/${id}`);
+  _getLongTaskProgresses(id: number): Observable<EntLongTaskProgress[]> {
+    return this.http.get<EntLongTaskProgress[]>(`${this.baseUrl}/long-tasks/${id}/progresses`);
+  }
+
+  _addLongTaskProgress(id: number, body: HandlersAddLongTaskProgressRequest): Observable<EntLongTaskProgress> {
+    return this.http.post<EntLongTaskProgress>(`${this.baseUrl}/long-tasks/${id}/progresses`, body);
+  }
+
+  _getLongTask(id: number): Observable<ModelsLongTaskFull> {
+    return forkJoin({
+      task: this.http.get<EntLongTask>(`${this.baseUrl}/long-tasks/${id}`),
+      progresses: this._getLongTaskProgresses(id),
+    }).pipe(
+      map(({ task, progresses }) => toModelsLongTaskFull(task, progresses)),
+    );
   }
 
   _createLongTask(obj: HandlersNewLongTaskRequest): Observable<EntLongTask> {
@@ -507,12 +527,22 @@ export class ApiService {
     return this.http.patch<EntLongTask>(`${this.baseUrl}/long-tasks/${id}`, body);
   }
 
-  _getLongTaskSubmissions(id: number): Observable<EntLongTaskSubmission[]> {
-    return this.http.get<EntLongTaskSubmission[]>(`${this.baseUrl}/long-tasks/${id}/submissions`);
+  _getLongTaskSubmissions(id: number): Observable<ModelsLongTaskProgressSubmission[]> {
+    return this.http.get<ModelsLongTaskProgressSubmission[]>(`${this.baseUrl}/long-tasks/${id}/submissions`);
   }
 
   _addLongTaskSubmission(id: number, body: HandlersAddLongTaskSubmissionRequest): Observable<EntLongTaskSubmission> {
     return this.http.post<EntLongTaskSubmission>(`${this.baseUrl}/long-tasks/${id}/submissions`, body);
+  }
+
+  _addLongTaskProgressSubmission(
+    progressId: number,
+    body: HandlersAddLongTaskProgressSubmissionRequest,
+  ): Observable<EntLongTaskProgressSubmission> {
+    return this.http.post<EntLongTaskProgressSubmission>(
+      `${this.baseUrl}/long-task-progresses/${progressId}/submissions`,
+      body,
+    );
   }
   //------------------------------------ long tasks  ----------------------------------------
 

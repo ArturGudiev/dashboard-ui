@@ -8,7 +8,7 @@ import { type Direction } from '../../../models/direction';
 import { DirectionsService } from '../../../services/task-container-services/directions.service';
 import { LongTasksService } from '../../../services/task-container-services/long-tasks.service';
 import { linkedContainerForView } from '../../../shared/libs/container-view.lib';
-import { type EntLongTask } from '../../../types/generated';
+import { ModelsLongTaskFull, type EntLongTask } from '../../../types/generated';
 import { LongTasksListComponent } from '../../lists/long-tasks-list/long-tasks-list.component';
 import { SubDirectionsComponent } from '../../lists/sub-directions/sub-directions.component';
 import { TaskContainerSignalComponent } from '../task-container-signal/task-container-signal.component';
@@ -42,7 +42,7 @@ export class DirectionComponent {
     },
   });
 
-  longTasksResource = rxResource<EntLongTask[], { ids: number[] }>({
+  longTasksResource = rxResource<ModelsLongTaskFull[], { ids: number[] }>({
     params: () => ({ ids: this.directionForView()?.longTasks ?? [] }),
     stream: ({ params }) => {
       if (!params.ids.length) {

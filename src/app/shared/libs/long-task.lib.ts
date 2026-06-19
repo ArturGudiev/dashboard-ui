@@ -1,4 +1,10 @@
-import { type EntLongTask } from '../../types/generated';
+import {
+  ModelsLongTaskFull,
+  ModelsLongTaskProgress,
+  ModelsLongTaskProgressSubmission,
+  type EntLongTask,
+  type EntLongTaskProgress,
+} from '../../types/generated';
 
 export function hasNumericProgress(
   task: Pick<EntLongTask, 'progress_total'>,
@@ -6,23 +12,101 @@ export function hasNumericProgress(
   return task.progress_total != null;
 }
 
-function formatPercent(value: number): string {
-  return String(parseFloat(value.toFixed(2)));
+export function hasNumericProgressForProgress(
+  progress: Pick<ModelsLongTaskProgress, 'total'>,
+): boolean {
+  return progress.total != null;
+}
+
+export function toModelsLongTaskProgress(
+  progress: EntLongTaskProgress,
+): ModelsLongTaskProgress {
+  return {
+    id: progress.id!,
+    name: progress.name ?? '',
+    value: progress.value,
+    total: progress.total,
+    units: progress.units,
+  };
+}
+
+function legacyProgressesFromTask(task: EntLongTask): ModelsLongTaskProgress[] {
+  if (task.progress_total == null) {
+    return [];
+  }
+
+  return [{
+    id: 0,
+    name: 'Progress',
+    value: task.progress_done ?? 0,
+    total: task.progress_total,
+    units: task.progress_units,
+  }];
+}
+
+export function toModelsLongTaskFull(
+  task: EntLongTask,
+  progresses?: EntLongTaskProgress[],
+): ModelsLongTaskFull {
+  const mappedProgresses = progresses?.map(toModelsLongTaskProgress) ?? [];
+
+  return {
+    id: task.id,
+    description: task.description,
+    done: task.done,
+    doneDateTime: task.done_date_time,
+    notes: task.notes,
+    tags: task.tags ?? [],
+    progresses: mappedProgresses.length > 0 ? mappedProgresses : legacyProgressesFromTask(task),
+  };
 }
 
 export function formatLongTaskProgress(
-  task: Pick<EntLongTask, 'progress_done' | 'progress_total' | 'progress_units'>,
+  task: Pick<ModelsLongTaskFull, 'progresses'>,
 ): string {
-  if (task.progress_total == null) {
+  if (!task.progresses?.length) {
     return '—';
   }
 
-  const done = task.progress_done ?? 0;
-  const total = task.progress_total;
-  const units = task.progress_units ?? '';
-  let result = `${done} / ${total}${units ? ' ' + units : ''}`;
-  if (total > 0) {
-    result += `, ${formatPercent((done / total) * 100)}%`;
+  return task.progresses.map(formatLongTaskSingleProgress).join(', ');
+}
+
+
+export function getLongTaskProgressName(
+  progresses: ModelsLongTaskProgress[] | undefined,
+  longTaskProgressId: number | undefined,
+): string {
+  if (longTaskProgressId == null || !progresses?.length) {
+    return '—';
   }
-  return result;
+
+  return progresses.find((progress) => progress.id === longTaskProgressId)?.name ?? '—';
+}
+
+export function formatLongTaskProgressSubmission(
+  submission: Pick<ModelsLongTaskProgressSubmission, 'progressRaw' | 'progressToAdd' | 'progressToSet'>,
+): string {
+  if (submission.progressRaw != null) {
+    return String(submission.progressRaw);
+  }
+  if (submission.progressToSet != null) {
+    return `set to ${submission.progressToSet}`;
+  }
+  if (submission.progressToAdd != null) {
+    return `+${submission.progressToAdd}`;
+  }
+  return '—';
+}
+
+export function formatLongTaskSingleProgress(
+  progress: ModelsLongTaskProgress,
+): string {
+  if (progress.total == null || progress.value == null) {
+    return '—';
+  }
+
+  const done = progress.value;
+  const total = progress.total;
+  const units = progress.units ?? '';
+  return `${done} / ${total}${units ? ' ' + units : ''}`;
 }
