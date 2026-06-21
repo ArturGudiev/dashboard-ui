@@ -15,7 +15,8 @@
   <div id="direction-sub-directions-section">
     <app-sub-directions
       [directions]="childDirectionsResource.value() ?? []"
-      [showAddButton]="false"
+      [showAddButton]="true"
+      (addSubDirection)="addSubDirection()"
       (directionClick)="openDirection($event)"
     ></app-sub-directions>
   </div>

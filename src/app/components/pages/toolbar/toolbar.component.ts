@@ -194,6 +194,10 @@ export class ToolbarComponent implements OnInit {
     this.commandService.setCommand('logs');
   }
 
+  onDirectionsClick() {
+    this.router.navigate(['directions']);
+  }
+
   onLongTasksClick() {
     this.router.navigate(['long-tasks']);
   }
