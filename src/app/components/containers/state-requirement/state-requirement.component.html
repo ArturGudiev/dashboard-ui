@@ -1,0 +1,34 @@
+@if (requirementForView(); as requirement) {
+  <div id="content-wrapper">
+    <div class="description-wrapper">
+      <div id="description-line">
+        <button
+          id="go-to-parent-button"
+          mat-mini-fab
+          color="accent"
+          (click)="goToParentState()"
+          aria-label="Go to parent state"
+        >
+          <mat-icon>north</mat-icon>
+        </button>
+        <div id="full-description-title">
+          {{ getFullDescription(requirement) }}
+        </div>
+        <app-fulfilled-status-icon [isFulfilled]="requirement.isFulfilled" />
+      </div>
+    </div>
+
+    <div id="requirement-meta">
+      @if (requirement.once_in_days != null) {
+        <div><strong>Once in days:</strong> {{ requirement.once_in_days }}</div>
+      }
+    </div>
+
+    <div id="checks-section">
+      <app-state-requirement-checks-list
+        [checks]="requirement.checks"
+        (addCheck)="addCheck()"
+      />
+    </div>
+  </div>
+}

@@ -37,6 +37,18 @@ export class NavigationService {
       this.router.navigate(['long-tasks']).then();;
       return;
     }
+    if (['states'].includes(arr[0])) {
+      this.router.navigate(['states']).then();
+      return;
+    }
+    if (['state'].includes(arr[0]) && Number.isInteger(+arr[1])) {
+      this.router.navigate(['state', arr[1]]).then();
+      return;
+    }
+    if (['sr', 'state-requirement'].includes(arr[0]) && Number.isInteger(+arr[1])) {
+      this.router.navigate(['state-requirement', arr[1]]).then();
+      return;
+    }
     if (['directions'].includes(arr[0])) {
       this.router.navigate(['directions']).then();
       return;

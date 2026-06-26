@@ -1,0 +1,6 @@
+@if (states$ | async; as states) {
+  <app-states-list
+    [states]="states ?? []"
+    (updateList)="updateList()"
+  />
+}

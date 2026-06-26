@@ -390,6 +390,107 @@ export type EntRepetitiveTaskExecutionEdges = {
     repetitive_task?: EntRepetitiveTask;
 };
 
+export type EntState = {
+    /**
+     * Closed holds the value of the "closed" field.
+     */
+    closed?: boolean;
+    /**
+     * Description holds the value of the "description" field.
+     */
+    description?: string;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the StateQuery when eager-loading is set.
+     */
+    edges?: EntStateEdges;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * Notes holds the value of the "notes" field.
+     */
+    notes?: string;
+    /**
+     * Tags holds the value of the "tags" field.
+     */
+    tags?: Array<string>;
+};
+
+export type EntStateEdges = {
+    /**
+     * Requirements holds the value of the requirements edge.
+     */
+    requirements?: Array<EntStateRequirement>;
+};
+
+export type EntStateRequirement = {
+    /**
+     * Description holds the value of the "description" field.
+     */
+    description?: string;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the StateRequirementQuery when eager-loading is set.
+     */
+    edges?: EntStateRequirementEdges;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * OnceInDays holds the value of the "once_in_days" field.
+     */
+    once_in_days?: number;
+    /**
+     * StateID holds the value of the "state_id" field.
+     */
+    state_id?: number;
+};
+
+export type EntStateRequirementCheck = {
+    /**
+     * DateTime holds the value of the "date_time" field.
+     */
+    date_time?: string;
+    /**
+     * Edges holds the relations/edges for other nodes in the graph.
+     * The values are being populated by the StateRequirementCheckQuery when eager-loading is set.
+     */
+    edges?: EntStateRequirementCheckEdges;
+    /**
+     * ID of the ent.
+     */
+    id?: number;
+    /**
+     * IsFulfilled holds the value of the "is_fulfilled" field.
+     */
+    is_fulfilled?: boolean;
+    /**
+     * StateRequirementID holds the value of the "state_requirement_id" field.
+     */
+    state_requirement_id?: number;
+};
+
+export type EntStateRequirementCheckEdges = {
+    /**
+     * StateRequirement holds the value of the state_requirement edge.
+     */
+    state_requirement?: EntStateRequirement;
+};
+
+export type EntStateRequirementEdges = {
+    /**
+     * Checks holds the value of the checks edge.
+     */
+    checks?: Array<EntStateRequirementCheck>;
+    /**
+     * State holds the value of the state edge.
+     */
+    state?: EntState;
+};
+
 export type EntTask = {
     /**
      * Description holds the value of the "description" field.
@@ -730,6 +831,11 @@ export type ModelsNewEpicRequest = {
     parent?: ModelsContainerDescription;
 };
 
+export type ModelsNewStateRequest = {
+    parent?: ModelsContainerDescription;
+    state?: ModelsStateShort;
+};
+
 export type ModelsNewStoryRequest = {
     parent?: ModelsContainerDescription;
     story?: ModelsStoryShort;
@@ -828,6 +934,40 @@ export type ModelsRepetitiveTaskShort = {
     onceInDays?: number;
     onceInMonths?: number;
     onceInWeeks?: number;
+    tags?: Array<string>;
+};
+
+export type ModelsStateFull = {
+    closed?: boolean;
+    description?: string;
+    id?: number;
+    isFulfilled?: boolean;
+    notes?: string;
+    states?: Array<number>;
+    stateRequirements?: Array<number>;
+    tags?: Array<string>;
+};
+
+export type ModelsStateRequirementCheckShort = {
+    isFulfilled?: boolean;
+};
+
+export type ModelsStateRequirementFull = {
+    description?: string;
+    id?: number;
+    isFulfilled?: boolean;
+    once_in_days?: number;
+    state_id?: number;
+};
+
+export type ModelsStateRequirementShort = {
+    description?: string;
+    onceInDays?: number;
+};
+
+export type ModelsStateShort = {
+    description?: string;
+    notes?: string;
     tags?: Array<string>;
 };
 
@@ -3261,6 +3401,321 @@ export type PutSolveProblemByIdResponses = {
 };
 
 export type PutSolveProblemByIdResponse = PutSolveProblemByIdResponses[keyof PutSolveProblemByIdResponses];
+
+export type GetStateRequirementsData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * State requirement IDs (comma separated)
+         */
+        ids: Array<number>;
+    };
+    url: '/state-requirements';
+};
+
+export type GetStateRequirementsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetStateRequirementsError = GetStateRequirementsErrors[keyof GetStateRequirementsErrors];
+
+export type GetStateRequirementsResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsStateRequirementFull>;
+};
+
+export type GetStateRequirementsResponse = GetStateRequirementsResponses[keyof GetStateRequirementsResponses];
+
+export type GetStateRequirementsByIdChecksData = {
+    body?: never;
+    path: {
+        /**
+         * State requirement ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/state-requirements/{id}/checks';
+};
+
+export type GetStateRequirementsByIdChecksErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetStateRequirementsByIdChecksError = GetStateRequirementsByIdChecksErrors[keyof GetStateRequirementsByIdChecksErrors];
+
+export type GetStateRequirementsByIdChecksResponses = {
+    /**
+     * OK
+     */
+    200: Array<EntStateRequirementCheck>;
+};
+
+export type GetStateRequirementsByIdChecksResponse = GetStateRequirementsByIdChecksResponses[keyof GetStateRequirementsByIdChecksResponses];
+
+export type PostStateRequirementsByIdChecksData = {
+    /**
+     * State requirement check
+     */
+    body: ModelsStateRequirementCheckShort;
+    path: {
+        /**
+         * State requirement ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/state-requirements/{id}/checks';
+};
+
+export type PostStateRequirementsByIdChecksErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostStateRequirementsByIdChecksError = PostStateRequirementsByIdChecksErrors[keyof PostStateRequirementsByIdChecksErrors];
+
+export type PostStateRequirementsByIdChecksResponses = {
+    /**
+     * OK
+     */
+    200: EntStateRequirementCheck;
+};
+
+export type PostStateRequirementsByIdChecksResponse = PostStateRequirementsByIdChecksResponses[keyof PostStateRequirementsByIdChecksResponses];
+
+export type GetStatesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/states';
+};
+
+export type GetStatesErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetStatesError = GetStatesErrors[keyof GetStatesErrors];
+
+export type GetStatesResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsStateFull>;
+};
+
+export type GetStatesResponse = GetStatesResponses[keyof GetStatesResponses];
+
+export type PostStatesData = {
+    /**
+     * State to add
+     */
+    body: ModelsNewStateRequest;
+    path?: never;
+    query?: never;
+    url: '/states';
+};
+
+export type PostStatesErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostStatesError = PostStatesErrors[keyof PostStatesErrors];
+
+export type PostStatesResponses = {
+    /**
+     * OK
+     */
+    200: ModelsStateFull;
+};
+
+export type PostStatesResponse = PostStatesResponses[keyof PostStatesResponses];
+
+export type GetStatesByIdData = {
+    body?: never;
+    path: {
+        /**
+         * State ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/states/{id}';
+};
+
+export type GetStatesByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetStatesByIdError = GetStatesByIdErrors[keyof GetStatesByIdErrors];
+
+export type GetStatesByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsStateFull;
+};
+
+export type GetStatesByIdResponse = GetStatesByIdResponses[keyof GetStatesByIdResponses];
+
+export type GetStatesByIdRequirementsData = {
+    body?: never;
+    path: {
+        /**
+         * State ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/states/{id}/requirements';
+};
+
+export type GetStatesByIdRequirementsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetStatesByIdRequirementsError = GetStatesByIdRequirementsErrors[keyof GetStatesByIdRequirementsErrors];
+
+export type GetStatesByIdRequirementsResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsStateRequirementFull>;
+};
+
+export type GetStatesByIdRequirementsResponse = GetStatesByIdRequirementsResponses[keyof GetStatesByIdRequirementsResponses];
+
+export type PostStatesByIdRequirementsData = {
+    /**
+     * State requirement
+     */
+    body: ModelsStateRequirementShort;
+    path: {
+        /**
+         * State ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/states/{id}/requirements';
+};
+
+export type PostStatesByIdRequirementsErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostStatesByIdRequirementsError = PostStatesByIdRequirementsErrors[keyof PostStatesByIdRequirementsErrors];
+
+export type PostStatesByIdRequirementsResponses = {
+    /**
+     * OK
+     */
+    200: ModelsStateRequirementFull;
+};
+
+export type PostStatesByIdRequirementsResponse = PostStatesByIdRequirementsResponses[keyof PostStatesByIdRequirementsResponses];
 
 export type GetStoryByIdData = {
     body?: never;

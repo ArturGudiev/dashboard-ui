@@ -1,0 +1,47 @@
+@if (stateForView(); as currentState) {
+  <div id="content-wrapper">
+    <div class="description-wrapper">
+      <div id="description-line">
+        <button
+          id="go-to-states-button"
+          mat-mini-fab
+          color="accent"
+          (click)="goToStatesList()"
+          aria-label="Go to states list"
+        >
+          <mat-icon>north</mat-icon>
+        </button>
+        <div id="full-description-title">
+          {{ getFullDescription(currentState) }}
+        </div>
+        <app-fulfilled-status-icon [isFulfilled]="currentState.isFulfilled" />
+      </div>
+    </div>
+
+    <div id="state-meta">
+      @if (currentState.notes) {
+        <div id="state-notes"><strong>Notes:</strong> {{ currentState.notes }}</div>
+      }
+      @if (currentState.tags?.length) {
+        <div id="state-tags"><strong>Tags:</strong> {{ currentState.tags?.join(', ') }}</div>
+      }
+    </div>
+
+    <div id="child-states-section">
+      <app-states-list
+        [states]="currentState.childStates"
+        [showTitle]="true"
+        [title]="'Child states'"
+        [parent]="{ id: currentState.id!, type: 'state' }"
+        (updateList)="reloadState()"
+      />
+    </div>
+
+    <div id="requirements-section">
+      <app-state-requirements-list
+        [requirements]="currentState.requirements"
+        (addRequirement)="addRequirement()"
+      />
+    </div>
+  </div>
+}

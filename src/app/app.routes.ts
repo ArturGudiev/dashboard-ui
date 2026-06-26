@@ -20,6 +20,11 @@ import { DirectionsComponent } from "./components/pages/directions/directions.co
 import { DirectionComponent } from "./components/containers/direction/direction.component";
 import { DirectionStatsComponent } from "./components/pages/direction-stats/direction-stats.component";
 import { directionResolver } from "./resolvers/direction.resolver";
+import { StatesComponent } from "./components/pages/states/states.component";
+import { StateComponent } from "./components/containers/state/state.component";
+import { stateResolver } from "./resolvers/state.resolver";
+import { StateRequirementComponent } from "./components/containers/state-requirement/state-requirement.component";
+import { stateRequirementResolver } from "./resolvers/state-requirement.resolver";
 
 export const routes: Routes = [
   {path: '', component: MainPageComponent},
@@ -62,6 +67,19 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'paramsChange',
   },
   {path: 'long-tasks', component: LongTasksComponent},
+  {path: 'states', component: StatesComponent},
+  {
+    path: 'state/:id',
+    component: StateComponent,
+    resolve: { state: stateResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
+  {
+    path: 'state-requirement/:id',
+    component: StateRequirementComponent,
+    resolve: { stateRequirement: stateRequirementResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
   {path: 'directions', component: DirectionsComponent},
   {
     path: 'direction/:id',

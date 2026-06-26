@@ -1,0 +1,51 @@
+<div class="requirements-header">
+  <div class="requirements-title">Requirements</div>
+  @if (showAddButton()) {
+    <button
+      class="add-requirement-button"
+      mat-mini-fab
+      color="primary"
+      (click)="addRequirement.emit()"
+      aria-label="Add requirement"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  }
+</div>
+
+@if (requirements().length > 0) {
+  <table mat-table [dataSource]="requirements()" class="mat-elevation-z2 requirements-table">
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td
+        mat-cell
+        class="row-link"
+        tabindex="0"
+        role="button"
+        *matCellDef="let requirement"
+        (click)="onRequirementClick(requirement)"
+        (keydown.enter)="onRequirementClick(requirement)"
+        (keydown.space)="onRequirementClick(requirement); $event.preventDefault()"
+      >
+        {{ requirement.description }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isFulfilled">
+      <th mat-header-cell *matHeaderCellDef>Fulfilled</th>
+      <td mat-cell *matCellDef="let requirement">
+        <app-fulfilled-status-icon [isFulfilled]="requirement.isFulfilled" />
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="onceInDays">
+      <th mat-header-cell *matHeaderCellDef>Once in days</th>
+      <td mat-cell *matCellDef="let requirement">{{ requirement.once_in_days ?? '—' }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+} @else {
+  <p>No requirements yet.</p>
+}

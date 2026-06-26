@@ -206,6 +206,10 @@ export class ToolbarComponent implements OnInit {
     this.router.navigate(['epics']);
   }
 
+  onStatesClick() {
+    this.router.navigate(['states']);
+  }
+
   private openCommandDialog() {
     const dialogRef = this.dialog.open(CommandDialogComponent,
       {

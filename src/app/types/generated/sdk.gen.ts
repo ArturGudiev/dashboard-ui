@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteContainerVariablesByIdData, DeleteContainerVariablesByIdErrors, DeleteContainerVariablesByIdResponses, GetAliasesByAliasData, GetAliasesByAliasErrors, GetAliasesByAliasResponses, GetData, GetDirectionsByIdData, GetDirectionsByIdErrors, GetDirectionsByIdResponses, GetDirectionsByIdStatsData, GetDirectionsByIdStatsErrors, GetDirectionsByIdStatsResponses, GetDirectionsByIdSubmissionsData, GetDirectionsByIdSubmissionsErrors, GetDirectionsByIdSubmissionsResponses, GetDirectionsData, GetDirectionsErrors, GetDirectionsResponses, GetDoneTasksData, GetDoneTasksErrors, GetDoneTasksResponses, GetEpicByIdData, GetEpicByIdErrors, GetEpicByIdResponses, GetEpicsData, GetEpicsErrors, GetEpicsResponses, GetLogMessagesByIdData, GetLogMessagesByIdErrors, GetLogMessagesByIdResponses, GetLogMessagesData, GetLogMessagesErrors, GetLogMessagesResponses, GetLongTaskProgressesByIdData, GetLongTaskProgressesByIdErrors, GetLongTaskProgressesByIdResponses, GetLongTaskProgressesByIdSubmissionsData, GetLongTaskProgressesByIdSubmissionsErrors, GetLongTaskProgressesByIdSubmissionsResponses, GetLongTasksByIdData, GetLongTasksByIdErrors, GetLongTasksByIdProgressesData, GetLongTasksByIdProgressesErrors, GetLongTasksByIdProgressesResponses, GetLongTasksByIdResponses, GetLongTasksByIdSubmissionsData, GetLongTasksByIdSubmissionsErrors, GetLongTasksByIdSubmissionsResponses, GetLongTasksData, GetLongTasksErrors, GetLongTasksResponses, GetProblemByIdData, GetProblemByIdErrors, GetProblemByIdResponses, GetQuestionByIdData, GetQuestionByIdErrors, GetQuestionByIdResponses, GetRepetitiveTasksByIdData, GetRepetitiveTasksByIdErrors, GetRepetitiveTasksByIdExecutionsData, GetRepetitiveTasksByIdExecutionsErrors, GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdResponses, GetRepetitiveTasksData, GetRepetitiveTasksErrors, GetRepetitiveTasksResponses, GetResponses, GetStoryByIdData, GetStoryByIdErrors, GetStoryByIdResponses, GetTaskByIdData, GetTaskByIdErrors, GetTaskByIdResponses, GetTaskReportByIdData, GetTaskReportByIdErrors, GetTaskReportByIdResponses, GetTestsData, GetTestsErrors, GetTestsResponses, PatchContainerVariablesByIdData, PatchContainerVariablesByIdErrors, PatchContainerVariablesByIdResponses, PatchDirectionsByIdData, PatchDirectionsByIdErrors, PatchDirectionsByIdResponses, PatchEpicByIdData, PatchEpicByIdErrors, PatchEpicByIdResponses, PatchLongTasksByIdData, PatchLongTasksByIdErrors, PatchLongTasksByIdResponses, PatchProblemByIdData, PatchProblemByIdErrors, PatchProblemByIdResponses, PatchQuestionByIdData, PatchQuestionByIdErrors, PatchQuestionByIdResponses, PatchRepetitiveTasksByIdData, PatchRepetitiveTasksByIdErrors, PatchRepetitiveTasksByIdResponses, PatchStoryByIdData, PatchStoryByIdErrors, PatchStoryByIdResponses, PatchTaskByIdData, PatchTaskByIdErrors, PatchTaskByIdResponses, PostAnswerQuestionByIdData, PostAnswerQuestionByIdErrors, PostAnswerQuestionByIdResponses, PostChangeTasksOrderData, PostChangeTasksOrderErrors, PostChangeTasksOrderResponses, PostContainerVariablesData, PostContainerVariablesErrors, PostContainerVariablesResponses, PostDirectionsByIdSubmissionsData, PostDirectionsByIdSubmissionsErrors, PostDirectionsByIdSubmissionsResponses, PostDirectionsData, PostDirectionsErrors, PostDirectionsResponses, PostGetEpicsData, PostGetEpicsErrors, PostGetEpicsResponses, PostGetProblemsData, PostGetProblemsErrors, PostGetProblemsResponses, PostGetQuestionsData, PostGetQuestionsErrors, PostGetQuestionsResponses, PostGetStoriesData, PostGetStoriesErrors, PostGetStoriesResponses, PostGetTasksData, PostGetTasksErrors, PostGetTasksResponses, PostLogMessagesData, PostLogMessagesErrors, PostLogMessagesResponses, PostLongTaskProgressesByIdSubmissionsData, PostLongTaskProgressesByIdSubmissionsErrors, PostLongTaskProgressesByIdSubmissionsResponses, PostLongTasksByIdProgressesData, PostLongTasksByIdProgressesErrors, PostLongTasksByIdProgressesResponses, PostLongTasksByIdSubmissionsData, PostLongTasksByIdSubmissionsErrors, PostLongTasksByIdSubmissionsResponses, PostLongTasksData, PostLongTasksErrors, PostLongTasksResponses, PostNewEpicData, PostNewEpicErrors, PostNewEpicResponses, PostNewProblemData, PostNewProblemErrors, PostNewProblemResponses, PostNewQuestionData, PostNewQuestionErrors, PostNewQuestionResponses, PostNewRepetitiveTaskData, PostNewRepetitiveTaskErrors, PostNewRepetitiveTaskResponses, PostNewStoryData, PostNewStoryErrors, PostNewStoryResponses, PostNewTaskData, PostNewTaskErrors, PostNewTaskResponses, PostParentsPathData, PostParentsPathErrors, PostParentsPathResponses, PostRepetitiveTasksByIdExecutionsData, PostRepetitiveTasksByIdExecutionsErrors, PostRepetitiveTasksByIdExecutionsResponses, PutAddAnonymousTaskData, PutAddAnonymousTaskErrors, PutAddAnonymousTaskResponses, PutFinishTaskByIdData, PutFinishTaskByIdErrors, PutFinishTaskByIdResponses, PutFinishTasksByIdsData, PutFinishTasksByIdsErrors, PutFinishTasksByIdsResponses, PutFinishTasksData, PutFinishTasksErrors, PutFinishTasksResponses, PutSolveProblemByIdData, PutSolveProblemByIdErrors, PutSolveProblemByIdResponses, PutUpdateEpicData, PutUpdateEpicErrors, PutUpdateEpicResponses, PutUpdateProblemData, PutUpdateProblemErrors, PutUpdateProblemResponses, PutUpdateQuestionData, PutUpdateQuestionErrors, PutUpdateQuestionResponses, PutUpdateStoryData, PutUpdateStoryErrors, PutUpdateStoryResponses, PutUpdateTaskData, PutUpdateTaskErrors, PutUpdateTaskResponses } from './types.gen';
+import type { DeleteContainerVariablesByIdData, DeleteContainerVariablesByIdErrors, DeleteContainerVariablesByIdResponses, GetAliasesByAliasData, GetAliasesByAliasErrors, GetAliasesByAliasResponses, GetData, GetDirectionsByIdData, GetDirectionsByIdErrors, GetDirectionsByIdResponses, GetDirectionsByIdStatsData, GetDirectionsByIdStatsErrors, GetDirectionsByIdStatsResponses, GetDirectionsByIdSubmissionsData, GetDirectionsByIdSubmissionsErrors, GetDirectionsByIdSubmissionsResponses, GetDirectionsData, GetDirectionsErrors, GetDirectionsResponses, GetDoneTasksData, GetDoneTasksErrors, GetDoneTasksResponses, GetEpicByIdData, GetEpicByIdErrors, GetEpicByIdResponses, GetEpicsData, GetEpicsErrors, GetEpicsResponses, GetLogMessagesByIdData, GetLogMessagesByIdErrors, GetLogMessagesByIdResponses, GetLogMessagesData, GetLogMessagesErrors, GetLogMessagesResponses, GetLongTaskProgressesByIdData, GetLongTaskProgressesByIdErrors, GetLongTaskProgressesByIdResponses, GetLongTaskProgressesByIdSubmissionsData, GetLongTaskProgressesByIdSubmissionsErrors, GetLongTaskProgressesByIdSubmissionsResponses, GetLongTasksByIdData, GetLongTasksByIdErrors, GetLongTasksByIdProgressesData, GetLongTasksByIdProgressesErrors, GetLongTasksByIdProgressesResponses, GetLongTasksByIdResponses, GetLongTasksByIdSubmissionsData, GetLongTasksByIdSubmissionsErrors, GetLongTasksByIdSubmissionsResponses, GetLongTasksData, GetLongTasksErrors, GetLongTasksResponses, GetProblemByIdData, GetProblemByIdErrors, GetProblemByIdResponses, GetQuestionByIdData, GetQuestionByIdErrors, GetQuestionByIdResponses, GetRepetitiveTasksByIdData, GetRepetitiveTasksByIdErrors, GetRepetitiveTasksByIdExecutionsData, GetRepetitiveTasksByIdExecutionsErrors, GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdResponses, GetRepetitiveTasksData, GetRepetitiveTasksErrors, GetRepetitiveTasksResponses, GetResponses, GetStateRequirementsByIdChecksData, GetStateRequirementsByIdChecksErrors, GetStateRequirementsByIdChecksResponses, GetStateRequirementsData, GetStateRequirementsErrors, GetStateRequirementsResponses, GetStatesByIdData, GetStatesByIdErrors, GetStatesByIdRequirementsData, GetStatesByIdRequirementsErrors, GetStatesByIdRequirementsResponses, GetStatesByIdResponses, GetStatesData, GetStatesErrors, GetStatesResponses, GetStoryByIdData, GetStoryByIdErrors, GetStoryByIdResponses, GetTaskByIdData, GetTaskByIdErrors, GetTaskByIdResponses, GetTaskReportByIdData, GetTaskReportByIdErrors, GetTaskReportByIdResponses, GetTestsData, GetTestsErrors, GetTestsResponses, PatchContainerVariablesByIdData, PatchContainerVariablesByIdErrors, PatchContainerVariablesByIdResponses, PatchDirectionsByIdData, PatchDirectionsByIdErrors, PatchDirectionsByIdResponses, PatchEpicByIdData, PatchEpicByIdErrors, PatchEpicByIdResponses, PatchLongTasksByIdData, PatchLongTasksByIdErrors, PatchLongTasksByIdResponses, PatchProblemByIdData, PatchProblemByIdErrors, PatchProblemByIdResponses, PatchQuestionByIdData, PatchQuestionByIdErrors, PatchQuestionByIdResponses, PatchRepetitiveTasksByIdData, PatchRepetitiveTasksByIdErrors, PatchRepetitiveTasksByIdResponses, PatchStoryByIdData, PatchStoryByIdErrors, PatchStoryByIdResponses, PatchTaskByIdData, PatchTaskByIdErrors, PatchTaskByIdResponses, PostAnswerQuestionByIdData, PostAnswerQuestionByIdErrors, PostAnswerQuestionByIdResponses, PostChangeTasksOrderData, PostChangeTasksOrderErrors, PostChangeTasksOrderResponses, PostContainerVariablesData, PostContainerVariablesErrors, PostContainerVariablesResponses, PostDirectionsByIdSubmissionsData, PostDirectionsByIdSubmissionsErrors, PostDirectionsByIdSubmissionsResponses, PostDirectionsData, PostDirectionsErrors, PostDirectionsResponses, PostGetEpicsData, PostGetEpicsErrors, PostGetEpicsResponses, PostGetProblemsData, PostGetProblemsErrors, PostGetProblemsResponses, PostGetQuestionsData, PostGetQuestionsErrors, PostGetQuestionsResponses, PostGetStoriesData, PostGetStoriesErrors, PostGetStoriesResponses, PostGetTasksData, PostGetTasksErrors, PostGetTasksResponses, PostLogMessagesData, PostLogMessagesErrors, PostLogMessagesResponses, PostLongTaskProgressesByIdSubmissionsData, PostLongTaskProgressesByIdSubmissionsErrors, PostLongTaskProgressesByIdSubmissionsResponses, PostLongTasksByIdProgressesData, PostLongTasksByIdProgressesErrors, PostLongTasksByIdProgressesResponses, PostLongTasksByIdSubmissionsData, PostLongTasksByIdSubmissionsErrors, PostLongTasksByIdSubmissionsResponses, PostLongTasksData, PostLongTasksErrors, PostLongTasksResponses, PostNewEpicData, PostNewEpicErrors, PostNewEpicResponses, PostNewProblemData, PostNewProblemErrors, PostNewProblemResponses, PostNewQuestionData, PostNewQuestionErrors, PostNewQuestionResponses, PostNewRepetitiveTaskData, PostNewRepetitiveTaskErrors, PostNewRepetitiveTaskResponses, PostNewStoryData, PostNewStoryErrors, PostNewStoryResponses, PostNewTaskData, PostNewTaskErrors, PostNewTaskResponses, PostParentsPathData, PostParentsPathErrors, PostParentsPathResponses, PostRepetitiveTasksByIdExecutionsData, PostRepetitiveTasksByIdExecutionsErrors, PostRepetitiveTasksByIdExecutionsResponses, PostStateRequirementsByIdChecksData, PostStateRequirementsByIdChecksErrors, PostStateRequirementsByIdChecksResponses, PostStatesByIdRequirementsData, PostStatesByIdRequirementsErrors, PostStatesByIdRequirementsResponses, PostStatesData, PostStatesErrors, PostStatesResponses, PutAddAnonymousTaskData, PutAddAnonymousTaskErrors, PutAddAnonymousTaskResponses, PutFinishTaskByIdData, PutFinishTaskByIdErrors, PutFinishTaskByIdResponses, PutFinishTasksByIdsData, PutFinishTasksByIdsErrors, PutFinishTasksByIdsResponses, PutFinishTasksData, PutFinishTasksErrors, PutFinishTasksResponses, PutSolveProblemByIdData, PutSolveProblemByIdErrors, PutSolveProblemByIdResponses, PutUpdateEpicData, PutUpdateEpicErrors, PutUpdateEpicResponses, PutUpdateProblemData, PutUpdateProblemErrors, PutUpdateProblemResponses, PutUpdateQuestionData, PutUpdateQuestionErrors, PutUpdateQuestionResponses, PutUpdateStoryData, PutUpdateStoryErrors, PutUpdateStoryResponses, PutUpdateTaskData, PutUpdateTaskErrors, PutUpdateTaskResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -647,6 +647,87 @@ export const postRepetitiveTasksByIdExecutions = <ThrowOnError extends boolean =
  */
 export const putSolveProblemById = <ThrowOnError extends boolean = false>(options: Options<PutSolveProblemByIdData, ThrowOnError>): RequestResult<PutSolveProblemByIdResponses, PutSolveProblemByIdErrors, ThrowOnError> => (options.client ?? client).put<PutSolveProblemByIdResponses, PutSolveProblemByIdErrors, ThrowOnError>({
     url: '/solve-problem/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get state requirements by their IDs
+ *
+ * Returns state requirements by their IDs
+ */
+export const getStateRequirements = <ThrowOnError extends boolean = false>(options: Options<GetStateRequirementsData, ThrowOnError>): RequestResult<GetStateRequirementsResponses, GetStateRequirementsErrors, ThrowOnError> => (options.client ?? client).get<GetStateRequirementsResponses, GetStateRequirementsErrors, ThrowOnError>({
+    querySerializer: { parameters: { ids: { array: { explode: false } } } },
+    url: '/state-requirements',
+    ...options
+});
+
+/**
+ * Get state requirement checks by state requirement ID
+ *
+ * Returns state requirement checks by state requirement ID
+ */
+export const getStateRequirementsByIdChecks = <ThrowOnError extends boolean = false>(options: Options<GetStateRequirementsByIdChecksData, ThrowOnError>): RequestResult<GetStateRequirementsByIdChecksResponses, GetStateRequirementsByIdChecksErrors, ThrowOnError> => (options.client ?? client).get<GetStateRequirementsByIdChecksResponses, GetStateRequirementsByIdChecksErrors, ThrowOnError>({ url: '/state-requirements/{id}/checks', ...options });
+
+/**
+ * Add a state requirement check
+ *
+ * Adds a new state requirement check
+ */
+export const postStateRequirementsByIdChecks = <ThrowOnError extends boolean = false>(options: Options<PostStateRequirementsByIdChecksData, ThrowOnError>): RequestResult<PostStateRequirementsByIdChecksResponses, PostStateRequirementsByIdChecksErrors, ThrowOnError> => (options.client ?? client).post<PostStateRequirementsByIdChecksResponses, PostStateRequirementsByIdChecksErrors, ThrowOnError>({
+    url: '/state-requirements/{id}/checks',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get all states
+ *
+ * Returns all states
+ */
+export const getStates = <ThrowOnError extends boolean = false>(options?: Options<GetStatesData, ThrowOnError>): RequestResult<GetStatesResponses, GetStatesErrors, ThrowOnError> => (options?.client ?? client).get<GetStatesResponses, GetStatesErrors, ThrowOnError>({ url: '/states', ...options });
+
+/**
+ * Add a state
+ *
+ * Adds a new state
+ */
+export const postStates = <ThrowOnError extends boolean = false>(options: Options<PostStatesData, ThrowOnError>): RequestResult<PostStatesResponses, PostStatesErrors, ThrowOnError> => (options.client ?? client).post<PostStatesResponses, PostStatesErrors, ThrowOnError>({
+    url: '/states',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get state by ID
+ *
+ * Returns a state by its ID
+ */
+export const getStatesById = <ThrowOnError extends boolean = false>(options: Options<GetStatesByIdData, ThrowOnError>): RequestResult<GetStatesByIdResponses, GetStatesByIdErrors, ThrowOnError> => (options.client ?? client).get<GetStatesByIdResponses, GetStatesByIdErrors, ThrowOnError>({ url: '/states/{id}', ...options });
+
+/**
+ * Get state requirements by state ID
+ *
+ * Returns state requirements by state ID
+ */
+export const getStatesByIdRequirements = <ThrowOnError extends boolean = false>(options: Options<GetStatesByIdRequirementsData, ThrowOnError>): RequestResult<GetStatesByIdRequirementsResponses, GetStatesByIdRequirementsErrors, ThrowOnError> => (options.client ?? client).get<GetStatesByIdRequirementsResponses, GetStatesByIdRequirementsErrors, ThrowOnError>({ url: '/states/{id}/requirements', ...options });
+
+/**
+ * Add a state requirement
+ *
+ * Adds a new state requirement
+ */
+export const postStatesByIdRequirements = <ThrowOnError extends boolean = false>(options: Options<PostStatesByIdRequirementsData, ThrowOnError>): RequestResult<PostStatesByIdRequirementsResponses, PostStatesByIdRequirementsErrors, ThrowOnError> => (options.client ?? client).post<PostStatesByIdRequirementsResponses, PostStatesByIdRequirementsErrors, ThrowOnError>({
+    url: '/states/{id}/requirements',
     ...options,
     headers: {
         'Content-Type': 'application/json',

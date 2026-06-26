@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { type TaskC } from '../models/task-class';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { forkJoin, type Observable } from 'rxjs';
+import { forkJoin, type Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Direction } from '../models/direction';
 import { Epic } from "../models/epic";
@@ -46,6 +46,13 @@ import {
   type ModelsProblemFull,
   type ModelsQuestionFull,
   type ModelsRepetitiveTaskResponse,
+  type ModelsStateFull,
+  type ModelsStateRequirementCheckShort,
+  type ModelsStateRequirementFull,
+  type ModelsStateRequirementShort,
+  type ModelsStateShort,
+  type ModelsNewStateRequest,
+  type EntStateRequirementCheck,
   type ModelsStoryFull,
   type ModelsTaskFull,
   type EntLongTaskProgress,
@@ -562,6 +569,52 @@ export class ApiService {
     );
   }
   //------------------------------------ repetitive tasks  ----------------------------------------
+
+  //------------------------------------ states  ----------------------------------------
+  _getAllStates(): Observable<ModelsStateFull[]> {
+    return this.http.get<ModelsStateFull[]>(`${this.baseUrl}/states`);
+  }
+
+  _getState(id: number): Observable<ModelsStateFull> {
+    return this.http.get<ModelsStateFull>(`${this.baseUrl}/states/${id}`);
+  }
+
+  _getStateRequirements(stateId: number): Observable<ModelsStateRequirementFull[]> {
+    return this.http.get<ModelsStateRequirementFull[]>(`${this.baseUrl}/states/${stateId}/requirements`);
+  }
+
+  _createState(body: ModelsNewStateRequest): Observable<ModelsStateFull> {
+    return this.http.post<ModelsStateFull>(`${this.baseUrl}/states`, body);
+  }
+
+  _addStateRequirement(stateId: number, body: ModelsStateRequirementShort): Observable<ModelsStateRequirementFull> {
+    return this.http.post<ModelsStateRequirementFull>(`${this.baseUrl}/states/${stateId}/requirements`, body);
+  }
+
+  _addStateRequirementCheck(
+    requirementId: number,
+    body: ModelsStateRequirementCheckShort,
+  ): Observable<EntStateRequirementCheck> {
+    return this.http.post<EntStateRequirementCheck>(
+      `${this.baseUrl}/state-requirements/${requirementId}/checks`,
+      body,
+    );
+  }
+
+  _getStateRequirementsByIds(ids: number[]): Observable<ModelsStateRequirementFull[]> {
+    if (!ids.length) {
+      return of([]);
+    }
+    const params = new HttpParams({ fromObject: { ids: ids.join(',') } });
+    return this.http.get<ModelsStateRequirementFull[]>(`${this.baseUrl}/state-requirements`, { params });
+  }
+
+  _getStateRequirementChecks(requirementId: number): Observable<EntStateRequirementCheck[]> {
+    return this.http.get<EntStateRequirementCheck[]>(
+      `${this.baseUrl}/state-requirements/${requirementId}/checks`,
+    );
+  }
+  //------------------------------------ states  ----------------------------------------
 
   //------------------------------------ container ----------------------------------------
   changeOrderOfTasks(containerType: TaskContainerType, containerId: number, tasksInNewOrder: number[]): Observable<void> {
