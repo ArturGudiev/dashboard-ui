@@ -1,14 +1,14 @@
 import { Component, DestroyRef, inject, type OnInit , ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { RouterOutlet } from '@angular/router';
 import { DashboardService } from "./services/dashboard.service";
 import { AlertService, type IAlertsDataState } from "./services/alert.service";
-import { SidenavComponent } from "./components/pages/sidenav/sidenav.component";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-root',
-    imports: [SidenavComponent],
+    imports: [RouterOutlet],
   templateUrl: './app.component.html',
   standalone: true,
   styleUrl: './app.component.sass'

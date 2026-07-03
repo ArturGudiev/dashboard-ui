@@ -16,11 +16,13 @@ export class AppConfigService {
   constructor() {
     const base = window.__env?.API_BASE_URL;
     if (base != null && base !== '') {
-      this._baseUrl = base.replace(/\/$/, ''); // same origin, Nginx proxies /api -> backend
+      this._baseUrl = base.replace(/\/$/, '');
+    } else if ('useProxy' in environment && environment.useProxy) {
+      this._baseUrl = '';
     } else {
       const host = window.__env?.API_HOST ?? environment.API_HOST;
       const port = window.__env?.API_PORT ?? environment.API_PORT;
-      this._baseUrl = `${host}:${port}`;
+      this._baseUrl = port ? `${host}:${port}` : host;
     }
   }
 

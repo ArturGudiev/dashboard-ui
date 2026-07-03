@@ -25,8 +25,11 @@ import { StateComponent } from "./components/containers/state/state.component";
 import { stateResolver } from "./resolvers/state.resolver";
 import { StateRequirementComponent } from "./components/containers/state-requirement/state-requirement.component";
 import { stateRequirementResolver } from "./resolvers/state-requirement.resolver";
+import { LoginComponent } from "./components/pages/login/login.component";
+import { SidenavComponent } from "./components/pages/sidenav/sidenav.component";
+import { authGuard, guestGuard } from "./guards/auth.guard";
 
-export const routes: Routes = [
+const protectedRoutes: Routes = [
   {path: '', component: MainPageComponent},
   {
     path: 'task/:id',
@@ -94,4 +97,18 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'paramsChange',
   },
   {path: 'help', component: HelpComponent},
+];
+
+export const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [guestGuard],
+  },
+  {
+    path: '',
+    component: SidenavComponent,
+    canActivate: [authGuard],
+    children: protectedRoutes,
+  },
 ];

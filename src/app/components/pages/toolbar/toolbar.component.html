@@ -32,8 +32,22 @@
     type="button"
     id="doneTasksButton"
     class="toolbar-interactive"
-    style="padding-right: 5rem"
     (click)="openGetDatetimeDialog()"
   >{{doneTasks()}}</button>
+
+  <button
+    mat-stroked-button
+    id="logout-button"
+    class="logout-button"
+    (click)="onLogoutClick()"
+    aria-label="Logout"
+  >
+    <mat-icon>logout</mat-icon>
+    @if (currentUser(); as user) {
+      <span class="logout-label">{{ user.name }}</span>
+    } @else {
+      <span class="logout-label">Logout</span>
+    }
+  </button>
 
 </mat-toolbar>

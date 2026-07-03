@@ -20,6 +20,8 @@ import { FormsModule } from "@angular/forms";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { GetDatetimeDialogComponent } from "../../dialogs/get-datetime-dialog/get-datetime-dialog.component";
 import { AppStore } from "../../../state/app.store";
+import { AuthService } from "../../../services/auth.service";
+import { AuthStore } from "../../../state/auth.store";
 
 @Component({
   selector: 'app-toolbar',
@@ -43,9 +45,11 @@ export class ToolbarComponent implements OnInit {
   readonly doneTasks = signal(0);
   readonly doneTasksUntilValue = signal(0);
   readonly showUntilValue = signal(false);
+  readonly currentUser = inject(AuthStore).user;
   value: string = '';
 
   private appStore = inject(AppStore);
+  private authService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
   private dialog = inject(MatDialog);
   private _snackBar = inject(MatSnackBar);
@@ -250,6 +254,15 @@ export class ToolbarComponent implements OnInit {
 
   onUntilValueClick() {
     this.dashboardService.disableShowUntilValue();
+  }
+
+  onLogoutClick(): void {
+    this.authService
+      .logout()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.router.navigate(['/login']);
+      });
   }
 
 }
