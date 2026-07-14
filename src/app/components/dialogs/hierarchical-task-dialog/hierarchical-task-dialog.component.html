@@ -1,0 +1,31 @@
+<div class="dialog-title">Add hierarchical tasks</div>
+
+<div class="roots-header">
+  <span>Root tasks</span>
+  <button
+    mat-mini-fab
+    color="primary"
+    type="button"
+    (click)="addRoot()"
+    aria-label="Add root task"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+
+<div class="tree-wrapper">
+  @for (root of roots(); track $index) {
+    <app-hierarchical-task-node
+      [node]="root"
+      [depth]="0"
+      [canRemove]="roots().length > 1"
+      (remove)="removeRoot($index)"
+      (treeChange)="refreshTree()"
+    ></app-hierarchical-task-node>
+  }
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <button mat-button type="button" [disabled]="!canSubmit()" (click)="onSubmit()">Create</button>
+</div>

@@ -35,7 +35,10 @@ import { NgClass } from "@angular/common";
 import { type TaskContainer } from "../../../models/interfaces/task-container";
 import {
   type CreateNewTaskRequest,
+  type CreateHierarchicalTasksRequest,
+  type HierarchicalTaskDialogResult,
   type NewTaskDialogResult,
+  type TaskNode,
   TasksService,
 } from "../../../services/task-container-services/tasks.service";
 import { TaskContainerService } from "../../../services/task-container-services/task-container.service";
@@ -127,7 +130,7 @@ export class TasksListComponent implements OnInit {
   }
 
   addTask(makeSelected = false) {
-    this.tasksService.openAddTaskDialog()
+    this.tasksService.openAddTaskDialog({ markSelectedByDefault: makeSelected })
       .subscribe((responseObj: NewTaskDialogResult | undefined) => {
         this.tasksService.addTaskDialogOpened = false;
         if (!responseObj) {
@@ -146,7 +149,7 @@ export class TasksListComponent implements OnInit {
           this.tasksService.createNewTask(request)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((newTask: TaskC) => {
-              if (makeSelected) {
+              if (makeSelected || responseObj.markSelected) {
                 this.expandedSubtasks.update(map => ({
                   ...map,
                   [newTask.id]: { container: newTask, tasks: [] },
@@ -157,6 +160,32 @@ export class TasksListComponent implements OnInit {
             })
         }
       })
+  }
+
+  addHierarchicalTask(): void {
+    this.tasksService.openHierarchicalTaskDialog()
+      .subscribe((responseObj: HierarchicalTaskDialogResult | undefined) => {
+        this.tasksService.hierarchicalTaskDialogOpened = false;
+        if (!responseObj?.nodes.length) {
+          return;
+        }
+
+        const request: CreateHierarchicalTasksRequest = {
+          parent: { id: this.container().id, type: this.container().type },
+          nodes: this.interpolateTaskNodes(responseObj.nodes),
+        };
+
+        this.tasksService.createHierarchicalTasks(request)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => this.refreshTasks.emit());
+      });
+  }
+
+  private interpolateTaskNodes(nodes: TaskNode[]): TaskNode[] {
+    return nodes.map((node) => ({
+      description: this.interpolateTaskText(node.description),
+      children: this.interpolateTaskNodes(node.children),
+    }));
   }
 
   private makeChangesAfterTasksChanged() {
@@ -217,6 +246,9 @@ export class TasksListComponent implements OnInit {
 
     if (['task'].includes(arr[0]) && this.level() === 0) {
       this.addTask();
+    }
+    if (['htask'].includes(arr[0]) && this.level() === 0) {
+      this.addHierarchicalTask();
     }
     if (['new-task-go'].includes(arr[0]) && this.level() === 0) {
       this.addTaskAndGoToIt();

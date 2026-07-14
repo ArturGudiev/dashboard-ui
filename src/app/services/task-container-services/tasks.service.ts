@@ -3,9 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { EMPTY, type Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { NewTaskDialogComponent } from '../../components/dialogs/new-task-dialog/new-task-dialog.component';
+import { HierarchicalTaskDialogComponent } from '../../components/dialogs/hierarchical-task-dialog/hierarchical-task-dialog.component';
 import { type TaskC } from '../../models/task-class';
 import { type TaskContainer } from '../../models/interfaces/task-container';
-import { NEW_TASK_DIALOG_OPTIONS } from '../../shared/constants';
+import { NEW_HIERARCHICAL_TASK_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from '../../shared/constants';
 import { type EmptyJsonResponse } from '../../shared/libs/task-api.lib';
 import { type HandlersNewTaskRequest } from '../../types/generated';
 import { ApiService } from '../api.service';
@@ -15,6 +16,49 @@ import { DashboardService } from '../dashboard.service';
 export interface NewTaskDialogResult {
   description: string;
   notes: string;
+  markSelected?: boolean;
+}
+
+export interface TaskNode {
+  description: string;
+  children: TaskNode[];
+}
+
+export type EditableTaskNode = {
+  description: string;
+  children: EditableTaskNode[];
+};
+
+export interface HierarchicalTaskDialogResult {
+  nodes: TaskNode[];
+}
+
+export type CreateHierarchicalTasksRequest = {
+  parent: { id: number; type: string };
+  nodes: TaskNode[];
+};
+
+export function createEmptyEditableTaskNode(): EditableTaskNode {
+  return { description: '', children: [] };
+}
+
+export function toTaskNode(node: EditableTaskNode): TaskNode | null {
+  const description = node.description.trim();
+  const children = node.children
+    .map(toTaskNode)
+    .filter((child): child is TaskNode => child !== null);
+
+  if (!description && children.length === 0) {
+    return null;
+  }
+
+  return { description, children };
+}
+
+export function toTaskNodes(roots: EditableTaskNode[]): TaskNode[] {
+  return roots
+    .map(toTaskNode)
+    .filter((node): node is TaskNode => node !== null);
 }
 
 /** Emitted when the add-task dialog is cancelled or already open. */
@@ -29,6 +73,7 @@ export type AddTaskToContainerResult = TaskC | AddTaskDialogSkipped;
 })
 export class TasksService {
   addTaskDialogOpened = false;
+  hierarchicalTaskDialogOpened = false;
 
   private apiService = inject(ApiService);
   private dialog = inject(MatDialog);
@@ -47,6 +92,11 @@ export class TasksService {
   /** POST /new-task → `models.TaskFull` */
   createNewTask(request: CreateNewTaskRequest): Observable<TaskC> {
     return this.apiService._createNewTask(request);
+  }
+
+  /** POST /new-hierarchical-tasks → `models.TaskFull[]` */
+  createHierarchicalTasks(request: CreateHierarchicalTasksRequest): Observable<TaskC[]> {
+    return this.apiService._createHierarchicalTasks(request);
   }
 
   /** PUT /finish-task/:id → `handlers.TaskResponse` */
@@ -92,14 +142,29 @@ export class TasksService {
     );
   }
 
-  openAddTaskDialog(): Observable<NewTaskDialogResult | undefined> {
+  openAddTaskDialog(options?: { markSelectedByDefault?: boolean }): Observable<NewTaskDialogResult | undefined> {
     if (this.addTaskDialogOpened) {
       return EMPTY;
     }
     this.addTaskDialogOpened = true;
     const dialogRef = this.dialog.open(NewTaskDialogComponent, {
-      data: { title: 'Description', inputWidth: '40rem' },
+      data: {
+        title: 'Description',
+        inputWidth: '40rem',
+        markSelectedByDefault: options?.markSelectedByDefault ?? false,
+      },
       ...NEW_TASK_DIALOG_OPTIONS,
+    });
+    return dialogRef.afterClosed();
+  }
+
+  openHierarchicalTaskDialog(): Observable<HierarchicalTaskDialogResult | undefined> {
+    if (this.hierarchicalTaskDialogOpened) {
+      return EMPTY;
+    }
+    this.hierarchicalTaskDialogOpened = true;
+    const dialogRef = this.dialog.open(HierarchicalTaskDialogComponent, {
+      ...NEW_HIERARCHICAL_TASK_DIALOG_OPTIONS,
     });
     return dialogRef.afterClosed();
   }

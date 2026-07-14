@@ -24,6 +24,11 @@
     "secure": false,
     "changeOrigin": true
   },
+  "/new-hierarchical-tasks": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
   "/update-task": {
     "target": "http://localhost:8080",
     "secure": false,

@@ -74,6 +74,7 @@ import {
   toQuestionPartial,
   toStoryPartial,
 } from '../shared/libs/container-update.lib';
+import { type CreateHierarchicalTasksRequest } from './task-container-services/tasks.service';
 
 /** GET /done-tasks — Go `handlers.DoneTasksResponse`. */
 export interface DoneTasksCountResponse {
@@ -146,6 +147,13 @@ export class ApiService {
     return this.http
       .post<ModelsTaskFull>(`${this.baseUrl}/new-task`, request)
       .pipe(map(taskFromFull));
+  }
+
+  /** POST /new-hierarchical-tasks — returns created root `models.TaskFull[]`. */
+  _createHierarchicalTasks(request: CreateHierarchicalTasksRequest): Observable<TaskC[]> {
+    return this.http
+      .post<ModelsTaskFull[]>(`${this.baseUrl}/new-hierarchical-tasks`, request)
+      .pipe(map((tasks) => tasks.map(taskFromFull)));
   }
 
   /** PUT /finish-task/:id — handler returns `handlers.TaskResponse`. */

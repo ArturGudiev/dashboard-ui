@@ -14,6 +14,8 @@
               cdkAutosizeMaxRows="5"></textarea>
   </mat-form-field>
 
+  <mat-checkbox formControlName="markSelected">Mark selected</mat-checkbox>
+
   <div mat-dialog-actions>
     <button mat-button type="button" (click)="onNoClick()">No Thanks</button>
     <button mat-button type="submit" [disabled]="!myForm.valid">Ok</button>
