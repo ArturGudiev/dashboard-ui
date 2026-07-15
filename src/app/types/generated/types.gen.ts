@@ -1009,6 +1009,7 @@ export type ModelsTaskFull = {
     description?: string;
     done?: boolean;
     doneDateTime?: string;
+    dueDateTime?: string;
     id?: number;
     knowledgeBits?: Array<number>;
     knowledgeNodes?: Array<number>;
@@ -1026,6 +1027,7 @@ export type ModelsTaskPartial = {
     description?: string;
     done?: boolean;
     doneDateTime?: string;
+    dueDateTime?: string;
     id?: number;
     notes?: string;
     tags?: Array<string>;
@@ -1039,6 +1041,7 @@ export type ModelsTaskReportTreeNode = {
 
 export type ModelsTaskShort = {
     description?: string;
+    dueDateTime?: string;
     notes?: string;
     tags?: Array<string>;
 };

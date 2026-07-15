@@ -53,6 +53,10 @@ export class NavigationService {
       this.router.navigate(['directions']).then();
       return;
     }
+    if (['due', 'due-date', 'due-date-tasks'].includes(arr[0])) {
+      this.router.navigate(['due-date-tasks']).then();
+      return;
+    }
     if (['d', 'direction'].includes(arr[0]) && Number.isInteger(+arr[1])) {
       this.router.navigate(['direction', arr[1]]).then();
       return;

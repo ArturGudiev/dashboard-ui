@@ -14,6 +14,7 @@ export type TaskCCreateSource = {
   done: boolean;
   tags?: string[];
   notes?: string;
+  dueDateTime?: string | null;
   tasks?: number[];
   problems?: number[];  
   questions?: number[];
@@ -35,6 +36,7 @@ export class TaskC implements TaskContainer {
   done = false;
 
   notes: string;
+  dueDateTime: string | null = null;
   tasks: number[];
   problems: number[];
   questions: number[];
@@ -51,6 +53,7 @@ export class TaskC implements TaskContainer {
               tags: string[] = [],
               notes = '',
               otherFields: {
+                dueDateTime?: string | null,
                 tasks?: number[],
                 problems?: number[],
                 questions?: number[],
@@ -66,6 +69,7 @@ export class TaskC implements TaskContainer {
     this.tags = tags;
     this.id = _id;
     this.notes = notes;
+    this.dueDateTime = otherFields?.dueDateTime ?? null;
     this.tasks = otherFields?.tasks ?? [];
     this.problems = otherFields?.problems ?? [];
     this.questions = otherFields?.questions ?? [];
@@ -81,9 +85,8 @@ export class TaskC implements TaskContainer {
   }
 
   static createFromObj(taskObj: TaskCCreateSource): TaskC {
-    // check here object has all necessary fields
     return new TaskC(taskObj.id, taskObj.description, taskObj.done, taskObj.tags, taskObj.notes,
-      pick(taskObj, ['parentContainers', 'tasks', 'problems', 'questions',
+      pick(taskObj, ['dueDateTime', 'parentContainers', 'tasks', 'problems', 'questions',
         'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions', 'variables']))
   }
 

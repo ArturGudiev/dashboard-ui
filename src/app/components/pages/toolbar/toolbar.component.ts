@@ -214,6 +214,10 @@ export class ToolbarComponent implements OnInit {
     this.router.navigate(['states']);
   }
 
+  onDueDateTasksClick() {
+    this.router.navigate(['due-date-tasks']);
+  }
+
   private openCommandDialog() {
     const dialogRef = this.dialog.open(CommandDialogComponent,
       {

@@ -11,7 +11,7 @@ export const colorLightPink = '#8080C0'
 export const COLORS = [colorBlue, colorPink, colorYellow, colorLightBrown, colorLightPink];
 
 export const  NEW_QUESTION_DIALOG_OPTIONS = { height: '300px', width: '700px'};
-export const  NEW_TASK_DIALOG_OPTIONS = { height: '400px', width: '700px'};
+export const  NEW_TASK_DIALOG_OPTIONS = { height: '430px', width: '700px'};
 export const  NEW_HIERARCHICAL_TASK_DIALOG_OPTIONS = { height: '600px', width: '800px'};
 export const  NEW_STORY_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  GET_VALUE_DIALOG_OPTIONS = { height: '300px', width: '700px'};

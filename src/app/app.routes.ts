@@ -27,6 +27,7 @@ import { StateRequirementComponent } from "./components/containers/state-require
 import { stateRequirementResolver } from "./resolvers/state-requirement.resolver";
 import { LoginComponent } from "./components/pages/login/login.component";
 import { SidenavComponent } from "./components/pages/sidenav/sidenav.component";
+import { DueDateTasksComponent } from "./components/pages/due-date-tasks/due-date-tasks.component";
 import { authGuard, guestGuard } from "./guards/auth.guard";
 
 const protectedRoutes: Routes = [
@@ -71,6 +72,7 @@ const protectedRoutes: Routes = [
   },
   {path: 'long-tasks', component: LongTasksComponent},
   {path: 'states', component: StatesComponent},
+  {path: 'due-date-tasks', component: DueDateTasksComponent},
   {
     path: 'state/:id',
     component: StateComponent,

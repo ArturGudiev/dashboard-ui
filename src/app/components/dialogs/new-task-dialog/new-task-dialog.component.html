@@ -14,6 +14,36 @@
               cdkAutosizeMaxRows="5"></textarea>
   </mat-form-field>
 
+  @if (showDueDate()) {
+    <div class="due-date-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Due date</mat-label>
+        <input matInput type="date" formControlName="dueDate">
+      </mat-form-field>
+      <button
+        mat-mini-fab
+        type="button"
+        color="basic"
+        class="clear-due-date-button"
+        (click)="clearDueDateField()"
+        aria-label="Remove due date"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  } @else {
+    <button
+      mat-mini-fab
+      type="button"
+      color="primary"
+      class="add-due-date-button"
+      (click)="showDueDateField()"
+      aria-label="Add due date"
+    >
+      <mat-icon>event</mat-icon>
+    </button>
+  }
+
   <mat-checkbox formControlName="markSelected">Mark selected</mat-checkbox>
 
   <div mat-dialog-actions>
@@ -22,4 +52,3 @@
   </div>
 
 </form>
-

@@ -142,6 +142,14 @@ export class ApiService {
       .pipe(map((tasks) => tasks.map(taskFromFull)));
   }
 
+  /** GET /tasks/by-due-date?date=YYYY-MM-DD */
+  _getOpenTasksByDueDate(date: string): Observable<TaskC[]> {
+    const params = new HttpParams({ fromObject: { date } });
+    return this.http
+      .get<ModelsTaskFull[]>(`${this.baseUrl}/tasks/by-due-date`, { params })
+      .pipe(map((tasks) => tasks.map(taskFromFull)));
+  }
+
   /** POST /new-task — handler returns `models.TaskFull` (via GetTaskFull after create). */
   _createNewTask(request: HandlersNewTaskRequest): Observable<TaskC> {
     return this.http

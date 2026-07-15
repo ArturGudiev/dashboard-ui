@@ -17,6 +17,8 @@ export interface NewTaskDialogResult {
   description: string;
   notes: string;
   markSelected?: boolean;
+  /** YYYY-MM-DD or empty when unset */
+  dueDate?: string;
 }
 
 export interface TaskNode {
@@ -66,6 +68,11 @@ export type AddTaskDialogSkipped = Record<string, never>;
 
 export type CreateNewTaskRequest = HandlersNewTaskRequest;
 
+/** Convert HTML date input (YYYY-MM-DD) to ISO datetime for the API. */
+export function dueDateInputToIso(dueDate: string): string {
+  return new Date(`${dueDate}T00:00:00`).toISOString();
+}
+
 export type AddTaskToContainerResult = TaskC | AddTaskDialogSkipped;
 
 @Injectable({
@@ -92,6 +99,11 @@ export class TasksService {
   /** POST /new-task → `models.TaskFull` */
   createNewTask(request: CreateNewTaskRequest): Observable<TaskC> {
     return this.apiService._createNewTask(request);
+  }
+
+  /** GET /tasks/by-due-date?date=YYYY-MM-DD → open tasks for that day */
+  getOpenTasksByDueDate(date: string): Observable<TaskC[]> {
+    return this.apiService._getOpenTasksByDueDate(date);
   }
 
   /** POST /new-hierarchical-tasks → `models.TaskFull[]` */
@@ -192,6 +204,9 @@ export class TasksService {
             description: responseObj.description,
             tags: [],
             notes: responseObj.notes ?? '',
+            ...(responseObj.dueDate
+              ? { dueDateTime: dueDateInputToIso(responseObj.dueDate) }
+              : {}),
           },
           parent: { id: taskContainer.id, type: taskContainer.type },
         };

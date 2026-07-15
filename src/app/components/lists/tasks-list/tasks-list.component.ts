@@ -36,6 +36,7 @@ import { type TaskContainer } from "../../../models/interfaces/task-container";
 import {
   type CreateNewTaskRequest,
   type CreateHierarchicalTasksRequest,
+  dueDateInputToIso,
   type HierarchicalTaskDialogResult,
   type NewTaskDialogResult,
   type TaskNode,
@@ -143,6 +144,9 @@ export class TasksListComponent implements OnInit {
               description: this.interpolateTaskText(description),
               tags: [],
               notes: this.interpolateTaskText(responseObj.notes ?? ''),
+              ...(responseObj.dueDate
+                ? { dueDateTime: dueDateInputToIso(responseObj.dueDate) }
+                : {}),
             },
             parent: { id: this.container().id, type: this.container().type },
           };
@@ -453,6 +457,9 @@ export class TasksListComponent implements OnInit {
               description: this.interpolateTaskText(description),
               tags: [],
               notes: this.interpolateTaskText(responseObj.notes ?? ''),
+              ...(responseObj.dueDate
+                ? { dueDateTime: dueDateInputToIso(responseObj.dueDate) }
+                : {}),
             },
             parent: { id: this.container().id, type: this.container().type },
           };

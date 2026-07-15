@@ -46,6 +46,7 @@ function toTaskCCreateSource(dto: {
   done?: boolean;
   tags?: string[];
   notes?: string;
+  dueDateTime?: string | null;
   tasks?: number[];
   problems?: number[];
   questions?: number[];
@@ -66,6 +67,7 @@ function toTaskCCreateSource(dto: {
     done,
     tags: dto.tags ?? [],
     notes: dto.notes ?? '',
+    dueDateTime: dto.dueDateTime ?? null,
     tasks: dto.tasks,
     problems: dto.problems,
     questions: dto.questions,

@@ -1,12 +1,13 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { MatFormField } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
-import { MatButton } from "@angular/material/button";
+import { MatButton, MatMiniFabButton } from "@angular/material/button";
 import { MatLabel } from "@angular/material/form-field";
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 import { type NewTaskDialogResult } from '../../../services/task-container-services/tasks.service';
 
 export type NewTaskDialogData = {
@@ -14,6 +15,13 @@ export type NewTaskDialogData = {
   inputWidth?: string;
   markSelectedByDefault?: boolean;
 };
+
+function todayDateInputValue(): string {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${now.getFullYear()}-${month}-${day}`;
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +35,9 @@ export type NewTaskDialogData = {
         MatInput,
         MatDialogActions,
         MatButton,
+        MatMiniFabButton,
         MatCheckboxModule,
+        MatIconModule,
     ],
     styleUrls: ['./new-task-dialog.component.sass']
 })
@@ -37,11 +47,24 @@ export class NewTaskDialogComponent {
   dialogRef = inject(MatDialogRef<NewTaskDialogComponent>);
   data = inject<NewTaskDialogData>(MAT_DIALOG_DATA, { optional: true });
 
+  readonly showDueDate = signal(false);
+
   myForm = new FormGroup({
     description: new FormControl('', [Validators.required]),
     notes: new FormControl('', []),
+    dueDate: new FormControl('', []),
     markSelected: new FormControl(this.data?.markSelectedByDefault ?? false, []),
   });
+
+  showDueDateField(): void {
+    this.myForm.controls.dueDate.setValue(todayDateInputValue());
+    this.showDueDate.set(true);
+  }
+
+  clearDueDateField(): void {
+    this.myForm.controls.dueDate.setValue('');
+    this.showDueDate.set(false);
+  }
 
   onNoClick(): void {
     this.dialogRef.close(null);
@@ -49,10 +72,12 @@ export class NewTaskDialogComponent {
 
   onSubmit() {
     const value = this.myForm.value;
+    const dueDate = this.showDueDate() ? (value.dueDate ?? '').trim() : '';
     const result: NewTaskDialogResult = {
       description: value.description ?? '',
       notes: value.notes ?? '',
       markSelected: !!value.markSelected,
+      dueDate: dueDate || undefined,
     };
     this.dialogRef.close(result);
   }
