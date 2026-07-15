@@ -142,7 +142,7 @@ export class ApiService {
       .pipe(map((tasks) => tasks.map(taskFromFull)));
   }
 
-  /** GET /tasks/by-due-date?date=YYYY-MM-DD */
+  /** GET /tasks/by-due-date?date=YYYY-MM-DD (UTC calendar day) */
   _getOpenTasksByDueDate(date: string): Observable<TaskC[]> {
     const params = new HttpParams({ fromObject: { date } });
     return this.http

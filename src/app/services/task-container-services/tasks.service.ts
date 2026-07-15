@@ -68,9 +68,9 @@ export type AddTaskDialogSkipped = Record<string, never>;
 
 export type CreateNewTaskRequest = HandlersNewTaskRequest;
 
-/** Convert HTML date input (YYYY-MM-DD) to ISO datetime for the API. */
+/** Convert HTML date input (YYYY-MM-DD) to UTC midnight ISO for the API. */
 export function dueDateInputToIso(dueDate: string): string {
-  return new Date(`${dueDate}T00:00:00`).toISOString();
+  return `${dueDate}T00:00:00.000Z`;
 }
 
 export type AddTaskToContainerResult = TaskC | AddTaskDialogSkipped;
