@@ -15,7 +15,6 @@ RUN npm run build
 
 # Stage 2: Serve the app
 FROM nginx:alpine
-RUN apk add --no-cache apache2-utils
 
 # Copy built assets from build stage
 # Angular application builder outputs to dist/dashboard-ui/browser
