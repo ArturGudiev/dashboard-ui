@@ -22,6 +22,12 @@ import { GetDatetimeDialogComponent } from "../../dialogs/get-datetime-dialog/ge
 import { AppStore } from "../../../state/app.store";
 import { AuthService } from "../../../services/auth.service";
 import { AuthStore } from "../../../state/auth.store";
+import {
+  type CreateNewTaskRequest,
+  dueDateInputToIso,
+  type NewTaskDialogResult,
+  TasksService,
+} from "../../../services/task-container-services/tasks.service";
 
 @Component({
   selector: 'app-toolbar',
@@ -59,6 +65,7 @@ export class ToolbarComponent implements OnInit {
   private navigateService = inject(NavigationService);
   private messageService = inject(MessageService);
   private router = inject(Router);
+  private tasksService = inject(TasksService);
 
   ngOnInit(): void {
     this.dashboardService.getDataStateChange()
@@ -254,6 +261,33 @@ export class ToolbarComponent implements OnInit {
     if (command === '+5') {
       this.dashboardService.setDoneTasksUntilValue(this.doneTasks() + 5);
     }
+    if (command === 'gtask') {
+      this.openAddTaskWithoutParentDialog();
+    }
+  }
+
+  private openAddTaskWithoutParentDialog(): void {
+    this.tasksService.openAddTaskDialog()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((responseObj: NewTaskDialogResult | undefined) => {
+        this.tasksService.addTaskDialogOpened = false;
+        if (!responseObj?.description) {
+          return;
+        }
+        const request: CreateNewTaskRequest = {
+          task: {
+            description: responseObj.description,
+            tags: [],
+            notes: responseObj.notes ?? '',
+            ...(responseObj.dueDate
+              ? { dueDateTime: dueDateInputToIso(responseObj.dueDate) }
+              : {}),
+          },
+        };
+        this.tasksService.createNewTask(request)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe();
+      });
   }
 
   onUntilValueClick() {
