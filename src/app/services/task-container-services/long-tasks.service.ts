@@ -89,6 +89,10 @@ export class LongTasksService {
     return this.longTaskProgressesApiService.addSubmission(progressId, body);
   }
 
+  closeLongTask(id: number): Observable<EntLongTask> {
+    return this.apiService._closeLongTask(id);
+  }
+
   openAddLongTaskDialog(parent?: ModelsContainerDescription): Observable<void | null> {
     if (this.addLongTaskDialogOpened) {
       return EMPTY;

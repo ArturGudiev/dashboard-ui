@@ -33,6 +33,8 @@
       <div><strong>Progress:</strong> {{ formatProgress(task) }}</div>
       @if (task.done) {
         <div><strong>Status:</strong> done</div>
+      } @else {
+        <button mat-stroked-button color="warn" (click)="closeTask()">Close the task</button>
       }
       @if (task.notes) {
         <div id="long-task-notes"><strong>Notes:</strong> {{ task.notes }}</div>

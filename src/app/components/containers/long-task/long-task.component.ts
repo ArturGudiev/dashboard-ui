@@ -66,6 +66,15 @@ export class LongTaskComponent {
       .subscribe((task) => this.longTaskForView.set(task));
   }
 
+  closeTask(): void {
+    this.longTasksService
+      .closeLongTask(Number(this.id()))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.router.navigate(['long-tasks']).then();
+      });
+  }
+
   loadSubmissions(): void {
     this.longTasksService
       .getSubmissions(Number(this.id()))

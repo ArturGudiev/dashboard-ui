@@ -544,8 +544,14 @@ export class ApiService {
     return this.http.post<EntLongTask>(`${this.baseUrl}/long-tasks`, { ...obj });
   }
 
-  _patchLongTask(id: number, body: { description?: string; notes?: string }): Observable<EntLongTask> {
-    return this.http.patch<EntLongTask>(`${this.baseUrl}/long-tasks/${id}`, body);
+  _patchLongTask(id: number, body: { description?: string; notes?: string; done?: boolean }): Observable<EntLongTask> {
+    return this.http.patch<EntLongTask>(`${this.baseUrl}/long-tasks/${id}`, body, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  _closeLongTask(id: number): Observable<EntLongTask> {
+    return this.http.put<EntLongTask>(`${this.baseUrl}/long-tasks/${id}/close`, {});
   }
 
   _getLongTaskSubmissions(id: number): Observable<ModelsLongTaskProgressSubmission[]> {
