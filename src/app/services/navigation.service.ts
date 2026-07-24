@@ -5,6 +5,84 @@ import { AlertService } from "./alert.service";
 import { TasksService } from "./task-container-services/tasks.service";
 import { type ModelsAliasModel } from "../types/generated";
 
+const FILES_ROOT_MARKERS = [
+  '/dashboard_files/',
+  '\\dashboard_files\\',
+  '/dashboard/files/',
+  '\\dashboard\\files\\',
+  '/data/files/',
+  '\\data\\files\\',
+];
+
+const FILES_TOP_DIRS = new Set([
+  'tasks',
+  'problems',
+  'questions',
+  'actions',
+  'definitions',
+  'knowledge-bits',
+  'knowledge-nodes',
+  'stories',
+  'epics',
+  'scheduled-tasks',
+  'states',
+]);
+
+/**
+ * Converts a stored file-alias path (often absolute Windows/Unix under FILES_DIR)
+ * into route segments for `/files/...`.
+ */
+export function relativeFilesPathSegments(filePath: string): string[] {
+  let normalized = filePath.trim().replace(/\\/g, '/');
+  if (!normalized) {
+    return [];
+  }
+
+  // Drop trailing .bin used by rclone crypt on disk.
+  if (normalized.toLowerCase().endsWith('.bin')) {
+    normalized = normalized.slice(0, -4);
+  }
+
+  const lower = normalized.toLowerCase();
+  for (const marker of FILES_ROOT_MARKERS) {
+    const markerNorm = marker.replace(/\\/g, '/').toLowerCase();
+    const idx = lower.lastIndexOf(markerNorm);
+    if (idx >= 0) {
+      return normalized
+        .slice(idx + markerNorm.length)
+        .split('/')
+        .filter(Boolean);
+    }
+  }
+
+  // Match ".../files/<relative>" even when the root folder name is just "files".
+  const filesIdx = lower.lastIndexOf('/files/');
+  if (filesIdx >= 0) {
+    return normalized
+      .slice(filesIdx + '/files/'.length)
+      .split('/')
+      .filter(Boolean);
+  }
+
+  const parts = normalized.split('/').filter(Boolean);
+  // Strip Windows drive letter segment ("C:").
+  if (parts[0]?.match(/^[A-Za-z]:$/)) {
+    parts.shift();
+  }
+
+  const topIdx = parts.findIndex((p) => FILES_TOP_DIRS.has(p.toLowerCase()));
+  if (topIdx >= 0) {
+    return parts.slice(topIdx);
+  }
+
+  // Already relative (no leading slash / drive).
+  if (!filePath.trim().startsWith('/') && !/^[A-Za-z]:[\\/]/.test(filePath.trim())) {
+    return parts;
+  }
+
+  return [];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -91,8 +169,14 @@ export class NavigationService {
   }
 
   private navigateByAlias(val: ModelsAliasModel) {
+    if (val.type === 'file') {
+      this.navigateToFileAlias(val.filePath);
+      return;
+    }
+
     const id = val.itemId;
     if (!id) {
+      this.alertService.showAlert('Alias has no target id');
       return;
     }
     if (val.type === 'epic') {
@@ -116,9 +200,6 @@ export class NavigationService {
     if (val.type === 'action') {
       this.navigateToAction(id);
     }
-    // if (val.type === 'knowledge') {
-    //   this.navigateToKnowledge(id);
-    // }
     if (val.type === 'knowledge-node') {
       this.navigateToKnowledgeNode(id);
     }
@@ -126,6 +207,20 @@ export class NavigationService {
     if (val.type === 'repetitive-task') {
       this.navigateToScheduledTask(id);
     }
+  }
+
+  /** Open a file alias in the files viewer (`/files/<relative-path>`). */
+  private navigateToFileAlias(filePath: string | undefined): void {
+    if (!filePath) {
+      this.alertService.showAlert('File alias has no path');
+      return;
+    }
+    const segments = relativeFilesPathSegments(filePath);
+    if (!segments.length) {
+      this.alertService.showAlert(`Could not resolve file path: ${filePath}`);
+      return;
+    }
+    void this.router.navigate(['files', ...segments]);
   }
 
   navigateToEpic(id: number) {
