@@ -1,4 +1,4 @@
-<div id="file-viewer">
+<div id="file-viewer" [class.wide]="previewKind() === 'mindmap' && showMindMapVisually()">
   <div class="file-header">
     <h1>{{ fileName() || filesPath() || 'File' }}</h1>
     <div class="file-meta">
@@ -15,12 +15,22 @@
         <span class="chip encrypted">encrypted</span>
       }
     </div>
-    @if (downloadHref()) {
-      <button mat-stroked-button type="button" (click)="download()">
-        <mat-icon>download</mat-icon>
-        Download
-      </button>
-    }
+    <div class="file-actions">
+      @if (previewKind() === 'mindmap' && mindMapRoot()) {
+        <mat-slide-toggle
+          [checked]="showMindMapVisually()"
+          (change)="onShowVisuallyChange($event.checked)"
+        >
+          Show visually
+        </mat-slide-toggle>
+      }
+      @if (downloadHref()) {
+        <button mat-stroked-button type="button" (click)="download()">
+          <mat-icon>download</mat-icon>
+          Download
+        </button>
+      }
+    </div>
   </div>
 
   @if (loading()) {
@@ -36,7 +46,11 @@
       }
       @case ('mindmap') {
         @if (mindMapRoot(); as root) {
-          <app-mind-map-viewer [root]="root" />
+          @if (showMindMapVisually()) {
+            <app-mind-map-graph [root]="root" />
+          } @else {
+            <app-mind-map-viewer [root]="root" />
+          }
         }
       }
       @case ('image') {

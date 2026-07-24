@@ -11,11 +11,13 @@ import { ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { from, of } from 'rxjs';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { type MmNode, parseMindMapXml } from '../../../shared/libs/mm-parser.lib';
 import { FilesService } from '../../../services/files.service';
 import { MindMapViewerComponent } from './mind-map-viewer.component';
+import { MindMapGraphComponent } from './mind-map-graph.component';
 
 type PreviewKind = 'text' | 'image' | 'pdf' | 'mindmap' | 'binary';
 
@@ -23,7 +25,14 @@ type PreviewKind = 'text' | 'image' | 'pdf' | 'mindmap' | 'binary';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-file',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatProgressSpinner, MindMapViewerComponent],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinner,
+    MatSlideToggleModule,
+    MindMapViewerComponent,
+    MindMapGraphComponent,
+  ],
   templateUrl: './file.component.html',
   styleUrls: ['./file.component.sass'],
 })
@@ -45,6 +54,8 @@ export class FileComponent {
   readonly previewKind = signal<PreviewKind>('binary');
   readonly textContent = signal<string | null>(null);
   readonly mindMapRoot = signal<MmNode | null>(null);
+  /** Outline (default) vs mind-elixir graph with nodes/edges. */
+  readonly showMindMapVisually = signal(false);
   readonly objectUrl = signal<SafeResourceUrl | null>(null);
   readonly downloadHref = signal<string | null>(null);
   readonly fileName = signal('');
@@ -60,6 +71,7 @@ export class FileComponent {
           this.revokeObjectUrl();
           this.textContent.set(null);
           this.mindMapRoot.set(null);
+          this.showMindMapVisually.set(false);
           this.objectUrl.set(null);
           this.error.set(null);
           this.encrypted.set(false);
@@ -110,6 +122,10 @@ export class FileComponent {
     a.click();
   }
 
+  onShowVisuallyChange(checked: boolean): void {
+    this.showMindMapVisually.set(checked);
+  }
+
   private async applyBlob(blob: Blob, encrypted: boolean): Promise<void> {
     this.encrypted.set(encrypted);
     this.sizeBytes.set(blob.size);
@@ -129,6 +145,7 @@ export class FileComponent {
         this.textContent.set(await blob.text());
       } else if (kind === 'mindmap') {
         const xml = await blob.text();
+        this.textContent.set(xml);
         this.mindMapRoot.set(parseMindMapXml(xml));
       } else if (kind === 'image' || kind === 'pdf') {
         this.objectUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(this.rawObjectUrl));

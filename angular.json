@@ -38,6 +38,7 @@
             ],
             "styles": [
               "node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "node_modules/mind-elixir/dist/MindElixir.css",
               "src/tailwind.css",
               "src/styles.sass"
             ],
