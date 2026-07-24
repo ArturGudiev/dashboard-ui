@@ -1,0 +1,45 @@
+<div class="mm-node" [style.--depth]="depth()">
+  <div class="mm-row">
+    @if (node().children.length > 0) {
+      <button
+        type="button"
+        class="toggle"
+        (click)="toggle.emit(node().id)"
+        [attr.aria-expanded]="!node().folded"
+        [attr.aria-label]="node().folded ? 'Expand' : 'Collapse'"
+      >
+        <mat-icon>{{ node().folded ? 'chevron_right' : 'expand_more' }}</mat-icon>
+      </button>
+    } @else {
+      <span class="toggle-spacer"></span>
+    }
+
+    <div class="mm-body">
+      <div class="mm-text">{{ node().text }}</div>
+      @if (node().link) {
+        <a class="mm-link" [href]="node().link" target="_blank" rel="noopener noreferrer">
+          {{ node().link }}
+        </a>
+      }
+      @if (node().note) {
+        <div class="mm-note">{{ node().note }}</div>
+      }
+    </div>
+
+    @if (node().children.length > 0) {
+      <span class="mm-count">{{ node().children.length }}</span>
+    }
+  </div>
+
+  @if (!node().folded && node().children.length > 0) {
+    <div class="mm-children">
+      @for (child of node().children; track child.id) {
+        <app-mm-node
+          [node]="child"
+          [depth]="depth() + 1"
+          (toggle)="toggle.emit($event)"
+        />
+      }
+    </div>
+  }
+</div>

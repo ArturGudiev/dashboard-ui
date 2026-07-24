@@ -11,6 +11,7 @@ const spaApiPaths = new Set([
   '/directions',
   '/epics',
   '/states',
+  '/files',
 ]);
 
 function spaBypass(req) {
@@ -63,6 +64,7 @@ const paths = [
   '/change-tasks-order',
   '/add-anonymous-task',
   '/tests',
+  '/files',
 ];
 
 /** @type {Record<string, import('http-proxy-middleware').Options>} */

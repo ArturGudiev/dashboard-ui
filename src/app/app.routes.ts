@@ -28,10 +28,21 @@ import { stateRequirementResolver } from "./resolvers/state-requirement.resolver
 import { LoginComponent } from "./components/pages/login/login.component";
 import { SidenavComponent } from "./components/pages/sidenav/sidenav.component";
 import { DueDateTasksComponent } from "./components/pages/due-date-tasks/due-date-tasks.component";
+import { FileComponent } from "./components/pages/file/file.component";
 import { authGuard, guestGuard } from "./guards/auth.guard";
 
 const protectedRoutes: Routes = [
   {path: '', component: MainPageComponent},
+  {
+    path: 'files',
+    children: [
+      {
+        path: '**',
+        component: FileComponent,
+        runGuardsAndResolvers: 'paramsChange',
+      },
+    ],
+  },
   {
     path: 'task/:id',
     component: TaskComponent,

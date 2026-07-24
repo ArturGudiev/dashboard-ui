@@ -1,0 +1,10 @@
+<div class="mm-viewer">
+  <div class="mm-toolbar">
+    <button mat-stroked-button type="button" (click)="expandAll()">Expand all</button>
+    <button mat-stroked-button type="button" (click)="collapseAll()">Collapse all</button>
+    <span class="hint">Click chevrons to open / close branches (Freeplane fold state is respected)</span>
+  </div>
+  <div class="mm-tree">
+    <app-mm-node [node]="tree()" [depth]="0" (toggle)="onToggle($event)" />
+  </div>
+</div>

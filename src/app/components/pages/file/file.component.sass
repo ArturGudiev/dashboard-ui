@@ -1,0 +1,83 @@
+#file-viewer
+  padding: 1rem 1.25rem
+  max-width: 960px
+
+.file-header
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  gap: 0.75rem
+  margin-bottom: 1rem
+
+  h1
+    margin: 0
+    font-size: 1.35rem
+    word-break: break-all
+
+.file-meta
+  display: flex
+  flex-wrap: wrap
+  gap: 0.5rem
+  align-items: center
+  font-size: 0.85rem
+  color: rgba(0, 0, 0, 0.65)
+
+  .path
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+
+.chip
+  padding: 0.15rem 0.5rem
+  border-radius: 4px
+  background: rgba(0, 0, 0, 0.06)
+
+  &.encrypted
+    background: #fff3e0
+    color: #e65100
+
+.center
+  display: flex
+  justify-content: center
+  padding: 3rem 0
+
+.error
+  color: #c62828
+
+.text-preview
+  margin: 0
+  padding: 1rem
+  overflow: auto
+  max-height: calc(100vh - 12rem)
+  background: #f7f7f7
+  border: 1px solid rgba(0, 0, 0, 0.08)
+  border-radius: 6px
+  white-space: pre-wrap
+  word-break: break-word
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+  font-size: 0.9rem
+  line-height: 1.45
+
+.image-preview
+  img
+    max-width: 100%
+    height: auto
+    border-radius: 6px
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12)
+
+.pdf-preview
+  width: 100%
+  height: calc(100vh - 12rem)
+  border: 1px solid rgba(0, 0, 0, 0.08)
+  border-radius: 6px
+
+.binary-preview
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 0.75rem
+  padding: 3rem 1rem
+  color: rgba(0, 0, 0, 0.7)
+
+  mat-icon
+    font-size: 48px
+    width: 48px
+    height: 48px

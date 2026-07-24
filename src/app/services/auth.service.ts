@@ -1,10 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { type Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { AppConfigService } from './app-config.service';
 import { AuthStore, type AuthUser } from '../state/auth.store';
+import { FilesCryptoService } from './files-crypto.service';
 
 export interface LoginUserRequest {
   email: string;
@@ -25,6 +26,7 @@ export class AuthService {
   private appConfig = inject(AppConfigService);
   private authStore = inject(AuthStore);
   private router = inject(Router);
+  private injector = inject(Injector);
 
   initialize(): Observable<boolean> {
     return this.getMe().pipe(
@@ -73,6 +75,8 @@ export class AuthService {
 
   logoutLocal(): void {
     this.authStore.clearUser();
+    // Lazy inject to avoid a circular dependency with files services.
+    this.injector.get(FilesCryptoService).clearSessionKey();
   }
 
   redirectToLogin(returnUrl?: string): void {
