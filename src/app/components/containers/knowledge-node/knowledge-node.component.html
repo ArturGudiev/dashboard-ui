@@ -1,0 +1,12 @@
+@if (knowledgeNodeForView(); as knowledgeNode) {
+  <app-task-container-signal
+    [taskContainer]="knowledgeNode"
+    (refreshContainer)="reloadKnowledgeNode()"
+    (updateTaskContainer)="updateKnowledgeNode()"
+    [showQuestions]="true"
+    [showProblems]="true"
+    [showStories]="true"
+    [showEpics]="true"
+    [showKnowledgeNodes]="true"
+  ></app-task-container-signal>
+}

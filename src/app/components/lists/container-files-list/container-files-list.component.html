@@ -1,0 +1,26 @@
+@if (hasFiles()) {
+  <div id="container-files">
+    <h2 id="files-title">Files</h2>
+    <ul class="files-list">
+      @for (file of files(); track file.path; let i = $index) {
+        <li
+          class="file-row"
+          [class.is-dir]="file.isDir"
+          [class.is-file]="!file.isDir"
+          tabindex="0"
+          role="button"
+          (click)="onFileClick(file)"
+          (keydown.enter)="onFileClick(file)"
+          (keydown.space)="onFileClick(file); $event.preventDefault()"
+        >
+          <span class="index">{{ i + 1 }}</span>
+          <mat-icon>{{ file.isDir ? 'folder' : 'insert_drive_file' }}</mat-icon>
+          <span class="name">{{ fileLabel(file) }}</span>
+          @if (!file.isDir) {
+            <span class="size">{{ file.size }} B</span>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+}

@@ -9,6 +9,7 @@ import { Story } from "../models/story";
 import { Problem } from "../models/problem";
 import { Question } from "../models/question";
 import { Knowledge } from "../models/knowledge";
+import { KnowledgeNode, type KnowledgeNodeCreateSource } from "../models/knowledge-node";
 import { RecordItem } from "../models/record-item";
 import { Action } from '../models/classes/action';
 import { type TaskContainer } from "../models/interfaces/task-container";
@@ -70,6 +71,7 @@ import {
 import { type TaskContainerType } from "../models/interfaces/types";
 import {
   toEpicPartial,
+  toKnowledgeNodePartial,
   toProblemPartial,
   toQuestionPartial,
   toStoryPartial,
@@ -325,6 +327,34 @@ export class ApiService {
   }
 
   //----------------------------------------problems-----------------------------------------
+  //----------------------------------------knowledge-nodes----------------------------------
+
+  _getKnowledgeNodes(ids: number[]): Observable<KnowledgeNode[]> {
+    const body: HandlersIdsRequest = { ids };
+    return this.http.post<KnowledgeNodeCreateSource[]>(`${this.baseUrl}/get-knowledge-nodes`, body).pipe(
+      map((nodes) => nodes.map((n) => KnowledgeNode.createFromObj(n))),
+    );
+  }
+
+  _getKnowledgeNode(id: number): Observable<KnowledgeNode> {
+    return this.http
+      .get<KnowledgeNodeCreateSource>(`${this.baseUrl}/knowledge-node/${id}`)
+      .pipe(map((obj) => KnowledgeNode.createFromObj(obj)));
+  }
+
+  updateKnowledgeNode(node: KnowledgeNode): Observable<KnowledgeNode> {
+    return this.http
+      .put<KnowledgeNodeCreateSource>(`${this.baseUrl}/update-knowledge-node`, toKnowledgeNodePartial(node))
+      .pipe(map((obj) => KnowledgeNode.createFromObj(obj)));
+  }
+
+  _patchKnowledgeNode(id: number, newName: string): Observable<KnowledgeNode> {
+    return this.http
+      .patch<KnowledgeNodeCreateSource>(`${this.baseUrl}/knowledge-node/${id}`, { description: newName })
+      .pipe(map((obj) => KnowledgeNode.createFromObj(obj)));
+  }
+
+  //----------------------------------------knowledge-nodes----------------------------------
   //----------------------------------------aliases----------------------------------------
   _getAlias(alias: string): Observable<ModelsAliasModel> {
     return this.http.get<ModelsAliasModel>(`${this.baseUrl}/aliases/${alias}`);

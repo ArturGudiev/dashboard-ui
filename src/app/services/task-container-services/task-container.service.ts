@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { type Observable, of, Subject } from "rxjs";
+import { KnowledgeNodesService } from './knowledge-nodes.service';
 import { TasksService } from './tasks.service';
 import { ProblemsService } from './problems.service';
 import { QuestionsService } from './questions.service';
@@ -40,6 +41,7 @@ export class TaskContainerService {
   private logsService = inject(LogsService);
   private epicsService = inject(EpicsService);
   private storiesService = inject(StoriesService);
+  private knowledgeNodesService = inject(KnowledgeNodesService);
   private dialog = inject(MatDialog);
 
   getParentsPath(taskContainer: TaskContainer): Observable<string[]> {
@@ -54,6 +56,8 @@ export class TaskContainerService {
         return this.problemsService.getProblem(id);
       case 'question':
         return this.questionsService.getQuestion(id);
+      case 'knowledge-node':
+        return this.knowledgeNodesService.getKnowledgeNode(id);
       default:
         return of(null);
     }
@@ -75,6 +79,8 @@ export class TaskContainerService {
         return this.apiService._patchProblem(id, newTaskName);
       case 'question':
         return this.apiService._patchQuestion(id, newTaskName);
+      case 'knowledge-node':
+        return this.apiService._patchKnowledgeNode(id, newTaskName);
       case 'repetitive-task':
         return this.apiService._patchRepetitiveTask(id, newTaskName);
       case 'direction':

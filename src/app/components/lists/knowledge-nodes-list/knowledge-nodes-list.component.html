@@ -1,0 +1,47 @@
+@if (knowledgeNodes().length > 0) {
+  <div id="knowledge-nodes-actions">
+    <h2 id="knowledge-nodes-title">Knowledge nodes</h2>
+  </div>
+
+  <div id="table-wrapper">
+    <table
+      id="knowledge-nodes-table"
+      mat-table
+      [dataSource]="knowledgeNodes()"
+      class="mat-elevation-z8"
+    >
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td
+          mat-cell
+          class="row-link"
+          tabindex="0"
+          role="button"
+          *matCellDef="let node; let i = index"
+          (click)="onKnowledgeNodeClick(node)"
+          (keydown.enter)="onKnowledgeNodeClick(node)"
+          (keydown.space)="onKnowledgeNodeClick(node); $event.preventDefault()"
+        >
+          <span>{{ i + 1 }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td
+          mat-cell
+          class="row-link"
+          tabindex="0"
+          role="button"
+          *matCellDef="let node"
+          (click)="onKnowledgeNodeClick(node)"
+          (keydown.enter)="onKnowledgeNodeClick(node)"
+          (keydown.space)="onKnowledgeNodeClick(node); $event.preventDefault()"
+        >
+          <span>{{ node.description }}</span>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+}

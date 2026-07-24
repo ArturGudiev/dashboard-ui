@@ -29,6 +29,8 @@ import { LoginComponent } from "./components/pages/login/login.component";
 import { SidenavComponent } from "./components/pages/sidenav/sidenav.component";
 import { DueDateTasksComponent } from "./components/pages/due-date-tasks/due-date-tasks.component";
 import { FileComponent } from "./components/pages/file/file.component";
+import { KnowledgeNodeComponent } from "./components/containers/knowledge-node/knowledge-node.component";
+import { knowledgeNodeResolver } from "./resolvers/knowledge-node.resolver";
 import { authGuard, guestGuard } from "./guards/auth.guard";
 
 const protectedRoutes: Routes = [
@@ -42,6 +44,12 @@ const protectedRoutes: Routes = [
         runGuardsAndResolvers: 'paramsChange',
       },
     ],
+  },
+  {
+    path: 'knowledge-node/:id',
+    component: KnowledgeNodeComponent,
+    resolve: { knowledgeNode: knowledgeNodeResolver },
+    runGuardsAndResolvers: 'paramsChange',
   },
   {
     path: 'task/:id',

@@ -12,6 +12,7 @@ const spaApiPaths = new Set([
   '/epics',
   '/states',
   '/files',
+  '/knowledge-node',
 ]);
 
 function spaBypass(req) {
@@ -65,6 +66,10 @@ const paths = [
   '/add-anonymous-task',
   '/tests',
   '/files',
+  '/knowledge-node',
+  '/get-knowledge-nodes',
+  '/new-knowledge-node',
+  '/update-knowledge-node',
 ];
 
 /** @type {Record<string, import('http-proxy-middleware').Options>} */

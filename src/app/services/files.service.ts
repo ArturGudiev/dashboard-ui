@@ -54,6 +54,13 @@ export class FilesService {
     return this.http.get<FileListItem[]>(`${this.baseUrl}/files`);
   }
 
+  /** GET /files/container/:type/:id — immediate children of the container files folder. */
+  listContainerFiles(containerType: string, id: number): Observable<FileListItem[]> {
+    return this.http.get<FileListItem[]>(
+      `${this.baseUrl}/files/container/${encodeURIComponent(containerType)}/${id}`,
+    );
+  }
+
   /** GET /files/content/{relativePath} — raw file bytes (ciphertext when encrypted). */
   getFile(relativePath: string): Observable<HttpResponse<Blob>> {
     const encoded = relativePath

@@ -13,6 +13,7 @@ import { CommandsService } from "../../../services/commands.service";
 import { RecordsService } from "../../../services/records.service";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
 import { type Epic } from "../../../models/epic";
+import { type KnowledgeNode } from "../../../models/knowledge-node";
 import { RecordsListDialogComponent } from "../../dialogs/records-list-dialog/records-list-dialog.component";
 import { HelpComponent } from "../../pages/help/help.component";
 import { MatButtonModule } from "@angular/material/button";
@@ -22,6 +23,7 @@ import { EpicsListComponent } from "../../lists/epics-list/epics-list.component"
 import { SubStoriesComponent } from "../../lists/substories/sub-stories.component";
 import { QuestionsListComponent } from "../../lists/questions-list/questions-list.component";
 import { ProblemsListComponent } from "../../lists/problems-list/problems-list.component";
+import { KnowledgeNodesListComponent } from "../../lists/knowledge-nodes-list/knowledge-nodes-list.component";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { VariableDialogComponent, type VariableDialogResult } from "../../dialogs/variable-dialog/variable-dialog.component";
 
@@ -34,10 +36,12 @@ import { StoriesService } from "../../../services/task-container-services/storie
 import { EpicsService } from "../../../services/task-container-services/epics.service";
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
+import { KnowledgeNodesService } from "../../../services/task-container-services/knowledge-nodes.service";
 import { UtilsService } from "../../../services/utils.service";
 import { ContainerReportComponent } from "../container-report/container-report.component";
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
 import { VariablesTableComponent } from "../../lists/variables-table/variables-table.component";
+import { ContainerFilesListComponent } from "../../lists/container-files-list/container-files-list.component";
 import { GET_VALUE_DIALOG_OPTIONS, VARIABLE_DIALOG_OPTIONS } from '../../../shared/constants';
 import { ContainerVariablesApiService } from '../../../services/container-variables-api.service';
 import { AppStore } from "../../../state/app.store";
@@ -61,10 +65,12 @@ const EMPTY_PARENTS_PATH: string[] = [];
     SubStoriesComponent,
     QuestionsListComponent,
     ProblemsListComponent,
+    KnowledgeNodesListComponent,
     NotesComponent,
     ContainerReportComponent,
     TasksListComponent,
     VariablesTableComponent,
+    ContainerFilesListComponent,
   ],
   standalone: true,
   styleUrls: ['./task-container-signal.component.sass'],
@@ -77,6 +83,7 @@ export class TaskContainerSignalComponent implements OnInit {
   showStories = input<boolean>(false);
   showQuestions = input<boolean>(false);
   showProblems = input<boolean>(false);
+  showKnowledgeNodes = input<boolean>(false);
 
   refreshContainer = output<void>();
 
@@ -187,6 +194,7 @@ export class TaskContainerSignalComponent implements OnInit {
   stories = signal<Story[]>([]);
   problems = signal<Problem[]>([]);
   questions = signal<Question[]>([]);
+  knowledgeNodes = signal<KnowledgeNode[]>([]);
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
 
@@ -201,6 +209,7 @@ export class TaskContainerSignalComponent implements OnInit {
   private storiesService = inject(StoriesService);
   private epicsService = inject(EpicsService);
   private problemsService = inject(ProblemsService);
+  private knowledgeNodesService = inject(KnowledgeNodesService);
   private dialog = inject(MatDialog);
   private recordsService = inject(RecordsService);
   private tasksService = inject(TasksService);
@@ -226,6 +235,7 @@ export class TaskContainerSignalComponent implements OnInit {
         this.lastParentsPath.set([]);
         this.stories.set([]);
         this.epics.set([]);
+        this.knowledgeNodes.set([]);
       }
       this.refreshTaskContainerParts();
     });
@@ -308,6 +318,9 @@ export class TaskContainerSignalComponent implements OnInit {
     }
     if (this.showEpics()) {
       this.refreshSubepics();
+    }
+    if (this.showKnowledgeNodes() || this.taskContainer().type === 'knowledge-node') {
+      this.refreshKnowledgeNodes();
     }
   }
 
@@ -513,13 +526,19 @@ export class TaskContainerSignalComponent implements OnInit {
     const taskContainerVal = this.taskContainer();
     if (taskContainerVal.type === "epic" && taskContainerVal.parentContainers.length === 0) {
       this.router.navigate(['epics']).then();
+      return;
+    }
+    if (taskContainerVal.type === "knowledge-node" && taskContainerVal.parentContainers.length === 0) {
+      if (taskContainerVal.id !== 1) {
+        this.router.navigate(['knowledge-node', 1]).then();
+      }
+      return;
     }
     if (!taskContainerVal.parentContainers || taskContainerVal.parentContainers.length === 0) {
       return;
     }
     const parent = taskContainerVal.parentContainers[0];
     this.router.navigate([parent.type, parent.id]).then();
-
   }
 
   callEditNotesEvent() {
@@ -545,11 +564,28 @@ export class TaskContainerSignalComponent implements OnInit {
   refreshSubepics():Observable<Epic[]> {
     const taskContainerVal = this.taskContainer();
     if (!taskContainerVal.epics?.length) {
+      this.epics.set([]);
       return of([]);
     }
     const epics$ = this.epicsService.getEpics(taskContainerVal.epics);
     epics$.subscribe((epics: Epic[]) => this.epics.set(epics));
     return epics$;
+  }
+
+  refreshKnowledgeNodes(): Observable<KnowledgeNode[]> {
+    const taskContainerVal = this.taskContainer();
+    const ids = taskContainerVal.knowledgeNodes ?? [];
+    if (!ids.length) {
+      this.knowledgeNodes.set([]);
+      return of([]);
+    }
+    const nodes$ = this.knowledgeNodesService.getKnowledgeNodes(ids);
+    nodes$.subscribe((nodes) => this.knowledgeNodes.set(nodes));
+    return nodes$;
+  }
+
+  navigateToKnowledgeNode(node: KnowledgeNode): void {
+    void this.router.navigate(['knowledge-node', node.id]);
   }
 
   solveTheProblem(problem: Problem): void {

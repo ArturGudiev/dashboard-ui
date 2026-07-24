@@ -225,6 +225,10 @@ export class ToolbarComponent implements OnInit {
     this.router.navigate(['due-date-tasks']);
   }
 
+  onKnowledgeNodesClick() {
+    this.router.navigate(['knowledge-node', 1]);
+  }
+
   onFilesClick() {
     this.router.navigate(['files', 'Chp.mm']);
   }

@@ -1,0 +1,54 @@
+#container-files
+  margin: 1.5rem 0 2rem 2rem
+  max-width: 40rem
+
+#files-title
+  margin: 0 0 0.75rem
+  font-size: 1.25rem
+
+.files-list
+  list-style: none
+  margin: 0
+  padding: 0
+  border: 1px solid rgba(0, 0, 0, 0.08)
+  border-radius: 6px
+  overflow: hidden
+
+.file-row
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  padding: 0.45rem 0.75rem
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06)
+
+  &:last-child
+    border-bottom: none
+
+  &.is-file
+    cursor: pointer
+
+    &:hover
+      background: rgba(0, 0, 0, 0.04)
+
+  &.is-dir
+    opacity: 0.75
+    cursor: default
+
+  .index
+    width: 1.5rem
+    color: rgba(0, 0, 0, 0.55)
+    font-variant-numeric: tabular-nums
+
+  mat-icon
+    font-size: 18px
+    width: 18px
+    height: 18px
+    color: rgba(0, 0, 0, 0.55)
+
+  .name
+    flex: 1
+    word-break: break-all
+
+  .size
+    font-size: 0.8rem
+    color: rgba(0, 0, 0, 0.45)

@@ -1,4 +1,5 @@
 import { type Epic } from '../../models/epic';
+import { type KnowledgeNode } from '../../models/knowledge-node';
 import { type Problem } from '../../models/problem';
 import { type Question } from '../../models/question';
 import { type Story } from '../../models/story';
@@ -39,5 +40,14 @@ export function toQuestionPartial(question: Question) {
     notes: question.notes,
     tags: question.tags,
     ...(question.answer !== undefined ? { answer: question.answer } : {}),
+  };
+}
+
+export function toKnowledgeNodePartial(node: KnowledgeNode) {
+  return {
+    id: node.id,
+    name: node.description,
+    notes: node.notes,
+    tags: node.tags,
   };
 }

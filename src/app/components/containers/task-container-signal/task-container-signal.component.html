@@ -108,6 +108,14 @@
         ></app-epics-list>
       }
 
+      <!-- Knowledge nodes -->
+      @if ((showKnowledgeNodes() || taskContainer().type === 'knowledge-node') && knowledgeNodes().length > 0) {
+        <app-knowledge-nodes-list
+          [knowledgeNodes]="knowledgeNodes()"
+          (knowledgeNodeClick)="navigateToKnowledgeNode($event)"
+        ></app-knowledge-nodes-list>
+      }
+
       <!-- Истории -->
       @if ( this.showStories() && stories().length > 0 ) {
         <app-substories
@@ -142,6 +150,8 @@
           [problems]="problemsForList()"
         ></app-problems-list>
       }
+
+      <app-container-files-list [container]="taskContainer()"></app-container-files-list>
     </div>
   </div>
 </div>
