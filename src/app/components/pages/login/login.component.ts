@@ -24,12 +24,12 @@ export class LoginComponent {
   readonly submitting = signal(false);
 
   loginModel = signal({
-    email: '',
+    username: '',
     password: '',
   });
 
   loginForm = form(this.loginModel, (path) => {
-    required(path.email);
+    required(path.username);
     required(path.password);
   });
 
@@ -42,7 +42,7 @@ export class LoginComponent {
     const model = this.loginModel();
     this.submitting.set(true);
 
-    this.authService.login(model.email, model.password).subscribe({
+    this.authService.login(model.username, model.password).subscribe({
       next: () => {
         this.submitting.set(false);
         const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
