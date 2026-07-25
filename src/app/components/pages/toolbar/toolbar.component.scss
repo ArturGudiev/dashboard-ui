@@ -1,4 +1,5 @@
 $iconWidth: 56px;
+$mobileBreakpoint: 960px;
 
 .sidenav-toggle {
   display: none;
@@ -21,8 +22,53 @@ $iconWidth: 56px;
   flex: 1 1 auto;
 }
 
+.toolbar-nav-desktop {
+  display: flex;
+  align-items: baseline;
+}
+
+.app-name {
+  white-space: nowrap;
+}
+
+.toolbar-nav-button {
+  margin-left: 1rem;
+  border-color: gray;
+}
+
 #task-button {
   margin-left: 2rem;
+}
+
+.toolbar-nav-menu-button {
+  display: none;
+  color: white;
+}
+
+.toolbar-nav-menu-title {
+  font-weight: 600;
+  opacity: 1 !important;
+  pointer-events: none;
+}
+
+.toolbar-nav-menu-user {
+  opacity: 0.8 !important;
+  pointer-events: none;
+  font-size: 0.9rem;
+}
+
+@media (max-width: $mobileBreakpoint) {
+  .toolbar-nav-desktop {
+    display: none;
+  }
+
+  .toolbar-nav-menu-button {
+    display: inline-flex;
+  }
+
+  .logout-label {
+    display: none;
+  }
 }
 
 .shining-text {

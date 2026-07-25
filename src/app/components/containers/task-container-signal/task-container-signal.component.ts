@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, HostListener, inject, input, type OnInit, output, signal } from '@angular/core';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { Hotkey, HotkeysService } from "angular2-hotkeys";
 import * as _ from "lodash";
-import { type Observable, of, Subject } from "rxjs";
+import { type Observable, map, of, Subject } from "rxjs";
 import { type Problem } from "../../../models/problem";
 import { type Question } from "../../../models/question";
 import { type Story } from "../../../models/story";
@@ -97,6 +98,12 @@ export class TaskContainerSignalComponent implements OnInit {
   resolve = output<void>();
 
   readonly displayReport = signal(false);
+
+  private readonly breakpointObserver = inject(BreakpointObserver);
+  readonly isMobile = toSignal(
+    this.breakpointObserver.observe('(max-width: 960px)').pipe(map((state) => state.matches)),
+    { initialValue: false },
+  );
 
   // tasks = signal<TaskC[]>([]);
 
@@ -201,8 +208,6 @@ export class TaskContainerSignalComponent implements OnInit {
   variables = computed<ContainerVariable[]>(() =>
     this.appStore.variablesStack() ?? this.taskContainer().variables
   )
-
-  readonly toggleReportTitle = computed(() => this.displayReport() ? 'Hide report' : 'Show report');
 
   private questionsService = inject(QuestionsService);
   private taskContainerService = inject(TaskContainerService);

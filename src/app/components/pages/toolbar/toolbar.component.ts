@@ -5,7 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
-import { MatButton } from "@angular/material/button";
+import { MatButton, MatIconButton } from "@angular/material/button";
+import { MatMenuModule } from "@angular/material/menu";
 import { DashboardService } from "../../../services/dashboard.service";
 import type { DashboardStateInterface } from "../../../services/dashboard.service";
 import { Hotkeys } from "../../../classes/hotkeys";
@@ -36,10 +37,11 @@ import {
     MatToolbar,
     MatIcon,
     MatButton,
+    MatIconButton,
+    MatMenuModule,
     NgxMatTimepickerModule,
     FormsModule,
     OverlayModule,
-
   ],
   standalone: true,
   styleUrls: ['./toolbar.component.scss'],

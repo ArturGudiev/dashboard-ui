@@ -12,17 +12,16 @@
     }
 
     <div style="width: 100%">
-      <button
-        mat-button
-        type="button"
-        (click)="toggleReport()"
-      >
-        {{ toggleReportTitle() }}
-      </button>
-      @if ( displayReport() ) {
+      @if (displayReport()) {
+        <button
+          mat-button
+          type="button"
+          (click)="toggleReport()"
+        >
+          Hide report
+        </button>
         <app-report [container]="taskContainer()"></app-report>
       }
-
     </div>
     <div class="flex-container-start mt-1">
       <div>
@@ -46,6 +45,7 @@
               <!-- Кнопка закончить всё -->
               <button
                 id="done-all-button"
+                class="desktop-only-action"
                 mat-mini-fab
                 color="accent"
                 (click)="onDoneAllButtonClick()"
@@ -63,11 +63,17 @@
               </button>
               <!-- Меню для ручного добавления вопросов, рекордов и т.д. -->
               <mat-menu #menu="matMenu">
+                @if (isMobile()) {
+                  <button mat-menu-item (click)="onDoneAllButtonClick()">Resolve</button>
+                }
                 @if (taskContainer().type === 'direction') {
                   <button mat-menu-item (click)="directionAddSubmission.emit()">Add submission</button>
                   <button mat-menu-item (click)="directionAddLongTask.emit()">Add long task</button>
                   <button mat-menu-item (click)="directionAddSubDirection.emit()">Add direction</button>
                   <button mat-menu-item (click)="directionShowStats.emit()">Show stats</button>
+                }
+                @if (!displayReport()) {
+                  <button mat-menu-item (click)="toggleReport()">Show report</button>
                 }
                 <button mat-menu-item (click)="renameTask()">Rename {{ taskContainer().type }}</button>
                 <button mat-menu-item (click)="addQuestion()">Add a new question</button>

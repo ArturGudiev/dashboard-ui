@@ -56,3 +56,61 @@
 
 #parents-path
   margin-left: 5rem
+
+@media (max-width: 960px)
+  #task-content
+    margin-right: 0
+
+  .description-wrapper
+    justify-content: flex-start
+
+  #description-line
+    display: flex
+    flex-wrap: nowrap
+    align-items: center
+    column-gap: 0.5rem
+    width: 100%
+    padding: 0 1rem
+    box-sizing: border-box
+
+  #full-description-title
+    order: 1
+    flex: 1 1 auto
+    margin-left: 0
+    font-size: 22px
+    line-height: 1.2
+    word-break: break-word
+
+  .desktop-only-action
+    display: none
+
+  #go-to-parent-button
+    order: 2
+    margin-left: 0
+    flex-shrink: 0
+
+  #more-icon
+    order: 3
+    margin-left: 0
+    flex-shrink: 0
+
+  #notes-wrapper, #ng-content-wrapper
+    margin-left: 1rem
+    margin-right: 1rem
+    max-width: calc(100% - 2rem)
+    width: calc(100% - 2rem)
+    box-sizing: border-box
+
+  .flex-container-start
+    flex-direction: column
+    width: 100%
+
+  .flex-container-start > div
+    width: 100%
+    max-width: 100%
+    box-sizing: border-box
+
+  #parents-path
+    margin-left: 1rem
+    margin-right: 1rem
+    margin-top: 0.5rem

@@ -18,7 +18,8 @@ export class AppConfigService {
     if (base != null && base !== '') {
       this._baseUrl = base.replace(/\/$/, '');
     } else if ('useProxy' in environment && environment.useProxy) {
-      this._baseUrl = '';
+      // Same-origin /api prefix; ng serve proxy (and Nginx in Docker) strip it.
+      this._baseUrl = '/api';
     } else {
       const host = window.__env?.API_HOST ?? environment.API_HOST;
       const port = window.__env?.API_PORT ?? environment.API_PORT;

@@ -12,6 +12,7 @@ import { EpicsService } from "../../../services/task-container-services/epics.se
       EpicsListComponent
     ],
     templateUrl: './epics.component.html',
+    styleUrls: ['./epics.component.sass'],
 })
 export class EpicsComponent {
   private epicsService = inject(EpicsService);
