@@ -27,6 +27,7 @@ import { ProblemsListComponent } from "../../lists/problems-list/problems-list.c
 import { KnowledgeNodesListComponent } from "../../lists/knowledge-nodes-list/knowledge-nodes-list.component";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { VariableDialogComponent, type VariableDialogResult } from "../../dialogs/variable-dialog/variable-dialog.component";
+import { AliasesDialogComponent } from "../../dialogs/aliases-dialog/aliases-dialog.component";
 
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
@@ -43,9 +44,12 @@ import { ContainerReportComponent } from "../container-report/container-report.c
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
 import { VariablesTableComponent } from "../../lists/variables-table/variables-table.component";
 import { ContainerFilesListComponent } from "../../lists/container-files-list/container-files-list.component";
-import { GET_VALUE_DIALOG_OPTIONS, VARIABLE_DIALOG_OPTIONS } from '../../../shared/constants';
+import { ALIASES_DIALOG_OPTIONS, GET_VALUE_DIALOG_OPTIONS, VARIABLE_DIALOG_OPTIONS } from '../../../shared/constants';
 import { ContainerVariablesApiService } from '../../../services/container-variables-api.service';
+import { AliasesService } from '../../../services/aliases.service';
+import { AlertService } from '../../../services/alert.service';
 import { AppStore } from "../../../state/app.store";
+import { type ModelsAliasModel } from '../../../types/generated';
 
 /** Stable fallback so `[tasks]="… ?? []"` does not allocate a new array every CD tick (breaks TasksListComponent's effect). */
 const EMPTY_TASKS: TaskC[] = [];
@@ -53,6 +57,21 @@ const EMPTY_QUESTIONS: Question[] = [];
 const EMPTY_PROBLEMS: Problem[] = [];
 const EMPTY_STORIES: Story[] = [];
 const EMPTY_PARENTS_PATH: string[] = [];
+const EMPTY_ALIASES: string[] = [];
+
+const ALIAS_SUPPORTED_TYPES = new Set([
+  'epic',
+  'story',
+  'task',
+  'question',
+  'problem',
+  'knowledge-node',
+  'knowledge-bit',
+  'definition',
+  'action',
+  'repetitive-task',
+  'state',
+]);
 
 @Component({
   selector: 'app-task-container-signal',
@@ -132,6 +151,24 @@ export class TaskContainerSignalComponent implements OnInit {
       params.ids.length ? this.problemsService.getProblems(params.ids) : of([]),
   });
 
+  readonly aliasesSupported = computed(() =>
+    ALIAS_SUPPORTED_TYPES.has(this.taskContainer().type),
+  );
+
+  aliasesResource = rxResource<ModelsAliasModel[], { enabled: boolean; containerKey: string }>({
+    params: () => {
+      const c = this.taskContainer();
+      return {
+        enabled: ALIAS_SUPPORTED_TYPES.has(c.type),
+        containerKey: `${c.type}:${c.id}`,
+      };
+    },
+    stream: ({ params }) =>
+      params.enabled
+        ? this.aliasesService.getContainerAliases(this.taskContainer())
+        : of([]),
+  });
+
   /** Enabled for epic/story containers (or when `[showStories]="true"`). */
   private readonly showStoriesEnabled = computed(
     () =>
@@ -156,6 +193,7 @@ export class TaskContainerSignalComponent implements OnInit {
   private lastQuestions = signal<Question[]>([]);
   private lastProblems = signal<Problem[]>([]);
   private lastStories = signal<Story[]>([]);
+  private lastAliases = signal<string[]>([]);
 
   /** Keep previous rows while tasksResource reloads so the list does not unmount and blink. */
   readonly tasksForList = computed(() => {
@@ -197,6 +235,14 @@ export class TaskContainerSignalComponent implements OnInit {
     return live.length > 0 ? live : (this.lastParentsPath().length > 0 ? this.lastParentsPath() : EMPTY_PARENTS_PATH);
   });
 
+  readonly aliasesForDisplay = computed(() => {
+    const live = this.aliasesResource.value();
+    if (live != null) {
+      return live.map((alias) => alias.alias);
+    }
+    return this.lastAliases().length > 0 ? this.lastAliases() : EMPTY_ALIASES;
+  });
+
   epics = signal<Epic[]>([]);
   stories = signal<Story[]>([]);
   problems = signal<Problem[]>([]);
@@ -225,6 +271,8 @@ export class TaskContainerSignalComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private appStore = inject(AppStore);
   private containerVariablesApiService = inject(ContainerVariablesApiService);
+  private aliasesService = inject(AliasesService);
+  private alertService = inject(AlertService);
 
   private lastContainerKey = '';
 
@@ -238,6 +286,7 @@ export class TaskContainerSignalComponent implements OnInit {
         this.lastQuestions.set([]);
         this.lastProblems.set([]);
         this.lastParentsPath.set([]);
+        this.lastAliases.set([]);
         this.stories.set([]);
         this.epics.set([]);
         this.knowledgeNodes.set([]);
@@ -270,6 +319,13 @@ export class TaskContainerSignalComponent implements OnInit {
       const problems = this.problemsResource.value();
       if (problems != null) {
         this.lastProblems.set(problems);
+      }
+    });
+
+    effect(() => {
+      const aliases = this.aliasesResource.value();
+      if (aliases != null) {
+        this.lastAliases.set(aliases.map((alias) => alias.alias));
       }
     });
   }
@@ -482,6 +538,37 @@ export class TaskContainerSignalComponent implements OnInit {
           .renameTaskContainer(this.taskContainer(), newTaskName)
           .subscribe(() => this.refreshContainer.emit());
       }
+    });
+  }
+
+  openAliasesDialog(): void {
+    const dialogRef = this.dialog.open(AliasesDialogComponent, {
+      data: {
+        aliases: this.aliasesForDisplay(),
+        containerDescription: this.taskContainer().getFullDescription(),
+      },
+      ...ALIASES_DIALOG_OPTIONS,
+    });
+
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((aliases: string[] | null) => {
+      if (!aliases) {
+        return;
+      }
+
+      this.aliasesService.updateContainerAliases(this.taskContainer(), aliases).subscribe({
+        next: (updated) => {
+          this.lastAliases.set(updated.map((alias) => alias.alias));
+          this.aliasesResource.reload();
+        },
+        error: (error: unknown) => {
+          const message =
+            error && typeof error === 'object' && 'error' in error
+              && (error as { error?: { error?: string } }).error?.error
+              ? (error as { error: { error: string } }).error.error
+              : 'Failed to update aliases';
+          this.alertService.showAlert(message, 3000, 'error');
+        },
+      });
     });
   }
 

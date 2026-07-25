@@ -42,6 +42,27 @@
               <div id="full-description-title">
                 {{ taskContainer().getFullDescription() }}
               </div>
+              @if (aliasesSupported()) {
+                <button
+                  type="button"
+                  id="aliases-section"
+                  class="aliases-section"
+                  (click)="openAliasesDialog()"
+                  [attr.aria-label]="aliasesForDisplay().length ? 'Edit aliases' : 'Add aliases'"
+                >
+                  <span class="aliases-label">Aliases</span>
+                  @if (aliasesForDisplay().length === 0) {
+                    <span class="aliases-empty">none</span>
+                  } @else {
+                    <span class="aliases-chips">
+                      @for (alias of aliasesForDisplay(); track alias) {
+                        <span class="alias-chip">{{ alias }}</span>
+                      }
+                    </span>
+                  }
+                  <mat-icon class="aliases-edit-icon">edit</mat-icon>
+                </button>
+              }
               <!-- Кнопка закончить всё -->
               <button
                 id="done-all-button"
@@ -82,6 +103,9 @@
                 <button mat-menu-item (click)="addRecord()">Add record</button>
                 <button mat-menu-item (click)="showRecords()">Show records</button>
                 <button mat-menu-item (click)="addVariable()">Add variable</button>
+                @if (aliasesSupported()) {
+                  <button mat-menu-item (click)="openAliasesDialog()">Edit aliases</button>
+                }
               </mat-menu>
             </div>
           }

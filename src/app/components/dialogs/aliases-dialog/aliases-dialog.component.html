@@ -1,0 +1,45 @@
+<div class="aliases-dialog">
+  <h2>Aliases</h2>
+
+  @if (data.containerDescription) {
+    <p class="container-hint">{{ data.containerDescription }}</p>
+  }
+
+  <div class="chips-section">
+    @if (aliases().length === 0) {
+      <p class="empty-state">No aliases yet. Add one below.</p>
+    } @else {
+      <mat-chip-set aria-label="Container aliases">
+        @for (alias of aliases(); track alias) {
+          <mat-chip (removed)="removeAlias(alias)">
+            {{ alias }}
+            <button matChipRemove type="button" aria-label="Remove {{ alias }}">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        }
+      </mat-chip-set>
+    }
+  </div>
+
+  <div class="add-row">
+    <mat-form-field appearance="fill" class="alias-input">
+      <mat-label>New alias</mat-label>
+      <input
+        matInput
+        [ngModel]="newAlias()"
+        (ngModelChange)="newAlias.set($event)"
+        (keydown)="onAliasInputKeydown($event)"
+        autocomplete="off"
+      />
+    </mat-form-field>
+    <button mat-stroked-button type="button" class="add-button" (click)="addAlias()" [disabled]="!newAlias().trim()">
+      Add
+    </button>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary" type="button" (click)="onOk()">Ok</button>
+  </div>
+</div>

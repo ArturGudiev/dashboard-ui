@@ -16,6 +16,12 @@ export const  NEW_HIERARCHICAL_TASK_DIALOG_OPTIONS = { height: '600px', width: '
 export const  NEW_STORY_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  GET_VALUE_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  VARIABLE_DIALOG_OPTIONS = { height: '300px', width: '700px'};
+export const  ALIASES_DIALOG_OPTIONS = {
+  width: '560px',
+  maxWidth: '95vw',
+  maxHeight: '90vh',
+  autoFocus: 'first-tabbable' as const,
+};
 
 export const isTask = (container: TaskContainer): container is TaskC => {
   return container.type === "task";

@@ -1,0 +1,69 @@
+.aliases-dialog
+  display: flex
+  flex-direction: column
+  gap: 0.75rem
+  min-width: min(28rem, 100%)
+  max-width: 40rem
+  box-sizing: border-box
+
+h2
+  margin: 0
+  font-size: 1.35rem
+  font-weight: 650
+
+.container-hint
+  margin: 0
+  color: rgba(0, 0, 0, 0.55)
+  font-size: 0.9rem
+  word-break: break-word
+
+.chips-section
+  min-height: 2.75rem
+  padding: 0.65rem 0.75rem
+  border-radius: 0.75rem
+  background: linear-gradient(160deg, #f4f7fb 0%, #eef2f7 100%)
+  border: 1px solid rgba(15, 82, 186, 0.08)
+
+.empty-state
+  margin: 0.35rem 0
+  color: rgba(0, 0, 0, 0.45)
+  font-size: 0.9rem
+
+.add-row
+  display: flex
+  align-items: flex-start
+  gap: 0.75rem
+  width: 100%
+
+.alias-input
+  flex: 1 1 auto
+  width: auto
+
+.add-button
+  margin-top: 0.35rem
+  flex-shrink: 0
+
+[mat-dialog-actions]
+  display: flex
+  justify-content: flex-end
+  gap: 0.5rem
+  padding: 0
+  margin: 0.25rem 0 0
+
+@media (max-width: 960px)
+  .aliases-dialog
+    min-width: 0
+    width: 100%
+    max-width: 100%
+
+  .add-row
+    flex-direction: column
+    gap: 0.35rem
+
+  .alias-input
+    width: 100%
+
+  .add-button
+    margin-top: 0
+    align-self: stretch
+    height: 2.75rem
