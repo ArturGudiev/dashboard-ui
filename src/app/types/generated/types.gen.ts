@@ -505,6 +505,10 @@ export type EntTask = {
      */
     done_date_time?: string;
     /**
+     * DueDateTime holds the value of the "due_date_time" field.
+     */
+    due_date_time?: string;
+    /**
      * ID of the ent.
      */
     id?: number;
@@ -543,6 +547,12 @@ export type EntVariablesStackEdges = {
      * ContainerVariables holds the value of the container_variables edge.
      */
     container_variables?: Array<EntContainerVariables>;
+};
+
+export type HandlersAddContainerCheckRequest = {
+    containerID: number;
+    containerType: SchemaContainerType;
+    description: string;
 };
 
 export type HandlersAddContainerVariableRequest = {
@@ -595,6 +605,11 @@ export type HandlersIdsRequest = {
 export type HandlersNewDirectionRequest = {
     direction?: ModelsDirectionShort;
     parent?: ModelsContainerDescription;
+};
+
+export type HandlersNewHierarchicalTasksRequest = {
+    nodes: Array<ModelsHierarchicalTaskNode>;
+    parent: ModelsContainerDescription;
 };
 
 export type HandlersNewLogMessageRequest = {
@@ -652,6 +667,10 @@ export type HandlersPatchContainerByIdRequest = {
     notes?: string;
 };
 
+export type HandlersPatchContainerCheckRequest = {
+    description: string;
+};
+
 export type HandlersPatchContainerVariableRequest = {
     variableName?: string;
     variableValue?: string;
@@ -660,6 +679,12 @@ export type HandlersPatchContainerVariableRequest = {
 export type HandlersPatchDirectionByIdRequest = {
     closed?: boolean;
     description?: string;
+    notes?: string;
+};
+
+export type HandlersPatchLongTaskByIdRequest = {
+    description?: string;
+    done?: boolean;
     notes?: string;
 };
 
@@ -698,12 +723,30 @@ export type HandlersTestResponse = {
     tags?: Array<string>;
 };
 
+export type HandlersUpdateContainerAliasesRequest = {
+    aliases?: Array<string>;
+    containerID: number;
+    containerType: SchemaContainerType;
+};
+
+export type HandlersUpdateFileAliasesRequest = {
+    aliases?: Array<string>;
+    filePath: string;
+};
+
 export type ModelsAliasModel = {
     alias: string;
     filePath?: string;
     id: number;
     itemId?: number;
     type: SchemaAliasType;
+};
+
+export type ModelsContainerCheck = {
+    containerID?: number;
+    containerType?: SchemaContainerType;
+    description?: string;
+    id?: number;
 };
 
 /**
@@ -780,6 +823,55 @@ export type ModelsEpicShort = {
     tags?: Array<string>;
 };
 
+export type ModelsHierarchicalTaskNode = {
+    children?: Array<ModelsHierarchicalTaskNode>;
+    description?: string;
+};
+
+export type ModelsKnowledgeNodeFull = {
+    actions?: Array<number>;
+    closed?: boolean;
+    definitions?: Array<number>;
+    doneDateTime?: string;
+    epics?: Array<number>;
+    id?: number;
+    knowledgeBits?: Array<number>;
+    knowledgeNodes?: Array<number>;
+    name?: string;
+    notes?: string;
+    parentContainers?: Array<ModelsContainerDescription>;
+    problems?: Array<number>;
+    questions?: Array<number>;
+    stories?: Array<number>;
+    tags?: Array<string>;
+    tasks?: Array<number>;
+};
+
+export type ModelsKnowledgeNodePartial = {
+    doneDateTime?: string;
+    id?: number;
+    name?: string;
+    notes?: string;
+    tags?: Array<string>;
+};
+
+export type ModelsKnowledgeNodeShort = {
+    name?: string;
+    notes?: string;
+    tags?: Array<string>;
+};
+
+export type ModelsLoginUserRequest = {
+    email: string;
+    password: string;
+};
+
+export type ModelsLoginUserResponse = {
+    accessToken?: string;
+    refreshToken?: string;
+    user?: ModelsUserResponse;
+};
+
 export type ModelsLongTaskFull = {
     description: string;
     done: boolean;
@@ -831,6 +923,11 @@ export type ModelsNewEpicRequest = {
     parent?: ModelsContainerDescription;
 };
 
+export type ModelsNewKnowledgeNodeRequest = {
+    knowledgeNode?: ModelsKnowledgeNodeShort;
+    parent?: ModelsContainerDescription;
+};
+
 export type ModelsNewStateRequest = {
     parent?: ModelsContainerDescription;
     state?: ModelsStateShort;
@@ -839,6 +936,12 @@ export type ModelsNewStateRequest = {
 export type ModelsNewStoryRequest = {
     parent?: ModelsContainerDescription;
     story?: ModelsStoryShort;
+};
+
+export type ModelsNewUserRequest = {
+    email: string;
+    name: string;
+    password: string;
 };
 
 /**
@@ -917,6 +1020,10 @@ export type ModelsQuestionShort = {
     tags?: Array<string>;
 };
 
+export type ModelsRefreshTokenRequest = {
+    refreshToken?: string;
+};
+
 export type ModelsRepetitiveTaskResponse = {
     closed?: boolean;
     description?: string;
@@ -943,8 +1050,8 @@ export type ModelsStateFull = {
     id?: number;
     isFulfilled?: boolean;
     notes?: string;
-    states?: Array<number>;
     stateRequirements?: Array<number>;
+    states?: Array<number>;
     tags?: Array<string>;
 };
 
@@ -1005,6 +1112,7 @@ export type ModelsStoryShort = {
 
 export type ModelsTaskFull = {
     actions?: Array<number>;
+    checks?: Array<ModelsContainerCheck>;
     definitions?: Array<number>;
     description?: string;
     done?: boolean;
@@ -1046,9 +1154,26 @@ export type ModelsTaskShort = {
     tags?: Array<string>;
 };
 
+export type ModelsUserResponse = {
+    email?: string;
+    id?: number;
+    name?: string;
+};
+
 export type SchemaAliasType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'state' | 'file';
 
 export type SchemaContainerType = 'epic' | 'story' | 'task' | 'question' | 'problem' | 'knowledge-node' | 'knowledge-bit' | 'definition' | 'action' | 'repetitive-task' | 'long-task' | 'direction' | 'state';
+
+export type ServicesFileInfo = {
+    isDir?: boolean;
+    path?: string;
+    size?: number;
+};
+
+export type ServicesFilesConfig = {
+    baseDir?: string;
+    encrypted?: boolean;
+};
 
 export type GetData = {
     body?: never;
@@ -1094,6 +1219,170 @@ export type PutAddAnonymousTaskResponses = {
 };
 
 export type PutAddAnonymousTaskResponse = PutAddAnonymousTaskResponses[keyof PutAddAnonymousTaskResponses];
+
+export type PutAliasesContainerData = {
+    /**
+     * Aliases sync request
+     */
+    body: HandlersUpdateContainerAliasesRequest;
+    path?: never;
+    query?: never;
+    url: '/aliases/container';
+};
+
+export type PutAliasesContainerErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Conflict
+     */
+    409: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PutAliasesContainerError = PutAliasesContainerErrors[keyof PutAliasesContainerErrors];
+
+export type PutAliasesContainerResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsAliasModel>;
+};
+
+export type PutAliasesContainerResponse = PutAliasesContainerResponses[keyof PutAliasesContainerResponses];
+
+export type GetAliasesContainerByTypeByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Container type
+         */
+        type: string;
+        /**
+         * Container ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/aliases/container/{type}/{id}';
+};
+
+export type GetAliasesContainerByTypeByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetAliasesContainerByTypeByIdError = GetAliasesContainerByTypeByIdErrors[keyof GetAliasesContainerByTypeByIdErrors];
+
+export type GetAliasesContainerByTypeByIdResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsAliasModel>;
+};
+
+export type GetAliasesContainerByTypeByIdResponse = GetAliasesContainerByTypeByIdResponses[keyof GetAliasesContainerByTypeByIdResponses];
+
+export type PutAliasesFileData = {
+    /**
+     * Aliases sync request
+     */
+    body: HandlersUpdateFileAliasesRequest;
+    path?: never;
+    query?: never;
+    url: '/aliases/file';
+};
+
+export type PutAliasesFileErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Conflict
+     */
+    409: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PutAliasesFileError = PutAliasesFileErrors[keyof PutAliasesFileErrors];
+
+export type PutAliasesFileResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsAliasModel>;
+};
+
+export type PutAliasesFileResponse = PutAliasesFileResponses[keyof PutAliasesFileResponses];
+
+export type GetAliasesFileByFilepathData = {
+    body?: never;
+    path: {
+        /**
+         * Relative file path
+         */
+        filepath: string;
+    };
+    query?: never;
+    url: '/aliases/file/{filepath}';
+};
+
+export type GetAliasesFileByFilepathErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetAliasesFileByFilepathError = GetAliasesFileByFilepathErrors[keyof GetAliasesFileByFilepathErrors];
+
+export type GetAliasesFileByFilepathResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsAliasModel>;
+};
+
+export type GetAliasesFileByFilepathResponse = GetAliasesFileByFilepathResponses[keyof GetAliasesFileByFilepathResponses];
 
 export type GetAliasesByAliasData = {
     body?: never;
@@ -1229,6 +1518,135 @@ export type PostChangeTasksOrderResponses = {
 };
 
 export type PostChangeTasksOrderResponse = PostChangeTasksOrderResponses[keyof PostChangeTasksOrderResponses];
+
+export type PostContainerChecksData = {
+    /**
+     * Check creation request
+     */
+    body: HandlersAddContainerCheckRequest;
+    path?: never;
+    query?: never;
+    url: '/container-checks';
+};
+
+export type PostContainerChecksErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostContainerChecksError = PostContainerChecksErrors[keyof PostContainerChecksErrors];
+
+export type PostContainerChecksResponses = {
+    /**
+     * OK
+     */
+    200: ModelsContainerCheck;
+};
+
+export type PostContainerChecksResponse = PostContainerChecksResponses[keyof PostContainerChecksResponses];
+
+export type DeleteContainerChecksByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Container check ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/container-checks/{id}';
+};
+
+export type DeleteContainerChecksByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type DeleteContainerChecksByIdError = DeleteContainerChecksByIdErrors[keyof DeleteContainerChecksByIdErrors];
+
+export type DeleteContainerChecksByIdResponses = {
+    /**
+     * OK
+     */
+    200: {
+        [key: string]: string;
+    };
+};
+
+export type DeleteContainerChecksByIdResponse = DeleteContainerChecksByIdResponses[keyof DeleteContainerChecksByIdResponses];
+
+export type PatchContainerChecksByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchContainerCheckRequest;
+    path: {
+        /**
+         * Container check ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/container-checks/{id}';
+};
+
+export type PatchContainerChecksByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchContainerChecksByIdError = PatchContainerChecksByIdErrors[keyof PatchContainerChecksByIdErrors];
+
+export type PatchContainerChecksByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsContainerCheck;
+};
+
+export type PatchContainerChecksByIdResponse = PatchContainerChecksByIdResponses[keyof PatchContainerChecksByIdResponses];
 
 export type PostContainerVariablesData = {
     /**
@@ -1821,6 +2239,289 @@ export type GetEpicsResponses = {
 
 export type GetEpicsResponse = GetEpicsResponses[keyof GetEpicsResponses];
 
+export type GetFilesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/files';
+};
+
+export type GetFilesErrors = {
+    /**
+     * Forbidden
+     */
+    403: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetFilesError = GetFilesErrors[keyof GetFilesErrors];
+
+export type GetFilesResponses = {
+    /**
+     * OK
+     */
+    200: Array<ServicesFileInfo>;
+};
+
+export type GetFilesResponse = GetFilesResponses[keyof GetFilesResponses];
+
+export type GetFilesConfigData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/files/config';
+};
+
+export type GetFilesConfigErrors = {
+    /**
+     * Forbidden
+     */
+    403: {
+        [key: string]: string;
+    };
+};
+
+export type GetFilesConfigError = GetFilesConfigErrors[keyof GetFilesConfigErrors];
+
+export type GetFilesConfigResponses = {
+    /**
+     * OK
+     */
+    200: ServicesFilesConfig;
+};
+
+export type GetFilesConfigResponse = GetFilesConfigResponses[keyof GetFilesConfigResponses];
+
+export type GetFilesContainerByTypeByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Container type
+         */
+        type: string;
+        /**
+         * Container ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/files/container/{type}/{id}';
+};
+
+export type GetFilesContainerByTypeByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetFilesContainerByTypeByIdError = GetFilesContainerByTypeByIdErrors[keyof GetFilesContainerByTypeByIdErrors];
+
+export type GetFilesContainerByTypeByIdResponses = {
+    /**
+     * OK
+     */
+    200: Array<ServicesFileInfo>;
+};
+
+export type GetFilesContainerByTypeByIdResponse = GetFilesContainerByTypeByIdResponses[keyof GetFilesContainerByTypeByIdResponses];
+
+export type DeleteFilesContentByFilepathData = {
+    body?: never;
+    path: {
+        /**
+         * Relative file path
+         */
+        filepath: string;
+    };
+    query?: never;
+    url: '/files/content/{filepath}';
+};
+
+export type DeleteFilesContentByFilepathErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Forbidden
+     */
+    403: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type DeleteFilesContentByFilepathError = DeleteFilesContentByFilepathErrors[keyof DeleteFilesContentByFilepathErrors];
+
+export type DeleteFilesContentByFilepathResponses = {
+    /**
+     * OK
+     */
+    200: {
+        [key: string]: string;
+    };
+};
+
+export type DeleteFilesContentByFilepathResponse = DeleteFilesContentByFilepathResponses[keyof DeleteFilesContentByFilepathResponses];
+
+export type GetFilesContentByFilepathData = {
+    body?: never;
+    path: {
+        /**
+         * Relative file path
+         */
+        filepath: string;
+    };
+    query?: never;
+    url: '/files/content/{filepath}';
+};
+
+export type GetFilesContentByFilepathErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Forbidden
+     */
+    403: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetFilesContentByFilepathError = GetFilesContentByFilepathErrors[keyof GetFilesContentByFilepathErrors];
+
+export type GetFilesContentByFilepathResponses = {
+    /**
+     * OK
+     */
+    200: unknown;
+};
+
+export type PutFilesContentByFilepathData = {
+    /**
+     * Raw file bytes
+     */
+    body: string;
+    path: {
+        /**
+         * Relative file path
+         */
+        filepath: string;
+    };
+    query?: never;
+    url: '/files/content/{filepath}';
+};
+
+export type PutFilesContentByFilepathErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Forbidden
+     */
+    403: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PutFilesContentByFilepathError = PutFilesContentByFilepathErrors[keyof PutFilesContentByFilepathErrors];
+
+export type PutFilesContentByFilepathResponses = {
+    /**
+     * OK
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type PutFilesContentByFilepathResponse = PutFilesContentByFilepathResponses[keyof PutFilesContentByFilepathResponses];
+
+export type GetFilesParentsPathByFilepathData = {
+    body?: never;
+    path: {
+        /**
+         * Relative file path
+         */
+        filepath: string;
+    };
+    query?: never;
+    url: '/files/parents-path/{filepath}';
+};
+
+export type GetFilesParentsPathByFilepathErrors = {
+    /**
+     * Forbidden
+     */
+    403: {
+        [key: string]: string;
+    };
+};
+
+export type GetFilesParentsPathByFilepathError = GetFilesParentsPathByFilepathErrors[keyof GetFilesParentsPathByFilepathErrors];
+
+export type GetFilesParentsPathByFilepathResponses = {
+    /**
+     * OK
+     */
+    200: Array<string>;
+};
+
+export type GetFilesParentsPathByFilepathResponse = GetFilesParentsPathByFilepathResponses[keyof GetFilesParentsPathByFilepathResponses];
+
 export type PutFinishTaskByIdData = {
     body?: never;
     path: {
@@ -1977,6 +2678,42 @@ export type PostGetEpicsResponses = {
 
 export type PostGetEpicsResponse = PostGetEpicsResponses[keyof PostGetEpicsResponses];
 
+export type PostGetKnowledgeNodesData = {
+    /**
+     * List of knowledge node IDs
+     */
+    body: HandlersIdsRequest;
+    path?: never;
+    query?: never;
+    url: '/get-knowledge-nodes';
+};
+
+export type PostGetKnowledgeNodesErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostGetKnowledgeNodesError = PostGetKnowledgeNodesErrors[keyof PostGetKnowledgeNodesErrors];
+
+export type PostGetKnowledgeNodesResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsKnowledgeNodeFull>;
+};
+
+export type PostGetKnowledgeNodesResponse = PostGetKnowledgeNodesResponses[keyof PostGetKnowledgeNodesResponses];
+
 export type PostGetProblemsData = {
     /**
      * List of problem IDs
@@ -2120,6 +2857,97 @@ export type PostGetTasksResponses = {
 };
 
 export type PostGetTasksResponse = PostGetTasksResponses[keyof PostGetTasksResponses];
+
+export type GetKnowledgeNodeByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Knowledge node ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/knowledge-node/{id}';
+};
+
+export type GetKnowledgeNodeByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetKnowledgeNodeByIdError = GetKnowledgeNodeByIdErrors[keyof GetKnowledgeNodeByIdErrors];
+
+export type GetKnowledgeNodeByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsKnowledgeNodeFull;
+};
+
+export type GetKnowledgeNodeByIdResponse = GetKnowledgeNodeByIdResponses[keyof GetKnowledgeNodeByIdResponses];
+
+export type PatchKnowledgeNodeByIdData = {
+    /**
+     * Fields to update
+     */
+    body: HandlersPatchContainerByIdRequest;
+    path: {
+        /**
+         * Knowledge node ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/knowledge-node/{id}';
+};
+
+export type PatchKnowledgeNodeByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PatchKnowledgeNodeByIdError = PatchKnowledgeNodeByIdErrors[keyof PatchKnowledgeNodeByIdErrors];
+
+export type PatchKnowledgeNodeByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsKnowledgeNodeFull;
+};
+
+export type PatchKnowledgeNodeByIdResponse = PatchKnowledgeNodeByIdResponses[keyof PatchKnowledgeNodeByIdResponses];
 
 export type GetLogMessagesData = {
     body?: never;
@@ -2383,7 +3211,7 @@ export type GetLongTasksData = {
     path?: never;
     query?: {
         /**
-         * Return only open long tasks
+         * Return only open long tasks (default true)
          */
         open?: boolean;
     };
@@ -2542,6 +3370,50 @@ export type PatchLongTasksByIdResponses = {
 };
 
 export type PatchLongTasksByIdResponse = PatchLongTasksByIdResponses[keyof PatchLongTasksByIdResponses];
+
+export type PutLongTasksByIdCloseData = {
+    body?: never;
+    path: {
+        /**
+         * Long task ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/long-tasks/{id}/close';
+};
+
+export type PutLongTasksByIdCloseErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PutLongTasksByIdCloseError = PutLongTasksByIdCloseErrors[keyof PutLongTasksByIdCloseErrors];
+
+export type PutLongTasksByIdCloseResponses = {
+    /**
+     * OK
+     */
+    200: EntLongTask;
+};
+
+export type PutLongTasksByIdCloseResponse = PutLongTasksByIdCloseResponses[keyof PutLongTasksByIdCloseResponses];
 
 export type GetLongTasksByIdProgressesData = {
     body?: never;
@@ -2748,6 +3620,90 @@ export type PostNewEpicResponses = {
 };
 
 export type PostNewEpicResponse = PostNewEpicResponses[keyof PostNewEpicResponses];
+
+export type PostNewHierarchicalTasksData = {
+    /**
+     * Hierarchical tasks creation request
+     */
+    body: HandlersNewHierarchicalTasksRequest;
+    path?: never;
+    query?: never;
+    url: '/new-hierarchical-tasks';
+};
+
+export type PostNewHierarchicalTasksErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostNewHierarchicalTasksError = PostNewHierarchicalTasksErrors[keyof PostNewHierarchicalTasksErrors];
+
+export type PostNewHierarchicalTasksResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsTaskFull>;
+};
+
+export type PostNewHierarchicalTasksResponse = PostNewHierarchicalTasksResponses[keyof PostNewHierarchicalTasksResponses];
+
+export type PostNewKnowledgeNodeData = {
+    /**
+     * Knowledge node creation request
+     */
+    body: ModelsNewKnowledgeNodeRequest;
+    path?: never;
+    query?: never;
+    url: '/new-knowledge-node';
+};
+
+export type PostNewKnowledgeNodeErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Not Found
+     */
+    404: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostNewKnowledgeNodeError = PostNewKnowledgeNodeErrors[keyof PostNewKnowledgeNodeErrors];
+
+export type PostNewKnowledgeNodeResponses = {
+    /**
+     * OK
+     */
+    200: ModelsKnowledgeNodeFull;
+};
+
+export type PostNewKnowledgeNodeResponse = PostNewKnowledgeNodeResponses[keyof PostNewKnowledgeNodeResponses];
 
 export type PostNewProblemData = {
     /**
@@ -3946,6 +4902,44 @@ export type PatchTaskByIdResponses = {
 
 export type PatchTaskByIdResponse = PatchTaskByIdResponses[keyof PatchTaskByIdResponses];
 
+export type GetTasksByDueDateData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * Due date (YYYY-MM-DD, UTC)
+         */
+        date: string;
+    };
+    url: '/tasks/by-due-date';
+};
+
+export type GetTasksByDueDateErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetTasksByDueDateError = GetTasksByDueDateErrors[keyof GetTasksByDueDateErrors];
+
+export type GetTasksByDueDateResponses = {
+    /**
+     * OK
+     */
+    200: Array<ModelsTaskFull>;
+};
+
+export type GetTasksByDueDateResponse = GetTasksByDueDateResponses[keyof GetTasksByDueDateResponses];
+
 export type GetTestsData = {
     body?: never;
     path?: never;
@@ -4014,6 +5008,42 @@ export type PutUpdateEpicResponses = {
 };
 
 export type PutUpdateEpicResponse = PutUpdateEpicResponses[keyof PutUpdateEpicResponses];
+
+export type PutUpdateKnowledgeNodeData = {
+    /**
+     * Knowledge node update request
+     */
+    body: ModelsKnowledgeNodePartial;
+    path?: never;
+    query?: never;
+    url: '/update-knowledge-node';
+};
+
+export type PutUpdateKnowledgeNodeErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PutUpdateKnowledgeNodeError = PutUpdateKnowledgeNodeErrors[keyof PutUpdateKnowledgeNodeErrors];
+
+export type PutUpdateKnowledgeNodeResponses = {
+    /**
+     * OK
+     */
+    200: ModelsKnowledgeNodeFull;
+};
+
+export type PutUpdateKnowledgeNodeResponse = PutUpdateKnowledgeNodeResponses[keyof PutUpdateKnowledgeNodeResponses];
 
 export type PutUpdateProblemData = {
     /**
@@ -4182,3 +5212,219 @@ export type PutUpdateTaskResponses = {
 };
 
 export type PutUpdateTaskResponse = PutUpdateTaskResponses[keyof PutUpdateTaskResponses];
+
+export type PostUsersData = {
+    /**
+     * User to add
+     */
+    body: ModelsNewUserRequest;
+    path?: never;
+    query?: never;
+    url: '/users';
+};
+
+export type PostUsersErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostUsersError = PostUsersErrors[keyof PostUsersErrors];
+
+export type PostUsersResponses = {
+    /**
+     * OK
+     */
+    200: ModelsUserResponse;
+};
+
+export type PostUsersResponse = PostUsersResponses[keyof PostUsersResponses];
+
+export type PostUsersLoginData = {
+    /**
+     * User to login
+     */
+    body: ModelsLoginUserRequest;
+    path?: never;
+    query?: never;
+    url: '/users/login';
+};
+
+export type PostUsersLoginErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Unauthorized
+     */
+    401: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostUsersLoginError = PostUsersLoginErrors[keyof PostUsersLoginErrors];
+
+export type PostUsersLoginResponses = {
+    /**
+     * OK
+     */
+    200: ModelsLoginUserResponse;
+};
+
+export type PostUsersLoginResponse = PostUsersLoginResponses[keyof PostUsersLoginResponses];
+
+export type PostUsersLogoutData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/users/logout';
+};
+
+export type PostUsersLogoutErrors = {
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostUsersLogoutError = PostUsersLogoutErrors[keyof PostUsersLogoutErrors];
+
+export type PostUsersLogoutResponses = {
+    /**
+     * No Content
+     */
+    204: unknown;
+};
+
+export type GetUsersMeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/users/me';
+};
+
+export type GetUsersMeErrors = {
+    /**
+     * Forbidden
+     */
+    403: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetUsersMeError = GetUsersMeErrors[keyof GetUsersMeErrors];
+
+export type GetUsersMeResponses = {
+    /**
+     * OK
+     */
+    200: ModelsUserResponse;
+};
+
+export type GetUsersMeResponse = GetUsersMeResponses[keyof GetUsersMeResponses];
+
+export type PostUsersRefreshData = {
+    /**
+     * Refresh token
+     */
+    body?: ModelsRefreshTokenRequest;
+    path?: never;
+    query?: never;
+    url: '/users/refresh';
+};
+
+export type PostUsersRefreshErrors = {
+    /**
+     * Forbidden
+     */
+    403: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type PostUsersRefreshError = PostUsersRefreshErrors[keyof PostUsersRefreshErrors];
+
+export type PostUsersRefreshResponses = {
+    /**
+     * OK
+     */
+    200: ModelsLoginUserResponse;
+};
+
+export type PostUsersRefreshResponse = PostUsersRefreshResponses[keyof PostUsersRefreshResponses];
+
+export type GetUsersByIdData = {
+    body?: never;
+    path: {
+        /**
+         * User ID
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/users/{id}';
+};
+
+export type GetUsersByIdErrors = {
+    /**
+     * Bad Request
+     */
+    400: {
+        [key: string]: string;
+    };
+    /**
+     * Forbidden
+     */
+    403: {
+        [key: string]: string;
+    };
+    /**
+     * Internal Server Error
+     */
+    500: {
+        [key: string]: string;
+    };
+};
+
+export type GetUsersByIdError = GetUsersByIdErrors[keyof GetUsersByIdErrors];
+
+export type GetUsersByIdResponses = {
+    /**
+     * OK
+     */
+    200: ModelsUserResponse;
+};
+
+export type GetUsersByIdResponse = GetUsersByIdResponses[keyof GetUsersByIdResponses];

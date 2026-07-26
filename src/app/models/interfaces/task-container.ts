@@ -1,4 +1,4 @@
-import { type ContainerVariable } from "../task-class";
+import { type ContainerCheck, type ContainerVariable } from "../task-class";
 import { type ContainerDescription, type TaskContainerDescription, type TaskContainerType } from "./types";
 
 export interface ITaskContainerChildElements {
@@ -26,5 +26,6 @@ export interface TaskContainer extends ITaskContainerChildElements {
   type: TaskContainerType;
   notes: string;
   variables: ContainerVariable[];
+  checks?: ContainerCheck[];
 
 }

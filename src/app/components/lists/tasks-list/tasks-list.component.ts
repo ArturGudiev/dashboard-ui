@@ -335,8 +335,14 @@ export class TasksListComponent implements OnInit {
   }
 
   onFinishAllTasksHandler() {
-    this.clearSelection();
     const subtasks = this.tasks();
+    if (subtasks.length > 7) {
+      const confirmed = confirm(`Are you sure you want to close all ${subtasks.length} tasks?`);
+      if (!confirmed) {
+        return;
+      }
+    }
+    this.clearSelection();
     this.tasksService.finishTasks(subtasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       () => this.refreshTasks.emit());
   }

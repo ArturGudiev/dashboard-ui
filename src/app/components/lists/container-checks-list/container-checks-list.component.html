@@ -1,0 +1,71 @@
+<div id="checks-actions">
+  <h2 id="checks-title">Checks</h2>
+
+  <button
+    mat-mini-fab
+    color="primary"
+    id="add-check-button"
+    type="button"
+    aria-label="Add check"
+    (click)="onAddCheckClick()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+
+  <button
+    mat-mini-fab
+    color="accent"
+    id="checks-more-button"
+    type="button"
+    aria-label="Checks actions"
+    [matMenuTriggerFor]="checksMenu"
+  >
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <mat-menu #checksMenu="matMenu">
+    <button mat-menu-item type="button" (click)="addAllChecksAsTasks()">
+      Add all checks
+    </button>
+    <button mat-menu-item type="button" (click)="addSelectedChecksAsTasks()">
+      Add selected checks
+    </button>
+    <button mat-menu-item type="button" (click)="addAllChecksToFocusedTask()">
+      Add all checks to focused task
+    </button>
+    <button mat-menu-item type="button" (click)="addSelectedChecksToFocusedTask()">
+      Add selected checks to focused task
+    </button>
+  </mat-menu>
+</div>
+
+@if (checks().length > 0) {
+  <div id="checks-table-wrapper">
+    <table
+      id="checks-table"
+      mat-table
+      [dataSource]="checks()"
+      class="mat-elevation-z8"
+    >
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let check" class="row-link">{{ check.description }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let check">
+          <mat-icon (click)="onDeleteCheck(check, $event)">delete</mat-icon>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+        class="row-link"
+        (click)="onEditCheck(row)"
+      ></tr>
+    </table>
+  </div>
+}

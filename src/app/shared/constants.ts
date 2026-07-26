@@ -22,6 +22,12 @@ export const  ALIASES_DIALOG_OPTIONS = {
   maxHeight: '90vh',
   autoFocus: 'first-tabbable' as const,
 };
+export const SELECT_MULTIPLE_DIALOG_OPTIONS = {
+  width: '560px',
+  maxWidth: '95vw',
+  maxHeight: '90vh',
+  autoFocus: 'first-tabbable' as const,
+};
 
 export const isTask = (container: TaskContainer): container is TaskC => {
   return container.type === "task";

@@ -9,7 +9,7 @@ import { type Observable, map, of, Subject } from "rxjs";
 import { type Problem } from "../../../models/problem";
 import { type Question } from "../../../models/question";
 import { type Story } from "../../../models/story";
-import { ContainerVariable, type TaskC } from "../../../models/task-class";
+import { type ContainerCheck, ContainerVariable, type TaskC } from "../../../models/task-class";
 import { CommandsService } from "../../../services/commands.service";
 import { RecordsService } from "../../../services/records.service";
 import { getUrlByDescription } from "../../../shared/libs/dashboard.lib";
@@ -43,9 +43,11 @@ import { UtilsService } from "../../../services/utils.service";
 import { ContainerReportComponent } from "../container-report/container-report.component";
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
 import { VariablesTableComponent } from "../../lists/variables-table/variables-table.component";
+import { ContainerChecksListComponent } from "../../lists/container-checks-list/container-checks-list.component";
 import { ContainerFilesListComponent } from "../../lists/container-files-list/container-files-list.component";
-import { ALIASES_DIALOG_OPTIONS, GET_VALUE_DIALOG_OPTIONS, VARIABLE_DIALOG_OPTIONS } from '../../../shared/constants';
+import { ALIASES_DIALOG_OPTIONS, GET_VALUE_DIALOG_OPTIONS, VARIABLE_DIALOG_OPTIONS, isTask } from '../../../shared/constants';
 import { ContainerVariablesApiService } from '../../../services/container-variables-api.service';
+import { ContainerChecksApiService } from '../../../services/container-checks-api.service';
 import { AliasesService } from '../../../services/aliases.service';
 import { AlertService } from '../../../services/alert.service';
 import { AppStore } from "../../../state/app.store";
@@ -90,6 +92,7 @@ const ALIAS_SUPPORTED_TYPES = new Set([
     ContainerReportComponent,
     TasksListComponent,
     VariablesTableComponent,
+    ContainerChecksListComponent,
     ContainerFilesListComponent,
   ],
   standalone: true,
@@ -255,6 +258,12 @@ export class TaskContainerSignalComponent implements OnInit {
     this.appStore.variablesStack() ?? this.taskContainer().variables
   )
 
+  checks = computed<ContainerCheck[]>(() =>
+    this.taskContainer().checks ?? []
+  )
+
+  isTaskContainer = computed(() => isTask(this.taskContainer()))
+
   private questionsService = inject(QuestionsService);
   private taskContainerService = inject(TaskContainerService);
   private storiesService = inject(StoriesService);
@@ -271,6 +280,7 @@ export class TaskContainerSignalComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private appStore = inject(AppStore);
   private containerVariablesApiService = inject(ContainerVariablesApiService);
+  private containerChecksApiService = inject(ContainerChecksApiService);
   private aliasesService = inject(AliasesService);
   private alertService = inject(AlertService);
 
@@ -455,7 +465,14 @@ export class TaskContainerSignalComponent implements OnInit {
   }
 
   finishAllTasks() {
-    this.tasksService.finishTasks(this.tasksResource.value() ?? [])
+    const tasks = this.tasksResource.value() ?? [];
+    if (tasks.length > 7) {
+      const confirmed = confirm(`Are you sure you want to close all ${tasks.length} tasks?`);
+      if (!confirmed) {
+        return;
+      }
+    }
+    this.tasksService.finishTasks(tasks)
       .subscribe(() => this.refreshContainer.emit());
   }
 
@@ -741,6 +758,24 @@ export class TaskContainerSignalComponent implements OnInit {
 
   addVariable(): void {
     this.openVariableDialog();
+  }
+
+  addCheck(): void {
+    const dialogRef = this.dialog.open(GetValueDialogComponent, {
+      data: { title: 'New check' },
+      ...GET_VALUE_DIALOG_OPTIONS,
+    });
+
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((description: string | null) => {
+      if (!description?.trim()) {
+        return;
+      }
+
+      this.containerChecksApiService.addCheck(
+        this.taskContainer(),
+        description.trim(),
+      ).subscribe(() => this.refreshContainer.emit());
+    });
   }
 
   private openVariableDialog(): void {

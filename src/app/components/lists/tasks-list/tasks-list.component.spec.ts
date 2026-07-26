@@ -86,6 +86,46 @@ describe('TasksListComponent', () => {
       expect(finishTasksSpy).toHaveBeenCalledOnce();
       expect(finishTasksSpy).toHaveBeenCalledWith(subtasks);
     });
+
+    it('asks for confirmation when finishing more than 7 tasks', () => {
+      const manyTasks = Array.from({ length: 8 }, (_, i) =>
+        createSubtask(200 + i, `Task ${i + 1}`),
+      );
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
+      fixture.componentRef.setInput('tasks', manyTasks);
+      fixture.detectChanges();
+
+      const finishAllButton = fixture.nativeElement.querySelector(
+        'button.finish-tasks-button',
+      ) as HTMLButtonElement;
+      finishAllButton.click();
+      fixture.detectChanges();
+
+      expect(confirmSpy).toHaveBeenCalledWith(
+        'Are you sure you want to close all 8 tasks?',
+      );
+      expect(finishTasksSpy).toHaveBeenCalledWith(manyTasks);
+      confirmSpy.mockRestore();
+    });
+
+    it('does not finish tasks when confirmation is cancelled', () => {
+      const manyTasks = Array.from({ length: 8 }, (_, i) =>
+        createSubtask(300 + i, `Task ${i + 1}`),
+      );
+      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+      fixture.componentRef.setInput('tasks', manyTasks);
+      fixture.detectChanges();
+
+      const finishAllButton = fixture.nativeElement.querySelector(
+        'button.finish-tasks-button',
+      ) as HTMLButtonElement;
+      finishAllButton.click();
+      fixture.detectChanges();
+
+      expect(confirmSpy).toHaveBeenCalledOnce();
+      expect(finishTasksSpy).not.toHaveBeenCalled();
+      confirmSpy.mockRestore();
+    });
   });
 
   describe('subtask navigation', () => {

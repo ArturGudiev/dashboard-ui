@@ -11,6 +11,11 @@ export interface UpdateContainerAliasesRequest {
   aliases: string[];
 }
 
+export interface UpdateFileAliasesRequest {
+  filePath: string;
+  aliases: string[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -42,5 +47,31 @@ export class AliasesService {
       `${this.appConfig.baseUrl}/aliases/container`,
       body,
     );
+  }
+
+  getFileAliases(relativePath: string): Observable<ModelsAliasModel[]> {
+    const encoded = this.encodeRelativePath(relativePath);
+    return this.http.get<ModelsAliasModel[]>(
+      `${this.appConfig.baseUrl}/aliases/file/${encoded}`,
+    );
+  }
+
+  updateFileAliases(relativePath: string, aliases: string[]): Observable<ModelsAliasModel[]> {
+    const body: UpdateFileAliasesRequest = {
+      filePath: relativePath,
+      aliases,
+    };
+
+    return this.http.put<ModelsAliasModel[]>(
+      `${this.appConfig.baseUrl}/aliases/file`,
+      body,
+    );
+  }
+
+  private encodeRelativePath(relativePath: string): string {
+    return relativePath
+      .split('/')
+      .map((segment) => encodeURIComponent(segment))
+      .join('/');
   }
 }

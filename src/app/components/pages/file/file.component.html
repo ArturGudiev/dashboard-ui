@@ -1,75 +1,107 @@
-<div id="file-viewer" [class.wide]="previewKind() === 'mindmap' && showMindMapVisually()">
-  <div class="file-header">
-    <h1>{{ fileName() || filesPath() || 'File' }}</h1>
-    <div class="file-meta">
-      @if (filesPath()) {
-        <span class="path">{{ filesPath() }}</span>
-      }
-      @if (mimeType()) {
-        <span class="chip">{{ mimeType() }}</span>
-      }
-      @if (sizeBytes()) {
-        <span class="chip">{{ sizeBytes() }} bytes</span>
-      }
-      @if (encrypted()) {
-        <span class="chip encrypted">encrypted</span>
-      }
-    </div>
-    <div class="file-actions">
-      @if (previewKind() === 'mindmap' && mindMapRoot()) {
-        <mat-slide-toggle
-          [checked]="showMindMapVisually()"
-          (change)="onShowVisuallyChange($event.checked)"
-        >
-          Show visually
-        </mat-slide-toggle>
-      }
-      @if (downloadHref()) {
-        <button mat-stroked-button type="button" (click)="download()">
-          <mat-icon>download</mat-icon>
-          Download
-        </button>
-      }
-    </div>
-  </div>
+<div id="file-viewer" [class.wide]="previewKind() === 'mindmap' && showMindMapVisually()" [class.has-parents]="parentsPath().length > 0">
+  <div class="flex-container-start file-layout">
+    <div class="file-main">
+      <div class="file-header">
+        <h1>{{ fileName() || filesPath() || 'File' }}</h1>
+        <div class="file-meta">
+          @if (filesPath()) {
+            <span class="path">{{ filesPath() }}</span>
+          }
+          @if (mimeType()) {
+            <span class="chip">{{ mimeType() }}</span>
+          }
+          @if (sizeBytes()) {
+            <span class="chip">{{ sizeBytes() }} bytes</span>
+          }
+          @if (encrypted()) {
+            <span class="chip encrypted">encrypted</span>
+          }
+          @if (filesPath()) {
+            <button
+              type="button"
+              class="aliases-section"
+              (click)="openAliasesDialog()"
+              [attr.aria-label]="aliasesForDisplay().length ? 'Edit aliases' : 'Add aliases'"
+            >
+              <span class="aliases-label">Aliases</span>
+              @if (aliasesForDisplay().length === 0) {
+                <span class="aliases-empty">none</span>
+              } @else {
+                <span class="aliases-chips">
+                  @for (alias of aliasesForDisplay(); track alias) {
+                    <span class="alias-chip">{{ alias }}</span>
+                  }
+                </span>
+              }
+              <mat-icon class="aliases-edit-icon">edit</mat-icon>
+            </button>
+          }
+        </div>
+        <div class="file-actions">
+          @if (previewKind() === 'mindmap' && mindMapRoot()) {
+            <mat-slide-toggle
+              [checked]="showMindMapVisually()"
+              (change)="onShowVisuallyChange($event.checked)"
+            >
+              Show visually
+            </mat-slide-toggle>
+          }
+          @if (downloadHref()) {
+            <button mat-stroked-button type="button" (click)="download()">
+              <mat-icon>download</mat-icon>
+              Download
+            </button>
+          }
+        </div>
+      </div>
 
-  @if (loading()) {
-    <div class="center">
-      <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
-    </div>
-  } @else if (error()) {
-    <p class="error">{{ error() }}</p>
-  } @else {
-    @switch (previewKind()) {
-      @case ('text') {
-        <pre class="text-preview">{{ textContent() }}</pre>
-      }
-      @case ('mindmap') {
-        @if (mindMapRoot(); as root) {
-          @if (showMindMapVisually()) {
-            <app-mind-map-graph [root]="root" />
-          } @else {
-            <app-mind-map-viewer [root]="root" />
+      @if (loading()) {
+        <div class="center">
+          <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
+        </div>
+      } @else if (error()) {
+        <p class="error">{{ error() }}</p>
+      } @else {
+        @switch (previewKind()) {
+          @case ('text') {
+            <pre class="text-preview">{{ textContent() }}</pre>
+          }
+          @case ('mindmap') {
+            @if (mindMapRoot(); as root) {
+              @if (showMindMapVisually()) {
+                <app-mind-map-graph [root]="root" />
+              } @else {
+                <app-mind-map-viewer [root]="root" />
+              }
+            }
+          }
+          @case ('image') {
+            <div class="image-preview">
+              <img [src]="objectUrl()" [alt]="fileName()" />
+            </div>
+          }
+          @case ('pdf') {
+            <iframe class="pdf-preview" [src]="objectUrl()" title="PDF preview"></iframe>
+          }
+          @default {
+            <div class="binary-preview">
+              <mat-icon>insert_drive_file</mat-icon>
+              <p>This file type cannot be previewed in the browser.</p>
+              <button mat-flat-button color="primary" type="button" (click)="download()">
+                Download file
+              </button>
+            </div>
           }
         }
       }
-      @case ('image') {
-        <div class="image-preview">
-          <img [src]="objectUrl()" [alt]="fileName()" />
-        </div>
-      }
-      @case ('pdf') {
-        <iframe class="pdf-preview" [src]="objectUrl()" title="PDF preview"></iframe>
-      }
-      @default {
-        <div class="binary-preview">
-          <mat-icon>insert_drive_file</mat-icon>
-          <p>This file type cannot be previewed in the browser.</p>
-          <button mat-flat-button color="primary" type="button" (click)="download()">
-            Download file
-          </button>
-        </div>
-      }
+    </div>
+
+    @if (parentsPath().length > 0) {
+      <app-parents-path
+        id="parents-path"
+        [parentsPath]="parentsPath()"
+        (parentClick)="goToParentHandler($event)"
+      ></app-parents-path>
     }
-  }
+  </div>
 </div>

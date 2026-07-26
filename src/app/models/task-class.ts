@@ -8,6 +8,13 @@ export type ContainerVariable = {
   variableValue: string;
 };
 
+export type ContainerCheck = {
+  id: number;
+  description: string;
+  containerType?: string;
+  containerID?: number;
+};
+
 export type TaskCCreateSource = {
   id: number;
   description: string;
@@ -24,6 +31,7 @@ export type TaskCCreateSource = {
   knowledgeNodes?: number[];
   parentContainers?: ContainerDescriptionSource[];
   variables?: ContainerVariable[];
+  checks?: ContainerCheck[];
 };
 
 export class TaskC implements TaskContainer {
@@ -46,6 +54,7 @@ export class TaskC implements TaskContainer {
   parentContainers: ContainerDescription[] = [];
   knowledgeNodes: number[] = [];
   variables: ContainerVariable[] = [];
+  checks: ContainerCheck[] = [];
 
   constructor(_id: number,
               description: string,
@@ -62,6 +71,7 @@ export class TaskC implements TaskContainer {
                 knowledgeBits?: number[],
                 parentContainers?: ContainerDescriptionSource[],
                 variables?: ContainerVariable[],
+                checks?: ContainerCheck[],
               } = {}
   ) {
     this.description = description;
@@ -78,6 +88,7 @@ export class TaskC implements TaskContainer {
     this.knowledgeBits = otherFields?.knowledgeBits ?? [];
     this.parentContainers = (otherFields?.parentContainers ?? []) as ContainerDescription[];
     this.variables = otherFields?.variables ?? [];
+    this.checks = otherFields?.checks ?? [];
   }
 
   getFullDescription(): string {
@@ -87,7 +98,7 @@ export class TaskC implements TaskContainer {
   static createFromObj(taskObj: TaskCCreateSource): TaskC {
     return new TaskC(taskObj.id, taskObj.description, taskObj.done, taskObj.tags, taskObj.notes,
       pick(taskObj, ['dueDateTime', 'parentContainers', 'tasks', 'problems', 'questions',
-        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions', 'variables']))
+        'definitions', 'knowledgeBits', 'knowledgeNodes', 'actions', 'variables', 'checks']))
   }
 
   getTaskContainerDescription(): TaskContainerDescription {

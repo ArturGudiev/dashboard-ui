@@ -1,7 +1,8 @@
-import { TaskC, type ContainerVariable, type TaskCCreateSource } from '../../models/task-class';
+import { TaskC, type ContainerCheck, type ContainerVariable, type TaskCCreateSource } from '../../models/task-class';
 import {
   type EntTask,
   type HandlersTaskResponse,
+  type ModelsContainerCheck,
   type ModelsContainerVariable,
   type ModelsTaskFull,
 } from '../../types/generated';
@@ -40,6 +41,16 @@ function toContainerVariables(variables?: ModelsContainerVariable[]): ContainerV
   });
 }
 
+function toContainerChecks(checks?: ModelsContainerCheck[]): ContainerCheck[] {
+  return (checks ?? []).map((check) => {
+    const { id, description, containerType, containerID } = check;
+    if (id == null || description == null) {
+      throw new Error('Invalid container check payload from API');
+    }
+    return { id, description, containerType, containerID };
+  });
+}
+
 function toTaskCCreateSource(dto: {
   id?: number;
   description?: string;
@@ -56,6 +67,7 @@ function toTaskCCreateSource(dto: {
   actions?: number[];
   parentContainers?: TaskCCreateSource['parentContainers'];
   variables?: ModelsContainerVariable[];
+  checks?: ModelsContainerCheck[];
 }): TaskCCreateSource {
   const { id, description, done } = dto;
   if (id == null || description == null || done == null) {
@@ -77,6 +89,7 @@ function toTaskCCreateSource(dto: {
     actions: dto.actions,
     parentContainers: dto.parentContainers,
     variables: toContainerVariables(dto.variables),
+    checks: toContainerChecks(dto.checks),
   };
 }
 

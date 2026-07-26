@@ -1,13 +1,24 @@
 <div id="content-wrapper">
   <div id="task-content">
-    @if (taskContainer().variables.length > 0) {
+    @if (taskContainer().variables.length > 0 || checks().length > 0) {
       <div id="variables-overlay">
-        <app-variables-table
-          class="overlay-position"
-          [variables]="variables()"
-          (addVariableClick)="addVariable()"
-          (refreshContainer)="refreshContainer.emit()"
-        ></app-variables-table>
+        @if (taskContainer().variables.length > 0) {
+          <app-variables-table
+            class="overlay-position"
+            [variables]="variables()"
+            (addVariableClick)="addVariable()"
+            (refreshContainer)="refreshContainer.emit()"
+          ></app-variables-table>
+        }
+        @if (checks().length > 0) {
+          <app-container-checks-list
+            class="overlay-position"
+            [container]="taskContainer()"
+            [checks]="checks()"
+            (addCheckClick)="addCheck()"
+            (refreshContainer)="refreshContainer.emit()"
+          ></app-container-checks-list>
+        }
       </div>
     }
 
@@ -103,6 +114,9 @@
                 <button mat-menu-item (click)="addRecord()">Add record</button>
                 <button mat-menu-item (click)="showRecords()">Show records</button>
                 <button mat-menu-item (click)="addVariable()">Add variable</button>
+                @if (isTaskContainer()) {
+                  <button mat-menu-item (click)="addCheck()">Add check</button>
+                }
                 @if (aliasesSupported()) {
                   <button mat-menu-item (click)="openAliasesDialog()">Edit aliases</button>
                 }

@@ -1,7 +1,10 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { EMPTY } from 'rxjs';
 import { AlertService } from './services/alert.service';
 import { DashboardService } from './services/dashboard.service';
+import { WebsocketService } from './services/websocket.service';
+import { AuthStore } from './state/auth.store';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -13,6 +16,21 @@ describe('AppComponent', () => {
           provide: DashboardService,
           useValue: {
             updateDoneTasksNumber: () => undefined,
+          },
+        },
+        {
+          provide: WebsocketService,
+          useValue: {
+            connect: () => undefined,
+            close: () => undefined,
+            connected$: EMPTY,
+            onEvent: () => EMPTY,
+          },
+        },
+        {
+          provide: AuthStore,
+          useValue: {
+            isAuthenticated: signal(false),
           },
         },
         {

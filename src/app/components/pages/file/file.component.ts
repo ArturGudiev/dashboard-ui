@@ -1,25 +1,37 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
+  effect,
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { DomSanitizer, type SafeResourceUrl, Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { from, of } from 'rxjs';
 import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { type MmNode, parseMindMapXml } from '../../../shared/libs/mm-parser.lib';
+import { getUrlByDescription } from '../../../shared/libs/dashboard.lib';
+import { ALIASES_DIALOG_OPTIONS } from '../../../shared/constants';
+import { AliasesService } from '../../../services/aliases.service';
+import { AlertService } from '../../../services/alert.service';
 import { FilesService } from '../../../services/files.service';
+import { type ModelsAliasModel } from '../../../types/generated';
+import { AliasesDialogComponent } from '../../dialogs/aliases-dialog/aliases-dialog.component';
+import { ParentsPathComponent } from '../../containers/parents-path/parents-path.component';
 import { MindMapViewerComponent } from './mind-map-viewer.component';
 import { MindMapGraphComponent } from './mind-map-graph.component';
 
 type PreviewKind = 'text' | 'image' | 'pdf' | 'mindmap' | 'binary';
+
+const EMPTY_ALIASES: string[] = [];
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +42,7 @@ type PreviewKind = 'text' | 'image' | 'pdf' | 'mindmap' | 'binary';
     MatIconModule,
     MatProgressSpinner,
     MatSlideToggleModule,
+    ParentsPathComponent,
     MindMapViewerComponent,
     MindMapGraphComponent,
   ],
@@ -38,7 +51,11 @@ type PreviewKind = 'text' | 'image' | 'pdf' | 'mindmap' | 'binary';
 })
 export class FileComponent {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private filesService = inject(FilesService);
+  private aliasesService = inject(AliasesService);
+  private alertService = inject(AlertService);
+  private dialog = inject(MatDialog);
   private sanitizer = inject(DomSanitizer);
   private titleService = inject(Title);
   private destroyRef = inject(DestroyRef);
@@ -61,10 +78,45 @@ export class FileComponent {
   readonly fileName = signal('');
   readonly mimeType = signal('');
   readonly sizeBytes = signal(0);
+  readonly parentsPath = signal<string[]>([]);
+
+  private lastAliases = signal<string[]>([]);
+  private lastAliasesPath = '';
+
+  aliasesResource = rxResource<ModelsAliasModel[], { path: string }>({
+    params: () => ({ path: this.filesPath() }),
+    stream: ({ params }) =>
+      params.path
+        ? this.aliasesService.getFileAliases(params.path).pipe(catchError(() => of([])))
+        : of([]),
+  });
+
+  readonly aliasesForDisplay = computed(() => {
+    const live = this.aliasesResource.value();
+    if (live != null) {
+      return live.map((alias) => alias.alias);
+    }
+    return this.lastAliases().length > 0 ? this.lastAliases() : EMPTY_ALIASES;
+  });
 
   private rawObjectUrl: string | null = null;
 
   constructor() {
+    effect(() => {
+      const path = this.filesPath();
+      if (this.lastAliasesPath !== path) {
+        this.lastAliasesPath = path;
+        this.lastAliases.set([]);
+      }
+    });
+
+    effect(() => {
+      const aliases = this.aliasesResource.value();
+      if (aliases != null) {
+        this.lastAliases.set(aliases.map((alias) => alias.alias));
+      }
+    });
+
     toObservable(this.filesPath)
       .pipe(
         tap((path) => {
@@ -77,6 +129,7 @@ export class FileComponent {
           this.encrypted.set(false);
           this.mimeType.set('');
           this.sizeBytes.set(0);
+          this.parentsPath.set([]);
 
           if (!path) {
             this.loading.set(false);
@@ -108,7 +161,53 @@ export class FileComponent {
         void this.applyBlob(loaded.blob, loaded.encrypted);
       });
 
+    toObservable(this.filesPath)
+      .pipe(
+        filter((path): path is string => !!path),
+        switchMap((path) =>
+          this.filesService.getParentsPath(path).pipe(catchError(() => of([] as string[]))),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((path) => this.parentsPath.set(path));
+
     this.destroyRef.onDestroy(() => this.revokeObjectUrl());
+  }
+
+  openAliasesDialog(): void {
+    const path = this.filesPath();
+    if (!path) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(AliasesDialogComponent, {
+      data: {
+        aliases: this.aliasesForDisplay(),
+        containerDescription: path,
+      },
+      ...ALIASES_DIALOG_OPTIONS,
+    });
+
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((aliases: string[] | null) => {
+      if (!aliases) {
+        return;
+      }
+
+      this.aliasesService.updateFileAliases(path, aliases).subscribe({
+        next: (updated) => {
+          this.lastAliases.set(updated.map((alias) => alias.alias));
+          this.aliasesResource.reload();
+        },
+        error: (error: unknown) => {
+          const message =
+            error && typeof error === 'object' && 'error' in error
+              && (error as { error?: { error?: string } }).error?.error
+              ? (error as { error: { error: string } }).error.error
+              : 'Failed to update aliases';
+          this.alertService.showAlert(message, 3000, 'error');
+        },
+      });
+    });
   }
 
   download(): void {
@@ -124,6 +223,13 @@ export class FileComponent {
 
   onShowVisuallyChange(checked: boolean): void {
     this.showMindMapVisually.set(checked);
+  }
+
+  goToParentHandler(description: string): void {
+    const urls = getUrlByDescription(description);
+    if (urls.length > 0) {
+      void this.router.navigate(urls);
+    }
   }
 
   private async applyBlob(blob: Blob, encrypted: boolean): Promise<void> {

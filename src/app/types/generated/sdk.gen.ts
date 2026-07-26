@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { DeleteContainerVariablesByIdData, DeleteContainerVariablesByIdErrors, DeleteContainerVariablesByIdResponses, GetAliasesByAliasData, GetAliasesByAliasErrors, GetAliasesByAliasResponses, GetData, GetDirectionsByIdData, GetDirectionsByIdErrors, GetDirectionsByIdResponses, GetDirectionsByIdStatsData, GetDirectionsByIdStatsErrors, GetDirectionsByIdStatsResponses, GetDirectionsByIdSubmissionsData, GetDirectionsByIdSubmissionsErrors, GetDirectionsByIdSubmissionsResponses, GetDirectionsData, GetDirectionsErrors, GetDirectionsResponses, GetDoneTasksData, GetDoneTasksErrors, GetDoneTasksResponses, GetEpicByIdData, GetEpicByIdErrors, GetEpicByIdResponses, GetEpicsData, GetEpicsErrors, GetEpicsResponses, GetLogMessagesByIdData, GetLogMessagesByIdErrors, GetLogMessagesByIdResponses, GetLogMessagesData, GetLogMessagesErrors, GetLogMessagesResponses, GetLongTaskProgressesByIdData, GetLongTaskProgressesByIdErrors, GetLongTaskProgressesByIdResponses, GetLongTaskProgressesByIdSubmissionsData, GetLongTaskProgressesByIdSubmissionsErrors, GetLongTaskProgressesByIdSubmissionsResponses, GetLongTasksByIdData, GetLongTasksByIdErrors, GetLongTasksByIdProgressesData, GetLongTasksByIdProgressesErrors, GetLongTasksByIdProgressesResponses, GetLongTasksByIdResponses, GetLongTasksByIdSubmissionsData, GetLongTasksByIdSubmissionsErrors, GetLongTasksByIdSubmissionsResponses, GetLongTasksData, GetLongTasksErrors, GetLongTasksResponses, GetProblemByIdData, GetProblemByIdErrors, GetProblemByIdResponses, GetQuestionByIdData, GetQuestionByIdErrors, GetQuestionByIdResponses, GetRepetitiveTasksByIdData, GetRepetitiveTasksByIdErrors, GetRepetitiveTasksByIdExecutionsData, GetRepetitiveTasksByIdExecutionsErrors, GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdResponses, GetRepetitiveTasksData, GetRepetitiveTasksErrors, GetRepetitiveTasksResponses, GetResponses, GetStateRequirementsByIdChecksData, GetStateRequirementsByIdChecksErrors, GetStateRequirementsByIdChecksResponses, GetStateRequirementsData, GetStateRequirementsErrors, GetStateRequirementsResponses, GetStatesByIdData, GetStatesByIdErrors, GetStatesByIdRequirementsData, GetStatesByIdRequirementsErrors, GetStatesByIdRequirementsResponses, GetStatesByIdResponses, GetStatesData, GetStatesErrors, GetStatesResponses, GetStoryByIdData, GetStoryByIdErrors, GetStoryByIdResponses, GetTaskByIdData, GetTaskByIdErrors, GetTaskByIdResponses, GetTaskReportByIdData, GetTaskReportByIdErrors, GetTaskReportByIdResponses, GetTestsData, GetTestsErrors, GetTestsResponses, PatchContainerVariablesByIdData, PatchContainerVariablesByIdErrors, PatchContainerVariablesByIdResponses, PatchDirectionsByIdData, PatchDirectionsByIdErrors, PatchDirectionsByIdResponses, PatchEpicByIdData, PatchEpicByIdErrors, PatchEpicByIdResponses, PatchLongTasksByIdData, PatchLongTasksByIdErrors, PatchLongTasksByIdResponses, PatchProblemByIdData, PatchProblemByIdErrors, PatchProblemByIdResponses, PatchQuestionByIdData, PatchQuestionByIdErrors, PatchQuestionByIdResponses, PatchRepetitiveTasksByIdData, PatchRepetitiveTasksByIdErrors, PatchRepetitiveTasksByIdResponses, PatchStoryByIdData, PatchStoryByIdErrors, PatchStoryByIdResponses, PatchTaskByIdData, PatchTaskByIdErrors, PatchTaskByIdResponses, PostAnswerQuestionByIdData, PostAnswerQuestionByIdErrors, PostAnswerQuestionByIdResponses, PostChangeTasksOrderData, PostChangeTasksOrderErrors, PostChangeTasksOrderResponses, PostContainerVariablesData, PostContainerVariablesErrors, PostContainerVariablesResponses, PostDirectionsByIdSubmissionsData, PostDirectionsByIdSubmissionsErrors, PostDirectionsByIdSubmissionsResponses, PostDirectionsData, PostDirectionsErrors, PostDirectionsResponses, PostGetEpicsData, PostGetEpicsErrors, PostGetEpicsResponses, PostGetProblemsData, PostGetProblemsErrors, PostGetProblemsResponses, PostGetQuestionsData, PostGetQuestionsErrors, PostGetQuestionsResponses, PostGetStoriesData, PostGetStoriesErrors, PostGetStoriesResponses, PostGetTasksData, PostGetTasksErrors, PostGetTasksResponses, PostLogMessagesData, PostLogMessagesErrors, PostLogMessagesResponses, PostLongTaskProgressesByIdSubmissionsData, PostLongTaskProgressesByIdSubmissionsErrors, PostLongTaskProgressesByIdSubmissionsResponses, PostLongTasksByIdProgressesData, PostLongTasksByIdProgressesErrors, PostLongTasksByIdProgressesResponses, PostLongTasksByIdSubmissionsData, PostLongTasksByIdSubmissionsErrors, PostLongTasksByIdSubmissionsResponses, PostLongTasksData, PostLongTasksErrors, PostLongTasksResponses, PostNewEpicData, PostNewEpicErrors, PostNewEpicResponses, PostNewProblemData, PostNewProblemErrors, PostNewProblemResponses, PostNewQuestionData, PostNewQuestionErrors, PostNewQuestionResponses, PostNewRepetitiveTaskData, PostNewRepetitiveTaskErrors, PostNewRepetitiveTaskResponses, PostNewStoryData, PostNewStoryErrors, PostNewStoryResponses, PostNewTaskData, PostNewTaskErrors, PostNewTaskResponses, PostParentsPathData, PostParentsPathErrors, PostParentsPathResponses, PostRepetitiveTasksByIdExecutionsData, PostRepetitiveTasksByIdExecutionsErrors, PostRepetitiveTasksByIdExecutionsResponses, PostStateRequirementsByIdChecksData, PostStateRequirementsByIdChecksErrors, PostStateRequirementsByIdChecksResponses, PostStatesByIdRequirementsData, PostStatesByIdRequirementsErrors, PostStatesByIdRequirementsResponses, PostStatesData, PostStatesErrors, PostStatesResponses, PutAddAnonymousTaskData, PutAddAnonymousTaskErrors, PutAddAnonymousTaskResponses, PutFinishTaskByIdData, PutFinishTaskByIdErrors, PutFinishTaskByIdResponses, PutFinishTasksByIdsData, PutFinishTasksByIdsErrors, PutFinishTasksByIdsResponses, PutFinishTasksData, PutFinishTasksErrors, PutFinishTasksResponses, PutSolveProblemByIdData, PutSolveProblemByIdErrors, PutSolveProblemByIdResponses, PutUpdateEpicData, PutUpdateEpicErrors, PutUpdateEpicResponses, PutUpdateProblemData, PutUpdateProblemErrors, PutUpdateProblemResponses, PutUpdateQuestionData, PutUpdateQuestionErrors, PutUpdateQuestionResponses, PutUpdateStoryData, PutUpdateStoryErrors, PutUpdateStoryResponses, PutUpdateTaskData, PutUpdateTaskErrors, PutUpdateTaskResponses } from './types.gen';
+import type { DeleteContainerChecksByIdData, DeleteContainerChecksByIdErrors, DeleteContainerChecksByIdResponses, DeleteContainerVariablesByIdData, DeleteContainerVariablesByIdErrors, DeleteContainerVariablesByIdResponses, DeleteFilesContentByFilepathData, DeleteFilesContentByFilepathErrors, DeleteFilesContentByFilepathResponses, GetAliasesByAliasData, GetAliasesByAliasErrors, GetAliasesByAliasResponses, GetAliasesContainerByTypeByIdData, GetAliasesContainerByTypeByIdErrors, GetAliasesContainerByTypeByIdResponses, GetAliasesFileByFilepathData, GetAliasesFileByFilepathErrors, GetAliasesFileByFilepathResponses, GetData, GetDirectionsByIdData, GetDirectionsByIdErrors, GetDirectionsByIdResponses, GetDirectionsByIdStatsData, GetDirectionsByIdStatsErrors, GetDirectionsByIdStatsResponses, GetDirectionsByIdSubmissionsData, GetDirectionsByIdSubmissionsErrors, GetDirectionsByIdSubmissionsResponses, GetDirectionsData, GetDirectionsErrors, GetDirectionsResponses, GetDoneTasksData, GetDoneTasksErrors, GetDoneTasksResponses, GetEpicByIdData, GetEpicByIdErrors, GetEpicByIdResponses, GetEpicsData, GetEpicsErrors, GetEpicsResponses, GetFilesConfigData, GetFilesConfigErrors, GetFilesConfigResponses, GetFilesContainerByTypeByIdData, GetFilesContainerByTypeByIdErrors, GetFilesContainerByTypeByIdResponses, GetFilesContentByFilepathData, GetFilesContentByFilepathErrors, GetFilesContentByFilepathResponses, GetFilesData, GetFilesErrors, GetFilesParentsPathByFilepathData, GetFilesParentsPathByFilepathErrors, GetFilesParentsPathByFilepathResponses, GetFilesResponses, GetKnowledgeNodeByIdData, GetKnowledgeNodeByIdErrors, GetKnowledgeNodeByIdResponses, GetLogMessagesByIdData, GetLogMessagesByIdErrors, GetLogMessagesByIdResponses, GetLogMessagesData, GetLogMessagesErrors, GetLogMessagesResponses, GetLongTaskProgressesByIdData, GetLongTaskProgressesByIdErrors, GetLongTaskProgressesByIdResponses, GetLongTaskProgressesByIdSubmissionsData, GetLongTaskProgressesByIdSubmissionsErrors, GetLongTaskProgressesByIdSubmissionsResponses, GetLongTasksByIdData, GetLongTasksByIdErrors, GetLongTasksByIdProgressesData, GetLongTasksByIdProgressesErrors, GetLongTasksByIdProgressesResponses, GetLongTasksByIdResponses, GetLongTasksByIdSubmissionsData, GetLongTasksByIdSubmissionsErrors, GetLongTasksByIdSubmissionsResponses, GetLongTasksData, GetLongTasksErrors, GetLongTasksResponses, GetProblemByIdData, GetProblemByIdErrors, GetProblemByIdResponses, GetQuestionByIdData, GetQuestionByIdErrors, GetQuestionByIdResponses, GetRepetitiveTasksByIdData, GetRepetitiveTasksByIdErrors, GetRepetitiveTasksByIdExecutionsData, GetRepetitiveTasksByIdExecutionsErrors, GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdResponses, GetRepetitiveTasksData, GetRepetitiveTasksErrors, GetRepetitiveTasksResponses, GetResponses, GetStateRequirementsByIdChecksData, GetStateRequirementsByIdChecksErrors, GetStateRequirementsByIdChecksResponses, GetStateRequirementsData, GetStateRequirementsErrors, GetStateRequirementsResponses, GetStatesByIdData, GetStatesByIdErrors, GetStatesByIdRequirementsData, GetStatesByIdRequirementsErrors, GetStatesByIdRequirementsResponses, GetStatesByIdResponses, GetStatesData, GetStatesErrors, GetStatesResponses, GetStoryByIdData, GetStoryByIdErrors, GetStoryByIdResponses, GetTaskByIdData, GetTaskByIdErrors, GetTaskByIdResponses, GetTaskReportByIdData, GetTaskReportByIdErrors, GetTaskReportByIdResponses, GetTasksByDueDateData, GetTasksByDueDateErrors, GetTasksByDueDateResponses, GetTestsData, GetTestsErrors, GetTestsResponses, GetUsersByIdData, GetUsersByIdErrors, GetUsersByIdResponses, GetUsersMeData, GetUsersMeErrors, GetUsersMeResponses, PatchContainerChecksByIdData, PatchContainerChecksByIdErrors, PatchContainerChecksByIdResponses, PatchContainerVariablesByIdData, PatchContainerVariablesByIdErrors, PatchContainerVariablesByIdResponses, PatchDirectionsByIdData, PatchDirectionsByIdErrors, PatchDirectionsByIdResponses, PatchEpicByIdData, PatchEpicByIdErrors, PatchEpicByIdResponses, PatchKnowledgeNodeByIdData, PatchKnowledgeNodeByIdErrors, PatchKnowledgeNodeByIdResponses, PatchLongTasksByIdData, PatchLongTasksByIdErrors, PatchLongTasksByIdResponses, PatchProblemByIdData, PatchProblemByIdErrors, PatchProblemByIdResponses, PatchQuestionByIdData, PatchQuestionByIdErrors, PatchQuestionByIdResponses, PatchRepetitiveTasksByIdData, PatchRepetitiveTasksByIdErrors, PatchRepetitiveTasksByIdResponses, PatchStoryByIdData, PatchStoryByIdErrors, PatchStoryByIdResponses, PatchTaskByIdData, PatchTaskByIdErrors, PatchTaskByIdResponses, PostAnswerQuestionByIdData, PostAnswerQuestionByIdErrors, PostAnswerQuestionByIdResponses, PostChangeTasksOrderData, PostChangeTasksOrderErrors, PostChangeTasksOrderResponses, PostContainerChecksData, PostContainerChecksErrors, PostContainerChecksResponses, PostContainerVariablesData, PostContainerVariablesErrors, PostContainerVariablesResponses, PostDirectionsByIdSubmissionsData, PostDirectionsByIdSubmissionsErrors, PostDirectionsByIdSubmissionsResponses, PostDirectionsData, PostDirectionsErrors, PostDirectionsResponses, PostGetEpicsData, PostGetEpicsErrors, PostGetEpicsResponses, PostGetKnowledgeNodesData, PostGetKnowledgeNodesErrors, PostGetKnowledgeNodesResponses, PostGetProblemsData, PostGetProblemsErrors, PostGetProblemsResponses, PostGetQuestionsData, PostGetQuestionsErrors, PostGetQuestionsResponses, PostGetStoriesData, PostGetStoriesErrors, PostGetStoriesResponses, PostGetTasksData, PostGetTasksErrors, PostGetTasksResponses, PostLogMessagesData, PostLogMessagesErrors, PostLogMessagesResponses, PostLongTaskProgressesByIdSubmissionsData, PostLongTaskProgressesByIdSubmissionsErrors, PostLongTaskProgressesByIdSubmissionsResponses, PostLongTasksByIdProgressesData, PostLongTasksByIdProgressesErrors, PostLongTasksByIdProgressesResponses, PostLongTasksByIdSubmissionsData, PostLongTasksByIdSubmissionsErrors, PostLongTasksByIdSubmissionsResponses, PostLongTasksData, PostLongTasksErrors, PostLongTasksResponses, PostNewEpicData, PostNewEpicErrors, PostNewEpicResponses, PostNewHierarchicalTasksData, PostNewHierarchicalTasksErrors, PostNewHierarchicalTasksResponses, PostNewKnowledgeNodeData, PostNewKnowledgeNodeErrors, PostNewKnowledgeNodeResponses, PostNewProblemData, PostNewProblemErrors, PostNewProblemResponses, PostNewQuestionData, PostNewQuestionErrors, PostNewQuestionResponses, PostNewRepetitiveTaskData, PostNewRepetitiveTaskErrors, PostNewRepetitiveTaskResponses, PostNewStoryData, PostNewStoryErrors, PostNewStoryResponses, PostNewTaskData, PostNewTaskErrors, PostNewTaskResponses, PostParentsPathData, PostParentsPathErrors, PostParentsPathResponses, PostRepetitiveTasksByIdExecutionsData, PostRepetitiveTasksByIdExecutionsErrors, PostRepetitiveTasksByIdExecutionsResponses, PostStateRequirementsByIdChecksData, PostStateRequirementsByIdChecksErrors, PostStateRequirementsByIdChecksResponses, PostStatesByIdRequirementsData, PostStatesByIdRequirementsErrors, PostStatesByIdRequirementsResponses, PostStatesData, PostStatesErrors, PostStatesResponses, PostUsersData, PostUsersErrors, PostUsersLoginData, PostUsersLoginErrors, PostUsersLoginResponses, PostUsersLogoutData, PostUsersLogoutErrors, PostUsersLogoutResponses, PostUsersRefreshData, PostUsersRefreshErrors, PostUsersRefreshResponses, PostUsersResponses, PutAddAnonymousTaskData, PutAddAnonymousTaskErrors, PutAddAnonymousTaskResponses, PutAliasesContainerData, PutAliasesContainerErrors, PutAliasesContainerResponses, PutAliasesFileData, PutAliasesFileErrors, PutAliasesFileResponses, PutFilesContentByFilepathData, PutFilesContentByFilepathErrors, PutFilesContentByFilepathResponses, PutFinishTaskByIdData, PutFinishTaskByIdErrors, PutFinishTaskByIdResponses, PutFinishTasksByIdsData, PutFinishTasksByIdsErrors, PutFinishTasksByIdsResponses, PutFinishTasksData, PutFinishTasksErrors, PutFinishTasksResponses, PutLongTasksByIdCloseData, PutLongTasksByIdCloseErrors, PutLongTasksByIdCloseResponses, PutSolveProblemByIdData, PutSolveProblemByIdErrors, PutSolveProblemByIdResponses, PutUpdateEpicData, PutUpdateEpicErrors, PutUpdateEpicResponses, PutUpdateKnowledgeNodeData, PutUpdateKnowledgeNodeErrors, PutUpdateKnowledgeNodeResponses, PutUpdateProblemData, PutUpdateProblemErrors, PutUpdateProblemResponses, PutUpdateQuestionData, PutUpdateQuestionErrors, PutUpdateQuestionResponses, PutUpdateStoryData, PutUpdateStoryErrors, PutUpdateStoryResponses, PutUpdateTaskData, PutUpdateTaskErrors, PutUpdateTaskResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -23,21 +23,113 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  *
  * Returns a welcome message
  */
-export const get = <ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>): RequestResult<GetResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetResponses, unknown, ThrowOnError>({ url: '/', ...options });
+export const get = <ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>): RequestResult<GetResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/',
+    ...options
+});
 
 /**
  * Create anonymous task
  *
  * Creates a simple anonymous task with default values
  */
-export const putAddAnonymousTask = <ThrowOnError extends boolean = false>(options?: Options<PutAddAnonymousTaskData, ThrowOnError>): RequestResult<PutAddAnonymousTaskResponses, PutAddAnonymousTaskErrors, ThrowOnError> => (options?.client ?? client).put<PutAddAnonymousTaskResponses, PutAddAnonymousTaskErrors, ThrowOnError>({ url: '/add-anonymous-task', ...options });
+export const putAddAnonymousTask = <ThrowOnError extends boolean = false>(options?: Options<PutAddAnonymousTaskData, ThrowOnError>): RequestResult<PutAddAnonymousTaskResponses, PutAddAnonymousTaskErrors, ThrowOnError> => (options?.client ?? client).put<PutAddAnonymousTaskResponses, PutAddAnonymousTaskErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/add-anonymous-task',
+    ...options
+});
+
+/**
+ * Sync aliases for container
+ *
+ * Replaces container aliases: removes absent ones and adds new ones
+ */
+export const putAliasesContainer = <ThrowOnError extends boolean = false>(options: Options<PutAliasesContainerData, ThrowOnError>): RequestResult<PutAliasesContainerResponses, PutAliasesContainerErrors, ThrowOnError> => (options.client ?? client).put<PutAliasesContainerResponses, PutAliasesContainerErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/aliases/container',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List aliases for container
+ *
+ * Returns all aliases linked to the given container type and id
+ */
+export const getAliasesContainerByTypeById = <ThrowOnError extends boolean = false>(options: Options<GetAliasesContainerByTypeByIdData, ThrowOnError>): RequestResult<GetAliasesContainerByTypeByIdResponses, GetAliasesContainerByTypeByIdErrors, ThrowOnError> => (options.client ?? client).get<GetAliasesContainerByTypeByIdResponses, GetAliasesContainerByTypeByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/aliases/container/{type}/{id}',
+    ...options
+});
+
+/**
+ * Sync aliases for file
+ *
+ * Replaces file aliases: removes absent ones and adds new ones. filePath is the logical relative path under FILES_DIR.
+ */
+export const putAliasesFile = <ThrowOnError extends boolean = false>(options: Options<PutAliasesFileData, ThrowOnError>): RequestResult<PutAliasesFileResponses, PutAliasesFileErrors, ThrowOnError> => (options.client ?? client).put<PutAliasesFileResponses, PutAliasesFileErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/aliases/file',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List aliases for file
+ *
+ * Returns all aliases linked to the given logical relative file path under FILES_DIR
+ */
+export const getAliasesFileByFilepath = <ThrowOnError extends boolean = false>(options: Options<GetAliasesFileByFilepathData, ThrowOnError>): RequestResult<GetAliasesFileByFilepathResponses, GetAliasesFileByFilepathErrors, ThrowOnError> => (options.client ?? client).get<GetAliasesFileByFilepathResponses, GetAliasesFileByFilepathErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/aliases/file/{filepath}',
+    ...options
+});
 
 /**
  * Get alias by string
  *
  * Returns an alias by its string
  */
-export const getAliasesByAlias = <ThrowOnError extends boolean = false>(options: Options<GetAliasesByAliasData, ThrowOnError>): RequestResult<GetAliasesByAliasResponses, GetAliasesByAliasErrors, ThrowOnError> => (options.client ?? client).get<GetAliasesByAliasResponses, GetAliasesByAliasErrors, ThrowOnError>({ url: '/aliases/{alias}', ...options });
+export const getAliasesByAlias = <ThrowOnError extends boolean = false>(options: Options<GetAliasesByAliasData, ThrowOnError>): RequestResult<GetAliasesByAliasResponses, GetAliasesByAliasErrors, ThrowOnError> => (options.client ?? client).get<GetAliasesByAliasResponses, GetAliasesByAliasErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/aliases/{alias}',
+    ...options
+});
 
 /**
  * Answer question
@@ -45,6 +137,11 @@ export const getAliasesByAlias = <ThrowOnError extends boolean = false>(options:
  * Sets the answer for a question
  */
 export const postAnswerQuestionById = <ThrowOnError extends boolean = false>(options: Options<PostAnswerQuestionByIdData, ThrowOnError>): RequestResult<PostAnswerQuestionByIdResponses, PostAnswerQuestionByIdErrors, ThrowOnError> => (options.client ?? client).post<PostAnswerQuestionByIdResponses, PostAnswerQuestionByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/answer-question/{id}',
     ...options,
     headers: {
@@ -59,7 +156,65 @@ export const postAnswerQuestionById = <ThrowOnError extends boolean = false>(opt
  * Changes the order of tasks in a container
  */
 export const postChangeTasksOrder = <ThrowOnError extends boolean = false>(options: Options<PostChangeTasksOrderData, ThrowOnError>): RequestResult<PostChangeTasksOrderResponses, PostChangeTasksOrderErrors, ThrowOnError> => (options.client ?? client).post<PostChangeTasksOrderResponses, PostChangeTasksOrderErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/change-tasks-order',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Add check to container
+ *
+ * Creates a check entry for the given container
+ */
+export const postContainerChecks = <ThrowOnError extends boolean = false>(options: Options<PostContainerChecksData, ThrowOnError>): RequestResult<PostContainerChecksResponses, PostContainerChecksErrors, ThrowOnError> => (options.client ?? client).post<PostContainerChecksResponses, PostContainerChecksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/container-checks',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Remove container check
+ *
+ * Deletes a container check by ID
+ */
+export const deleteContainerChecksById = <ThrowOnError extends boolean = false>(options: Options<DeleteContainerChecksByIdData, ThrowOnError>): RequestResult<DeleteContainerChecksByIdResponses, DeleteContainerChecksByIdErrors, ThrowOnError> => (options.client ?? client).delete<DeleteContainerChecksByIdResponses, DeleteContainerChecksByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/container-checks/{id}',
+    ...options
+});
+
+/**
+ * Update container check
+ *
+ * Updates a container check's description
+ */
+export const patchContainerChecksById = <ThrowOnError extends boolean = false>(options: Options<PatchContainerChecksByIdData, ThrowOnError>): RequestResult<PatchContainerChecksByIdResponses, PatchContainerChecksByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchContainerChecksByIdResponses, PatchContainerChecksByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/container-checks/{id}',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -73,6 +228,11 @@ export const postChangeTasksOrder = <ThrowOnError extends boolean = false>(optio
  * Creates a variable entry for the given container (creates variables stack if needed)
  */
 export const postContainerVariables = <ThrowOnError extends boolean = false>(options: Options<PostContainerVariablesData, ThrowOnError>): RequestResult<PostContainerVariablesResponses, PostContainerVariablesErrors, ThrowOnError> => (options.client ?? client).post<PostContainerVariablesResponses, PostContainerVariablesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/container-variables',
     ...options,
     headers: {
@@ -86,7 +246,15 @@ export const postContainerVariables = <ThrowOnError extends boolean = false>(opt
  *
  * Deletes a container variable by ID
  */
-export const deleteContainerVariablesById = <ThrowOnError extends boolean = false>(options: Options<DeleteContainerVariablesByIdData, ThrowOnError>): RequestResult<DeleteContainerVariablesByIdResponses, DeleteContainerVariablesByIdErrors, ThrowOnError> => (options.client ?? client).delete<DeleteContainerVariablesByIdResponses, DeleteContainerVariablesByIdErrors, ThrowOnError>({ url: '/container-variables/{id}', ...options });
+export const deleteContainerVariablesById = <ThrowOnError extends boolean = false>(options: Options<DeleteContainerVariablesByIdData, ThrowOnError>): RequestResult<DeleteContainerVariablesByIdResponses, DeleteContainerVariablesByIdErrors, ThrowOnError> => (options.client ?? client).delete<DeleteContainerVariablesByIdResponses, DeleteContainerVariablesByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/container-variables/{id}',
+    ...options
+});
 
 /**
  * Update container variable
@@ -94,6 +262,11 @@ export const deleteContainerVariablesById = <ThrowOnError extends boolean = fals
  * Partially updates a container variable's name and/or value
  */
 export const patchContainerVariablesById = <ThrowOnError extends boolean = false>(options: Options<PatchContainerVariablesByIdData, ThrowOnError>): RequestResult<PatchContainerVariablesByIdResponses, PatchContainerVariablesByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchContainerVariablesByIdResponses, PatchContainerVariablesByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/container-variables/{id}',
     ...options,
     headers: {
@@ -107,7 +280,15 @@ export const patchContainerVariablesById = <ThrowOnError extends boolean = false
  *
  * Returns all directions; use open=true to return only open directions
  */
-export const getDirections = <ThrowOnError extends boolean = false>(options?: Options<GetDirectionsData, ThrowOnError>): RequestResult<GetDirectionsResponses, GetDirectionsErrors, ThrowOnError> => (options?.client ?? client).get<GetDirectionsResponses, GetDirectionsErrors, ThrowOnError>({ url: '/directions', ...options });
+export const getDirections = <ThrowOnError extends boolean = false>(options?: Options<GetDirectionsData, ThrowOnError>): RequestResult<GetDirectionsResponses, GetDirectionsErrors, ThrowOnError> => (options?.client ?? client).get<GetDirectionsResponses, GetDirectionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/directions',
+    ...options
+});
 
 /**
  * Create new direction
@@ -115,6 +296,11 @@ export const getDirections = <ThrowOnError extends boolean = false>(options?: Op
  * Creates a new direction with optional parent relationship
  */
 export const postDirections = <ThrowOnError extends boolean = false>(options: Options<PostDirectionsData, ThrowOnError>): RequestResult<PostDirectionsResponses, PostDirectionsErrors, ThrowOnError> => (options.client ?? client).post<PostDirectionsResponses, PostDirectionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/directions',
     ...options,
     headers: {
@@ -128,16 +314,29 @@ export const postDirections = <ThrowOnError extends boolean = false>(options: Op
  *
  * Returns a direction by ID with child container IDs
  */
-export const getDirectionsById = <ThrowOnError extends boolean = false>(options: Options<GetDirectionsByIdData, ThrowOnError>): RequestResult<GetDirectionsByIdResponses, GetDirectionsByIdErrors, ThrowOnError> => (options.client ?? client).get<GetDirectionsByIdResponses, GetDirectionsByIdErrors, ThrowOnError>({ url: '/directions/{id}', ...options });
+export const getDirectionsById = <ThrowOnError extends boolean = false>(options: Options<GetDirectionsByIdData, ThrowOnError>): RequestResult<GetDirectionsByIdResponses, GetDirectionsByIdErrors, ThrowOnError> => (options.client ?? client).get<GetDirectionsByIdResponses, GetDirectionsByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/directions/{id}',
+    ...options
+});
 
 /**
  * Patch direction by ID
  *
  * Partially updates a repetitive task's description and/or notes
- * Partially updates a long task's description and/or notes
+ * Partially updates a long task's description, notes, and/or done state
  * Partially updates a direction's description, notes, and/or closed state
  */
 export const patchDirectionsById = <ThrowOnError extends boolean = false>(options: Options<PatchDirectionsByIdData, ThrowOnError>): RequestResult<PatchDirectionsByIdResponses, PatchDirectionsByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchDirectionsByIdResponses, PatchDirectionsByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/directions/{id}',
     ...options,
     headers: {
@@ -151,14 +350,30 @@ export const patchDirectionsById = <ThrowOnError extends boolean = false>(option
  *
  * Returns aggregated stats entries for a direction including submissions and descendant activity
  */
-export const getDirectionsByIdStats = <ThrowOnError extends boolean = false>(options: Options<GetDirectionsByIdStatsData, ThrowOnError>): RequestResult<GetDirectionsByIdStatsResponses, GetDirectionsByIdStatsErrors, ThrowOnError> => (options.client ?? client).get<GetDirectionsByIdStatsResponses, GetDirectionsByIdStatsErrors, ThrowOnError>({ url: '/directions/{id}/stats', ...options });
+export const getDirectionsByIdStats = <ThrowOnError extends boolean = false>(options: Options<GetDirectionsByIdStatsData, ThrowOnError>): RequestResult<GetDirectionsByIdStatsResponses, GetDirectionsByIdStatsErrors, ThrowOnError> => (options.client ?? client).get<GetDirectionsByIdStatsResponses, GetDirectionsByIdStatsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/directions/{id}/stats',
+    ...options
+});
 
 /**
  * List direction submissions
  *
  * Returns submission records for the given direction (newest first)
  */
-export const getDirectionsByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<GetDirectionsByIdSubmissionsData, ThrowOnError>): RequestResult<GetDirectionsByIdSubmissionsResponses, GetDirectionsByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).get<GetDirectionsByIdSubmissionsResponses, GetDirectionsByIdSubmissionsErrors, ThrowOnError>({ url: '/directions/{id}/submissions', ...options });
+export const getDirectionsByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<GetDirectionsByIdSubmissionsData, ThrowOnError>): RequestResult<GetDirectionsByIdSubmissionsResponses, GetDirectionsByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).get<GetDirectionsByIdSubmissionsResponses, GetDirectionsByIdSubmissionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/directions/{id}/submissions',
+    ...options
+});
 
 /**
  * Add direction submission
@@ -166,6 +381,11 @@ export const getDirectionsByIdSubmissions = <ThrowOnError extends boolean = fals
  * Records a text submission for a direction
  */
 export const postDirectionsByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<PostDirectionsByIdSubmissionsData, ThrowOnError>): RequestResult<PostDirectionsByIdSubmissionsResponses, PostDirectionsByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).post<PostDirectionsByIdSubmissionsResponses, PostDirectionsByIdSubmissionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/directions/{id}/submissions',
     ...options,
     headers: {
@@ -179,14 +399,30 @@ export const postDirectionsByIdSubmissions = <ThrowOnError extends boolean = fal
  *
  * Returns all done tasks where doneDateTime is today
  */
-export const getDoneTasks = <ThrowOnError extends boolean = false>(options?: Options<GetDoneTasksData, ThrowOnError>): RequestResult<GetDoneTasksResponses, GetDoneTasksErrors, ThrowOnError> => (options?.client ?? client).get<GetDoneTasksResponses, GetDoneTasksErrors, ThrowOnError>({ url: '/done-tasks', ...options });
+export const getDoneTasks = <ThrowOnError extends boolean = false>(options?: Options<GetDoneTasksData, ThrowOnError>): RequestResult<GetDoneTasksResponses, GetDoneTasksErrors, ThrowOnError> => (options?.client ?? client).get<GetDoneTasksResponses, GetDoneTasksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/done-tasks',
+    ...options
+});
 
 /**
  * Get epic by ID
  *
  * Returns a epic by its ID
  */
-export const getEpicById = <ThrowOnError extends boolean = false>(options: Options<GetEpicByIdData, ThrowOnError>): RequestResult<GetEpicByIdResponses, GetEpicByIdErrors, ThrowOnError> => (options.client ?? client).get<GetEpicByIdResponses, GetEpicByIdErrors, ThrowOnError>({ url: '/epic/{id}', ...options });
+export const getEpicById = <ThrowOnError extends boolean = false>(options: Options<GetEpicByIdData, ThrowOnError>): RequestResult<GetEpicByIdResponses, GetEpicByIdErrors, ThrowOnError> => (options.client ?? client).get<GetEpicByIdResponses, GetEpicByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/epic/{id}',
+    ...options
+});
 
 /**
  * Patch epic by ID
@@ -194,6 +430,11 @@ export const getEpicById = <ThrowOnError extends boolean = false>(options: Optio
  * Partially updates an epic's description and/or notes
  */
 export const patchEpicById = <ThrowOnError extends boolean = false>(options: Options<PatchEpicByIdData, ThrowOnError>): RequestResult<PatchEpicByIdResponses, PatchEpicByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchEpicByIdResponses, PatchEpicByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/epic/{id}',
     ...options,
     headers: {
@@ -207,14 +448,140 @@ export const patchEpicById = <ThrowOnError extends boolean = false>(options: Opt
  *
  * Returns all epics
  */
-export const getEpics = <ThrowOnError extends boolean = false>(options?: Options<GetEpicsData, ThrowOnError>): RequestResult<GetEpicsResponses, GetEpicsErrors, ThrowOnError> => (options?.client ?? client).get<GetEpicsResponses, GetEpicsErrors, ThrowOnError>({ url: '/epics', ...options });
+export const getEpics = <ThrowOnError extends boolean = false>(options?: Options<GetEpicsData, ThrowOnError>): RequestResult<GetEpicsResponses, GetEpicsErrors, ThrowOnError> => (options?.client ?? client).get<GetEpicsResponses, GetEpicsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/epics',
+    ...options
+});
+
+/**
+ * List files
+ *
+ * Lists all files and directories under the configured files directory (logical relative paths; when FILES_ENCRYPTED=true the trailing .bin suffix is stripped)
+ */
+export const getFiles = <ThrowOnError extends boolean = false>(options?: Options<GetFilesData, ThrowOnError>): RequestResult<GetFilesResponses, GetFilesErrors, ThrowOnError> => (options?.client ?? client).get<GetFilesResponses, GetFilesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/files',
+    ...options
+});
+
+/**
+ * Get files storage config
+ *
+ * Returns whether files are stored encrypted and the configured base directory
+ */
+export const getFilesConfig = <ThrowOnError extends boolean = false>(options?: Options<GetFilesConfigData, ThrowOnError>): RequestResult<GetFilesConfigResponses, GetFilesConfigErrors, ThrowOnError> => (options?.client ?? client).get<GetFilesConfigResponses, GetFilesConfigErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/files/config',
+    ...options
+});
+
+/**
+ * List files for a container
+ *
+ * Lists immediate files/dirs in the container's related files folder (if present)
+ */
+export const getFilesContainerByTypeById = <ThrowOnError extends boolean = false>(options: Options<GetFilesContainerByTypeByIdData, ThrowOnError>): RequestResult<GetFilesContainerByTypeByIdResponses, GetFilesContainerByTypeByIdErrors, ThrowOnError> => (options.client ?? client).get<GetFilesContainerByTypeByIdResponses, GetFilesContainerByTypeByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/files/container/{type}/{id}',
+    ...options
+});
+
+/**
+ * Delete a file
+ *
+ * Deletes a file by logical relative path (when FILES_ENCRYPTED=true deletes path.bin)
+ */
+export const deleteFilesContentByFilepath = <ThrowOnError extends boolean = false>(options: Options<DeleteFilesContentByFilepathData, ThrowOnError>): RequestResult<DeleteFilesContentByFilepathResponses, DeleteFilesContentByFilepathErrors, ThrowOnError> => (options.client ?? client).delete<DeleteFilesContentByFilepathResponses, DeleteFilesContentByFilepathErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/files/content/{filepath}',
+    ...options
+});
+
+/**
+ * Get file by relative path
+ *
+ * Returns file contents for the given logical relative path (e.g. 1.txt or sub/dir/file.txt). When FILES_ENCRYPTED=true reads path.bin on disk and returns opaque ciphertext (no server-side decrypt).
+ */
+export const getFilesContentByFilepath = <ThrowOnError extends boolean = false>(options: Options<GetFilesContentByFilepathData, ThrowOnError>): RequestResult<GetFilesContentByFilepathResponses, GetFilesContentByFilepathErrors, ThrowOnError> => (options.client ?? client).get<GetFilesContentByFilepathResponses, GetFilesContentByFilepathErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/files/content/{filepath}',
+    ...options
+});
+
+/**
+ * Upload or replace a file
+ *
+ * Writes request body to the given logical relative path. When FILES_ENCRYPTED=true stores as path.bin; client should send already-encrypted bytes.
+ */
+export const putFilesContentByFilepath = <ThrowOnError extends boolean = false>(options: Options<PutFilesContentByFilepathData, ThrowOnError>): RequestResult<PutFilesContentByFilepathResponses, PutFilesContentByFilepathErrors, ThrowOnError> => (options.client ?? client).put<PutFilesContentByFilepathResponses, PutFilesContentByFilepathErrors, ThrowOnError>({
+    bodySerializer: null,
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/files/content/{filepath}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/octet-stream',
+        ...options.headers
+    }
+});
+
+/**
+ * Get parents path for a file
+ *
+ * Resolves the owning container from a logical relative file path and returns its parent container descriptions (leaf→root), same shape as POST /parents-path
+ */
+export const getFilesParentsPathByFilepath = <ThrowOnError extends boolean = false>(options: Options<GetFilesParentsPathByFilepathData, ThrowOnError>): RequestResult<GetFilesParentsPathByFilepathResponses, GetFilesParentsPathByFilepathErrors, ThrowOnError> => (options.client ?? client).get<GetFilesParentsPathByFilepathResponses, GetFilesParentsPathByFilepathErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/files/parents-path/{filepath}',
+    ...options
+});
 
 /**
  * Finish task recursively
  *
  * Marks a task and all its descendants as done
  */
-export const putFinishTaskById = <ThrowOnError extends boolean = false>(options: Options<PutFinishTaskByIdData, ThrowOnError>): RequestResult<PutFinishTaskByIdResponses, PutFinishTaskByIdErrors, ThrowOnError> => (options.client ?? client).put<PutFinishTaskByIdResponses, PutFinishTaskByIdErrors, ThrowOnError>({ url: '/finish-task/{id}', ...options });
+export const putFinishTaskById = <ThrowOnError extends boolean = false>(options: Options<PutFinishTaskByIdData, ThrowOnError>): RequestResult<PutFinishTaskByIdResponses, PutFinishTaskByIdErrors, ThrowOnError> => (options.client ?? client).put<PutFinishTaskByIdResponses, PutFinishTaskByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/finish-task/{id}',
+    ...options
+});
 
 /**
  * Finish tasks by IDs recursively
@@ -222,6 +589,11 @@ export const putFinishTaskById = <ThrowOnError extends boolean = false>(options:
  * Marks tasks by their IDs and all their descendants as done
  */
 export const putFinishTasksByIds = <ThrowOnError extends boolean = false>(options: Options<PutFinishTasksByIdsData, ThrowOnError>): RequestResult<PutFinishTasksByIdsResponses, PutFinishTasksByIdsErrors, ThrowOnError> => (options.client ?? client).put<PutFinishTasksByIdsResponses, PutFinishTasksByIdsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/finish-tasks-by-ids/',
     ...options,
     headers: {
@@ -236,6 +608,11 @@ export const putFinishTasksByIds = <ThrowOnError extends boolean = false>(option
  * Marks multiple tasks and all their descendants as done
  */
 export const putFinishTasks = <ThrowOnError extends boolean = false>(options: Options<PutFinishTasksData, ThrowOnError>): RequestResult<PutFinishTasksResponses, PutFinishTasksErrors, ThrowOnError> => (options.client ?? client).put<PutFinishTasksResponses, PutFinishTasksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/finish-tasks/',
     ...options,
     headers: {
@@ -250,7 +627,31 @@ export const putFinishTasks = <ThrowOnError extends boolean = false>(options: Op
  * Returns multiple epics by their IDs
  */
 export const postGetEpics = <ThrowOnError extends boolean = false>(options: Options<PostGetEpicsData, ThrowOnError>): RequestResult<PostGetEpicsResponses, PostGetEpicsErrors, ThrowOnError> => (options.client ?? client).post<PostGetEpicsResponses, PostGetEpicsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/get-epics',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get knowledge nodes by IDs
+ *
+ * Returns multiple knowledge nodes by their IDs
+ */
+export const postGetKnowledgeNodes = <ThrowOnError extends boolean = false>(options: Options<PostGetKnowledgeNodesData, ThrowOnError>): RequestResult<PostGetKnowledgeNodesResponses, PostGetKnowledgeNodesErrors, ThrowOnError> => (options.client ?? client).post<PostGetKnowledgeNodesResponses, PostGetKnowledgeNodesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/get-knowledge-nodes',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -264,6 +665,11 @@ export const postGetEpics = <ThrowOnError extends boolean = false>(options: Opti
  * Returns multiple problems by their IDs
  */
 export const postGetProblems = <ThrowOnError extends boolean = false>(options: Options<PostGetProblemsData, ThrowOnError>): RequestResult<PostGetProblemsResponses, PostGetProblemsErrors, ThrowOnError> => (options.client ?? client).post<PostGetProblemsResponses, PostGetProblemsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/get-problems',
     ...options,
     headers: {
@@ -278,6 +684,11 @@ export const postGetProblems = <ThrowOnError extends boolean = false>(options: O
  * Returns multiple questions by their IDs
  */
 export const postGetQuestions = <ThrowOnError extends boolean = false>(options: Options<PostGetQuestionsData, ThrowOnError>): RequestResult<PostGetQuestionsResponses, PostGetQuestionsErrors, ThrowOnError> => (options.client ?? client).post<PostGetQuestionsResponses, PostGetQuestionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/get-questions',
     ...options,
     headers: {
@@ -292,6 +703,11 @@ export const postGetQuestions = <ThrowOnError extends boolean = false>(options: 
  * Returns multiple stories by their IDs
  */
 export const postGetStories = <ThrowOnError extends boolean = false>(options: Options<PostGetStoriesData, ThrowOnError>): RequestResult<PostGetStoriesResponses, PostGetStoriesErrors, ThrowOnError> => (options.client ?? client).post<PostGetStoriesResponses, PostGetStoriesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/get-stories',
     ...options,
     headers: {
@@ -306,7 +722,46 @@ export const postGetStories = <ThrowOnError extends boolean = false>(options: Op
  * Returns multiple tasks by their IDs
  */
 export const postGetTasks = <ThrowOnError extends boolean = false>(options: Options<PostGetTasksData, ThrowOnError>): RequestResult<PostGetTasksResponses, PostGetTasksErrors, ThrowOnError> => (options.client ?? client).post<PostGetTasksResponses, PostGetTasksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/get-tasks',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get knowledge node by ID
+ *
+ * Returns a knowledge node by its ID
+ */
+export const getKnowledgeNodeById = <ThrowOnError extends boolean = false>(options: Options<GetKnowledgeNodeByIdData, ThrowOnError>): RequestResult<GetKnowledgeNodeByIdResponses, GetKnowledgeNodeByIdErrors, ThrowOnError> => (options.client ?? client).get<GetKnowledgeNodeByIdResponses, GetKnowledgeNodeByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/knowledge-node/{id}',
+    ...options
+});
+
+/**
+ * Patch knowledge node by ID
+ *
+ * Partially updates a knowledge node's name (via description) and/or notes
+ */
+export const patchKnowledgeNodeById = <ThrowOnError extends boolean = false>(options: Options<PatchKnowledgeNodeByIdData, ThrowOnError>): RequestResult<PatchKnowledgeNodeByIdResponses, PatchKnowledgeNodeByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchKnowledgeNodeByIdResponses, PatchKnowledgeNodeByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/knowledge-node/{id}',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -319,7 +774,15 @@ export const postGetTasks = <ThrowOnError extends boolean = false>(options: Opti
  *
  * Returns multiple log messages
  */
-export const getLogMessages = <ThrowOnError extends boolean = false>(options?: Options<GetLogMessagesData, ThrowOnError>): RequestResult<GetLogMessagesResponses, GetLogMessagesErrors, ThrowOnError> => (options?.client ?? client).get<GetLogMessagesResponses, GetLogMessagesErrors, ThrowOnError>({ url: '/log-messages', ...options });
+export const getLogMessages = <ThrowOnError extends boolean = false>(options?: Options<GetLogMessagesData, ThrowOnError>): RequestResult<GetLogMessagesResponses, GetLogMessagesErrors, ThrowOnError> => (options?.client ?? client).get<GetLogMessagesResponses, GetLogMessagesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/log-messages',
+    ...options
+});
 
 /**
  * Create new log message
@@ -327,6 +790,11 @@ export const getLogMessages = <ThrowOnError extends boolean = false>(options?: O
  * Creates a new log message with optional container relationship
  */
 export const postLogMessages = <ThrowOnError extends boolean = false>(options: Options<PostLogMessagesData, ThrowOnError>): RequestResult<PostLogMessagesResponses, PostLogMessagesErrors, ThrowOnError> => (options.client ?? client).post<PostLogMessagesResponses, PostLogMessagesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/log-messages',
     ...options,
     headers: {
@@ -340,21 +808,45 @@ export const postLogMessages = <ThrowOnError extends boolean = false>(options: O
  *
  * Returns a log message by its ID
  */
-export const getLogMessagesById = <ThrowOnError extends boolean = false>(options: Options<GetLogMessagesByIdData, ThrowOnError>): RequestResult<GetLogMessagesByIdResponses, GetLogMessagesByIdErrors, ThrowOnError> => (options.client ?? client).get<GetLogMessagesByIdResponses, GetLogMessagesByIdErrors, ThrowOnError>({ url: '/log-messages/{id}', ...options });
+export const getLogMessagesById = <ThrowOnError extends boolean = false>(options: Options<GetLogMessagesByIdData, ThrowOnError>): RequestResult<GetLogMessagesByIdResponses, GetLogMessagesByIdErrors, ThrowOnError> => (options.client ?? client).get<GetLogMessagesByIdResponses, GetLogMessagesByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/log-messages/{id}',
+    ...options
+});
 
 /**
  * Get long task progress by ID
  *
  * Returns a long task progress by ID
  */
-export const getLongTaskProgressesById = <ThrowOnError extends boolean = false>(options: Options<GetLongTaskProgressesByIdData, ThrowOnError>): RequestResult<GetLongTaskProgressesByIdResponses, GetLongTaskProgressesByIdErrors, ThrowOnError> => (options.client ?? client).get<GetLongTaskProgressesByIdResponses, GetLongTaskProgressesByIdErrors, ThrowOnError>({ url: '/long-task-progresses/{id}', ...options });
+export const getLongTaskProgressesById = <ThrowOnError extends boolean = false>(options: Options<GetLongTaskProgressesByIdData, ThrowOnError>): RequestResult<GetLongTaskProgressesByIdResponses, GetLongTaskProgressesByIdErrors, ThrowOnError> => (options.client ?? client).get<GetLongTaskProgressesByIdResponses, GetLongTaskProgressesByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/long-task-progresses/{id}',
+    ...options
+});
 
 /**
  * List long task progress submissions
  *
  * Returns submission records for the given long task progress
  */
-export const getLongTaskProgressesByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<GetLongTaskProgressesByIdSubmissionsData, ThrowOnError>): RequestResult<GetLongTaskProgressesByIdSubmissionsResponses, GetLongTaskProgressesByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).get<GetLongTaskProgressesByIdSubmissionsResponses, GetLongTaskProgressesByIdSubmissionsErrors, ThrowOnError>({ url: '/long-task-progresses/{id}/submissions', ...options });
+export const getLongTaskProgressesByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<GetLongTaskProgressesByIdSubmissionsData, ThrowOnError>): RequestResult<GetLongTaskProgressesByIdSubmissionsResponses, GetLongTaskProgressesByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).get<GetLongTaskProgressesByIdSubmissionsResponses, GetLongTaskProgressesByIdSubmissionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/long-task-progresses/{id}/submissions',
+    ...options
+});
 
 /**
  * Add long task progress submission
@@ -362,6 +854,11 @@ export const getLongTaskProgressesByIdSubmissions = <ThrowOnError extends boolea
  * Adds a new progress submission for the given long task progress
  */
 export const postLongTaskProgressesByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<PostLongTaskProgressesByIdSubmissionsData, ThrowOnError>): RequestResult<PostLongTaskProgressesByIdSubmissionsResponses, PostLongTaskProgressesByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).post<PostLongTaskProgressesByIdSubmissionsResponses, PostLongTaskProgressesByIdSubmissionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/long-task-progresses/{id}/submissions',
     ...options,
     headers: {
@@ -373,9 +870,17 @@ export const postLongTaskProgressesByIdSubmissions = <ThrowOnError extends boole
 /**
  * Get long tasks
  *
- * Returns all long tasks; use open=true to return only open (not done) tasks
+ * Returns open long tasks by default (done=false). Use open=false to include completed tasks.
  */
-export const getLongTasks = <ThrowOnError extends boolean = false>(options?: Options<GetLongTasksData, ThrowOnError>): RequestResult<GetLongTasksResponses, GetLongTasksErrors, ThrowOnError> => (options?.client ?? client).get<GetLongTasksResponses, GetLongTasksErrors, ThrowOnError>({ url: '/long-tasks', ...options });
+export const getLongTasks = <ThrowOnError extends boolean = false>(options?: Options<GetLongTasksData, ThrowOnError>): RequestResult<GetLongTasksResponses, GetLongTasksErrors, ThrowOnError> => (options?.client ?? client).get<GetLongTasksResponses, GetLongTasksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/long-tasks',
+    ...options
+});
 
 /**
  * Create new long task
@@ -383,6 +888,11 @@ export const getLongTasks = <ThrowOnError extends boolean = false>(options?: Opt
  * Creates a new long task with optional parent relationship
  */
 export const postLongTasks = <ThrowOnError extends boolean = false>(options: Options<PostLongTasksData, ThrowOnError>): RequestResult<PostLongTasksResponses, PostLongTasksErrors, ThrowOnError> => (options.client ?? client).post<PostLongTasksResponses, PostLongTasksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/long-tasks',
     ...options,
     headers: {
@@ -396,16 +906,29 @@ export const postLongTasks = <ThrowOnError extends boolean = false>(options: Opt
  *
  * Returns a long task by ID
  */
-export const getLongTasksById = <ThrowOnError extends boolean = false>(options: Options<GetLongTasksByIdData, ThrowOnError>): RequestResult<GetLongTasksByIdResponses, GetLongTasksByIdErrors, ThrowOnError> => (options.client ?? client).get<GetLongTasksByIdResponses, GetLongTasksByIdErrors, ThrowOnError>({ url: '/long-tasks/{id}', ...options });
+export const getLongTasksById = <ThrowOnError extends boolean = false>(options: Options<GetLongTasksByIdData, ThrowOnError>): RequestResult<GetLongTasksByIdResponses, GetLongTasksByIdErrors, ThrowOnError> => (options.client ?? client).get<GetLongTasksByIdResponses, GetLongTasksByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/long-tasks/{id}',
+    ...options
+});
 
 /**
  * Patch direction by ID
  *
  * Partially updates a repetitive task's description and/or notes
- * Partially updates a long task's description and/or notes
+ * Partially updates a long task's description, notes, and/or done state
  * Partially updates a direction's description, notes, and/or closed state
  */
 export const patchLongTasksById = <ThrowOnError extends boolean = false>(options: Options<PatchLongTasksByIdData, ThrowOnError>): RequestResult<PatchLongTasksByIdResponses, PatchLongTasksByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchLongTasksByIdResponses, PatchLongTasksByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/long-tasks/{id}',
     ...options,
     headers: {
@@ -415,11 +938,34 @@ export const patchLongTasksById = <ThrowOnError extends boolean = false>(options
 });
 
 /**
+ * Close long task
+ *
+ * Marks a long task as done
+ */
+export const putLongTasksByIdClose = <ThrowOnError extends boolean = false>(options: Options<PutLongTasksByIdCloseData, ThrowOnError>): RequestResult<PutLongTasksByIdCloseResponses, PutLongTasksByIdCloseErrors, ThrowOnError> => (options.client ?? client).put<PutLongTasksByIdCloseResponses, PutLongTasksByIdCloseErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/long-tasks/{id}/close',
+    ...options
+});
+
+/**
  * List long task progresses
  *
  * Returns progress records for the given long task (newest first)
  */
-export const getLongTasksByIdProgresses = <ThrowOnError extends boolean = false>(options: Options<GetLongTasksByIdProgressesData, ThrowOnError>): RequestResult<GetLongTasksByIdProgressesResponses, GetLongTasksByIdProgressesErrors, ThrowOnError> => (options.client ?? client).get<GetLongTasksByIdProgressesResponses, GetLongTasksByIdProgressesErrors, ThrowOnError>({ url: '/long-tasks/{id}/progresses', ...options });
+export const getLongTasksByIdProgresses = <ThrowOnError extends boolean = false>(options: Options<GetLongTasksByIdProgressesData, ThrowOnError>): RequestResult<GetLongTasksByIdProgressesResponses, GetLongTasksByIdProgressesErrors, ThrowOnError> => (options.client ?? client).get<GetLongTasksByIdProgressesResponses, GetLongTasksByIdProgressesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/long-tasks/{id}/progresses',
+    ...options
+});
 
 /**
  * Add long task progress
@@ -427,6 +973,11 @@ export const getLongTasksByIdProgresses = <ThrowOnError extends boolean = false>
  * Adds a new progress record for the given long task
  */
 export const postLongTasksByIdProgresses = <ThrowOnError extends boolean = false>(options: Options<PostLongTasksByIdProgressesData, ThrowOnError>): RequestResult<PostLongTasksByIdProgressesResponses, PostLongTasksByIdProgressesErrors, ThrowOnError> => (options.client ?? client).post<PostLongTasksByIdProgressesResponses, PostLongTasksByIdProgressesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/long-tasks/{id}/progresses',
     ...options,
     headers: {
@@ -440,7 +991,15 @@ export const postLongTasksByIdProgresses = <ThrowOnError extends boolean = false
  *
  * Returns submission records for the given long task (newest first)
  */
-export const getLongTasksByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<GetLongTasksByIdSubmissionsData, ThrowOnError>): RequestResult<GetLongTasksByIdSubmissionsResponses, GetLongTasksByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).get<GetLongTasksByIdSubmissionsResponses, GetLongTasksByIdSubmissionsErrors, ThrowOnError>({ url: '/long-tasks/{id}/submissions', ...options });
+export const getLongTasksByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<GetLongTasksByIdSubmissionsData, ThrowOnError>): RequestResult<GetLongTasksByIdSubmissionsResponses, GetLongTasksByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).get<GetLongTasksByIdSubmissionsResponses, GetLongTasksByIdSubmissionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/long-tasks/{id}/submissions',
+    ...options
+});
 
 /**
  * Add long task submission
@@ -448,6 +1007,11 @@ export const getLongTasksByIdSubmissions = <ThrowOnError extends boolean = false
  * Records progress submission; increments progress_done when progressToAdd is set, or sets progress_done when progressToSet is set
  */
 export const postLongTasksByIdSubmissions = <ThrowOnError extends boolean = false>(options: Options<PostLongTasksByIdSubmissionsData, ThrowOnError>): RequestResult<PostLongTasksByIdSubmissionsResponses, PostLongTasksByIdSubmissionsErrors, ThrowOnError> => (options.client ?? client).post<PostLongTasksByIdSubmissionsResponses, PostLongTasksByIdSubmissionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/long-tasks/{id}/submissions',
     ...options,
     headers: {
@@ -462,7 +1026,50 @@ export const postLongTasksByIdSubmissions = <ThrowOnError extends boolean = fals
  * Creates a new epic with optional parent relationship
  */
 export const postNewEpic = <ThrowOnError extends boolean = false>(options: Options<PostNewEpicData, ThrowOnError>): RequestResult<PostNewEpicResponses, PostNewEpicErrors, ThrowOnError> => (options.client ?? client).post<PostNewEpicResponses, PostNewEpicErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/new-epic',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Create hierarchical tasks
+ *
+ * Creates a tree of tasks under a parent container
+ */
+export const postNewHierarchicalTasks = <ThrowOnError extends boolean = false>(options: Options<PostNewHierarchicalTasksData, ThrowOnError>): RequestResult<PostNewHierarchicalTasksResponses, PostNewHierarchicalTasksErrors, ThrowOnError> => (options.client ?? client).post<PostNewHierarchicalTasksResponses, PostNewHierarchicalTasksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/new-hierarchical-tasks',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Create new knowledge node
+ *
+ * Creates a new knowledge node with optional parent relationship
+ */
+export const postNewKnowledgeNode = <ThrowOnError extends boolean = false>(options: Options<PostNewKnowledgeNodeData, ThrowOnError>): RequestResult<PostNewKnowledgeNodeResponses, PostNewKnowledgeNodeErrors, ThrowOnError> => (options.client ?? client).post<PostNewKnowledgeNodeResponses, PostNewKnowledgeNodeErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/new-knowledge-node',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -476,6 +1083,11 @@ export const postNewEpic = <ThrowOnError extends boolean = false>(options: Optio
  * Creates a new problem with optional parent relationship
  */
 export const postNewProblem = <ThrowOnError extends boolean = false>(options: Options<PostNewProblemData, ThrowOnError>): RequestResult<PostNewProblemResponses, PostNewProblemErrors, ThrowOnError> => (options.client ?? client).post<PostNewProblemResponses, PostNewProblemErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/new-problem',
     ...options,
     headers: {
@@ -490,6 +1102,11 @@ export const postNewProblem = <ThrowOnError extends boolean = false>(options: Op
  * Creates a new question with optional parent relationship
  */
 export const postNewQuestion = <ThrowOnError extends boolean = false>(options: Options<PostNewQuestionData, ThrowOnError>): RequestResult<PostNewQuestionResponses, PostNewQuestionErrors, ThrowOnError> => (options.client ?? client).post<PostNewQuestionResponses, PostNewQuestionErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/new-question',
     ...options,
     headers: {
@@ -504,6 +1121,11 @@ export const postNewQuestion = <ThrowOnError extends boolean = false>(options: O
  * Creates a new repetitive task with optional parent relationship
  */
 export const postNewRepetitiveTask = <ThrowOnError extends boolean = false>(options: Options<PostNewRepetitiveTaskData, ThrowOnError>): RequestResult<PostNewRepetitiveTaskResponses, PostNewRepetitiveTaskErrors, ThrowOnError> => (options.client ?? client).post<PostNewRepetitiveTaskResponses, PostNewRepetitiveTaskErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/new-repetitive-task',
     ...options,
     headers: {
@@ -518,6 +1140,11 @@ export const postNewRepetitiveTask = <ThrowOnError extends boolean = false>(opti
  * Creates a new story with optional parent relationship
  */
 export const postNewStory = <ThrowOnError extends boolean = false>(options: Options<PostNewStoryData, ThrowOnError>): RequestResult<PostNewStoryResponses, PostNewStoryErrors, ThrowOnError> => (options.client ?? client).post<PostNewStoryResponses, PostNewStoryErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/new-story',
     ...options,
     headers: {
@@ -532,6 +1159,11 @@ export const postNewStory = <ThrowOnError extends boolean = false>(options: Opti
  * Creates a new task with optional parent relationship
  */
 export const postNewTask = <ThrowOnError extends boolean = false>(options: Options<PostNewTaskData, ThrowOnError>): RequestResult<PostNewTaskResponses, PostNewTaskErrors, ThrowOnError> => (options.client ?? client).post<PostNewTaskResponses, PostNewTaskErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/new-task',
     ...options,
     headers: {
@@ -546,6 +1178,11 @@ export const postNewTask = <ThrowOnError extends boolean = false>(options: Optio
  * Returns the path of parent containers for a given container
  */
 export const postParentsPath = <ThrowOnError extends boolean = false>(options: Options<PostParentsPathData, ThrowOnError>): RequestResult<PostParentsPathResponses, PostParentsPathErrors, ThrowOnError> => (options.client ?? client).post<PostParentsPathResponses, PostParentsPathErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/parents-path',
     ...options,
     headers: {
@@ -559,7 +1196,15 @@ export const postParentsPath = <ThrowOnError extends boolean = false>(options: O
  *
  * Returns a problem by its ID
  */
-export const getProblemById = <ThrowOnError extends boolean = false>(options: Options<GetProblemByIdData, ThrowOnError>): RequestResult<GetProblemByIdResponses, GetProblemByIdErrors, ThrowOnError> => (options.client ?? client).get<GetProblemByIdResponses, GetProblemByIdErrors, ThrowOnError>({ url: '/problem/{id}', ...options });
+export const getProblemById = <ThrowOnError extends boolean = false>(options: Options<GetProblemByIdData, ThrowOnError>): RequestResult<GetProblemByIdResponses, GetProblemByIdErrors, ThrowOnError> => (options.client ?? client).get<GetProblemByIdResponses, GetProblemByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/problem/{id}',
+    ...options
+});
 
 /**
  * Patch problem by ID
@@ -567,6 +1212,11 @@ export const getProblemById = <ThrowOnError extends boolean = false>(options: Op
  * Partially updates a problem's description and/or notes
  */
 export const patchProblemById = <ThrowOnError extends boolean = false>(options: Options<PatchProblemByIdData, ThrowOnError>): RequestResult<PatchProblemByIdResponses, PatchProblemByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchProblemByIdResponses, PatchProblemByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/problem/{id}',
     ...options,
     headers: {
@@ -580,7 +1230,15 @@ export const patchProblemById = <ThrowOnError extends boolean = false>(options: 
  *
  * Returns a question by its ID
  */
-export const getQuestionById = <ThrowOnError extends boolean = false>(options: Options<GetQuestionByIdData, ThrowOnError>): RequestResult<GetQuestionByIdResponses, GetQuestionByIdErrors, ThrowOnError> => (options.client ?? client).get<GetQuestionByIdResponses, GetQuestionByIdErrors, ThrowOnError>({ url: '/question/{id}', ...options });
+export const getQuestionById = <ThrowOnError extends boolean = false>(options: Options<GetQuestionByIdData, ThrowOnError>): RequestResult<GetQuestionByIdResponses, GetQuestionByIdErrors, ThrowOnError> => (options.client ?? client).get<GetQuestionByIdResponses, GetQuestionByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/question/{id}',
+    ...options
+});
 
 /**
  * Patch question by ID
@@ -588,6 +1246,11 @@ export const getQuestionById = <ThrowOnError extends boolean = false>(options: O
  * Partially updates a question's description and/or notes
  */
 export const patchQuestionById = <ThrowOnError extends boolean = false>(options: Options<PatchQuestionByIdData, ThrowOnError>): RequestResult<PatchQuestionByIdResponses, PatchQuestionByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchQuestionByIdResponses, PatchQuestionByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/question/{id}',
     ...options,
     headers: {
@@ -601,23 +1264,44 @@ export const patchQuestionById = <ThrowOnError extends boolean = false>(options:
  *
  * Returns all repetitive tasks
  */
-export const getRepetitiveTasks = <ThrowOnError extends boolean = false>(options?: Options<GetRepetitiveTasksData, ThrowOnError>): RequestResult<GetRepetitiveTasksResponses, GetRepetitiveTasksErrors, ThrowOnError> => (options?.client ?? client).get<GetRepetitiveTasksResponses, GetRepetitiveTasksErrors, ThrowOnError>({ url: '/repetitive-tasks/', ...options });
+export const getRepetitiveTasks = <ThrowOnError extends boolean = false>(options?: Options<GetRepetitiveTasksData, ThrowOnError>): RequestResult<GetRepetitiveTasksResponses, GetRepetitiveTasksErrors, ThrowOnError> => (options?.client ?? client).get<GetRepetitiveTasksResponses, GetRepetitiveTasksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/repetitive-tasks/',
+    ...options
+});
 
 /**
  * Get repetitive task by ID
  *
  * Returns repetitive task by ID
  */
-export const getRepetitiveTasksById = <ThrowOnError extends boolean = false>(options: Options<GetRepetitiveTasksByIdData, ThrowOnError>): RequestResult<GetRepetitiveTasksByIdResponses, GetRepetitiveTasksByIdErrors, ThrowOnError> => (options.client ?? client).get<GetRepetitiveTasksByIdResponses, GetRepetitiveTasksByIdErrors, ThrowOnError>({ url: '/repetitive-tasks/{id}', ...options });
+export const getRepetitiveTasksById = <ThrowOnError extends boolean = false>(options: Options<GetRepetitiveTasksByIdData, ThrowOnError>): RequestResult<GetRepetitiveTasksByIdResponses, GetRepetitiveTasksByIdErrors, ThrowOnError> => (options.client ?? client).get<GetRepetitiveTasksByIdResponses, GetRepetitiveTasksByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/repetitive-tasks/{id}',
+    ...options
+});
 
 /**
  * Patch direction by ID
  *
  * Partially updates a repetitive task's description and/or notes
- * Partially updates a long task's description and/or notes
+ * Partially updates a long task's description, notes, and/or done state
  * Partially updates a direction's description, notes, and/or closed state
  */
 export const patchRepetitiveTasksById = <ThrowOnError extends boolean = false>(options: Options<PatchRepetitiveTasksByIdData, ThrowOnError>): RequestResult<PatchRepetitiveTasksByIdResponses, PatchRepetitiveTasksByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchRepetitiveTasksByIdResponses, PatchRepetitiveTasksByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/repetitive-tasks/{id}',
     ...options,
     headers: {
@@ -631,14 +1315,30 @@ export const patchRepetitiveTasksById = <ThrowOnError extends boolean = false>(o
  *
  * Returns execution records for the given repetitive task (newest first)
  */
-export const getRepetitiveTasksByIdExecutions = <ThrowOnError extends boolean = false>(options: Options<GetRepetitiveTasksByIdExecutionsData, ThrowOnError>): RequestResult<GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdExecutionsErrors, ThrowOnError> => (options.client ?? client).get<GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdExecutionsErrors, ThrowOnError>({ url: '/repetitive-tasks/{id}/executions', ...options });
+export const getRepetitiveTasksByIdExecutions = <ThrowOnError extends boolean = false>(options: Options<GetRepetitiveTasksByIdExecutionsData, ThrowOnError>): RequestResult<GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdExecutionsErrors, ThrowOnError> => (options.client ?? client).get<GetRepetitiveTasksByIdExecutionsResponses, GetRepetitiveTasksByIdExecutionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/repetitive-tasks/{id}/executions',
+    ...options
+});
 
 /**
  * Record repetitive task execution
  *
  * Creates an execution record for the given repetitive task (timestamp is server time)
  */
-export const postRepetitiveTasksByIdExecutions = <ThrowOnError extends boolean = false>(options: Options<PostRepetitiveTasksByIdExecutionsData, ThrowOnError>): RequestResult<PostRepetitiveTasksByIdExecutionsResponses, PostRepetitiveTasksByIdExecutionsErrors, ThrowOnError> => (options.client ?? client).post<PostRepetitiveTasksByIdExecutionsResponses, PostRepetitiveTasksByIdExecutionsErrors, ThrowOnError>({ url: '/repetitive-tasks/{id}/executions', ...options });
+export const postRepetitiveTasksByIdExecutions = <ThrowOnError extends boolean = false>(options: Options<PostRepetitiveTasksByIdExecutionsData, ThrowOnError>): RequestResult<PostRepetitiveTasksByIdExecutionsResponses, PostRepetitiveTasksByIdExecutionsErrors, ThrowOnError> => (options.client ?? client).post<PostRepetitiveTasksByIdExecutionsResponses, PostRepetitiveTasksByIdExecutionsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/repetitive-tasks/{id}/executions',
+    ...options
+});
 
 /**
  * Solve problem
@@ -646,6 +1346,11 @@ export const postRepetitiveTasksByIdExecutions = <ThrowOnError extends boolean =
  * Sets the solution for a problem
  */
 export const putSolveProblemById = <ThrowOnError extends boolean = false>(options: Options<PutSolveProblemByIdData, ThrowOnError>): RequestResult<PutSolveProblemByIdResponses, PutSolveProblemByIdErrors, ThrowOnError> => (options.client ?? client).put<PutSolveProblemByIdResponses, PutSolveProblemByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/solve-problem/{id}',
     ...options,
     headers: {
@@ -661,6 +1366,11 @@ export const putSolveProblemById = <ThrowOnError extends boolean = false>(option
  */
 export const getStateRequirements = <ThrowOnError extends boolean = false>(options: Options<GetStateRequirementsData, ThrowOnError>): RequestResult<GetStateRequirementsResponses, GetStateRequirementsErrors, ThrowOnError> => (options.client ?? client).get<GetStateRequirementsResponses, GetStateRequirementsErrors, ThrowOnError>({
     querySerializer: { parameters: { ids: { array: { explode: false } } } },
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/state-requirements',
     ...options
 });
@@ -670,7 +1380,15 @@ export const getStateRequirements = <ThrowOnError extends boolean = false>(optio
  *
  * Returns state requirement checks by state requirement ID
  */
-export const getStateRequirementsByIdChecks = <ThrowOnError extends boolean = false>(options: Options<GetStateRequirementsByIdChecksData, ThrowOnError>): RequestResult<GetStateRequirementsByIdChecksResponses, GetStateRequirementsByIdChecksErrors, ThrowOnError> => (options.client ?? client).get<GetStateRequirementsByIdChecksResponses, GetStateRequirementsByIdChecksErrors, ThrowOnError>({ url: '/state-requirements/{id}/checks', ...options });
+export const getStateRequirementsByIdChecks = <ThrowOnError extends boolean = false>(options: Options<GetStateRequirementsByIdChecksData, ThrowOnError>): RequestResult<GetStateRequirementsByIdChecksResponses, GetStateRequirementsByIdChecksErrors, ThrowOnError> => (options.client ?? client).get<GetStateRequirementsByIdChecksResponses, GetStateRequirementsByIdChecksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/state-requirements/{id}/checks',
+    ...options
+});
 
 /**
  * Add a state requirement check
@@ -678,6 +1396,11 @@ export const getStateRequirementsByIdChecks = <ThrowOnError extends boolean = fa
  * Adds a new state requirement check
  */
 export const postStateRequirementsByIdChecks = <ThrowOnError extends boolean = false>(options: Options<PostStateRequirementsByIdChecksData, ThrowOnError>): RequestResult<PostStateRequirementsByIdChecksResponses, PostStateRequirementsByIdChecksErrors, ThrowOnError> => (options.client ?? client).post<PostStateRequirementsByIdChecksResponses, PostStateRequirementsByIdChecksErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/state-requirements/{id}/checks',
     ...options,
     headers: {
@@ -691,7 +1414,15 @@ export const postStateRequirementsByIdChecks = <ThrowOnError extends boolean = f
  *
  * Returns all states
  */
-export const getStates = <ThrowOnError extends boolean = false>(options?: Options<GetStatesData, ThrowOnError>): RequestResult<GetStatesResponses, GetStatesErrors, ThrowOnError> => (options?.client ?? client).get<GetStatesResponses, GetStatesErrors, ThrowOnError>({ url: '/states', ...options });
+export const getStates = <ThrowOnError extends boolean = false>(options?: Options<GetStatesData, ThrowOnError>): RequestResult<GetStatesResponses, GetStatesErrors, ThrowOnError> => (options?.client ?? client).get<GetStatesResponses, GetStatesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/states',
+    ...options
+});
 
 /**
  * Add a state
@@ -699,6 +1430,11 @@ export const getStates = <ThrowOnError extends boolean = false>(options?: Option
  * Adds a new state
  */
 export const postStates = <ThrowOnError extends boolean = false>(options: Options<PostStatesData, ThrowOnError>): RequestResult<PostStatesResponses, PostStatesErrors, ThrowOnError> => (options.client ?? client).post<PostStatesResponses, PostStatesErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/states',
     ...options,
     headers: {
@@ -712,14 +1448,30 @@ export const postStates = <ThrowOnError extends boolean = false>(options: Option
  *
  * Returns a state by its ID
  */
-export const getStatesById = <ThrowOnError extends boolean = false>(options: Options<GetStatesByIdData, ThrowOnError>): RequestResult<GetStatesByIdResponses, GetStatesByIdErrors, ThrowOnError> => (options.client ?? client).get<GetStatesByIdResponses, GetStatesByIdErrors, ThrowOnError>({ url: '/states/{id}', ...options });
+export const getStatesById = <ThrowOnError extends boolean = false>(options: Options<GetStatesByIdData, ThrowOnError>): RequestResult<GetStatesByIdResponses, GetStatesByIdErrors, ThrowOnError> => (options.client ?? client).get<GetStatesByIdResponses, GetStatesByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/states/{id}',
+    ...options
+});
 
 /**
  * Get state requirements by state ID
  *
  * Returns state requirements by state ID
  */
-export const getStatesByIdRequirements = <ThrowOnError extends boolean = false>(options: Options<GetStatesByIdRequirementsData, ThrowOnError>): RequestResult<GetStatesByIdRequirementsResponses, GetStatesByIdRequirementsErrors, ThrowOnError> => (options.client ?? client).get<GetStatesByIdRequirementsResponses, GetStatesByIdRequirementsErrors, ThrowOnError>({ url: '/states/{id}/requirements', ...options });
+export const getStatesByIdRequirements = <ThrowOnError extends boolean = false>(options: Options<GetStatesByIdRequirementsData, ThrowOnError>): RequestResult<GetStatesByIdRequirementsResponses, GetStatesByIdRequirementsErrors, ThrowOnError> => (options.client ?? client).get<GetStatesByIdRequirementsResponses, GetStatesByIdRequirementsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/states/{id}/requirements',
+    ...options
+});
 
 /**
  * Add a state requirement
@@ -727,6 +1479,11 @@ export const getStatesByIdRequirements = <ThrowOnError extends boolean = false>(
  * Adds a new state requirement
  */
 export const postStatesByIdRequirements = <ThrowOnError extends boolean = false>(options: Options<PostStatesByIdRequirementsData, ThrowOnError>): RequestResult<PostStatesByIdRequirementsResponses, PostStatesByIdRequirementsErrors, ThrowOnError> => (options.client ?? client).post<PostStatesByIdRequirementsResponses, PostStatesByIdRequirementsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/states/{id}/requirements',
     ...options,
     headers: {
@@ -740,7 +1497,15 @@ export const postStatesByIdRequirements = <ThrowOnError extends boolean = false>
  *
  * Returns a story by its ID
  */
-export const getStoryById = <ThrowOnError extends boolean = false>(options: Options<GetStoryByIdData, ThrowOnError>): RequestResult<GetStoryByIdResponses, GetStoryByIdErrors, ThrowOnError> => (options.client ?? client).get<GetStoryByIdResponses, GetStoryByIdErrors, ThrowOnError>({ url: '/story/{id}', ...options });
+export const getStoryById = <ThrowOnError extends boolean = false>(options: Options<GetStoryByIdData, ThrowOnError>): RequestResult<GetStoryByIdResponses, GetStoryByIdErrors, ThrowOnError> => (options.client ?? client).get<GetStoryByIdResponses, GetStoryByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/story/{id}',
+    ...options
+});
 
 /**
  * Patch story by ID
@@ -748,6 +1513,11 @@ export const getStoryById = <ThrowOnError extends boolean = false>(options: Opti
  * Partially updates a story's description and/or notes
  */
 export const patchStoryById = <ThrowOnError extends boolean = false>(options: Options<PatchStoryByIdData, ThrowOnError>): RequestResult<PatchStoryByIdResponses, PatchStoryByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchStoryByIdResponses, PatchStoryByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/story/{id}',
     ...options,
     headers: {
@@ -761,14 +1531,30 @@ export const patchStoryById = <ThrowOnError extends boolean = false>(options: Op
  *
  * Returns a tree of done descendant tasks under the root task. The response body is JSON null when there are no done descendants.
  */
-export const getTaskReportById = <ThrowOnError extends boolean = false>(options: Options<GetTaskReportByIdData, ThrowOnError>): RequestResult<GetTaskReportByIdResponses, GetTaskReportByIdErrors, ThrowOnError> => (options.client ?? client).get<GetTaskReportByIdResponses, GetTaskReportByIdErrors, ThrowOnError>({ url: '/task-report/{id}', ...options });
+export const getTaskReportById = <ThrowOnError extends boolean = false>(options: Options<GetTaskReportByIdData, ThrowOnError>): RequestResult<GetTaskReportByIdResponses, GetTaskReportByIdErrors, ThrowOnError> => (options.client ?? client).get<GetTaskReportByIdResponses, GetTaskReportByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/task-report/{id}',
+    ...options
+});
 
 /**
  * Get task by ID
  *
  * Returns a task by its ID
  */
-export const getTaskById = <ThrowOnError extends boolean = false>(options: Options<GetTaskByIdData, ThrowOnError>): RequestResult<GetTaskByIdResponses, GetTaskByIdErrors, ThrowOnError> => (options.client ?? client).get<GetTaskByIdResponses, GetTaskByIdErrors, ThrowOnError>({ url: '/task/{id}', ...options });
+export const getTaskById = <ThrowOnError extends boolean = false>(options: Options<GetTaskByIdData, ThrowOnError>): RequestResult<GetTaskByIdResponses, GetTaskByIdErrors, ThrowOnError> => (options.client ?? client).get<GetTaskByIdResponses, GetTaskByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/task/{id}',
+    ...options
+});
 
 /**
  * Patch task by ID
@@ -776,6 +1562,11 @@ export const getTaskById = <ThrowOnError extends boolean = false>(options: Optio
  * Partially updates a task's description and/or notes
  */
 export const patchTaskById = <ThrowOnError extends boolean = false>(options: Options<PatchTaskByIdData, ThrowOnError>): RequestResult<PatchTaskByIdResponses, PatchTaskByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchTaskByIdResponses, PatchTaskByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/task/{id}',
     ...options,
     headers: {
@@ -785,11 +1576,34 @@ export const patchTaskById = <ThrowOnError extends boolean = false>(options: Opt
 });
 
 /**
+ * Get open tasks by due date
+ *
+ * Returns open (not done) tasks whose due date falls on the specified calendar day (UTC)
+ */
+export const getTasksByDueDate = <ThrowOnError extends boolean = false>(options: Options<GetTasksByDueDateData, ThrowOnError>): RequestResult<GetTasksByDueDateResponses, GetTasksByDueDateErrors, ThrowOnError> => (options.client ?? client).get<GetTasksByDueDateResponses, GetTasksByDueDateErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/tasks/by-due-date',
+    ...options
+});
+
+/**
  * Get all tests
  *
  * Returns a list of all tests
  */
-export const getTests = <ThrowOnError extends boolean = false>(options?: Options<GetTestsData, ThrowOnError>): RequestResult<GetTestsResponses, GetTestsErrors, ThrowOnError> => (options?.client ?? client).get<GetTestsResponses, GetTestsErrors, ThrowOnError>({ url: '/tests', ...options });
+export const getTests = <ThrowOnError extends boolean = false>(options?: Options<GetTestsData, ThrowOnError>): RequestResult<GetTestsResponses, GetTestsErrors, ThrowOnError> => (options?.client ?? client).get<GetTestsResponses, GetTestsErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/tests',
+    ...options
+});
 
 /**
  * Update epic
@@ -797,7 +1611,31 @@ export const getTests = <ThrowOnError extends boolean = false>(options?: Options
  * Updates an existing epic by ID
  */
 export const putUpdateEpic = <ThrowOnError extends boolean = false>(options: Options<PutUpdateEpicData, ThrowOnError>): RequestResult<PutUpdateEpicResponses, PutUpdateEpicErrors, ThrowOnError> => (options.client ?? client).put<PutUpdateEpicResponses, PutUpdateEpicErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/update-epic',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Update knowledge node
+ *
+ * Updates an existing knowledge node by ID
+ */
+export const putUpdateKnowledgeNode = <ThrowOnError extends boolean = false>(options: Options<PutUpdateKnowledgeNodeData, ThrowOnError>): RequestResult<PutUpdateKnowledgeNodeResponses, PutUpdateKnowledgeNodeErrors, ThrowOnError> => (options.client ?? client).put<PutUpdateKnowledgeNodeResponses, PutUpdateKnowledgeNodeErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/update-knowledge-node',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -811,6 +1649,11 @@ export const putUpdateEpic = <ThrowOnError extends boolean = false>(options: Opt
  * Updates an existing problem by ID
  */
 export const putUpdateProblem = <ThrowOnError extends boolean = false>(options: Options<PutUpdateProblemData, ThrowOnError>): RequestResult<PutUpdateProblemResponses, PutUpdateProblemErrors, ThrowOnError> => (options.client ?? client).put<PutUpdateProblemResponses, PutUpdateProblemErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/update-problem',
     ...options,
     headers: {
@@ -825,6 +1668,11 @@ export const putUpdateProblem = <ThrowOnError extends boolean = false>(options: 
  * Updates an existing question by ID
  */
 export const putUpdateQuestion = <ThrowOnError extends boolean = false>(options: Options<PutUpdateQuestionData, ThrowOnError>): RequestResult<PutUpdateQuestionResponses, PutUpdateQuestionErrors, ThrowOnError> => (options.client ?? client).put<PutUpdateQuestionResponses, PutUpdateQuestionErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/update-question',
     ...options,
     headers: {
@@ -839,6 +1687,11 @@ export const putUpdateQuestion = <ThrowOnError extends boolean = false>(options:
  * Updates an existing story by ID
  */
 export const putUpdateStory = <ThrowOnError extends boolean = false>(options: Options<PutUpdateStoryData, ThrowOnError>): RequestResult<PutUpdateStoryResponses, PutUpdateStoryErrors, ThrowOnError> => (options.client ?? client).put<PutUpdateStoryResponses, PutUpdateStoryErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/update-story',
     ...options,
     headers: {
@@ -853,10 +1706,94 @@ export const putUpdateStory = <ThrowOnError extends boolean = false>(options: Op
  * Updates an existing task by ID
  */
 export const putUpdateTask = <ThrowOnError extends boolean = false>(options: Options<PutUpdateTaskData, ThrowOnError>): RequestResult<PutUpdateTaskResponses, PutUpdateTaskErrors, ThrowOnError> => (options.client ?? client).put<PutUpdateTaskResponses, PutUpdateTaskErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
     url: '/update-task',
     ...options,
     headers: {
         'Content-Type': 'application/json',
         ...options.headers
     }
+});
+
+/**
+ * Add a user
+ *
+ * Adds a new user
+ */
+export const postUsers = <ThrowOnError extends boolean = false>(options: Options<PostUsersData, ThrowOnError>): RequestResult<PostUsersResponses, PostUsersErrors, ThrowOnError> => (options.client ?? client).post<PostUsersResponses, PostUsersErrors, ThrowOnError>({
+    url: '/users',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Logs in a user
+ *
+ * Logs in a user and returns tokens. Sets auth cookies. Copy accessToken into Authorize for other endpoints.
+ */
+export const postUsersLogin = <ThrowOnError extends boolean = false>(options: Options<PostUsersLoginData, ThrowOnError>): RequestResult<PostUsersLoginResponses, PostUsersLoginErrors, ThrowOnError> => (options.client ?? client).post<PostUsersLoginResponses, PostUsersLoginErrors, ThrowOnError>({
+    url: '/users/login',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Logout user
+ *
+ * Revokes refresh token and clears auth cookies
+ */
+export const postUsersLogout = <ThrowOnError extends boolean = false>(options?: Options<PostUsersLogoutData, ThrowOnError>): RequestResult<PostUsersLogoutResponses, PostUsersLogoutErrors, ThrowOnError> => (options?.client ?? client).post<PostUsersLogoutResponses, PostUsersLogoutErrors, ThrowOnError>({ url: '/users/logout', ...options });
+
+/**
+ * Get current user
+ *
+ * Returns the authenticated user
+ */
+export const getUsersMe = <ThrowOnError extends boolean = false>(options?: Options<GetUsersMeData, ThrowOnError>): RequestResult<GetUsersMeResponses, GetUsersMeErrors, ThrowOnError> => (options?.client ?? client).get<GetUsersMeResponses, GetUsersMeErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/users/me',
+    ...options
+});
+
+/**
+ * Refresh access token
+ *
+ * Exchanges a refresh token for a new access and refresh token pair
+ */
+export const postUsersRefresh = <ThrowOnError extends boolean = false>(options?: Options<PostUsersRefreshData, ThrowOnError>): RequestResult<PostUsersRefreshResponses, PostUsersRefreshErrors, ThrowOnError> => (options?.client ?? client).post<PostUsersRefreshResponses, PostUsersRefreshErrors, ThrowOnError>({
+    url: '/users/refresh',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers
+    }
+});
+
+/**
+ * Get a user by their ID
+ *
+ * Returns a user by their ID
+ */
+export const getUsersById = <ThrowOnError extends boolean = false>(options: Options<GetUsersByIdData, ThrowOnError>): RequestResult<GetUsersByIdResponses, GetUsersByIdErrors, ThrowOnError> => (options.client ?? client).get<GetUsersByIdResponses, GetUsersByIdErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'access_token',
+            type: 'apiKey'
+        }],
+    url: '/users/{id}',
+    ...options
 });

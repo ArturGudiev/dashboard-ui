@@ -1,6 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom, type Observable, of, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AppConfigService } from './app-config.service';
 import { FilesCryptoService } from './files-crypto.service';
 
@@ -63,14 +64,29 @@ export class FilesService {
 
   /** GET /files/content/{relativePath} — raw file bytes (ciphertext when encrypted). */
   getFile(relativePath: string): Observable<HttpResponse<Blob>> {
-    const encoded = relativePath
-      .split('/')
-      .map((segment) => encodeURIComponent(segment))
-      .join('/');
+    const encoded = this.encodeRelativePath(relativePath);
     return this.http.get(`${this.baseUrl}/files/content/${encoded}`, {
       responseType: 'blob',
       observe: 'response',
     });
+  }
+
+  /**
+   * GET /files/parents-path/{relativePath}
+   * Parent container descriptions for the file's owning container (root→leaf).
+   */
+  getParentsPath(relativePath: string): Observable<string[]> {
+    const encoded = this.encodeRelativePath(relativePath);
+    return this.http
+      .get<string[]>(`${this.baseUrl}/files/parents-path/${encoded}`)
+      .pipe(map((arr) => [...arr].reverse()));
+  }
+
+  private encodeRelativePath(relativePath: string): string {
+    return relativePath
+      .split('/')
+      .map((segment) => encodeURIComponent(segment))
+      .join('/');
   }
 
   /**
