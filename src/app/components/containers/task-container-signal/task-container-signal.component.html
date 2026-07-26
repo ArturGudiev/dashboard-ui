@@ -1,6 +1,6 @@
 <div id="content-wrapper">
   <div id="task-content">
-    @if (taskContainer().variables.length > 0 || checks().length > 0) {
+    @if (showSideOverlay()) {
       <div id="variables-overlay">
         @if (taskContainer().variables.length > 0) {
           <app-variables-table
@@ -18,6 +18,16 @@
             (addCheckClick)="addCheck()"
             (refreshContainer)="refreshContainer.emit()"
           ></app-container-checks-list>
+        }
+        @if (localScripts().length > 0) {
+          <app-container-scripts-list
+            class="overlay-position"
+            [container]="taskContainer()"
+            [scripts]="localScripts()"
+            (addScriptClick)="addScript()"
+            (scriptClick)="runScript($event.id)"
+            (refreshScripts)="reloadLocalScripts()"
+          ></app-container-scripts-list>
         }
       </div>
     }
@@ -114,6 +124,8 @@
                 <button mat-menu-item (click)="addRecord()">Add record</button>
                 <button mat-menu-item (click)="showRecords()">Show records</button>
                 <button mat-menu-item (click)="addVariable()">Add variable</button>
+                <button mat-menu-item (click)="addScript()">Add script</button>
+                <button mat-menu-item (click)="runScript()">Run script</button>
                 @if (isTaskContainer()) {
                   <button mat-menu-item (click)="addCheck()">Add check</button>
                 }

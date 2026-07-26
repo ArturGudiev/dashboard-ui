@@ -12,183 +12,191 @@
   }
 
   @if (tasks().length > 0) {
-    <div id="subtasks-actions">
-      <div style="display: flex; align-items: center;">
-        <h2 id="subtasks-title">Tasks ({{ tasks().length }})</h2>
+    @for (section of taskSections(); track section.key; let isFirst = $first) {
+      <div
+        class="tasks-section"
+        [class.after-tasks-section]="section.key === 'after'"
+      >
+        <div class="subtasks-actions">
+          <div style="display: flex; align-items: center;">
+            <h2 class="subtasks-title">{{ section.title }} ({{ section.tasks.length }})</h2>
 
-        <button
-          id="add-task-button"
-          mat-mini-fab
-          color="primary"
-          (click)="addTask()"
-        >
-          <mat-icon class="tasks-icon">add</mat-icon>
-        </button>
-
-        @if (showFinishSelectedTasksIcon()) {
-          <button
-            mat-mini-fab
-            color="primary"
-            class="finish-tasks-button"
-            [disabled]="!hasSelection()"
-            (click)="onFinishTasksClick()"
-          >
-            <mat-icon class="tasks-icon">done</mat-icon>
-          </button>
-        }
-
-        @if (showFinishAllTasksIcon()) {
-          <button
-            mat-mini-fab
-            class="finish-tasks-button"
-            color="primary"
-            [disabled]="this.tasks().length === 0"
-            (click)="onFinishAllTasksHandler()"
-          >
-            <mat-icon class="tasks-icon">done_outline</mat-icon>
-          </button>
-        }
-
-        @if (!reorderMode()) {
-          <button
-            mat-mini-fab
-            class="finish-tasks-button"
-            color="primary"
-            [disabled]="this.tasks().length === 0"
-            (click)="startReorderMode()"
-          >
-            <mat-icon class="tasks-icon">reorder</mat-icon>
-          </button>
-        } @else {
-          <button
-            mat-mini-fab
-            class="finish-tasks-button"
-            color="primary"
-            (click)="finishReorderMode()"
-          >
-            <mat-icon class="tasks-icon">check</mat-icon>
-          </button>
-        }
-      </div>
-    </div>
-
-    <div id="table-wrapper">
-      @if (!reorderMode()) {
-        <table
-          id="subtasks-table"
-          mat-table
-          [dataSource]="tasks()"
-          class="mat-elevation-z8"
-        >
-        <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-              (change)="$event ? onMainCheckboxClick() : null"
-              [checked]="hasSelection() && areAllSelected()"
-              [indeterminate]="hasSelection() && !areAllSelected()"
+            <button
+              [id]="section.key === 'after' ? 'add-after-task-button' : 'add-task-button'"
+              mat-mini-fab
+              color="primary"
+              (click)="addTask(false, section.afterTaskDefault)"
             >
-            </mat-checkbox>
-          </th>
+              <mat-icon class="tasks-icon">add</mat-icon>
+            </button>
 
-          <td
-            mat-cell
-            *matCellDef="let row; let i = index"
-            [ngClass]="{'highlight': isSelected(row.id)}"
-          >
-            <mat-checkbox
-              (click)="$event.stopPropagation()"
-              (change)="$event ? toggleSelection(row.id) : null"
-              [checked]="isSelected(row.id)"
+            @if (section.showFinishSelected && showFinishSelectedTasksIcon()) {
+              <button
+                mat-mini-fab
+                color="primary"
+                class="finish-tasks-button"
+                [disabled]="!hasSelection()"
+                (click)="onFinishTasksClick()"
+              >
+                <mat-icon class="tasks-icon">done</mat-icon>
+              </button>
+            }
+
+            @if (section.key === 'after' || showFinishAllTasksIcon()) {
+              <button
+                mat-mini-fab
+                class="finish-tasks-button"
+                color="primary"
+                [disabled]="section.tasks.length === 0"
+                (click)="onFinishAllTasksHandler(section.tasks)"
+              >
+                <mat-icon class="tasks-icon">done_outline</mat-icon>
+              </button>
+            }
+
+            @if (section.showReorder) {
+              @if (!reorderMode()) {
+                <button
+                  mat-mini-fab
+                  class="finish-tasks-button"
+                  color="primary"
+                  [disabled]="section.tasks.length === 0"
+                  (click)="startReorderMode()"
+                >
+                  <mat-icon class="tasks-icon">reorder</mat-icon>
+                </button>
+              } @else {
+                <button
+                  mat-mini-fab
+                  class="finish-tasks-button"
+                  color="primary"
+                  (click)="finishReorderMode()"
+                >
+                  <mat-icon class="tasks-icon">check</mat-icon>
+                </button>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="table-wrapper" [attr.id]="isFirst ? 'table-wrapper' : null">
+          @if (isFirst && reorderMode()) {
+            <div id="reorder-list" cdkDropList (cdkDropListDropped)="dropReorderedTask($event)">
+              @for (task of reorderedTasks(); track task.id; let i = $index) {
+                <div class="reorder-item" cdkDrag>
+                  <span>{{ i + 1 }}.</span>
+                  <span>{{ task.description }}</span>
+                </div>
+              }
+            </div>
+          } @else if (section.tasks.length > 0) {
+            <table
+              [attr.id]="section.key === 'after' ? 'after-tasks-table' : 'subtasks-table'"
+              mat-table
+              [dataSource]="section.tasks"
+              class="mat-elevation-z8 tasks-table"
             >
-            </mat-checkbox>
-          </td>
-        </ng-container>
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox
+                    (change)="$event ? onMainCheckboxClick(section.tasks) : null"
+                    [checked]="hasSelectionIn(section.tasks) && areAllSelected(section.tasks)"
+                    [indeterminate]="hasSelectionIn(section.tasks) && !areAllSelected(section.tasks)"
+                  >
+                  </mat-checkbox>
+                </th>
 
-        <ng-container matColumnDef="position">
-          <th mat-header-cell *matHeaderCellDef>No.</th>
-          <td
-            mat-cell
-            class="row-link"
-            [ngClass]="{'highlight': isSelected(subtask.id)}"
-            (click)="onSubtaskClick(subtask)"
-            *matCellDef="let subtask; let i = index"
-          >
-            <span>{{ i + 1 }}</span>
-          </td>
-        </ng-container>
+                <td
+                  mat-cell
+                  *matCellDef="let row; let i = index"
+                  [ngClass]="{'highlight': isSelected(row.id)}"
+                >
+                  <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? toggleSelection(row.id) : null"
+                    [checked]="isSelected(row.id)"
+                  >
+                  </mat-checkbox>
+                </td>
+              </ng-container>
 
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef>Description</th>
-          <td
-            mat-cell
-            *matCellDef="let subtask;"
-            (click)="onSubtaskClick(subtask)"
-            [ngClass]="{'highlight': isSelected(subtask.id)}"
-          >
-            <span class="row-link">
-              {{ subtask.description }}
-            </span>
-          </td>
-        </ng-container>
+              <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef>No.</th>
+                <td
+                  mat-cell
+                  class="row-link"
+                  [ngClass]="{'highlight': isSelected(subtask.id)}"
+                  (click)="onSubtaskClick(subtask)"
+                  *matCellDef="let subtask; let i = index"
+                >
+                  <span>{{ section.positionOffset + i + 1 }}</span>
+                </td>
+              </ng-container>
 
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td
-            mat-cell
-            *matCellDef="let subtask; let i=index"
-            id="row-{{i}}"
-            class="row-link"
-            [ngClass]="{'highlight': isSelected(subtask.id)}"
-          >
-            <mat-icon (click)="finishSubtask(subtask)">done</mat-icon>
-          </td>
-        </ng-container>
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Description</th>
+                <td
+                  mat-cell
+                  *matCellDef="let subtask;"
+                  (click)="onSubtaskClick(subtask)"
+                  [ngClass]="{'highlight': isSelected(subtask.id)}"
+                >
+                  <span class="row-link">
+                    {{ subtask.description }}
+                  </span>
+                </td>
+              </ng-container>
 
-        <ng-container matColumnDef="showSubtasks">
-          <th mat-header-cell *matHeaderCellDef>Subtasks</th>
-          <td
-            mat-cell
-            *matCellDef="let subtask; let i=index"
-            id="row-{{i}}"
-            class="row-link"
-            [ngClass]="{'highlight': isSelected(subtask.id)}"
-          >
-            <mat-checkbox
-              [checked]="checkedElement(subtask)"
-              (click)="setShowSubtasksFieldClickHandler($event, subtask)"
-            >
-            </mat-checkbox>
-          </td>
-        </ng-container>
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td
+                  mat-cell
+                  *matCellDef="let subtask; let i=index"
+                  class="row-link"
+                  [ngClass]="{'highlight': isSelected(subtask.id)}"
+                >
+                  <mat-icon (click)="finishSubtask(subtask)">done</mat-icon>
+                </td>
+              </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      } @else {
-        <div id="reorder-list" cdkDropList (cdkDropListDropped)="dropReorderedTask($event)">
-          @for (task of reorderedTasks(); track task.id; let i = $index) {
-            <div class="reorder-item" cdkDrag>
-              <span>{{ i + 1 }}.</span>
-              <span>{{ task.description }}</span>
+              <ng-container matColumnDef="showSubtasks">
+                <th mat-header-cell *matHeaderCellDef>Subtasks</th>
+                <td
+                  mat-cell
+                  *matCellDef="let subtask; let i=index"
+                  class="row-link"
+                  [ngClass]="{'highlight': isSelected(subtask.id)}"
+                >
+                  <mat-checkbox
+                    [checked]="checkedElement(subtask)"
+                    (click)="setShowSubtasksFieldClickHandler($event, subtask)"
+                  >
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          }
+
+          @if (isFirst) {
+            <div id="subtasks-of-selected-tasks">
+              @for (item of tasksByIdMapKeys(); track item) {
+                <app-tasks-list
+                  [container]="expandedSubtasks()[item].container"
+                  [tasks]="expandedSubtasks()[item].tasks"
+                  [variables]="variables()"
+                  (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
+                  (resolveParent)="resolveContainer(expandedSubtasks()[item].container)"
+                  [showTitle]="true"
+                  [level]="level() + 1"
+                ></app-tasks-list>
+              }
             </div>
           }
         </div>
-      }
-
-      <!-- [variables]="expandedSubtasks()[item].container.variables" -->
-      <div id="subtasks-of-selected-tasks">
-        @for (item of tasksByIdMapKeys(); track item) {
-          <app-tasks-list
-            [container]="expandedSubtasks()[item].container"
-            [tasks]="expandedSubtasks()[item].tasks"
-            [variables]="variables()"
-            (refreshTasks)="refreshTasksOfSelectedSubtask(item)"
-            (resolveParent)="resolveContainer(expandedSubtasks()[item].container)"
-            [showTitle]="true"
-            [level]="level() + 1"
-          ></app-tasks-list>
-        }
       </div>
-    </div>
+    }
   }
 </div>

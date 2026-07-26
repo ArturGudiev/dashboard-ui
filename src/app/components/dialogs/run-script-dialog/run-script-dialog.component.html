@@ -1,0 +1,90 @@
+<h2 mat-dialog-title>Run script</h2>
+
+<div class="run-script-body">
+  @if (!hidePicker()) {
+    <mat-button-toggle-group
+      class="scope-toggle"
+      [formControl]="scopeControl"
+      aria-label="Script scope"
+    >
+      <mat-button-toggle value="all">All</mat-button-toggle>
+      <mat-button-toggle value="global">Global</mat-button-toggle>
+      <mat-button-toggle value="local">Local</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Script</mat-label>
+      <input
+        matInput
+        [formControl]="searchControl"
+        [matAutocomplete]="auto"
+        placeholder="Start typing a script name"
+        autocomplete="off"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="displayScriptName"
+        (optionSelected)="onScriptSelected($event.option.value)"
+      >
+        @for (script of filteredScripts$ | async; track script.id) {
+          <mat-option [value]="script">
+            {{ script.name }}
+            <span class="scope-badge">{{ script.isGlobal ? 'global' : 'local' }}</span>
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  }
+
+  @if (selectedScript(); as script) {
+    <div class="selected-meta">
+      <strong>{{ script.name }}</strong>
+      <span class="scope-badge">{{ script.isGlobal ? 'global' : 'local' }}</span>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width code-field">
+      <mat-label>Code</mat-label>
+      <textarea
+        matInput
+        [value]="script.code"
+        readonly
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="8"
+        cdkAutosizeMaxRows="18"
+        spellcheck="false"
+      ></textarea>
+    </mat-form-field>
+
+    @if (script.params.length) {
+      <div class="params-title">Parameters</div>
+      <form [formGroup]="paramControls()" class="params-form">
+        @for (param of script.params; track param.name) {
+          @if (param.type === 'boolean') {
+            <mat-checkbox [formControlName]="param.name">{{ param.name }}</mat-checkbox>
+          } @else {
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>{{ param.name }} ({{ param.type }})</mat-label>
+              <input
+                matInput
+                [formControlName]="param.name"
+                [type]="param.type === 'number' ? 'number' : 'text'"
+                autocomplete="off"
+              />
+            </mat-form-field>
+          }
+        }
+      </form>
+    }
+  }
+
+  @if (launchError()) {
+    <div class="launch-error">{{ launchError() }}</div>
+  }
+</div>
+
+<mat-dialog-actions align="end">
+  <button type="button" mat-button (click)="onCancel()">Cancel</button>
+  <button type="button" mat-flat-button color="primary" [disabled]="!selectedScript()" (click)="onLaunch()">
+    Launch
+  </button>
+</mat-dialog-actions>

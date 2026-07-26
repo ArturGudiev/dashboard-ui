@@ -5,15 +5,21 @@ $first-columns-width: 3.5rem
   cursor: pointer
   min-width: 20rem
 
-#subtasks-actions
+.subtasks-actions
   display: flex
   margin-left: 3.5rem
   margin-bottom: 1rem
 
-#subtasks-table
+.tasks-table,
+#subtasks-table,
+#after-tasks-table
   margin-left: 2rem
   margin-bottom: 2rem
   max-width: 30rem
+
+.after-tasks-section
+  // ~2 task rows of space between regular and after-task lists
+  margin-top: 4rem
 
 .row-link
   cursor: pointer
@@ -45,7 +51,7 @@ $first-columns-width: 3.5rem
 .mat-mdc-row
   height: 1rem
 
-#subtasks-title
+.subtasks-title
   padding-right: 1rem
 
 .finish-tasks-button
@@ -65,6 +71,7 @@ $first-columns-width: 3.5rem
 .selected-for-subtasks
   border: 1px solid yellow
 
+.table-wrapper,
 #table-wrapper
   display: flex
   align-items: flex-start
@@ -99,15 +106,18 @@ $first-columns-width: 3.5rem
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2)
 
 @media (max-width: 960px)
-  #subtasks-actions
+  .subtasks-actions
     margin-left: 1rem
     padding-right: 1rem
 
-  #subtasks-table
+  .tasks-table,
+  #subtasks-table,
+  #after-tasks-table
     margin-left: 2rem
     max-width: calc(100% - 3rem)
     box-sizing: border-box
 
+  .table-wrapper,
   #table-wrapper
     max-width: 100%
     padding-right: 1rem

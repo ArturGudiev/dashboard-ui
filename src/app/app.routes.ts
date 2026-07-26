@@ -31,6 +31,7 @@ import { DueDateTasksComponent } from "./components/pages/due-date-tasks/due-dat
 import { FileComponent } from "./components/pages/file/file.component";
 import { KnowledgeNodeComponent } from "./components/containers/knowledge-node/knowledge-node.component";
 import { knowledgeNodeResolver } from "./resolvers/knowledge-node.resolver";
+import { ScriptsComponent } from "./components/pages/scripts/scripts.component";
 import { authGuard, guestGuard } from "./guards/auth.guard";
 
 const protectedRoutes: Routes = [
@@ -118,6 +119,7 @@ const protectedRoutes: Routes = [
     runGuardsAndResolvers: 'paramsChange',
   },
   {path: 'help', component: HelpComponent},
+  {path: 'scripts', component: ScriptsComponent},
 ];
 
 export const routes: Routes = [

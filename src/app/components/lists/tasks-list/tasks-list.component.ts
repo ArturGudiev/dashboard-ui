@@ -26,7 +26,7 @@ import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialo
 import { AppStore } from "../../../state/app.store";
 import { taskContainerDescriptionsAreEqual } from "../../../shared/libs/utils.lib";
 import { NavigationService } from "../../../services/navigation.service";
-import { isTask } from "../../../shared/constants";
+import { isAfterTask, isTask } from "../../../shared/constants";
 import { MatTableModule } from "@angular/material/table";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatButtonModule } from "@angular/material/button";
@@ -39,6 +39,7 @@ import {
   dueDateInputToIso,
   type HierarchicalTaskDialogResult,
   type NewTaskDialogResult,
+  tagsFromNewTaskDialog,
   type TaskNode,
   TasksService,
 } from "../../../services/task-container-services/tasks.service";
@@ -47,6 +48,16 @@ import { VariablesService } from "../../../services/variables.service";
 import { tasksListRefreshAnimation } from './tasks-list.animations';
 
 type ExpandedSubtasks = Record<number, { tasks: TaskC[]; container: TaskContainer }>;
+
+type TasksSection = {
+  key: 'regular' | 'after';
+  title: string;
+  tasks: TaskC[];
+  afterTaskDefault: boolean;
+  showReorder: boolean;
+  showFinishSelected: boolean;
+  positionOffset: number;
+};
 
 @Component({
   selector: 'app-tasks-list',
@@ -86,6 +97,48 @@ export class TasksListComponent implements OnInit {
     return !!(this.showTitle() && focused && this.container().getFullDescription() === focused.getFullDescription());
   });
   readonly tasksByIdMapKeys = computed(() => Object.keys(this.expandedSubtasks()).map(Number));
+  readonly regularTasks = computed(() => this.tasks().filter((task) => !isAfterTask(task)));
+  readonly afterTasks = computed(() => this.tasks().filter((task) => isAfterTask(task)));
+  readonly hasAfterTasks = computed(() => this.afterTasks().length > 0);
+  /** Tasks in display order: regular first, then after-tasks. */
+  readonly orderedTasks = computed(() =>
+    this.hasAfterTasks() ? [...this.regularTasks(), ...this.afterTasks()] : this.tasks(),
+  );
+  readonly taskSections = computed((): TasksSection[] => {
+    const regular = this.regularTasks();
+    const after = this.afterTasks();
+    if (after.length === 0) {
+      return [{
+        key: 'regular',
+        title: 'Tasks',
+        tasks: this.tasks(),
+        afterTaskDefault: false,
+        showReorder: true,
+        showFinishSelected: true,
+        positionOffset: 0,
+      }];
+    }
+    return [
+      {
+        key: 'regular',
+        title: 'Tasks',
+        tasks: regular,
+        afterTaskDefault: false,
+        showReorder: true,
+        showFinishSelected: true,
+        positionOffset: 0,
+      },
+      {
+        key: 'after',
+        title: 'After tasks',
+        tasks: after,
+        afterTaskDefault: true,
+        showReorder: false,
+        showFinishSelected: false,
+        positionOffset: regular.length,
+      },
+    ];
+  });
   readonly showFinishAllTasksIcon = computed(() => {
     const selectedCount = this.selectedIds().length;
     return selectedCount === 0 || selectedCount === this.tasks().length;
@@ -130,8 +183,11 @@ export class TasksListComponent implements OnInit {
     });
   }
 
-  addTask(makeSelected = false) {
-    this.tasksService.openAddTaskDialog({ markSelectedByDefault: makeSelected })
+  addTask(makeSelected = false, afterTaskByDefault = false) {
+    this.tasksService.openAddTaskDialog({
+      markSelectedByDefault: makeSelected,
+      afterTaskByDefault,
+    })
       .subscribe((responseObj: NewTaskDialogResult | undefined) => {
         this.tasksService.addTaskDialogOpened = false;
         if (!responseObj) {
@@ -142,7 +198,7 @@ export class TasksListComponent implements OnInit {
           const request: CreateNewTaskRequest = {
             task: {
               description: this.interpolateTaskText(description),
-              tags: [],
+              tags: tagsFromNewTaskDialog(responseObj),
               notes: this.interpolateTaskText(responseObj.notes ?? ''),
               ...(responseObj.dueDate
                 ? { dueDateTime: dueDateInputToIso(responseObj.dueDate) }
@@ -227,8 +283,8 @@ export class TasksListComponent implements OnInit {
       }
     }
 
-    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.tasks().length) {
-      this.navigationService.navigateToTask(this.tasks()[+arr[0] - 1].id);
+    if (arr.length === 1 && Number.isInteger(+arr[0]) && +arr[0] >= 1 && +arr[0] <= this.orderedTasks().length) {
+      this.navigationService.navigateToTask(this.orderedTasks()[+arr[0] - 1].id);
     }
 
     if (['select-subsubtask'].includes(arr[0])) {
@@ -272,21 +328,22 @@ export class TasksListComponent implements OnInit {
     if (!args || args.length === 0) {
       return;
     }
+    const ordered = this.orderedTasks();
     if (args.length > 0 && args[0] && /^\d+-\d+$/.test(args[0])) {
       const numbers = args[0].split('-');
       const num1 = +numbers[0] - 1;
       const num2 = +numbers[1] - 1;
       const rangeNumbers = _.range(num1, num2 + 1);
-      const tasksToFinish = rangeNumbers.map((index: number) => this.tasks()[index]);
+      const tasksToFinish = rangeNumbers.map((index: number) => ordered[index]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks.emit());
     } else if (args.length > 0 && args[0] && args[0].includes(',')) {
       const numbers = args[0].split(',').map(str => +str);
-      const tasksToFinish = numbers.map((number: number) => this.tasks()[number - 1]);
+      const tasksToFinish = numbers.map((number: number) => ordered[number - 1]);
       this.tasksService.finishTasks(tasksToFinish).subscribe(() => this.refreshTasks.emit());
     } else {
       const index = +args[0];
-      if (Number.isInteger(index) && index >= 1 && index <= this.tasks().length) {
-        this.tasksService.finishTask(this.tasks()[index - 1]).subscribe(() => this.refreshTasks.emit());
+      if (Number.isInteger(index) && index >= 1 && index <= ordered.length) {
+        this.tasksService.finishTask(ordered[index - 1]).subscribe(() => this.refreshTasks.emit());
       }
     }
   }
@@ -299,18 +356,21 @@ export class TasksListComponent implements OnInit {
     return this.selectedIds().length > 0;
   }
 
-  areAllSelected() {
-    const numSelected = this.selectedIds().length;
-    const numRows = this.tasks().length;
-    return numSelected === numRows;
+  areAllSelected(sectionTasks: TaskC[] = this.tasks()) {
+    return sectionTasks.length > 0 && sectionTasks.every((task) => this.selectedIds().includes(task.id));
   }
 
-  onMainCheckboxClick() {
-    if (this.areAllSelected()) {
-      this.clearSelection();
+  hasSelectionIn(sectionTasks: TaskC[]): boolean {
+    return sectionTasks.some((task) => this.selectedIds().includes(task.id));
+  }
+
+  onMainCheckboxClick(sectionTasks: TaskC[] = this.tasks()) {
+    if (this.areAllSelected(sectionTasks)) {
+      const sectionIds = new Set(sectionTasks.map((task) => task.id));
+      this.selectedIds.update((ids) => ids.filter((id) => !sectionIds.has(id)));
       return;
     }
-    this.selectedIds.set(this.tasks().map(e => e.id));
+    this.selectedIds.update((ids) => [...new Set([...ids, ...sectionTasks.map((task) => task.id)])]);
   }
 
   toggleSelection(id: number) {
@@ -334,21 +394,24 @@ export class TasksListComponent implements OnInit {
     );
   }
 
-  onFinishAllTasksHandler() {
-    const subtasks = this.tasks();
-    if (subtasks.length > 7) {
-      const confirmed = confirm(`Are you sure you want to close all ${subtasks.length} tasks?`);
+  onFinishAllTasksHandler(sectionTasks: TaskC[] = this.tasks()) {
+    if (sectionTasks.length === 0) {
+      return;
+    }
+    if (sectionTasks.length > 7) {
+      const confirmed = confirm(`Are you sure you want to close all ${sectionTasks.length} tasks?`);
       if (!confirmed) {
         return;
       }
     }
-    this.clearSelection();
-    this.tasksService.finishTasks(subtasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
+    const finishedIds = new Set(sectionTasks.map((task) => task.id));
+    this.selectedIds.update((ids) => ids.filter((id) => !finishedIds.has(id)));
+    this.tasksService.finishTasks(sectionTasks).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       () => this.refreshTasks.emit());
   }
 
   startReorderMode(): void {
-    this.reorderedTasks.set([...this.tasks()]);
+    this.reorderedTasks.set([...this.regularTasks()]);
     this.reorderMode.set(true);
   }
 
@@ -362,7 +425,9 @@ export class TasksListComponent implements OnInit {
 
   finishReorderMode(): void {
     this.reorderMode.set(false);
-    this.reorderDone.emit(this.reorderedTasks().map((task) => task.id));
+    const reorderedIds = this.reorderedTasks().map((task) => task.id);
+    const afterIds = this.afterTasks().map((task) => task.id);
+    this.reorderDone.emit(afterIds.length > 0 ? [...reorderedIds, ...afterIds] : reorderedIds);
   }
 
   onSubtaskClick(task: TaskC) {
@@ -386,8 +451,9 @@ export class TasksListComponent implements OnInit {
     dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value: string) => {
       if (value && !isNaN(+value)) {
         const index = +value;
-        if (index > 0 && index <= this.tasks().length) {
-          const task = this.tasks()[index - 1];
+        const ordered = this.orderedTasks();
+        if (index > 0 && index <= ordered.length) {
+          const task = ordered[index - 1];
           if (this.expandedSubtasks()[task.id] !== undefined) {
             this.removeTasksByIdMapKey(task.id);
             return;
@@ -461,7 +527,7 @@ export class TasksListComponent implements OnInit {
           const request: CreateNewTaskRequest = {
             task: {
               description: this.interpolateTaskText(description),
-              tags: [],
+              tags: tagsFromNewTaskDialog(responseObj),
               notes: this.interpolateTaskText(responseObj.notes ?? ''),
               ...(responseObj.dueDate
                 ? { dueDateTime: dueDateInputToIso(responseObj.dueDate) }

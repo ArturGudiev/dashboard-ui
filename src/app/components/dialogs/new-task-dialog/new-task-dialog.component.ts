@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, DestroyRef, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
@@ -9,11 +9,13 @@ import { MatLabel } from "@angular/material/form-field";
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { type NewTaskDialogResult } from '../../../services/task-container-services/tasks.service';
+import { AppStore } from '../../../state/app.store';
 
 export type NewTaskDialogData = {
   title?: string;
   inputWidth?: string;
   markSelectedByDefault?: boolean;
+  afterTaskByDefault?: boolean;
 };
 
 function todayDateInputValue(): string {
@@ -46,6 +48,8 @@ export class NewTaskDialogComponent {
 
   dialogRef = inject(MatDialogRef<NewTaskDialogComponent>);
   data = inject<NewTaskDialogData>(MAT_DIALOG_DATA, { optional: true });
+  private destroyRef = inject(DestroyRef);
+  private appStore = inject(AppStore);
 
   readonly showDueDate = signal(false);
 
@@ -54,7 +58,13 @@ export class NewTaskDialogComponent {
     notes: new FormControl('', []),
     dueDate: new FormControl('', []),
     markSelected: new FormControl(this.data?.markSelectedByDefault ?? false, []),
+    afterTask: new FormControl(this.data?.afterTaskByDefault ?? false, []),
   });
+
+  constructor() {
+    this.appStore.setDisabledHotkeys(true);
+    this.destroyRef.onDestroy(() => this.appStore.setDisabledHotkeys(false));
+  }
 
   showDueDateField(): void {
     this.myForm.controls.dueDate.setValue(todayDateInputValue());
@@ -77,6 +87,7 @@ export class NewTaskDialogComponent {
       description: value.description ?? '',
       notes: value.notes ?? '',
       markSelected: !!value.markSelected,
+      afterTask: !!value.afterTask,
       dueDate: dueDate || undefined,
     };
     this.dialogRef.close(result);

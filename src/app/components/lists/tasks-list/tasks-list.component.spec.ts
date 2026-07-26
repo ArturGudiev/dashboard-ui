@@ -10,11 +10,12 @@ import { TasksService } from '../../../services/task-container-services/tasks.se
 import { TaskContainerService } from '../../../services/task-container-services/task-container.service';
 import { TasksListComponent } from './tasks-list.component';
 
-function createSubtask(id: number, description: string): TaskC {
+function createSubtask(id: number, description: string, tags: string[] = []): TaskC {
   return TaskC.createFromObj({
     id,
     description,
     done: false,
+    tags,
     tasks: [],
   });
 }
@@ -152,6 +153,54 @@ describe('TasksListComponent', () => {
       fixture.detectChanges();
 
       expect(openAddTaskDialogSpy).toHaveBeenCalledOnce();
+      expect(openAddTaskDialogSpy).toHaveBeenCalledWith({
+        markSelectedByDefault: false,
+        afterTaskByDefault: false,
+      });
+    });
+  });
+
+  describe('after tasks', () => {
+    it('renders after tasks in a separate section after regular tasks', () => {
+      const mixedTasks = [
+        createSubtask(101, 'Regular one'),
+        createSubtask(102, 'After one', ['after-task']),
+        createSubtask(103, 'Regular two'),
+        createSubtask(104, 'After two', ['after-task']),
+      ];
+      fixture.componentRef.setInput('tasks', mixedTasks);
+      fixture.detectChanges();
+
+      const regularDescriptions = Array.from(
+        fixture.nativeElement.querySelectorAll('#subtasks-table td.mat-column-description'),
+      ).map((el) => (el as HTMLElement).textContent?.trim());
+      const afterDescriptions = Array.from(
+        fixture.nativeElement.querySelectorAll('#after-tasks-table td.mat-column-description'),
+      ).map((el) => (el as HTMLElement).textContent?.trim());
+
+      expect(regularDescriptions).toEqual(['Regular one', 'Regular two']);
+      expect(afterDescriptions).toEqual(['After one', 'After two']);
+      expect(fixture.nativeElement.querySelector('.after-tasks-section')).toBeTruthy();
+    });
+
+    it('opens add dialog with after-task checked from after section plus button', () => {
+      const mixedTasks = [
+        createSubtask(101, 'Regular one'),
+        createSubtask(102, 'After one', ['after-task']),
+      ];
+      fixture.componentRef.setInput('tasks', mixedTasks);
+      fixture.detectChanges();
+
+      const addAfterButton = fixture.nativeElement.querySelector(
+        '#add-after-task-button',
+      ) as HTMLButtonElement;
+      addAfterButton.click();
+      fixture.detectChanges();
+
+      expect(openAddTaskDialogSpy).toHaveBeenCalledWith({
+        markSelectedByDefault: false,
+        afterTaskByDefault: true,
+      });
     });
   });
 });

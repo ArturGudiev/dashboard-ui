@@ -6,7 +6,7 @@ import { NewTaskDialogComponent } from '../../components/dialogs/new-task-dialog
 import { HierarchicalTaskDialogComponent } from '../../components/dialogs/hierarchical-task-dialog/hierarchical-task-dialog.component';
 import { type TaskC } from '../../models/task-class';
 import { type TaskContainer } from '../../models/interfaces/task-container';
-import { NEW_HIERARCHICAL_TASK_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from '../../shared/constants';
+import { AFTER_TASK_TAG, NEW_HIERARCHICAL_TASK_DIALOG_OPTIONS, NEW_TASK_DIALOG_OPTIONS } from '../../shared/constants';
 import { type EmptyJsonResponse } from '../../shared/libs/task-api.lib';
 import { type HandlersNewTaskRequest } from '../../types/generated';
 import { ApiService } from '../api.service';
@@ -17,8 +17,13 @@ export interface NewTaskDialogResult {
   description: string;
   notes: string;
   markSelected?: boolean;
+  afterTask?: boolean;
   /** YYYY-MM-DD or empty when unset */
   dueDate?: string;
+}
+
+export function tagsFromNewTaskDialog(result: Pick<NewTaskDialogResult, 'afterTask'>): string[] {
+  return result.afterTask ? [AFTER_TASK_TAG] : [];
 }
 
 export interface TaskNode {
@@ -154,7 +159,10 @@ export class TasksService {
     );
   }
 
-  openAddTaskDialog(options?: { markSelectedByDefault?: boolean }): Observable<NewTaskDialogResult | undefined> {
+  openAddTaskDialog(options?: {
+    markSelectedByDefault?: boolean;
+    afterTaskByDefault?: boolean;
+  }): Observable<NewTaskDialogResult | undefined> {
     if (this.addTaskDialogOpened) {
       return EMPTY;
     }
@@ -164,6 +172,7 @@ export class TasksService {
         title: 'Description',
         inputWidth: '40rem',
         markSelectedByDefault: options?.markSelectedByDefault ?? false,
+        afterTaskByDefault: options?.afterTaskByDefault ?? false,
       },
       ...NEW_TASK_DIALOG_OPTIONS,
     });
@@ -202,7 +211,7 @@ export class TasksService {
         const request: HandlersNewTaskRequest = {
           task: {
             description: responseObj.description,
-            tags: [],
+            tags: tagsFromNewTaskDialog(responseObj),
             notes: responseObj.notes ?? '',
             ...(responseObj.dueDate
               ? { dueDateTime: dueDateInputToIso(responseObj.dueDate) }

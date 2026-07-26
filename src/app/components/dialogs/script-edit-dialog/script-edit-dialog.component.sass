@@ -1,0 +1,35 @@
+.script-edit-form
+  display: flex
+  flex-direction: column
+  gap: 0.5rem
+  min-width: min(40rem, 90vw)
+  padding: 0 1rem 0.5rem
+
+.full-width
+  width: 100%
+
+.params-header
+  display: flex
+  align-items: center
+  justify-content: space-between
+  font-weight: 500
+
+.params-list
+  display: flex
+  flex-direction: column
+  gap: 0.25rem
+
+.param-row
+  display: grid
+  grid-template-columns: 1.2fr 1fr 1fr auto
+  gap: 0.5rem
+  align-items: start
+
+.code-field textarea
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+  font-size: 0.9rem
+
+.syntax-error
+  color: #b00020
+  font-size: 0.875rem
+  white-space: pre-wrap

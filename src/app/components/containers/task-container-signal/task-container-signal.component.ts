@@ -28,6 +28,14 @@ import { KnowledgeNodesListComponent } from "../../lists/knowledge-nodes-list/kn
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { VariableDialogComponent, type VariableDialogResult } from "../../dialogs/variable-dialog/variable-dialog.component";
 import { AliasesDialogComponent } from "../../dialogs/aliases-dialog/aliases-dialog.component";
+import { RunScriptDialogComponent, type RunScriptDialogResult } from "../../dialogs/run-script-dialog/run-script-dialog.component";
+import {
+  ScriptEditDialogComponent,
+  type ScriptEditDialogResult,
+} from "../../dialogs/script-edit-dialog/script-edit-dialog.component";
+import { ContainerScriptsListComponent } from "../../lists/container-scripts-list/container-scripts-list.component";
+import { ScriptsApiService } from '../../../services/scripts-api.service';
+import { type ScriptListItem } from '../../../models/script';
 
 import { ParentsPathComponent } from "../parents-path/parents-path.component";
 import { NotesComponent } from "../notes/notes.component";
@@ -45,7 +53,14 @@ import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component"
 import { VariablesTableComponent } from "../../lists/variables-table/variables-table.component";
 import { ContainerChecksListComponent } from "../../lists/container-checks-list/container-checks-list.component";
 import { ContainerFilesListComponent } from "../../lists/container-files-list/container-files-list.component";
-import { ALIASES_DIALOG_OPTIONS, GET_VALUE_DIALOG_OPTIONS, VARIABLE_DIALOG_OPTIONS, isTask } from '../../../shared/constants';
+import {
+  ALIASES_DIALOG_OPTIONS,
+  GET_VALUE_DIALOG_OPTIONS,
+  RUN_SCRIPT_DIALOG_OPTIONS,
+  SCRIPT_EDIT_DIALOG_OPTIONS,
+  VARIABLE_DIALOG_OPTIONS,
+  isTask,
+} from '../../../shared/constants';
 import { ContainerVariablesApiService } from '../../../services/container-variables-api.service';
 import { ContainerChecksApiService } from '../../../services/container-checks-api.service';
 import { AliasesService } from '../../../services/aliases.service';
@@ -93,6 +108,7 @@ const ALIAS_SUPPORTED_TYPES = new Set([
     TasksListComponent,
     VariablesTableComponent,
     ContainerChecksListComponent,
+    ContainerScriptsListComponent,
     ContainerFilesListComponent,
   ],
   standalone: true,
@@ -281,8 +297,32 @@ export class TaskContainerSignalComponent implements OnInit {
   private appStore = inject(AppStore);
   private containerVariablesApiService = inject(ContainerVariablesApiService);
   private containerChecksApiService = inject(ContainerChecksApiService);
+  private scriptsApiService = inject(ScriptsApiService);
   private aliasesService = inject(AliasesService);
   private alertService = inject(AlertService);
+
+  private readonly scriptsTick = signal(0);
+
+  private readonly scriptsResource = rxResource({
+    params: () => ({
+      type: this.taskContainer().type,
+      id: this.taskContainer().id,
+      tick: this.scriptsTick(),
+    }),
+    stream: ({ params }) => this.scriptsApiService.list({
+      scope: 'local',
+      containerType: params.type,
+      containerId: params.id,
+    }),
+  });
+
+  localScripts = computed<ScriptListItem[]>(() => this.scriptsResource.value() ?? []);
+
+  showSideOverlay = computed(() =>
+    this.taskContainer().variables.length > 0
+    || this.checks().length > 0
+    || this.localScripts().length > 0
+  );
 
   private lastContainerKey = '';
 
@@ -396,6 +436,9 @@ export class TaskContainerSignalComponent implements OnInit {
   }
 
   private handleTaskCommand(command: string): void {
+    if (this.appStore.disabledHotkeys()) {
+      return;
+    }
     const arr = command.split(' ');
     const args = arr.slice(1);
     if (['help'].includes(arr[0])) {
@@ -758,6 +801,55 @@ export class TaskContainerSignalComponent implements OnInit {
 
   addVariable(): void {
     this.openVariableDialog();
+  }
+
+  addScript(): void {
+    const dialogRef = this.dialog.open(ScriptEditDialogComponent, {
+      data: { script: null },
+      ...SCRIPT_EDIT_DIALOG_OPTIONS,
+    });
+
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result: ScriptEditDialogResult | null) => {
+      if (!result) {
+        return;
+      }
+      const container = this.taskContainer();
+      this.scriptsApiService.create({
+        ...result,
+        container: { id: container.id, type: container.type },
+      }).subscribe({
+        next: () => this.reloadLocalScripts(),
+        error: (err) => this.alertService.showAlert(err?.error?.error ?? 'Failed to create script', 4000, 'error'),
+      });
+    });
+  }
+
+  runScript(scriptId?: number): void {
+    const dialogRef = this.dialog.open(RunScriptDialogComponent, {
+      data: {
+        container: this.taskContainer(),
+        scriptId,
+        scope: 'all',
+      },
+      ...RUN_SCRIPT_DIALOG_OPTIONS,
+    });
+
+    dialogRef.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result: RunScriptDialogResult | null) => {
+      if (!result) {
+        return;
+      }
+      this.scriptsApiService.run(result.scriptId, this.taskContainer(), result.params).subscribe({
+        next: () => this.refreshContainer.emit(),
+        error: (err) => {
+          const message = err?.error?.error ?? 'Script failed';
+          this.alertService.showAlert(typeof message === 'string' ? message : 'Script failed', 4000, 'error');
+        },
+      });
+    });
+  }
+
+  reloadLocalScripts(): void {
+    this.scriptsTick.update((n) => n + 1);
   }
 
   addCheck(): void {

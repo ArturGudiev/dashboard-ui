@@ -27,6 +27,7 @@ import {
   type CreateNewTaskRequest,
   dueDateInputToIso,
   type NewTaskDialogResult,
+  tagsFromNewTaskDialog,
   TasksService,
 } from "../../../services/task-container-services/tasks.service";
 
@@ -235,6 +236,10 @@ export class ToolbarComponent implements OnInit {
     this.router.navigate(['files', 'Chp.mm']);
   }
 
+  onScriptsClick() {
+    this.router.navigate(['scripts']);
+  }
+
   private openCommandDialog() {
     const dialogRef = this.dialog.open(CommandDialogComponent,
       {
@@ -287,7 +292,7 @@ export class ToolbarComponent implements OnInit {
         const request: CreateNewTaskRequest = {
           task: {
             description: responseObj.description,
-            tags: [],
+            tags: tagsFromNewTaskDialog(responseObj),
             notes: responseObj.notes ?? '',
             ...(responseObj.dueDate
               ? { dueDateTime: dueDateInputToIso(responseObj.dueDate) }

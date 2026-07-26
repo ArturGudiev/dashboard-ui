@@ -1,0 +1,69 @@
+<h2 mat-dialog-title>{{ data?.script ? 'Edit script' : 'New script' }}</h2>
+
+<form class="script-edit-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" autocomplete="off" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Description</mat-label>
+    <input matInput formControlName="description" autocomplete="off" />
+  </mat-form-field>
+
+  <div class="params-header">
+    <span>Parameters</span>
+    <button type="button" mat-icon-button (click)="addParam()" aria-label="Add parameter">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <div formArrayName="params" class="params-list">
+    @for (ctrl of params.controls; track $index; let i = $index) {
+      <div class="param-row" [formGroupName]="i">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" autocomplete="off" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            @for (t of paramTypes; track t) {
+              <mat-option [value]="t">{{ t }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Default</mat-label>
+          <input matInput formControlName="defaultValue" autocomplete="off" />
+        </mat-form-field>
+        <button type="button" mat-icon-button (click)="removeParam(i)" aria-label="Remove parameter">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+
+  <mat-form-field appearance="outline" class="full-width code-field">
+    <mat-label>Code</mat-label>
+    <textarea
+      matInput
+      formControlName="code"
+      cdkTextareaAutosize
+      cdkAutosizeMinRows="10"
+      cdkAutosizeMaxRows="24"
+      spellcheck="false"
+      (keydown)="onCodeKeydown($event)"
+      (blur)="validateCode()"
+    ></textarea>
+  </mat-form-field>
+
+  @if (syntaxError()) {
+    <div class="syntax-error">{{ syntaxError() }}</div>
+  }
+
+  <mat-dialog-actions align="end">
+    <button type="button" mat-button (click)="onCancel()">Cancel</button>
+    <button type="submit" mat-flat-button color="primary">Save</button>
+  </mat-dialog-actions>
+</form>

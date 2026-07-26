@@ -8,13 +8,15 @@
     <span class="app-name">Task Manager vGo</span>
     <button id="task-button" class="toolbar-nav-button" mat-stroked-button (click)="onNavToClick()">Navigate</button>
     <button class="toolbar-nav-button" mat-stroked-button (click)="onEpicsClick()">Epics</button>
-    <button class="toolbar-nav-button" mat-stroked-button (click)="onLogsClick()">Logs</button>
-    <button class="toolbar-nav-button" mat-stroked-button (click)="onDirectionsClick()">Directions</button>
-    <button class="toolbar-nav-button" mat-stroked-button (click)="onLongTasksClick()">Long Tasks</button>
-    <button class="toolbar-nav-button" mat-stroked-button (click)="onStatesClick()">States</button>
-    <button class="toolbar-nav-button" mat-stroked-button (click)="onDueDateTasksClick()">Due date</button>
-    <button class="toolbar-nav-button" mat-stroked-button (click)="onKnowledgeNodesClick()">Knowledge Nodes</button>
-    <button class="toolbar-nav-button" mat-stroked-button (click)="onFilesClick()">Files</button>
+    <button
+      class="toolbar-nav-button"
+      mat-stroked-button
+      [matMenuTriggerFor]="moreNavMenu"
+      aria-label="More navigation"
+    >
+      More
+      <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+    </button>
   </div>
 
   <button
@@ -26,20 +28,32 @@
     <mat-icon>menu</mat-icon>
   </button>
 
+  <mat-menu #moreNavMenu="matMenu" class="toolbar-nav-menu">
+    <button mat-menu-item (click)="onLogsClick()">Logs</button>
+    <button mat-menu-item (click)="onDirectionsClick()">Directions</button>
+    <button mat-menu-item (click)="onLongTasksClick()">Long Tasks</button>
+    <button mat-menu-item (click)="onStatesClick()">States</button>
+    <button mat-menu-item (click)="onDueDateTasksClick()">Due date</button>
+    <button mat-menu-item (click)="onKnowledgeNodesClick()">Knowledge Nodes</button>
+    <button mat-menu-item (click)="onFilesClick()">Files</button>
+    <button mat-menu-item (click)="onScriptsClick()">Scripts</button>
+  </mat-menu>
+
   <mat-menu #navMenu="matMenu" class="toolbar-nav-menu">
     <div class="toolbar-nav-menu-title" disabled mat-menu-item>Task Manager vGo</div>
     @if (currentUser(); as user) {
       <div class="toolbar-nav-menu-user" disabled mat-menu-item>{{ user.name }}</div>
     }
     <button mat-menu-item (click)="onNavToClick()">Navigate</button>
+    <button mat-menu-item (click)="onEpicsClick()">Epics</button>
     <button mat-menu-item (click)="onLogsClick()">Logs</button>
     <button mat-menu-item (click)="onDirectionsClick()">Directions</button>
     <button mat-menu-item (click)="onLongTasksClick()">Long Tasks</button>
-    <button mat-menu-item (click)="onEpicsClick()">Epics</button>
     <button mat-menu-item (click)="onStatesClick()">States</button>
     <button mat-menu-item (click)="onDueDateTasksClick()">Due date</button>
     <button mat-menu-item (click)="onKnowledgeNodesClick()">Knowledge Nodes</button>
     <button mat-menu-item (click)="onFilesClick()">Files</button>
+    <button mat-menu-item (click)="onScriptsClick()">Scripts</button>
   </mat-menu>
 
   <span class="example-spacer"></span>
