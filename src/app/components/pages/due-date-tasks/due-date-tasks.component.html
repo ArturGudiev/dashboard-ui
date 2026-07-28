@@ -1,5 +1,17 @@
 <div id="due-date-tasks-page" class="mt-3 ms-4">
-  <div class="text-xl mb-3">Tasks by due date</div>
+  <div class="page-header">
+    <div class="text-xl">Tasks by due date</div>
+    <button
+      id="add-global-task-button"
+      mat-mini-fab
+      color="primary"
+      type="button"
+      (click)="addGlobalTask()"
+      aria-label="Add global task"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
 
   <mat-form-field appearance="fill" class="date-field">
     <mat-label>Due date</mat-label>

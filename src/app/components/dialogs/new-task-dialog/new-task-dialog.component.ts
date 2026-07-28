@@ -16,6 +16,8 @@ export type NewTaskDialogData = {
   inputWidth?: string;
   markSelectedByDefault?: boolean;
   afterTaskByDefault?: boolean;
+  /** YYYY-MM-DD — shows the due-date field prefilled when set */
+  initialDueDate?: string;
 };
 
 function todayDateInputValue(): string {
@@ -51,12 +53,12 @@ export class NewTaskDialogComponent {
   private destroyRef = inject(DestroyRef);
   private appStore = inject(AppStore);
 
-  readonly showDueDate = signal(false);
+  readonly showDueDate = signal(!!this.data?.initialDueDate);
 
   myForm = new FormGroup({
     description: new FormControl('', [Validators.required]),
     notes: new FormControl('', []),
-    dueDate: new FormControl('', []),
+    dueDate: new FormControl(this.data?.initialDueDate ?? '', []),
     markSelected: new FormControl(this.data?.markSelectedByDefault ?? false, []),
     afterTask: new FormControl(this.data?.afterTaskByDefault ?? false, []),
   });

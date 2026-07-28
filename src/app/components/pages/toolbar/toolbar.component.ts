@@ -276,7 +276,11 @@ export class ToolbarComponent implements OnInit {
     if (command === '+5') {
       this.dashboardService.setDoneTasksUntilValue(this.doneTasks() + 5);
     }
-    if (command === 'gtask') {
+    // Due-date-tasks page handles gtask itself (prefilled due date + list refresh).
+    if (
+      (command === 'gtask' || command === 'gt' || command === 'global-task') &&
+      !this.router.url.includes('/due-date-tasks')
+    ) {
       this.openAddTaskWithoutParentDialog();
     }
   }

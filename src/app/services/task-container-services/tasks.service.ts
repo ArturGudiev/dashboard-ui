@@ -162,6 +162,7 @@ export class TasksService {
   openAddTaskDialog(options?: {
     markSelectedByDefault?: boolean;
     afterTaskByDefault?: boolean;
+    initialDueDate?: string;
   }): Observable<NewTaskDialogResult | undefined> {
     if (this.addTaskDialogOpened) {
       return EMPTY;
@@ -173,6 +174,7 @@ export class TasksService {
         inputWidth: '40rem',
         markSelectedByDefault: options?.markSelectedByDefault ?? false,
         afterTaskByDefault: options?.afterTaskByDefault ?? false,
+        initialDueDate: options?.initialDueDate,
       },
       ...NEW_TASK_DIALOG_OPTIONS,
     });
