@@ -509,7 +509,7 @@ export class TaskContainerSignalComponent implements OnInit {
 
   finishAllTasks() {
     const tasks = this.tasksResource.value() ?? [];
-    if (tasks.length > 7) {
+    if (tasks.length > 15) {
       const confirmed = confirm(`Are you sure you want to close all ${tasks.length} tasks?`);
       if (!confirmed) {
         return;

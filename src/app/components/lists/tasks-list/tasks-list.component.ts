@@ -384,6 +384,16 @@ export class TasksListComponent implements OnInit {
   }
 
   onFinishTasksClick() {
+    const selectedCount = this.selectedIds().length;
+    if (selectedCount === 0) {
+      return;
+    }
+    if (selectedCount > 15) {
+      const confirmed = confirm(`Are you sure you want to close all ${selectedCount} tasks?`);
+      if (!confirmed) {
+        return;
+      }
+    }
     this.tasksService.finishTasksByIds([...this.selectedIds()]).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       {
         next: () => {
@@ -398,7 +408,7 @@ export class TasksListComponent implements OnInit {
     if (sectionTasks.length === 0) {
       return;
     }
-    if (sectionTasks.length > 7) {
+    if (sectionTasks.length > 15) {
       const confirmed = confirm(`Are you sure you want to close all ${sectionTasks.length} tasks?`);
       if (!confirmed) {
         return;
