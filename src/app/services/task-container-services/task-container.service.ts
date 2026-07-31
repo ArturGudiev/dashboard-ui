@@ -72,9 +72,9 @@ export class TaskContainerService {
       case 'task':
         return this.apiService._patchTask(id, newTaskName);
       case 'epic':
-        return this.apiService._patchEpic(id, newTaskName);
+        return this.apiService._patchEpic(id, { description: newTaskName });
       case 'story':
-        return this.apiService._patchStory(id, newTaskName);
+        return this.apiService._patchStory(id, { description: newTaskName });
       case 'problem':
         return this.apiService._patchProblem(id, newTaskName);
       case 'question':

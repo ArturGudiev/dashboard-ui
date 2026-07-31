@@ -568,6 +568,26 @@ export class TaskContainerSignalComponent implements OnInit {
         .subscribe(() => this.navigateToParentAfterResolve());
       return;
     }
+    if (container.type === 'story') {
+      if (!confirm('Do you really want to close this story?')) {
+        return;
+      }
+      this.storiesService
+        .closeStory(container.id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.navigateToParentAfterResolve());
+      return;
+    }
+    if (container.type === 'epic') {
+      if (!confirm('Do you really want to close this epic?')) {
+        return;
+      }
+      this.epicsService
+        .closeEpic(container.id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.navigateToParentAfterResolve());
+      return;
+    }
     this.doneAllClick.emit();
   }
 

@@ -248,9 +248,9 @@ export class ApiService {
       );
   }
 
-  _patchEpic(id: number, newName: string): Observable<Epic> {
+  _patchEpic(id: number, body: { description?: string; notes?: string; closed?: boolean }): Observable<Epic> {
     return this.http
-      .patch<Epic>(`${this.baseUrl}/epic/${id}`, { description: newName })
+      .patch<Epic>(`${this.baseUrl}/epic/${id}`, body)
       .pipe(map((obj) => Epic.createFromObj(obj)));
   }
 
@@ -282,9 +282,9 @@ export class ApiService {
     );
   }
 
-  _patchStory(id: number, newName: string): Observable<Story> {
+  _patchStory(id: number, body: { description?: string; notes?: string; closed?: boolean }): Observable<Story> {
     return this.http
-      .patch<Story>(`${this.baseUrl}/story/${id}`, { description: newName })
+      .patch<Story>(`${this.baseUrl}/story/${id}`, body)
       .pipe(map((obj) => Story.createFromObj(obj)));
   }
   //------------------------------------stories-------------------------------------------------

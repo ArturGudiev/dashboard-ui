@@ -28,6 +28,10 @@ export class StoriesService {
     return this.apiService._updateStory(story);
   }
 
+  closeStory(id: number): Observable<Story> {
+    return this.apiService._patchStory(id, { closed: true });
+  }
+
   createNewStory(obj: ModelsNewStoryRequest): Observable<Story> {
     return this.apiService._createNewStory(obj);
   }
