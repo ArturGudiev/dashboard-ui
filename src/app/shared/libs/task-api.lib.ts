@@ -98,7 +98,7 @@ export function taskFromFull(dto: ModelsTaskFull): TaskC {
   return TaskC.createFromObj(toTaskCCreateSource(dto));
 }
 
-/** PUT /add-anonymous-task, POST /new-task (swagger) — Go `ent.Task` JSON. */
+/** PUT /add-anonymous-task/:count, POST /new-task (swagger) — Go `ent.Task` JSON. */
 export function taskFromEnt(dto: EntTask): TaskC {
   return TaskC.createFromObj(toTaskCCreateSource(dto));
 }

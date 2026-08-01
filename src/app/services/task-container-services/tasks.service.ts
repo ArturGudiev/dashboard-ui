@@ -150,9 +150,9 @@ export class TasksService {
     );
   }
 
-  /** PUT /add-anonymous-task → `ent.Task` */
-  addAnonymousTask(): Observable<TaskC> {
-    return this.apiService._addAnonymousTask().pipe(
+  /** PUT /add-anonymous-task/:count → `ent.Task[]` */
+  addAnonymousTask(count = 1): Observable<TaskC[]> {
+    return this.apiService._addAnonymousTask(count).pipe(
       tap({
         complete: () => this.dashboardService.updateDoneTasksNumber(),
       }),

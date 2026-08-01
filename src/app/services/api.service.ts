@@ -191,11 +191,11 @@ export class ApiService {
     return this.http.put<EmptyJsonResponse>(`${this.baseUrl}/finish-tasks-by-ids/`, ids);
   }
 
-  /** PUT /add-anonymous-task — handler returns `ent.Task`. */
-  _addAnonymousTask(): Observable<TaskC> {
+  /** PUT /add-anonymous-task/:count — handler returns `ent.Task[]`. */
+  _addAnonymousTask(count = 1): Observable<TaskC[]> {
     return this.http
-      .put<EntTask>(`${this.baseUrl}/add-anonymous-task`, {})
-      .pipe(map(taskFromEnt));
+      .put<EntTask[]>(`${this.baseUrl}/add-anonymous-task/${count}`, {})
+      .pipe(map(tasks => tasks.map(taskFromEnt)));
   }
 
   /** PUT /update-task — handler returns `models.TaskFull`. */

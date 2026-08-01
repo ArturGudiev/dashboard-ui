@@ -444,8 +444,9 @@ export class TaskContainerSignalComponent implements OnInit {
     if (['help'].includes(arr[0])) {
       this.showHelp();
     }
-    if (['anonymous'].includes(arr[0])) {
-      this.addAnonymousTaskHandler();
+    if (['anonymous', 't++'].includes(arr[0])) {
+      const count = args[0] !== undefined ? Number.parseInt(args[0], 10) : 1;
+      this.addAnonymousTaskHandler(Number.isFinite(count) && count > 0 ? count : 1);
     }
     if (['f', 'ft', 'finish-task'].includes(arr[0])) {
       this.finishTaskHandler(args);
@@ -678,8 +679,8 @@ export class TaskContainerSignalComponent implements OnInit {
     }
   }
 
-  private addAnonymousTaskHandler() {
-    this.tasksService.addAnonymousTask().subscribe();
+  private addAnonymousTaskHandler(count = 1) {
+    this.tasksService.addAnonymousTask(count).subscribe();
   }
 
   addQuestion(): void {
