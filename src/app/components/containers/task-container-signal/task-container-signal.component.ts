@@ -787,6 +787,13 @@ export class TaskContainerSignalComponent implements OnInit {
       .subscribe(() => this.refreshContainer.emit());
   }
 
+  addSubepic(): void {
+    this.epicsService
+      .createEpicFromDialog(this.taskContainer())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.refreshContainer.emit());
+  }
+
   navigateToStory(story: Story) {
     this.router.navigate(['story', story.id]).then();
   }

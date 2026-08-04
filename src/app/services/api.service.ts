@@ -44,6 +44,7 @@ import {
   type ModelsDirectionFull,
   type ModelsDirectionStatsEntry,
   type ModelsNewStoryRequest,
+  type ModelsNewEpicRequest,
   type ModelsProblemFull,
   type ModelsQuestionFull,
   type ModelsRepetitiveTaskResponse,
@@ -252,6 +253,12 @@ export class ApiService {
     return this.http
       .patch<Epic>(`${this.baseUrl}/epic/${id}`, body)
       .pipe(map((obj) => Epic.createFromObj(obj)));
+  }
+
+  _createNewEpic(obj: ModelsNewEpicRequest): Observable<Epic> {
+    return this.http.post<Epic>(`${this.baseUrl}/new-epic`, obj).pipe(
+      map((epic) => Epic.createFromObj(epic)),
+    );
   }
 
 //------------------------------------stories-------------------------------------------------

@@ -1,8 +1,17 @@
-@if (epics().length > 0) {
 <div id="subepics-actions">
   <h2 id="subepics-title">Epics</h2>
+  @if (showAddButton()) {
+    <button
+      mat-mini-fab
+      color="primary"
+      id="add-epic-button"
+      (click)="addSubepic.emit()">
+      <mat-icon class="epics-icon">add</mat-icon>
+    </button>
+  }
 </div>
 
+@if (epics().length > 0) {
   <div id="table-wrapper">
     <table
       id="subepics-table"
@@ -61,5 +70,4 @@
     </mat-paginator>
 
   </div>
-
 }

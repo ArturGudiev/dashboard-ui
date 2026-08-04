@@ -14,6 +14,7 @@ export const  NEW_QUESTION_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  NEW_TASK_DIALOG_OPTIONS = { height: '460px', width: '700px'};
 export const  NEW_HIERARCHICAL_TASK_DIALOG_OPTIONS = { height: '600px', width: '800px'};
 export const  NEW_STORY_DIALOG_OPTIONS = { height: '300px', width: '700px'};
+export const  NEW_EPIC_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  GET_VALUE_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  VARIABLE_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  ALIASES_DIALOG_OPTIONS = {
