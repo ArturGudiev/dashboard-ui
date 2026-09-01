@@ -10,6 +10,7 @@ import { Problem } from "../models/problem";
 import { Question } from "../models/question";
 import { Knowledge } from "../models/knowledge";
 import { KnowledgeNode, type KnowledgeNodeCreateSource } from "../models/knowledge-node";
+import { Definition, type DefinitionCreateSource } from "../models/definition";
 import { RecordItem } from "../models/record-item";
 import { Action } from '../models/classes/action';
 import { type TaskContainer } from "../models/interfaces/task-container";
@@ -361,7 +362,49 @@ export class ApiService {
       .pipe(map((obj) => KnowledgeNode.createFromObj(obj)));
   }
 
-  //----------------------------------------knowledge-nodes----------------------------------
+  //----------------------------------------definitions----------------------------------
+
+  _getDefinitions(ids: number[]): Observable<Definition[]> {
+    const body: HandlersIdsRequest = { ids };
+    return this.http.post<DefinitionCreateSource[]>(`${this.baseUrl}/get-definitions`, body).pipe(
+      map((items) => items.map((item) => Definition.createFromObj(item))),
+    );
+  }
+
+  _getDefinition(id: number): Observable<Definition> {
+    return this.http
+      .get<DefinitionCreateSource>(`${this.baseUrl}/definition/${id}`)
+      .pipe(map((obj) => Definition.createFromObj(obj)));
+  }
+
+  _createNewDefinition(request: {
+    definition: { name: string; value: string; tags?: string[]; notes?: string };
+    parent?: { id: number; type: string };
+  }): Observable<Definition> {
+    return this.http
+      .post<DefinitionCreateSource>(`${this.baseUrl}/new-definition`, request)
+      .pipe(map((obj) => Definition.createFromObj(obj)));
+  }
+
+  updateDefinition(definition: Definition): Observable<Definition> {
+    return this.http
+      .put<DefinitionCreateSource>(`${this.baseUrl}/update-definition`, {
+        id: definition.id,
+        name: definition.description,
+        value: definition.value,
+        tags: definition.tags,
+        notes: definition.notes,
+      })
+      .pipe(map((obj) => Definition.createFromObj(obj)));
+  }
+
+  _patchDefinition(id: number, body: { description?: string; value?: string; notes?: string }): Observable<Definition> {
+    return this.http
+      .patch<DefinitionCreateSource>(`${this.baseUrl}/definition/${id}`, body)
+      .pipe(map((obj) => Definition.createFromObj(obj)));
+  }
+
+  //----------------------------------------definitions----------------------------------
   //----------------------------------------aliases----------------------------------------
   _getAlias(alias: string): Observable<ModelsAliasModel> {
     return this.http.get<ModelsAliasModel>(`${this.baseUrl}/aliases/${alias}`);

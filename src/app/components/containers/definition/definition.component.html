@@ -1,0 +1,14 @@
+@if (definitionForView(); as definition) {
+  <div class="definition-value-block">{{ definition.value }}</div>
+  <app-task-container-signal
+    [taskContainer]="definition"
+    (refreshContainer)="reloadDefinition()"
+    (updateTaskContainer)="updateDefinition()"
+    [showQuestions]="true"
+    [showProblems]="true"
+    [showStories]="true"
+    [showEpics]="true"
+    [showKnowledgeNodes]="true"
+    [showDefinitions]="true"
+  ></app-task-container-signal>
+}

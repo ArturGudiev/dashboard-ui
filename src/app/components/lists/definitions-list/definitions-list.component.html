@@ -1,0 +1,67 @@
+@if (definitions().length > 0 || showAddButton()) {
+  <div id="definitions-actions">
+    <h2 id="definitions-title">Definitions</h2>
+    @if (showAddButton()) {
+      <button mat-button type="button" (click)="addDefinition.emit()">Add definition</button>
+    }
+  </div>
+
+  @if (definitions().length > 0) {
+    <div id="table-wrapper">
+      <table
+        id="definitions-table"
+        mat-table
+        [dataSource]="definitions()"
+        class="mat-elevation-z8"
+      >
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef>No.</th>
+          <td
+            mat-cell
+            class="row-link"
+            tabindex="0"
+            role="button"
+            *matCellDef="let definition; let i = index"
+            (click)="onDefinitionClick(definition)"
+            (keydown.enter)="onDefinitionClick(definition)"
+            (keydown.space)="onDefinitionClick(definition); $event.preventDefault()"
+          >
+            <span>{{ i + 1 }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td
+            mat-cell
+            class="row-link"
+            tabindex="0"
+            role="button"
+            *matCellDef="let definition"
+            (click)="onDefinitionClick(definition)"
+            (keydown.enter)="onDefinitionClick(definition)"
+            (keydown.space)="onDefinitionClick(definition); $event.preventDefault()"
+          >
+            <span>{{ definition.description }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef>Value</th>
+          <td
+            mat-cell
+            class="row-link definition-value"
+            tabindex="0"
+            role="button"
+            *matCellDef="let definition"
+            (click)="onDefinitionClick(definition)"
+            (keydown.enter)="onDefinitionClick(definition)"
+            (keydown.space)="onDefinitionClick(definition); $event.preventDefault()"
+          >
+            <span>{{ definition.value }}</span>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  }
+}

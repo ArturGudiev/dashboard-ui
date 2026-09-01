@@ -31,6 +31,8 @@ import { DueDateTasksComponent } from "./components/pages/due-date-tasks/due-dat
 import { FileComponent } from "./components/pages/file/file.component";
 import { KnowledgeNodeComponent } from "./components/containers/knowledge-node/knowledge-node.component";
 import { knowledgeNodeResolver } from "./resolvers/knowledge-node.resolver";
+import { DefinitionComponent } from "./components/containers/definition/definition.component";
+import { definitionResolver } from "./resolvers/definition.resolver";
 import { ScriptsComponent } from "./components/pages/scripts/scripts.component";
 import { authGuard, guestGuard } from "./guards/auth.guard";
 
@@ -50,6 +52,12 @@ const protectedRoutes: Routes = [
     path: 'knowledge-node/:id',
     component: KnowledgeNodeComponent,
     resolve: { knowledgeNode: knowledgeNodeResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
+  {
+    path: 'definition/:id',
+    component: DefinitionComponent,
+    resolve: { definition: definitionResolver },
     runGuardsAndResolvers: 'paramsChange',
   },
   {

@@ -25,6 +25,7 @@ import { SubStoriesComponent } from "../../lists/substories/sub-stories.componen
 import { QuestionsListComponent } from "../../lists/questions-list/questions-list.component";
 import { ProblemsListComponent } from "../../lists/problems-list/problems-list.component";
 import { KnowledgeNodesListComponent } from "../../lists/knowledge-nodes-list/knowledge-nodes-list.component";
+import { DefinitionsListComponent } from "../../lists/definitions-list/definitions-list.component";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { VariableDialogComponent, type VariableDialogResult } from "../../dialogs/variable-dialog/variable-dialog.component";
 import { AliasesDialogComponent } from "../../dialogs/aliases-dialog/aliases-dialog.component";
@@ -47,6 +48,8 @@ import { EpicsService } from "../../../services/task-container-services/epics.se
 import { ProblemsService } from "../../../services/task-container-services/problems.service";
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { KnowledgeNodesService } from "../../../services/task-container-services/knowledge-nodes.service";
+import { DefinitionsService } from "../../../services/task-container-services/definitions.service";
+import { type Definition } from "../../../models/definition";
 import { UtilsService } from "../../../services/utils.service";
 import { ContainerReportComponent } from "../container-report/container-report.component";
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
@@ -103,6 +106,7 @@ const ALIAS_SUPPORTED_TYPES = new Set([
     QuestionsListComponent,
     ProblemsListComponent,
     KnowledgeNodesListComponent,
+    DefinitionsListComponent,
     NotesComponent,
     ContainerReportComponent,
     TasksListComponent,
@@ -123,6 +127,7 @@ export class TaskContainerSignalComponent implements OnInit {
   showQuestions = input<boolean>(false);
   showProblems = input<boolean>(false);
   showKnowledgeNodes = input<boolean>(false);
+  showDefinitions = input<boolean>(false);
 
   refreshContainer = output<void>();
 
@@ -267,6 +272,7 @@ export class TaskContainerSignalComponent implements OnInit {
   problems = signal<Problem[]>([]);
   questions = signal<Question[]>([]);
   knowledgeNodes = signal<KnowledgeNode[]>([]);
+  definitions = signal<Definition[]>([]);
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
 
@@ -286,6 +292,7 @@ export class TaskContainerSignalComponent implements OnInit {
   private epicsService = inject(EpicsService);
   private problemsService = inject(ProblemsService);
   private knowledgeNodesService = inject(KnowledgeNodesService);
+  private definitionsService = inject(DefinitionsService);
   private dialog = inject(MatDialog);
   private recordsService = inject(RecordsService);
   private tasksService = inject(TasksService);
@@ -340,6 +347,7 @@ export class TaskContainerSignalComponent implements OnInit {
         this.stories.set([]);
         this.epics.set([]);
         this.knowledgeNodes.set([]);
+        this.definitions.set([]);
       }
       this.refreshTaskContainerParts();
     });
@@ -432,6 +440,10 @@ export class TaskContainerSignalComponent implements OnInit {
     }
     if (this.showKnowledgeNodes() || this.taskContainer().type === 'knowledge-node') {
       this.refreshKnowledgeNodes();
+    }
+    const definitionIds = container.definitions ?? [];
+    if (this.showDefinitions() || container.type === 'definition' || definitionIds.length > 0) {
+      this.refreshDefinitions();
     }
   }
 
@@ -759,6 +771,29 @@ export class TaskContainerSignalComponent implements OnInit {
 
   navigateToKnowledgeNode(node: KnowledgeNode): void {
     void this.router.navigate(['knowledge-node', node.id]);
+  }
+
+  refreshDefinitions(): Observable<Definition[]> {
+    const taskContainerVal = this.taskContainer();
+    const ids = taskContainerVal.definitions ?? [];
+    if (!ids.length) {
+      this.definitions.set([]);
+      return of([]);
+    }
+    const defs$ = this.definitionsService.getDefinitions(ids);
+    defs$.subscribe((items) => this.definitions.set(items));
+    return defs$;
+  }
+
+  navigateToDefinition(definition: Definition): void {
+    void this.router.navigate(['definition', definition.id]);
+  }
+
+  addDefinition(): void {
+    this.definitionsService
+      .createDefinitionFromDialog(this.taskContainer())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.refreshContainer.emit());
   }
 
   solveTheProblem(problem: Problem): void {

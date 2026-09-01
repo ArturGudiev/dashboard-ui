@@ -177,6 +177,16 @@
         ></app-knowledge-nodes-list>
       }
 
+      <!-- Definitions -->
+      @if (showDefinitions() || taskContainer().type === 'definition' || definitions().length > 0) {
+        <app-definitions-list
+          [definitions]="definitions()"
+          [showAddButton]="true"
+          (definitionClick)="navigateToDefinition($event)"
+          (addDefinition)="addDefinition()"
+        ></app-definitions-list>
+      }
+
       <!-- Истории -->
       @if ( this.showStories() && stories().length > 0 ) {
         <app-substories
