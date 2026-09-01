@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError, timer } from 'rxjs';
 import { catchError, filter, finalize, map, take, tap } from 'rxjs/operators';
 import type { LoginUserResponse } from './auth.service';
+import { randomId } from '../utils/id.utils';
 
 const LOCK_KEY = 'auth_refresh_lock';
 const LOCK_TTL_MS = 15_000;
@@ -19,7 +20,7 @@ interface RefreshLock {
 
 @Injectable({ providedIn: 'root' })
 export class AuthRefreshCoordinator {
-  private readonly tabId = crypto.randomUUID();
+  private readonly tabId = randomId();
   private readonly channel =
     typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel(CHANNEL_NAME) : null;
   private inFlightRefresh$: Observable<void> | null = null;

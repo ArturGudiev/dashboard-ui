@@ -1,3 +1,5 @@
+import { randomId } from '../../utils/id.utils';
+
 export interface MmNode {
   id: string;
   text: string;
@@ -45,7 +47,7 @@ function parseNodeElement(el: Element): MmNode {
   const note = noteText(el);
 
   return {
-    id: el.getAttribute('ID') || crypto.randomUUID(),
+    id: el.getAttribute('ID') || randomId(),
     text: text || '(untitled)',
     folded,
     link,
