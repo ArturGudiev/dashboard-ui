@@ -1,13 +1,9 @@
 import { type HttpErrorResponse, type HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { BehaviorSubject, throwError } from 'rxjs';
-import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
-import { AuthStore } from '../state/auth.store';
-
-let isRefreshing = false;
-const refreshResult$ = new BehaviorSubject<boolean | null>(null);
+import { isAuthFailure, isNetworkError } from '../utils/auth.utils';
 
 function shouldSkipAuth(url: string): boolean {
   const path = url.split('?')[0];
@@ -21,8 +17,6 @@ function shouldSkipAuth(url: string): boolean {
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const authStore = inject(AuthStore);
-  const router = inject(Router);
 
   const authReq = req.clone({ withCredentials: true });
 
@@ -32,38 +26,22 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status !== 403 || shouldSkipAuth(authReq.url) || !authStore.isAuthenticated()) {
+      if (error.status !== 403 || shouldSkipAuth(authReq.url) || !authService.canAttemptRefresh()) {
         return throwError(() => error);
       }
 
-      if (!isRefreshing) {
-        isRefreshing = true;
-        refreshResult$.next(null);
-
-        return authService.refreshToken().pipe(
-          switchMap(() => {
-            isRefreshing = false;
-            refreshResult$.next(true);
-            return next(authReq);
-          }),
-          catchError((refreshError) => {
-            isRefreshing = false;
-            refreshResult$.next(false);
-            authService.logoutLocal();
-            router.navigate(['/login']);
+      return authService.refreshTokenWithLock().pipe(
+        switchMap(() => next(authReq)),
+        catchError((refreshError) => {
+          if (isNetworkError(refreshError)) {
             return throwError(() => refreshError);
-          }),
-        );
-      }
-
-      return refreshResult$.pipe(
-        filter((result): result is boolean => result !== null),
-        take(1),
-        switchMap((result) => {
-          if (!result) {
-            return throwError(() => error);
           }
-          return next(authReq);
+
+          if (isAuthFailure(refreshError)) {
+            return authService.forceLogout().pipe(switchMap(() => throwError(() => refreshError)));
+          }
+
+          return throwError(() => refreshError);
         }),
       );
     }),

@@ -15,7 +15,14 @@ interface AuthState {
 const AUTH_USER_STORAGE_KEY = 'auth_user';
 
 function readStoredUser(): AuthUser | null {
-  const raw = sessionStorage.getItem(AUTH_USER_STORAGE_KEY);
+  let raw = localStorage.getItem(AUTH_USER_STORAGE_KEY);
+  if (!raw) {
+    raw = sessionStorage.getItem(AUTH_USER_STORAGE_KEY);
+    if (raw) {
+      localStorage.setItem(AUTH_USER_STORAGE_KEY, raw);
+      sessionStorage.removeItem(AUTH_USER_STORAGE_KEY);
+    }
+  }
   if (!raw) {
     return null;
   }
@@ -35,12 +42,12 @@ export const AuthStore = signalStore(
   }),
   withMethods((store) => ({
     setUser(user: AuthUser): void {
-      sessionStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(user));
+      localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(user));
       patchState(store, { user, isAuthenticated: true, initialized: true });
     },
 
     clearUser(): void {
-      sessionStorage.removeItem(AUTH_USER_STORAGE_KEY);
+      localStorage.removeItem(AUTH_USER_STORAGE_KEY);
       patchState(store, { user: null, isAuthenticated: false, initialized: true });
     },
 
