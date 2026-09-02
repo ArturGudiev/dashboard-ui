@@ -1,26 +1,26 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type Definition } from '../../../models/definition';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CommandsService } from '../../../services/commands.service';
+import { type Knowledge } from '../../../models/knowledge';
 import { type TaskContainer } from '../../../models/interfaces/task-container';
+import { CommandsService } from '../../../services/commands.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-definitions-list',
+  selector: 'app-knowledge-bits-list',
   imports: [MatTableModule, MatButtonModule, MatIconModule],
-  templateUrl: './definitions-list.component.html',
+  templateUrl: './knowledge-bits-list.component.html',
   standalone: true,
-  styleUrls: ['./definitions-list.component.sass'],
+  styleUrls: ['./knowledge-bits-list.component.sass'],
 })
-export class DefinitionsListComponent implements OnInit {
+export class KnowledgeBitsListComponent implements OnInit {
   container = input.required<TaskContainer>();
-  definitions = input.required<Definition[]>();
+  knowledgeBits = input.required<Knowledge[]>();
   showAddButton = input<boolean>(false);
-  definitionClick = output<Definition>();
-  addDefinition = output<void>();
+  knowledgeBitClick = output<Knowledge>();
+  addKnowledgeBit = output<void>();
 
   readonly displayedColumns: string[] = ['name', 'value'];
 
@@ -37,12 +37,17 @@ export class DefinitionsListComponent implements OnInit {
 
   private handleTaskCommand(command: string): void {
     const cmd = command.split(' ')[0];
-    if (['definition', 'd+', 'def+'].includes(cmd)) {
-      this.addDefinition.emit();
+    if (['knowledge', 'k+', 'kb+', 'knowledge-bit', 'kb'].includes(cmd)) {
+      this.addKnowledgeBit.emit();
     }
   }
 
-  onDefinitionClick(definition: Definition): void {
-    this.definitionClick.emit(definition);
+  firstLine(value: string): string {
+    const line = value.split(/\r?\n/)[0] ?? '';
+    return line.trim();
+  }
+
+  onKnowledgeBitClick(knowledgeBit: Knowledge): void {
+    this.knowledgeBitClick.emit(knowledgeBit);
   }
 }

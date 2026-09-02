@@ -197,6 +197,9 @@ export class NavigationService {
     if (val.type === 'definition') {
       this.navigateToDefinition(id);
     }
+    if (val.type === 'knowledge-bit') {
+      this.navigateToKnowledge(id);
+    }
     if (val.type === 'action') {
       this.navigateToAction(id);
     }
@@ -262,7 +265,7 @@ export class NavigationService {
   }
 
   navigateToKnowledge(id: number) {
-    this.router.navigate(['knowledge', id]).then();
+    this.router.navigate(['knowledge-bit', id]).then();
   }
 
   navigateToKnowledgeNode(id: number) {

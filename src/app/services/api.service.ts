@@ -8,7 +8,7 @@ import { Epic } from "../models/epic";
 import { Story } from "../models/story";
 import { Problem } from "../models/problem";
 import { Question } from "../models/question";
-import { Knowledge } from "../models/knowledge";
+import { Knowledge, type KnowledgeCreateSource } from "../models/knowledge";
 import { KnowledgeNode, type KnowledgeNodeCreateSource } from "../models/knowledge-node";
 import { Definition, type DefinitionCreateSource } from "../models/definition";
 import { RecordItem } from "../models/record-item";
@@ -510,27 +510,38 @@ export class ApiService {
   //------------------------------------knowledge bits start----------------------------------------
   _getKnowledgeBits(ids: number[]): Observable<Knowledge[]> {
     const body: HandlersIdsRequest = { ids };
-    return this.http.post<Knowledge[]>(`${this.baseUrl}/get-knowledge-bits/`, body).pipe(
+    return this.http.post<KnowledgeCreateSource[]>(`${this.baseUrl}/get-knowledge-bits`, body).pipe(
       map((knowledgeBits) => knowledgeBits.map((a) => Knowledge.createFromObj(a))),
     );
   }
 
-  _createNewKnowledge(knowledgeObject: NameValueEntityPayload): Observable<Knowledge> {
-    return this.http.post<Knowledge>(`${this.baseUrl}/new-knowledge/`, knowledgeObject);
+  _createNewKnowledgeBit(request: {
+    knowledgeBit: { name: string; value: string; extension?: string; tags?: string[]; notes?: string };
+    parent: { id: number; type: string };
+  }): Observable<Knowledge> {
+    return this.http
+      .post<KnowledgeCreateSource>(`${this.baseUrl}/new-knowledge-bit`, request)
+      .pipe(map((obj) => Knowledge.createFromObj(obj)));
   }
 
   _getKnowledge(id: number) {
-    return this.http.get<Knowledge>(`${this.baseUrl}/knowledge/${id}`)
+    return this.http.get<KnowledgeCreateSource>(`${this.baseUrl}/knowledge-bit/${id}`)
       .pipe(
-        map((obj: Knowledge) => Knowledge.createFromObj(obj))
+        map((obj: KnowledgeCreateSource) => Knowledge.createFromObj(obj))
       );
   }
 
   _updateKnowledge(knowledge: Knowledge): Observable<Knowledge> {
-    return this.http.post<Knowledge>(`${this.baseUrl}/update-knowledge/`, knowledge)
-      .pipe(
-        map((obj: Knowledge) => Knowledge.createFromObj(obj))
-      );
+    return this.http.put<KnowledgeCreateSource>(`${this.baseUrl}/update-knowledge-bit`, {
+      id: knowledge.id,
+      name: knowledge.name,
+      value: knowledge.value,
+      tags: knowledge.tags,
+      notes: knowledge.notes,
+      extension: knowledge.extension ?? '',
+    }).pipe(
+      map((obj: KnowledgeCreateSource) => Knowledge.createFromObj(obj))
+    );
   }
 
   _getRecordItems(arrayParams: IArrayParams, tag?: string): Observable<IArrayResponse<RecordItem>> {

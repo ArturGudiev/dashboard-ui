@@ -14,21 +14,6 @@
         [dataSource]="definitions()"
         class="mat-elevation-z8"
       >
-        <ng-container matColumnDef="position">
-          <th mat-header-cell *matHeaderCellDef>No.</th>
-          <td
-            mat-cell
-            class="row-link"
-            tabindex="0"
-            role="button"
-            *matCellDef="let definition; let i = index"
-            (click)="onDefinitionClick(definition)"
-            (keydown.enter)="onDefinitionClick(definition)"
-            (keydown.space)="onDefinitionClick(definition); $event.preventDefault()"
-          >
-            <span>{{ i + 1 }}</span>
-          </td>
-        </ng-container>
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>Name</th>
           <td
