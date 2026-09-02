@@ -1,0 +1,53 @@
+#definitions-actions
+  display: flex
+  align-items: center
+  margin-left: 3.5rem
+  margin-bottom: 0.5rem
+  gap: 1rem
+
+#definitions-title
+  margin: 0
+  padding-right: 0.5rem
+
+#table-wrapper
+  max-width: 28rem
+  margin-left: 3.5rem
+  margin-bottom: 0
+  overflow: hidden
+
+#definitions-table
+  width: 100%
+  table-layout: fixed
+  --mat-table-row-item-container-height: 1.75rem
+  --mat-table-header-container-height: 1.75rem
+
+  .mat-mdc-row
+    height: 1.75rem !important
+    min-height: 1.75rem !important
+    max-height: 1.75rem !important
+
+  .mat-mdc-header-row
+    height: 1.75rem !important
+    min-height: 1.75rem !important
+    max-height: 1.75rem !important
+
+  .mat-mdc-cell,
+  .mat-mdc-header-cell
+    padding-top: 0
+    padding-bottom: 0
+    font-size: 0.875rem
+
+.mat-column-name
+  width: 35%
+
+.mat-column-value
+  width: 65%
+
+.definition-value span
+  display: block
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.row-link
+  cursor: pointer

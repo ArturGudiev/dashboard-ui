@@ -5,8 +5,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '../api.service';
 import { Definition } from '../../models/definition';
 import { type TaskContainer } from '../../models/interfaces/task-container';
-import { GetValueDialogComponent } from '../../components/dialogs/get-value/get-value-dialog.component';
-import { GET_VALUE_DIALOG_OPTIONS } from '../../shared/constants';
+import {
+  AddDefinitionDialogComponent,
+  type AddDefinitionDialogResult,
+} from '../../components/dialogs/add-definition-dialog/add-definition-dialog.component';
+import { DEFINITION_DIALOG_OPTIONS } from '../../shared/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -28,32 +31,22 @@ export class DefinitionsService {
   }
 
   createDefinitionFromDialog(taskContainer: TaskContainer): Observable<Definition> {
-    const nameDialogRef = this.dialog.open(GetValueDialogComponent, {
-      data: { title: 'Definition name', inputWidth: '40rem' },
-      ...GET_VALUE_DIALOG_OPTIONS,
+    const dialogRef = this.dialog.open(AddDefinitionDialogComponent, {
+      ...DEFINITION_DIALOG_OPTIONS,
     });
 
-    return nameDialogRef.afterClosed().pipe(
-      filter((name: string) => !!name),
-      switchMap((name: string) => {
-        const valueDialogRef = this.dialog.open(GetValueDialogComponent, {
-          data: { title: 'Definition value', inputWidth: '40rem' },
-          ...GET_VALUE_DIALOG_OPTIONS,
+    return dialogRef.afterClosed().pipe(
+      filter((result: AddDefinitionDialogResult | null): result is AddDefinitionDialogResult => !!result),
+      switchMap((result) => {
+        return this.apiService._createNewDefinition({
+          definition: {
+            name: result.name,
+            value: result.value,
+            tags: [],
+            notes: '',
+          },
+          parent: { id: taskContainer.id, type: taskContainer.type },
         });
-        return valueDialogRef.afterClosed().pipe(
-          filter((value: string) => value != null),
-          switchMap((value: string) => {
-            return this.apiService._createNewDefinition({
-              definition: {
-                name,
-                value,
-                tags: [],
-                notes: '',
-              },
-              parent: { id: taskContainer.id, type: taskContainer.type },
-            });
-          }),
-        );
       }),
     );
   }

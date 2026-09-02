@@ -493,6 +493,9 @@ export class TaskContainerSignalComponent implements OnInit {
     if (['log', 'l+'].includes(arr[0])) {
       this.taskContainerService.openAddLogDialog(this.taskContainer()).subscribe();
     }
+    if (['definition', 'd+', 'def+'].includes(arr[0])) {
+      this.addDefinition();
+    }
     if (['ls', 'logs', 'l'].includes(arr[0])) {
       this.taskContainerService.openLogsDialog(this.taskContainer());
     }
@@ -793,7 +796,16 @@ export class TaskContainerSignalComponent implements OnInit {
     this.definitionsService
       .createDefinitionFromDialog(this.taskContainer())
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.refreshContainer.emit());
+      .subscribe({
+        next: (created) => {
+          this.definitions.update((items) => [...items, created]);
+          this.refreshContainer.emit();
+        },
+        error: (err) => {
+          const message = err?.error?.error ?? err?.message ?? 'Failed to create definition';
+          this.alertService.showAlert(message, 4000, 'error');
+        },
+      });
   }
 
   solveTheProblem(problem: Problem): void {

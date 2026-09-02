@@ -122,6 +122,7 @@
                 }
                 <button mat-menu-item (click)="renameTask()">Rename {{ taskContainer().type }}</button>
                 <button mat-menu-item (click)="addQuestion()">Add a new question</button>
+                <button mat-menu-item (click)="addDefinition()">Add definition</button>
                 <button mat-menu-item (click)="addSubstory()">Add a new substory</button>
                 <button mat-menu-item (click)="callEditNotesEvent()">Edit notes</button>
                 <button mat-menu-item (click)="addRecord()">Add record</button>
@@ -180,6 +181,7 @@
       <!-- Definitions -->
       @if (showDefinitions() || taskContainer().type === 'definition' || definitions().length > 0) {
         <app-definitions-list
+          [container]="taskContainer()"
           [definitions]="definitions()"
           [showAddButton]="true"
           (definitionClick)="navigateToDefinition($event)"

@@ -17,6 +17,7 @@ export const  NEW_STORY_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  NEW_EPIC_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  GET_VALUE_DIALOG_OPTIONS = { height: '300px', width: '700px'};
 export const  VARIABLE_DIALOG_OPTIONS = { height: '300px', width: '700px'};
+export const  DEFINITION_DIALOG_OPTIONS = { height: '420px', width: '520px'};
 export const  ALIASES_DIALOG_OPTIONS = {
   width: '560px',
   maxWidth: '95vw',
