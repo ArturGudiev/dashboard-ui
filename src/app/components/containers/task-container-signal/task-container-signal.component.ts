@@ -26,6 +26,7 @@ import { QuestionsListComponent } from "../../lists/questions-list/questions-lis
 import { ProblemsListComponent } from "../../lists/problems-list/problems-list.component";
 import { KnowledgeNodesListComponent } from "../../lists/knowledge-nodes-list/knowledge-nodes-list.component";
 import { DefinitionsListComponent } from "../../lists/definitions-list/definitions-list.component";
+import { KnowledgeBitsListComponent } from "../../lists/knowledge-bits-list/knowledge-bits-list.component";
 import { GetValueDialogComponent } from "../../dialogs/get-value/get-value-dialog.component";
 import { VariableDialogComponent, type VariableDialogResult } from "../../dialogs/variable-dialog/variable-dialog.component";
 import { AliasesDialogComponent } from "../../dialogs/aliases-dialog/aliases-dialog.component";
@@ -49,7 +50,9 @@ import { ProblemsService } from "../../../services/task-container-services/probl
 import { TasksService } from "../../../services/task-container-services/tasks.service";
 import { KnowledgeNodesService } from "../../../services/task-container-services/knowledge-nodes.service";
 import { DefinitionsService } from "../../../services/task-container-services/definitions.service";
+import { KnowledgeService } from "../../../services/task-container-services/knowledge.service";
 import { type Definition } from "../../../models/definition";
+import { type Knowledge } from "../../../models/knowledge";
 import { UtilsService } from "../../../services/utils.service";
 import { ContainerReportComponent } from "../container-report/container-report.component";
 import { TasksListComponent } from "../../lists/tasks-list/tasks-list.component";
@@ -107,6 +110,7 @@ const ALIAS_SUPPORTED_TYPES = new Set([
     ProblemsListComponent,
     KnowledgeNodesListComponent,
     DefinitionsListComponent,
+    KnowledgeBitsListComponent,
     NotesComponent,
     ContainerReportComponent,
     TasksListComponent,
@@ -128,6 +132,7 @@ export class TaskContainerSignalComponent implements OnInit {
   showProblems = input<boolean>(false);
   showKnowledgeNodes = input<boolean>(false);
   showDefinitions = input<boolean>(false);
+  showKnowledgeBits = input<boolean>(false);
 
   refreshContainer = output<void>();
 
@@ -273,6 +278,7 @@ export class TaskContainerSignalComponent implements OnInit {
   questions = signal<Question[]>([]);
   knowledgeNodes = signal<KnowledgeNode[]>([]);
   definitions = signal<Definition[]>([]);
+  knowledgeBits = signal<Knowledge[]>([]);
 
   toggleNotesEditSubject: Subject<void> = new Subject<void>();
 
@@ -293,6 +299,7 @@ export class TaskContainerSignalComponent implements OnInit {
   private problemsService = inject(ProblemsService);
   private knowledgeNodesService = inject(KnowledgeNodesService);
   private definitionsService = inject(DefinitionsService);
+  private knowledgeService = inject(KnowledgeService);
   private dialog = inject(MatDialog);
   private recordsService = inject(RecordsService);
   private tasksService = inject(TasksService);
@@ -348,6 +355,7 @@ export class TaskContainerSignalComponent implements OnInit {
         this.epics.set([]);
         this.knowledgeNodes.set([]);
         this.definitions.set([]);
+        this.knowledgeBits.set([]);
       }
       this.refreshTaskContainerParts();
     });
@@ -445,6 +453,10 @@ export class TaskContainerSignalComponent implements OnInit {
     if (this.showDefinitions() || container.type === 'definition' || definitionIds.length > 0) {
       this.refreshDefinitions();
     }
+    const knowledgeBitIds = container.knowledgeBits ?? [];
+    if (this.showKnowledgeBits() || container.type === 'knowledge-bit' || knowledgeBitIds.length > 0) {
+      this.refreshKnowledgeBits();
+    }
   }
 
   private handleTaskCommand(command: string): void {
@@ -495,6 +507,9 @@ export class TaskContainerSignalComponent implements OnInit {
     }
     if (['definition', 'd+', 'def+'].includes(arr[0])) {
       this.addDefinition();
+    }
+    if (['knowledge', 'k+', 'kb+', 'knowledge-bit', 'kb'].includes(arr[0])) {
+      this.addKnowledgeBit();
     }
     if (['ls', 'logs', 'l'].includes(arr[0])) {
       this.taskContainerService.openLogsDialog(this.taskContainer());
@@ -803,6 +818,38 @@ export class TaskContainerSignalComponent implements OnInit {
         },
         error: (err) => {
           const message = err?.error?.error ?? err?.message ?? 'Failed to create definition';
+          this.alertService.showAlert(message, 4000, 'error');
+        },
+      });
+  }
+
+  refreshKnowledgeBits(): Observable<Knowledge[]> {
+    const taskContainerVal = this.taskContainer();
+    const ids = taskContainerVal.knowledgeBits ?? [];
+    if (!ids.length) {
+      this.knowledgeBits.set([]);
+      return of([]);
+    }
+    const bits$ = this.knowledgeService.getKnowledgeBits(ids);
+    bits$.subscribe((items) => this.knowledgeBits.set(items));
+    return bits$;
+  }
+
+  navigateToKnowledgeBit(knowledgeBit: Knowledge): void {
+    void this.router.navigate(['knowledge-bit', knowledgeBit.id]);
+  }
+
+  addKnowledgeBit(): void {
+    this.knowledgeService
+      .createKnowledgeBitFromDialog(this.taskContainer())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (created) => {
+          this.knowledgeBits.update((items) => [...items, created]);
+          this.refreshContainer.emit();
+        },
+        error: (err) => {
+          const message = err?.error?.error ?? err?.message ?? 'Failed to create knowledge bit';
           this.alertService.showAlert(message, 4000, 'error');
         },
       });

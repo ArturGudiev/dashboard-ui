@@ -1,0 +1,52 @@
+@if (knowledgeBits().length > 0 || showAddButton()) {
+  <div id="knowledge-bits-actions">
+    <h2 id="knowledge-bits-title">Knowledge bits</h2>
+    @if (showAddButton()) {
+      <button mat-button type="button" (click)="addKnowledgeBit.emit()">Add knowledge bit</button>
+    }
+  </div>
+
+  @if (knowledgeBits().length > 0) {
+    <div id="table-wrapper">
+      <table
+        id="knowledge-bits-table"
+        mat-table
+        [dataSource]="knowledgeBits()"
+        class="mat-elevation-z8"
+      >
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td
+            mat-cell
+            class="row-link"
+            tabindex="0"
+            role="button"
+            *matCellDef="let knowledgeBit"
+            (click)="onKnowledgeBitClick(knowledgeBit)"
+            (keydown.enter)="onKnowledgeBitClick(knowledgeBit)"
+            (keydown.space)="onKnowledgeBitClick(knowledgeBit); $event.preventDefault()"
+          >
+            <span>{{ knowledgeBit.name }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef>Value</th>
+          <td
+            mat-cell
+            class="row-link knowledge-bit-value"
+            tabindex="0"
+            role="button"
+            *matCellDef="let knowledgeBit"
+            (click)="onKnowledgeBitClick(knowledgeBit)"
+            (keydown.enter)="onKnowledgeBitClick(knowledgeBit)"
+            (keydown.space)="onKnowledgeBitClick(knowledgeBit); $event.preventDefault()"
+          >
+            <span>{{ firstLine(knowledgeBit.value) }}</span>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  }
+}

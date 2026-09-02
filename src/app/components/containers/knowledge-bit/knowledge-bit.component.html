@@ -1,8 +1,9 @@
-@if (knowledgeNodeForView(); as knowledgeNode) {
+@if (knowledgeBitForView(); as knowledgeBit) {
+  <div class="knowledge-bit-value-block">{{ knowledgeBit.value }}</div>
   <app-task-container-signal
-    [taskContainer]="knowledgeNode"
-    (refreshContainer)="reloadKnowledgeNode()"
-    (updateTaskContainer)="updateKnowledgeNode()"
+    [taskContainer]="knowledgeBit"
+    (refreshContainer)="reloadKnowledgeBit()"
+    (updateTaskContainer)="updateKnowledgeBit()"
     [showQuestions]="true"
     [showProblems]="true"
     [showStories]="true"

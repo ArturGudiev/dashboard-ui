@@ -33,6 +33,8 @@ import { KnowledgeNodeComponent } from "./components/containers/knowledge-node/k
 import { knowledgeNodeResolver } from "./resolvers/knowledge-node.resolver";
 import { DefinitionComponent } from "./components/containers/definition/definition.component";
 import { definitionResolver } from "./resolvers/definition.resolver";
+import { KnowledgeBitComponent } from "./components/containers/knowledge-bit/knowledge-bit.component";
+import { knowledgeBitResolver } from "./resolvers/knowledge-bit.resolver";
 import { ScriptsComponent } from "./components/pages/scripts/scripts.component";
 import { authGuard, guestGuard } from "./guards/auth.guard";
 
@@ -58,6 +60,12 @@ const protectedRoutes: Routes = [
     path: 'definition/:id',
     component: DefinitionComponent,
     resolve: { definition: definitionResolver },
+    runGuardsAndResolvers: 'paramsChange',
+  },
+  {
+    path: 'knowledge-bit/:id',
+    component: KnowledgeBitComponent,
+    resolve: { knowledgeBit: knowledgeBitResolver },
     runGuardsAndResolvers: 'paramsChange',
   },
   {
