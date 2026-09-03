@@ -180,7 +180,7 @@
       }
 
       <!-- Definitions -->
-      @if (showDefinitions() || taskContainer().type === 'definition' || definitions().length > 0) {
+      @if (definitions().length > 0) {
         <app-definitions-list
           [container]="taskContainer()"
           [definitions]="definitions()"
@@ -190,7 +190,7 @@
         ></app-definitions-list>
       }
 
-      @if (showKnowledgeBits() || taskContainer().type === 'knowledge-bit' || knowledgeBits().length > 0) {
+      @if (knowledgeBits().length > 0) {
         <app-knowledge-bits-list
           [container]="taskContainer()"
           [knowledgeBits]="knowledgeBits()"
